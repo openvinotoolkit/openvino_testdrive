@@ -1,0 +1,12 @@
+syntax = "proto2";
+package mediapipe;
+
+import "mediapipe/framework/calculator.proto";
+
+message OpenVINOInferenceAdapterCalculatorOptions {
+  extend mediapipe.CalculatorOptions {
+    optional OpenVINOInferenceAdapterCalculatorOptions ext = 125115990;
+    }
+    optional string model_path = 1;
+    optional string device = 2;
+}

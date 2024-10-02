@@ -1,0 +1,36 @@
+display_name: OpenVINO TestDrive
+package_name: openvinotestdrive
+
+maintainer:
+  name: Ronald Hecker
+  email: ronald.hecker@intel.com
+
+priority: optional
+
+section: x11
+
+installed_size: 396000
+
+dependencies:
+  - libtbb12
+  - libtiff5
+  - libopenjp2-7
+  - libtiff5
+  - libpng16-16
+  - libzstd1
+
+essential: false
+
+icon: images/openvino_eye.png
+
+keywords:
+  - OpenVINO
+  - Inference
+
+generic_name: OpenVINO TestDrive
+
+categories:
+  - Development
+  - Utility
+
+startup_notify: true

@@ -1,0 +1,53 @@
+#+title: Todo
+
+* General
+** STRT Improve readme
+** TODO Clean up test_utils references to models
+** STRT Support windows & ubuntu
+This is generally simple case of:
+- adding the workspace repos to openvino, opencv for their platforms
+- adding build file in third_party folder for the above & blend2d
+- setting correct aliasses in third_party
+- adding the build commands for the bindings:
+  src:macos_bindings
+  src:windows_bindings
+  src:linux_bindings
+
+What would be really neat is a way to package it with the dependencies automatically.
+We need openvino, opencv, tbb and blend2d shared libraries to be packaged together
+For ubuntu the added difficulty is setting the rpath for those libraries.
+
+*** DONE src:windows_bindings
+
+* ImageInference
+** DONE Empty label
+** DONE overlay:
+*** DONE labels for overlay
+*** DONE overlay properties (font_size, opacity, stroke_width, font_path)
+** DONE SerializeModel binding
+** STRT overlay serialization
+*** TODO proper serialization properties?
+** TODO tiling
+** DONE Implement all model types
+*** DONE MaskRCNN/ Instance segmentation.
+Feed the task_type into post processing
+Implement the contourer
+** DONE Async infer
+** TODO Clean up the use of properties?
+I feel like the empty label stuff is not in the correct space
+Perhaps make it optional
+
+* LLM Inference
+** DONE Create bindings
+** TODO Implement llm properties like max tokens and temperature etc.
+
+* Dart
+** TODO Add example
+** TODO Add tests
+** TODO Perhaps remove bin
+
+* Bugs
+** TODO Fix issue with Dart LLMInference where if the inference is closed it will throw segmentation fault.
+Probably need to make sure the callback is done before deleting the inference.
+** DONE Throw error when no serialization is requested.
+

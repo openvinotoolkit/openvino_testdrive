@@ -1,0 +1,187 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:inference/interop/generated_bindings.dart';
+import 'package:inference/interop/llm_inference.dart';
+import 'package:inference/project.dart';
+
+enum Speaker { system, assistant, user }
+
+String speakerRole(Speaker speaker) {
+  switch(speaker) {
+    case Speaker.system:
+      return "system";
+    case Speaker.user:
+      return "user";
+    case Speaker.assistant:
+      return "assistant";
+  }
+}
+
+String speakerName(Speaker speaker) {
+  switch(speaker) {
+    case Speaker.system:
+      return "Prompt";
+    case Speaker.user:
+      return "You";
+    case Speaker.assistant:
+      return "Assistant";
+  }
+}
+
+class Message {
+  final Speaker speaker;
+  final String message;
+  final Metrics? metrics;
+  const Message(this.speaker, this.message, this.metrics);
+}
+
+class TextInferenceProvider extends ChangeNotifier {
+
+  Completer<void> loaded = Completer<void>();
+
+  Project? _project;
+  String? _device;
+
+  Project? get project => _project;
+  String? get device => _device;
+  Metrics? get metrics => _messages.lastOrNull?.metrics;
+
+  double _temperature = 1;
+  double get temperature => _temperature;
+  set temperature(double v) {
+    _temperature = v;
+    notifyListeners();
+  }
+
+  double _topP = 1;
+  double get topP => _topP;
+  set topP(double v) {
+    _topP = v;
+    notifyListeners();
+  }
+
+  LLMInference? _inference;
+  final stopWatch = Stopwatch();
+  int n = 0;
+
+  TextInferenceProvider(Project? project, String? device) {
+    _project = project;
+    _device = device;
+
+    if (project != null && device != null) {
+      print("instantiating project: ${project.name}");
+      print(project.storagePath);
+      print(device);
+      LLMInference.init(project.storagePath, device).then((instance) {
+          print("done loading");
+          _inference = instance;
+          instance.setListener(onMessage);
+          loaded.complete();
+          notifyListeners();
+      });
+    }
+  }
+
+  void onMessage(String word) {
+     stopWatch.stop();
+     if (n == 0) { // dont count first token since it's slow.
+       stopWatch.reset();
+     }
+
+     double timeElapsed = stopWatch.elapsedMilliseconds.toDouble();
+     double averageElapsed = (n == 0 ? 0.0 : timeElapsed / n);
+     if (n == 0) {
+       _response = word;
+     } else {
+       _response = _response! + word;
+     }
+     _speed = averageElapsed;
+     notifyListeners();
+     stopWatch.start();
+     n++;
+  }
+
+  bool sameProps(Project? project, String? device) {
+    return _project == project && _device == device;
+  }
+
+  bool get initialized => loaded.isCompleted;
+  final List<Message> _messages = [];
+
+  double? _speed;
+  double? get speed => _speed;
+  set speed(double? speed) {
+    _speed = speed;
+    notifyListeners();
+  }
+
+  String? _response;
+  String? get response => _response;
+  set response(String? response) {
+    _response = response;
+    notifyListeners();
+  }
+
+  Message? get interimResponse {
+    if (_response == null) {
+      return null;
+    }
+    return Message(Speaker.assistant, response!, null);
+  }
+
+  List<Message> get messages {
+    if (interimResponse == null) {
+      return _messages;
+    }
+    return [..._messages, interimResponse!];
+  }
+
+  Future<void> message(String message) async {
+    _response = "...";
+    _messages.add(Message(Speaker.user, message, null));
+    notifyListeners();
+    final response = await _inference!.prompt(message, temperature, topP);
+
+    if (_messages.isNotEmpty) {
+      _messages.add(Message(Speaker.assistant, response.content, response.metrics));
+    }
+    _response = null;
+    n = 0;
+    notifyListeners();
+  }
+
+  void close() {
+    _messages.clear();
+    _inference?.close();
+    _response = null;
+    if (_inference != null) {
+      _inference!.close();
+    }
+  }
+
+  void forceStop() {
+    _inference?.forceStop(); //TODO
+  }
+
+  void reset() {
+    //_inference?.close();
+    _inference?.forceStop();
+    _inference?.clearHistory();
+    _messages.clear();
+    _response = null;
+    notifyListeners();
+  }
+
+
+  @override
+  void dispose() {
+    if (_inference != null) {
+      _inference?.close();
+      super.dispose();
+    } else {
+      close();
+      super.dispose();
+    }
+  }
+}

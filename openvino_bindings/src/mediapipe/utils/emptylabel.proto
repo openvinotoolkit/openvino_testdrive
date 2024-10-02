@@ -1,0 +1,12 @@
+syntax = "proto2";
+package mediapipe;
+
+import "mediapipe/framework/calculator.proto";
+
+message EmptyLabelOptions {
+  extend mediapipe.CalculatorOptions {
+    optional EmptyLabelOptions ext = 125116990;
+    }
+    optional string id = 1;
+    optional string label = 2;
+}

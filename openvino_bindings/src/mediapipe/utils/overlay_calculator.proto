@@ -1,0 +1,22 @@
+syntax = "proto2";
+package mediapipe;
+
+import "mediapipe/framework/calculator.proto";
+
+message OverlayLabel {
+  required string id = 1;
+  required string name = 2;
+  required string color = 3;
+  required bool is_empty = 4;
+}
+
+message OverlayCalculatorOptions {
+  extend mediapipe.CalculatorOptions {
+      optional OverlayCalculatorOptions ext = 125115991;
+  }
+  repeated OverlayLabel labels = 1;
+  optional double stroke_width = 2;
+  optional double opacity = 3;
+  optional double font_size = 4;
+  required string font_path = 5;
+}
