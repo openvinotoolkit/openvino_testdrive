@@ -84,11 +84,9 @@ These Status objects do need to be deleted from the heap.
 
 This project is built with Bazel. You can use [bazelisk](https://bazel.build/install/bazelisk) which will take the correct bazel version from the .bazelversion file.
 
-Further dependencies:
+Further dependencies which are explained per platform below:
 - OpenVINO
 - OpenCV
-- Mediapipe:
- - Python 
 
 ### Windows
 
@@ -116,7 +114,7 @@ The .dylib and .so are located in `bazel-bin/macos_bindings.tar`.
 
 [Install OpenVINO Runtime 24.4.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=LINUX&DISTRIBUTION=ARCHIVE) with GenAI flavor in `/opt/intel/openvino_24.4.0` and symlink to `/opt/intel/openvino`.
 
-Build or install OpenCV.
+Build or install OpenCV to `/usr/local/`.
 
 `bazel build :linux_bindings`
 

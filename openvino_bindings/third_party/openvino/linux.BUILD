@@ -2,11 +2,28 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
+OPENVINO_VERSION = "2440"
+
 filegroup(
     name = "shared_objects",
-    srcs = glob([
-        "lib/**/*.so",
-    ])
+    srcs = [
+        "3rdparty/tbb/lib/libtbb.so.12",
+        "lib/intel64/libopenvino.so." + OPENVINO_VERSION,
+        "lib/intel64/libopenvino_c.so",
+        "lib/intel64/libopenvino_genai.so." + OPENVINO_VERSION,
+        "lib/intel64/libopenvino_tokenizers.so",
+        "lib/intel64/libopenvino_auto_plugin.so",
+        "lib/intel64/libopenvino_hetero_plugin.so",
+        "lib/intel64/libopenvino_onnx_frontend.so",
+        "lib/intel64/libopenvino_paddle_frontend.so",
+        "lib/intel64/libopenvino_intel_cpu_plugin.so",
+        "lib/intel64/libopenvino_intel_gpu_plugin.so",
+        "lib/intel64/libopenvino_intel_npu_plugin.so",
+        "lib/intel64/libopenvino_pytorch_frontend.so",
+        "lib/intel64/libopenvino_auto_batch_plugin.so",
+        "lib/intel64/libopenvino_tensorflow_frontend.so",
+        "lib/intel64/libopenvino_tensorflow_lite_frontend.so"
+    ]
 )
 
 cc_library(
@@ -41,12 +58,9 @@ cc_library(
 
 cc_library(
     name = "openvino",
-    srcs = glob([
-        "lib/intel64/libopenvino.so",
-        "lib/intel64/libopenvino.so.*",
-        "lib/intel64/libopenvino_genai.so",
-        "lib/intel64/libopenvino_genai.so.*",
-    ]),
+    srcs = [
+        ":shared_objects"
+    ],
     data = [
         ":shared_objects",
     ],
