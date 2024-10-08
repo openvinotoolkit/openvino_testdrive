@@ -24,13 +24,6 @@ class ModelInfo extends StatelessWidget {
                 child: PropertyValue(project.name)
               ),
               PropertyItem(
-                name: "Task",
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: project.tasks.map((task) => PropertyValue(task.name)).toList()
-                )
-              ),
-              PropertyItem(
                 name: "Architecture",
                 enabled: project.tasks.firstWhereOrNull((t) => t.architecture.isNotEmpty) != null,
                 child: Column(

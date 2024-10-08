@@ -78,7 +78,15 @@ class _ImageInferencePageState extends State<ImageInferencePage>
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ModelInfo(widget.project, children: const []),
+                  ModelInfo(widget.project, children: [
+                    PropertyItem(
+                      name: "Task",
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: widget.project.tasks.map((task) => PropertyValue(task.name)).toList()
+                      )
+                    ),
+                  ]),
                   (
                     Expanded(
                       child: Padding(

@@ -7,8 +7,6 @@
 #include "openvino/genai/llm_pipeline.hpp"
 #include "metrics.h"
 
-
-
 inline float nan_safe(const float& value){
   if (std::isnan(value)) {
     return 0.0f;
@@ -22,17 +20,18 @@ class LLMInference {
   ov::genai::ChatHistory history;
   std::function<bool(std::string)> streamer;
   public:
-    LLMInference(std::string model_path, std::string device): pipe(model_path, device) {}
+    LLMInference(std::string model_path, std::string device): model_path(model_path), pipe(model_path, device) {}
     void set_streamer(const std::function<void(const std::string& response)> callback);
     std::string prompt(std::string message, float temperature, float top_p);
     void clear_history();
     void force_stop();
-
+    bool has_chat_template();
     Metrics get_metrics();
 
     std::optional<ov::genai::PerfMetrics> metrics = {};
   private:
     bool _stop = false;
+    std::string model_path;
 
 
 };
