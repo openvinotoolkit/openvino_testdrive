@@ -40,6 +40,12 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    bool value;
+} StatusOrBool;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     CImageInference value;
 } StatusOrImageInference;
 
@@ -94,6 +100,7 @@ EXPORT Status* llmInferenceSetListener(CLLMInference instance, LLMInferenceCallb
 EXPORT StatusOrLLMResponse* llmInferencePrompt(CLLMInference instance, const char* message, float temperature, float top_p);
 EXPORT Status* llmInferenceClearHistory(CLLMInference instance);
 EXPORT Status* llmInferenceForceStop(CLLMInference instance);
+EXPORT StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance);
 EXPORT Status* llmInferenceClose(CLLMInference instance);
 
 EXPORT StatusOrGraphRunner* graphRunnerOpen(const char* graph);

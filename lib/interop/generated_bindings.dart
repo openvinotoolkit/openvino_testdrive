@@ -421,6 +421,21 @@ class OpenVINO {
   late final _llmInferenceForceStop = _llmInferenceForceStopPtr
       .asFunction<ffi.Pointer<Status> Function(CLLMInference)>();
 
+  ffi.Pointer<StatusOrBool> llmInferenceHasChatTemplate(
+    CLLMInference instance,
+  ) {
+    return _llmInferenceHasChatTemplate(
+      instance,
+    );
+  }
+
+  late final _llmInferenceHasChatTemplatePtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Pointer<StatusOrBool> Function(CLLMInference)>>(
+      'llmInferenceHasChatTemplate');
+  late final _llmInferenceHasChatTemplate = _llmInferenceHasChatTemplatePtr
+      .asFunction<ffi.Pointer<StatusOrBool> Function(CLLMInference)>();
+
   ffi.Pointer<Status> llmInferenceClose(
     CLLMInference instance,
   ) {
@@ -607,6 +622,16 @@ final class StatusOrString extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
   external ffi.Pointer<pkg_ffi.Utf8> value;
+}
+
+final class StatusOrBool extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  @ffi.Bool()
+  external bool value;
 }
 
 final class StatusOrImageInference extends ffi.Struct {

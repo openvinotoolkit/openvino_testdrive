@@ -123,6 +123,18 @@ class TextInferenceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String get task {
+    if (_inference == null) {
+      return "";
+    }
+
+    if (_inference?.chatEnabled == true) {
+      return "Chat";
+    } else {
+      return "Text Generation";
+    }
+  }
+
   Message? get interimResponse {
     if (_response == null) {
       return null;

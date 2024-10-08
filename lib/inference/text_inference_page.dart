@@ -37,9 +37,6 @@ class _TextInferencePageState extends State<TextInferencePage> with TickerProvid
   @override
   Widget build(BuildContext context) {
     Locale locale = Localizations.localeOf(context);
-    final numberFormatter = NumberFormat.decimalPatternDigits(
-        locale: locale.languageCode, decimalDigits: 2);
-
 
     return ChangeNotifierProxyProvider<PreferenceProvider, TextInferenceProvider>(
       create: (_) {
@@ -71,6 +68,10 @@ class _TextInferencePageState extends State<TextInferencePage> with TickerProvid
                       child: ModelInfo(
                         widget.project,
                         children: [
+                          PropertyItem(
+                            name: "Task",
+                            child: PropertyValue(inference.task),
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(left: 12, top: 12, right: 20.0),
                             child: Column(

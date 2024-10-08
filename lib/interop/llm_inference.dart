@@ -11,7 +11,11 @@ class LLMInference {
 
   NativeCallable<LLMInferenceCallbackFunctionFunction>? nativeListener;
   final Pointer<StatusOrLLMInference> instance;
-  LLMInference(this.instance);
+  late bool chatEnabled;
+
+  LLMInference(this.instance) {
+    chatEnabled = hasChatTemplate();
+  }
 
   static Future<LLMInference> init(String modelPath, String device) async {
     final result = await Isolate.run(() {
@@ -39,7 +43,8 @@ class LLMInference {
       final status = llm_ov.llmInferencePrompt(Pointer<Void>.fromAddress(instanceAddress), messagePtr, temperature, topP);
       calloc.free(messagePtr);
       return status;
-    });
+    })
+;
 
     if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
       throw "LLMInference prompt error: ${result.ref.status} ${result.ref.message.toDartString()}";
@@ -74,6 +79,16 @@ class LLMInference {
     if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
       throw "LLM Force Stop error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
+  }
+
+  bool hasChatTemplate() {
+    final status = llm_ov.llmInferenceHasChatTemplate(instance.ref.value);
+
+    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+      throw "LLM Chat template error: ${status.ref.status} ${status.ref.message.toDartString()}";
+    }
+
+    return status.ref.value;
   }
 
   void close() {
