@@ -66,7 +66,7 @@ class _CanvasState extends State<Canvas> {
 
     final ratio = Size(imageSize.width / canvasSize.width, imageSize.height / canvasSize.height);
 
-    final scale = 1 / max(ratio.width, ratio.height);
+    final scale = 1 / max(ratio.width, ratio.height) * 0.9;
     final offset = (canvasSize - imageSize * scale as Offset) / 2;
 
     return matrix = Matrix4.identity()
