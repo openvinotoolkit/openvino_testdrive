@@ -282,11 +282,8 @@ Status* graphRunnerStop(CGraphRunner instance) {
 
 StatusOrDevices* getAvailableDevices() {
     auto core = ov::Core();
-
     auto device_ids = core.get_available_devices();
-    //device_ids.insert(device_ids.begin(), "AUTO");
     Device* devices = new Device[device_ids.size() + 1];
-    const char** strings = (const char**)malloc(device_ids.size() * sizeof(char*));
     devices[0] = {"AUTO", "auto"};
     for (int i = 0; i < device_ids.size(); i++) {
         auto device_name = core.get_property(device_ids[i], ov::device::full_name);
