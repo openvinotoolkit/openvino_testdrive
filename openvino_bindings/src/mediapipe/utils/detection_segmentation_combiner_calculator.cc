@@ -27,6 +27,7 @@ absl::Status DetectionSegmentationCombinerCalculator::GetiProcess(
   auto polygons = segmentation.polygons;
 
   for (auto &contour : polygons) {
+    contour.boundingBox = detection.shape;
     for (auto &point : contour.shape) {
       point.x += detection.shape.x;
       point.y += detection.shape.y;
