@@ -7,7 +7,7 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:inference/inference/device_selector.dart';
-import 'package:inference/interop/image_inference.dart';
+import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/providers/image_inference_provider.dart';
 import 'package:inference/theme.dart';
 import 'package:mime/mime.dart';
@@ -96,6 +96,7 @@ class _BatchInferenceState extends State<BatchInference> {
         final outputFilename = platformContext.basename(file.path);
         Uint8List imageData = File(file.path).readAsBytesSync();
         final inferenceResult = await inference.infer(imageData, serializationOutput);
+        await Future.delayed(Duration.zero); // For some reason ui does not update even though it's running in Isolate. This gives the UI time to run that code.
         final outputPath = platformContext.join(destinationFolder, outputFilename);
         if (serializationOutput.overlay) {
           final outputFile = File(outputPath);

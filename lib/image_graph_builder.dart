@@ -1,24 +1,14 @@
 import 'package:collection/collection.dart';
 import 'package:inference/deployment_processor.dart';
+import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/project.dart';
 import 'package:path/path.dart';
-
-class SerializationOutput {
-  bool csv;
-  bool json;
-  bool overlay;
-
-  SerializationOutput({this.csv = false, this.json = false, this.overlay = false});
-
-  bool any() => csv || json || overlay;
-}
 
 class ImageGraphBuilder {
   final Project project;
   final Context platformContext;
-  final SerializationOutput serializationOutput;
   final String device;
-  ImageGraphBuilder(this.project, this.serializationOutput, this.device): platformContext = Context(style: Style.platform);
+  ImageGraphBuilder(this.project, this.device): platformContext = Context(style: Style.platform);
 
 
   bool get isTaskChain => project.tasks.length > 1;
@@ -26,6 +16,7 @@ class ImageGraphBuilder {
   Future<String> buildGraph() async {
     return """
       input_stream : "input"
+      input_stream : "serialization_output"
       output_stream : "output"
 
       ${buildInferenceAdapterCalculators()}
@@ -228,9 +219,6 @@ class ImageGraphBuilder {
   }
 
   Future<String> buildOverlayCalculator() async {
-    if (!serializationOutput.overlay) {
-      return "";
-    }
     final font = (await fontPath()).replaceAll("\\", "/");
     return """
       node {
@@ -278,20 +266,13 @@ class ImageGraphBuilder {
 
   String buildSerializationCalculator() {
 
-    final overlayInput = serializationOutput.overlay ? """input_stream : "OVERLAY:overlay" """ : "";
     return """
       node {
-          calculator : "AppSerializationCalculator"
+          calculator : "SerializationCalculator"
           input_stream : "INFERENCE_RESULT:inference_result"
-          $overlayInput
+          input_stream : "OVERLAY:overlay"
+          input_stream : "OUTPUT:serialization_output"
           output_stream: "RESULT:output"
-          node_options: {
-            [type.googleapis.com/mediapipe.AppSerializationCalculatorOptions] {
-              overlay: ${serializationOutput.overlay}
-              csv: ${serializationOutput.csv}
-              json: ${serializationOutput.json}
-            }
-          }
       }
     """;
   }

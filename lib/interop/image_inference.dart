@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:ffi';
-import 'dart:io';
 import 'dart:isolate';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
@@ -8,24 +7,12 @@ import 'package:inference/annotation.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 
 
-class SerializationOutput {
-  bool csv;
-  bool json;
-  bool overlay;
-
-  SerializationOutput({this.csv = false, this.json = false, this.overlay = false});
-
-  bool any() => csv || json || overlay;
-
-}
-
 class ImageInferenceResult {
   final String? csv;
   final Map<String, dynamic>? json;
   final String? overlay;
-  Uint8List? imageData;
 
-  ImageInferenceResult({this.csv, this.json, this.overlay, this.imageData});
+  ImageInferenceResult({this.csv, this.json, this.overlay});
 
   factory ImageInferenceResult.fromJson(Map<String, dynamic> output) {
     return ImageInferenceResult(csv: output["csv"], json: output["json"], overlay: output["overlay"]);
@@ -109,8 +96,7 @@ class ImageInference {
       return output;
     });
 
-    return ImageInferenceResult.fromJson(jsonDecode(result))
-      ..imageData = file;
+    return ImageInferenceResult.fromJson(jsonDecode(result));
   }
 
   Future<ImageInferenceResult> inferRoi(Uint8List file, SerializationOutput options, Rectangle roi) async {
@@ -129,8 +115,7 @@ class ImageInference {
       return output;
     });
 
-    return ImageInferenceResult.fromJson(jsonDecode(result))
-      ..imageData = file;
+    return ImageInferenceResult.fromJson(jsonDecode(result));
   }
 
   void inferAsync(Uint8List file, String id, SerializationOutput options) {

@@ -13,7 +13,13 @@ class GraphRunner  {
     graph(std::make_shared<mediapipe::CalculatorGraph>()) {}
   void open_graph(std::string graph_content);
   //void Listen(const std::function<void(const std::string&)> callback);
-  void queue_image(cv::Mat image);
+
+  template<typename T>
+  void queue(std::string name, int timestamp, T content) {
+    auto packet = mediapipe::MakePacket<T>(content).At(mediapipe::Timestamp(timestamp));
+    graph->AddPacketToInputStream(name, packet);
+  }
+
   std::string get();
   void stop();
   //void Queue(const std::string& input);
