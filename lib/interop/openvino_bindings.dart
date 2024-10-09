@@ -7,6 +7,17 @@ import 'package:path/path.dart';
 
 export 'package:inference/interop/generated_bindings.dart';
 
+class SerializationOutput {
+  bool csv;
+  bool json;
+  bool overlay;
+
+  SerializationOutput({this.csv = false, this.json = false, this.overlay = false});
+
+  bool any() => csv || json || overlay;
+
+}
+
 String getLibraryPath() {
   if (Platform.isWindows) {
     return "windows_bindings.dll";

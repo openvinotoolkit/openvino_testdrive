@@ -1,25 +1,22 @@
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:inference/annotation.dart';
 import 'package:inference/canvas/canvas_painter.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 import 'package:inference/project.dart' as project;
 
-
 class Canvas extends StatefulWidget {
 
-  final Uint8List imageData;
+  final ui.Image image;
   final List<Annotation>? annotations;
   final List<project.Label> labelDefinitions;
 
-  const Canvas({required this.imageData, this.annotations, required this.labelDefinitions, super.key});
+  const Canvas({required this.image, this.annotations, required this.labelDefinitions, super.key});
 
   @override
   State<Canvas> createState() => _CanvasState();
@@ -33,27 +30,14 @@ class _CanvasState extends State<Canvas> {
   Matrix4 inverse = Matrix4.identity();
   bool done = false;
 
-  ui.Image? image;
-
-  Future<ui.Image> createImage(Uint8List bytes) async {
-    final Completer<ui.Image> completer = Completer();
-    ui.decodeImageFromList(bytes,
-      (ui.Image img) {
-        completer.complete(img);
-      },
-    );
-    return completer.future;
-  }
-
   @override
   void initState() {
     super.initState();
-    createImage(widget.imageData!).then((img) {
-        setState(() {
-            image = img;
-            matrix = setTransformToFit(img);
-        });
-        setTransformToFit;
+
+    Future.delayed(Duration.zero).then((_) {
+      setState(() {
+          matrix = setTransformToFit(widget.image);
+      });
     });
   }
 
@@ -93,9 +77,7 @@ class _CanvasState extends State<Canvas> {
       onNotification: (f) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
-            if (image != null) {
-                matrix = setTransformToFit(image!);
-            }
+            matrix = setTransformToFit(widget.image);
           });
         });
         return false;
@@ -112,7 +94,7 @@ class _CanvasState extends State<Canvas> {
               },
               onDoubleTap: () {
                 setState(() {
-                  matrix = setTransformToFit(image!);
+                  matrix = setTransformToFit(widget.image);
                 });
               },
               onScaleUpdate: (ScaleUpdateDetails d) {
@@ -137,12 +119,8 @@ class _CanvasState extends State<Canvas> {
                   alignment: FractionalOffset.topLeft,
                   child: Builder(
                     builder: (context) {
-                      if (image == null) {
-                        return Container();
-                      }
-
                       return CustomPaint(
-                        painter: CanvasPainter(image!, widget.annotations, widget.labelDefinitions, matrix.getMaxScaleOnAxis()),
+                        painter: CanvasPainter(widget.image, widget.annotations, widget.labelDefinitions, matrix.getMaxScaleOnAxis()),
                         child: Container(),
                       );
                     }

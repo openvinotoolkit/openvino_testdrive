@@ -6,15 +6,13 @@
 #include "src/image/csv_serialization.h"
 #include "src/image/json_serialization.h"
 #include "src/image/data_structures.h"
-#include "src/mediapipe/serialization/serialization_calculator.pb.h"
 
 namespace mediapipe {
 
 absl::Status SerializationCalculator::GetContract(CalculatorContract *cc) {
   LOG(INFO) << "SerializationCalculator::GetContract()";
   cc->Inputs().Tag("OVERLAY").Set<cv::Mat>().Optional();
-  cc->Inputs().Tag("CSV").Set<bool>().Optional();
-  cc->Inputs().Tag("JSON").Set<bool>().Optional();
+  cc->Inputs().Tag("OUTPUT").Set<SerializationOutput>();
   cc->Inputs().Tag("INFERENCE_RESULT").Set<geti::InferenceResult>();
 
   cc->Outputs().Tag("RESULT").Set<std::string>();
@@ -25,21 +23,6 @@ absl::Status SerializationCalculator::GetContract(CalculatorContract *cc) {
 
 absl::Status SerializationCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "SerializationCalculator::GetiOpen()";
-  const auto &options =
-      cc->Options<SerializationCalculatorOptions>();
-
-  if (options.has_overlay()) {
-      output_overlay = options.overlay();
-  }
-
-  if (options.has_csv()) {
-      output_csv = options.csv();
-  }
-
-  if (options.has_json()) {
-      output_json = options.json();
-  }
-
   return absl::OkStatus();
 }
 
@@ -52,19 +35,21 @@ absl::Status SerializationCalculator::GetiProcess(CalculatorContext *cc) {
   if (!include_xai) {
     result.saliency_maps.clear();
   }
+  auto selected_output = cc->Inputs().Tag("OUTPUT").Get<SerializationOutput>();
+
   nlohmann::json output = {};
-  if (output_json) {
+  if (output_json || selected_output.json) {
     output["json"] = result;
     if (!include_xai) {
         output["json"].erase("maps");  // Remove empty array added by serializer.
     }
   }
 
-  if (output_csv) {
+  if (output_csv || selected_output.csv) {
     output["csv"] = geti::csv_serialize(result);
   }
 
-  if (output_overlay && cc->Inputs().HasTag("OVERLAY")) {
+  if (output_overlay || selected_output.overlay) {
       //Base 64 encode the overlay into the json
     cv::Mat overlay = cc->Inputs().Tag("OVERLAY").Get<cv::Mat>();
     cv::cvtColor(overlay, overlay, cv::COLOR_BGR2RGB);

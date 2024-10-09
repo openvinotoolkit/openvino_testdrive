@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +11,16 @@ import 'package:inference/inference/camera_page.dart';
 import 'package:inference/canvas/canvas.dart';
 import 'package:inference/inference/device_selector.dart';
 import 'package:inference/interop/image_inference.dart';
+import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/image_inference_provider.dart';
 import 'package:inference/theme.dart';
 import 'package:provider/provider.dart';
+
+
+Future<ui.Image> createImage(Uint8List bytes) async {
+  return await decodeImageFromList(bytes);
+}
 
 class LiveInference extends StatefulWidget {
   final Project project;
@@ -29,6 +37,7 @@ class _LiveInferenceState extends State<LiveInference> {
   bool loading = false;
   bool cameraMode = false;
   ImageInferenceResult? inferenceResult;
+  ui.Image? image;
 
   void showUploadMenu() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
@@ -49,10 +58,11 @@ class _LiveInferenceState extends State<LiveInference> {
 
     inferenceProvider.loaded.future.then((_) async{
       final output = await inferenceProvider.infer(imageData, SerializationOutput(json: true));
-
+      final uiImage = await decodeImageFromList(imageData);
       setState(() {
           loading = false;
           inferenceResult = output;
+          image = uiImage;
       });
     });
 
@@ -180,7 +190,7 @@ class _LiveInferenceState extends State<LiveInference> {
                                 return Container();
                               }
                               return Canvas(
-                                imageData: inferenceResult!.imageData!,
+                                image: image!,
                                 annotations: inferenceResult!.parseAnnotations(),
                                 labelDefinitions: widget.project.labelDefinitions,
                               );

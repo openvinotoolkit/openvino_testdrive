@@ -7,6 +7,7 @@ cc_library(
         "llm_inference.cc",
     ],
     deps = [
+        "@nlohmann_json//:json",
          "//third_party:openvino",
          "//src/utils:errors",
          ":metrics",
