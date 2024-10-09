@@ -147,7 +147,7 @@ class CanvasPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CanvasPainter oldDelegate) {
-    return true;
+    return false;
   }
   @override
   bool shouldRebuildSemantics(CanvasPainter oldDelegate) => false;

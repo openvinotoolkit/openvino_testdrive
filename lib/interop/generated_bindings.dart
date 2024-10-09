@@ -467,11 +467,15 @@ class OpenVINO {
 
   ffi.Pointer<Status> graphRunnerQueueImage(
     CGraphRunner instance,
+    ffi.Pointer<pkg_ffi.Utf8> name,
+    int timestamp,
     ffi.Pointer<ffi.Uint8> image_data,
     int data_length,
   ) {
     return _graphRunnerQueueImage(
       instance,
+      name,
+      timestamp,
       image_data,
       data_length,
     );
@@ -479,11 +483,47 @@ class OpenVINO {
 
   late final _graphRunnerQueueImagePtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<Status> Function(CGraphRunner, ffi.Pointer<ffi.Uint8>,
+          ffi.Pointer<Status> Function(
+              CGraphRunner,
+              ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Int,
+              ffi.Pointer<ffi.Uint8>,
               ffi.Size)>>('graphRunnerQueueImage');
   late final _graphRunnerQueueImage = _graphRunnerQueueImagePtr.asFunction<
-      ffi.Pointer<Status> Function(
-          CGraphRunner, ffi.Pointer<ffi.Uint8>, int)>();
+      ffi.Pointer<Status> Function(CGraphRunner, ffi.Pointer<pkg_ffi.Utf8>, int,
+          ffi.Pointer<ffi.Uint8>, int)>();
+
+  ffi.Pointer<Status> graphRunnerQueueSerializationOutput(
+    CGraphRunner instance,
+    ffi.Pointer<pkg_ffi.Utf8> name,
+    int timestamp,
+    bool json,
+    bool csv,
+    bool overlay,
+  ) {
+    return _graphRunnerQueueSerializationOutput(
+      instance,
+      name,
+      timestamp,
+      json,
+      csv,
+      overlay,
+    );
+  }
+
+  late final _graphRunnerQueueSerializationOutputPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<Status> Function(
+              CGraphRunner,
+              ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Int,
+              ffi.Bool,
+              ffi.Bool,
+              ffi.Bool)>>('graphRunnerQueueSerializationOutput');
+  late final _graphRunnerQueueSerializationOutput =
+      _graphRunnerQueueSerializationOutputPtr.asFunction<
+          ffi.Pointer<Status> Function(CGraphRunner, ffi.Pointer<pkg_ffi.Utf8>,
+              int, bool, bool, bool)>();
 
   ffi.Pointer<StatusOrString> graphRunnerGet(
     CGraphRunner instance,

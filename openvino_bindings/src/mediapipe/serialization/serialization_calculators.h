@@ -12,6 +12,13 @@
 #include "mediapipe/framework/port/opencv_imgcodecs_inc.h"
 #include "mediapipe/framework/port/status.h"
 
+class SerializationOutput {
+  public:
+    bool json;
+    bool csv;
+    bool overlay;
+};
+
 namespace mediapipe {
 
 // Serialize the output detections to a KFSResponse

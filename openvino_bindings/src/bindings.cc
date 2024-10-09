@@ -6,6 +6,7 @@
 
 #include "src/image/image_inference.h"
 #include "src/mediapipe/graph_runner.h"
+#include "src/mediapipe/serialization/serialization_calculators.h"
 #include "src/llm/llm_inference.h"
 #include "src/utils/errors.h"
 #include "src/image/json_serialization.h"
@@ -240,11 +241,22 @@ StatusOrGraphRunner* graphRunnerOpen(const char* graph) {
     }
 
 }
-Status* graphRunnerQueueImage(CGraphRunner instance, unsigned char* image_data, const size_t data_length) {
+
+Status* graphRunnerQueueImage(CGraphRunner instance, const char* name, int timestamp, unsigned char* image_data, const size_t data_length) {
     try {
         std::vector<char> image_vector(image_data, image_data + data_length);
         auto image = cv::imdecode(image_vector, 1);
-        reinterpret_cast<GraphRunner*>(instance)->queue_image(image);
+        cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
+        reinterpret_cast<GraphRunner*>(instance)->queue(name, timestamp, image);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
+Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* name, int timestamp, bool json, bool csv, bool overlay) {
+    try {
+        reinterpret_cast<GraphRunner*>(instance)->queue(name, timestamp, SerializationOutput{json, csv, overlay});
         return new Status{OkStatus, ""};
     } catch (...) {
         return handle_exceptions();
