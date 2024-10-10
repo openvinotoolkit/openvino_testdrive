@@ -1,7 +1,6 @@
 import 'dart:ffi' as ffi;
 import 'dart:io';
 import 'package:ffi/ffi.dart' as pkg_ffi;
-import 'package:flutter/foundation.dart';
 import 'package:inference/interop/generated_bindings.dart';
 import 'package:path/path.dart';
 
@@ -24,12 +23,12 @@ String getLibraryPath() {
   } else if (Platform.isMacOS) {
     return "libmacos_bindings.dylib";
   } else {
-    if (kDebugMode) {
-      return "bindings/liblinux_bindings.so";
-    } else {
-      final executableFolder = dirname(Platform.resolvedExecutable);
-      return "$executableFolder/data/flutter_assets/bindings/liblinux_bindings.so";
-    }
+    //if (kDebugMode) {
+    return "bindings/liblinux_bindings.so";
+    //} else {
+    //  final executableFolder = dirname(Platform.resolvedExecutable);
+    //  return "$executableFolder/data/flutter_assets/bindings/liblinux_bindings.so";
+    //}
   }
 }
 
