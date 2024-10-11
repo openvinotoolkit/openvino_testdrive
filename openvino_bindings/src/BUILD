@@ -7,6 +7,7 @@ cc_library(
         "//third_party:opencv",
         "//src/utils:status",
         "//src/image:image_inference",
+        "//src/audio:speech_to_text",
         "//src/llm:llm_inference",
         "//src/mediapipe:graph_runner",
     ],

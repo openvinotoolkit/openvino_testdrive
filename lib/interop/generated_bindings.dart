@@ -77,6 +77,21 @@ class OpenVINO {
   late final _freeStatusOrLLMInference = _freeStatusOrLLMInferencePtr
       .asFunction<void Function(ffi.Pointer<StatusOrLLMInference>)>();
 
+  void freeStatusOrSpeechToText(
+    ffi.Pointer<StatusOrSpeechToText> status,
+  ) {
+    return _freeStatusOrSpeechToText(
+      status,
+    );
+  }
+
+  late final _freeStatusOrSpeechToTextPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Pointer<StatusOrSpeechToText>)>>('freeStatusOrSpeechToText');
+  late final _freeStatusOrSpeechToText = _freeStatusOrSpeechToTextPtr
+      .asFunction<void Function(ffi.Pointer<StatusOrSpeechToText>)>();
+
   void freeStatusOrDevices(
     ffi.Pointer<StatusOrDevices> status,
   ) {
@@ -554,6 +569,60 @@ class OpenVINO {
   late final _graphRunnerStop = _graphRunnerStopPtr
       .asFunction<ffi.Pointer<Status> Function(CGraphRunner)>();
 
+  ffi.Pointer<StatusOrSpeechToText> speechToTextOpen(
+    ffi.Pointer<pkg_ffi.Utf8> model_path,
+    ffi.Pointer<pkg_ffi.Utf8> device,
+  ) {
+    return _speechToTextOpen(
+      model_path,
+      device,
+    );
+  }
+
+  late final _speechToTextOpenPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrSpeechToText> Function(ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('speechToTextOpen');
+  late final _speechToTextOpen = _speechToTextOpenPtr.asFunction<
+      ffi.Pointer<StatusOrSpeechToText> Function(
+          ffi.Pointer<pkg_ffi.Utf8>, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<Status> speechToTextLoadVideo(
+    CSpeechToText instance,
+    ffi.Pointer<pkg_ffi.Utf8> video_path,
+  ) {
+    return _speechToTextLoadVideo(
+      instance,
+      video_path,
+    );
+  }
+
+  late final _speechToTextLoadVideoPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<Status> Function(CSpeechToText,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('speechToTextLoadVideo');
+  late final _speechToTextLoadVideo = _speechToTextLoadVideoPtr.asFunction<
+      ffi.Pointer<Status> Function(CSpeechToText, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<StatusOrString> speechToTextTranscribe(
+    CSpeechToText instance,
+    int start,
+    int duration,
+  ) {
+    return _speechToTextTranscribe(
+      instance,
+      start,
+      duration,
+    );
+  }
+
+  late final _speechToTextTranscribePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrString> Function(
+              CSpeechToText, ffi.Int, ffi.Int)>>('speechToTextTranscribe');
+  late final _speechToTextTranscribe = _speechToTextTranscribePtr.asFunction<
+      ffi.Pointer<StatusOrString> Function(CSpeechToText, int, int)>();
+
   ffi.Pointer<StatusOrDevices> getAvailableDevices() {
     return _getAvailableDevices();
   }
@@ -589,7 +658,9 @@ enum StatusEnum {
   InferenceAnomalyLabelsIncorrect(-40),
   CameraNotOpenend(-50),
   MediapipeNextPackageFailure(-61),
-  LLMNoMetricsYet(-71);
+  LLMNoMetricsYet(-71),
+  SpeechToTextError(-80),
+  SpeechToTextFileNotOpened(-81);
 
   final int value;
   const StatusEnum(this.value);
@@ -609,6 +680,8 @@ enum StatusEnum {
         -50 => CameraNotOpenend,
         -61 => MediapipeNextPackageFailure,
         -71 => LLMNoMetricsYet,
+        -80 => SpeechToTextError,
+        -81 => SpeechToTextFileNotOpened,
         _ => throw ArgumentError("Unknown value for StatusEnum: $value"),
       };
 }
@@ -695,6 +768,17 @@ final class StatusOrGraphRunner extends ffi.Struct {
 }
 
 typedef CGraphRunner = ffi.Pointer<ffi.Void>;
+
+final class StatusOrSpeechToText extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external CSpeechToText value;
+}
+
+typedef CSpeechToText = ffi.Pointer<ffi.Void>;
 
 final class StatusOrLLMInference extends ffi.Struct {
   @ffi.Int()

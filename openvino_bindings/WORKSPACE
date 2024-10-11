@@ -107,6 +107,12 @@ git_repository(
     tag = "v3.11.3",
 )
 
+new_local_repository(
+    name = "linux_ffmpeg",
+    build_file = "//third_party/ffmpeg:linux.BUILD",
+    path = "/usr"
+)
+
 http_archive(
     name = "rules_pkg",
     urls = [

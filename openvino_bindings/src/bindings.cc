@@ -4,6 +4,7 @@
 #include <nlohmann/json.hpp>
 #include <openvino/openvino.hpp>
 
+#include "src/audio/speech_to_text.h"
 #include "src/image/image_inference.h"
 #include "src/mediapipe/graph_runner.h"
 #include "src/mediapipe/serialization/serialization_calculators.h"
@@ -25,6 +26,10 @@ void freeStatusOrString(StatusOrString *status) {
         free((void*)status->value);  // Free the allocated memory
         status->value = NULL;        // Prevent dangling pointers
     }
+    delete status;
+}
+
+void freeStatusOrSpeechToText(StatusOrSpeechToText *status) {
     delete status;
 }
 
@@ -285,6 +290,35 @@ Status* graphRunnerStop(CGraphRunner instance) {
     }
 }
 
+StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device) {
+    try {
+        auto instance = new SpeechToText(model_path, device);
+        return new StatusOrSpeechToText{OkStatus, "", instance};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrSpeechToText{except->status, except->message};
+    }
+}
+
+Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path) {
+    try {
+        auto object = reinterpret_cast<SpeechToText*>(instance);
+        object->load_video(video_path);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+StatusOrString* speechToTextTranscribe(CSpeechToText instance, int start, int duration) {
+    try {
+        auto object = reinterpret_cast<SpeechToText*>(instance);
+        auto result = object->transcribe(start, duration);
+        return new StatusOrString{OkStatus, "", strdup(result.c_str())};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrString{except->status, except->message};
+    }
+}
 
 //void report_rss() {
 //    struct rusage r_usage;

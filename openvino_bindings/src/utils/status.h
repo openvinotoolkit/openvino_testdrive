@@ -23,6 +23,10 @@ enum StatusEnum {
   MediapipeNextPackageFailure = -61,
 
   LLMNoMetricsYet = -71,
+
+  SpeechToTextError = -80,
+  SpeechToTextFileNotOpened = -81,
+  SpeechToTextChunkHasNoData = -82,
 };
 
 #endif // STATUS_H_
