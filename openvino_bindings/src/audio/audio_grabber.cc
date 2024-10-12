@@ -1,7 +1,8 @@
 #include "audio_grabber.h"
 
 AudioGrabber::AudioGrabber(std::string filename): filename(filename) {
-    av_register_all(); //maybe move
+    // Has been removed
+    // v_register_all(); //maybe move
     // Open video file
     if (avformat_open_input(&formatContext, filename.c_str(), nullptr, nullptr) != 0) {
         throw std::runtime_error("Failed to open video file!");
@@ -19,7 +20,7 @@ AudioGrabber::AudioGrabber(std::string filename): filename(filename) {
     for (unsigned int i = 0; i < formatContext->nb_streams; i++) {
         if (formatContext->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
             audioStreamIndex = i;
-            codec = avcodec_find_decoder(formatContext->streams[i]->codecpar->codec_id);
+            codec = const_cast<AVCodec*>(avcodec_find_decoder(formatContext->streams[i]->codecpar->codec_id));
             break;
         }
     }

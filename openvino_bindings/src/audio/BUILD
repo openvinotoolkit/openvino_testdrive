@@ -23,7 +23,7 @@ cc_library(
          "audio_grabber.cc",
     ],
     deps = [
-        "@linux_ffmpeg//:libffmpeg",
+        "//third_party:ffmpeg",
     ],
     visibility = ["//visibility:public"],
 )
