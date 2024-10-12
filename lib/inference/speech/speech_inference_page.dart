@@ -13,7 +13,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
 
 
-const testSource = "/data/intel_test_video.mp4";
+const testSource = "C:/data/intel_test_video.mp4";
 
 class SpeechInferencePage extends StatelessWidget {
   final Project project;
@@ -82,20 +82,10 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
     result.then((m) {
       setState(() {
         transcription[index] = m;
-        //player.stream.buffer.last.then((p) => print("last buffer: $p"));
-        //if (index < 5) {
-          //transcription[index + 1] = getSegment(index + 1);
-        //}
       });
     });
 
     return result;
-    //then((m) {
-    //      print(m);
-    //      if (m.isNotEmpty) {
-    //        getSegment(index + 1);
-    //      }
-    //  });
   }
 
   void positionListener(Duration position) {
@@ -106,14 +96,6 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
       setState(() {
         transcription[index ] = getSegment(index);
       });
-      //transcription[index] = widget.inference.transcribe(index * transcriptionPeriod, transcriptionPeriod)
-      //..then((message) {
-      //  //final nextIndex = index + 1;
-      //  //transcription[nextIndex] = widget.inference.transcribe(nextIndex * transcriptionPeriod, transcriptionPeriod);
-      //  setState(() {
-      //    transcription[index] = message;
-      //  });
-      //});
     }
   }
 
@@ -143,7 +125,6 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
         children: [
           Expanded(
             child: SizedBox.expand(
-              // Use [Video] widget to display video output.
               child: Video(controller: controller),
             ),
           ),
@@ -154,14 +135,13 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Builder(
                   builder: (context) {
-                    //final indices = transcription.keys.toList()..sort();
                     final messages = Message.rework(transcription, transcriptionPeriod);
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: const Text("Transcription"),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text("Transcription"),
                         ),
                         ...List<Widget>.from(messages.map((message) {
                            return TranscriptionSection(
@@ -169,17 +149,6 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
                              player: player,
                            );
                         }))
-                        //...List<Widget>.from(indices.map((int key){
-                        //  if (transcription[key] is Future) {
-                        //    return Container();
-                        //  } else {
-                        //    return TranscriptionSection(
-                        //      message: transcription[key] as String,
-                        //      player: player,
-                        //      duration: Duration(seconds: key * transcriptionPeriod),
-                        //    );
-                        //  }
-                        //})),
                       ]
                     );
                   }
