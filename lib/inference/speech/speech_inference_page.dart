@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:inference/drop_area.dart';
 import 'package:inference/header.dart';
+import 'package:inference/inference/device_selector.dart';
 import 'package:inference/inference/model_info.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
@@ -50,7 +53,6 @@ class SpeechInferencePage extends StatelessWidget {
                   return VideoPlayerWrapper(inference);
                 }
               ),
-              //VideoPlayer(source),
             ],
           ),
         )
@@ -71,8 +73,8 @@ class VideoPlayerWrapper extends StatefulWidget {
 class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   late final player = Player();
   late final controller = VideoController(player);
-
-  String? currentLine;
+  StreamSubscription<Duration>? listener;
+  String? file;
 
   Map<int, FutureOr<String>> transcription = {};
 
@@ -102,13 +104,21 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   @override
   void initState() {
     super.initState();
-    player.open(Media(testSource));
-    initializeVideoAndListeners();
   }
 
-  void initializeVideoAndListeners() async {
-    await widget.inference.loadVideo(testSource);
-    player.stream.position.listen(positionListener);
+  void initializeVideoAndListeners(String source) async {
+    await listener?.cancel();
+    player.open(Media(source));
+    await widget.inference.loadVideo(source);
+    listener = player.stream.position.listen(positionListener);
+  }
+
+  void loadFile(String path) {
+    setState(() {
+        file = path;
+        transcription.clear();
+        initializeVideoAndListeners(path);
+    });
   }
 
   @override
@@ -120,43 +130,68 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(
-            child: SizedBox.expand(
-              child: Video(controller: controller),
-            ),
-          ),
-          SizedBox(
-            width: 300,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Builder(
-                  builder: (context) {
-                    final messages = Message.rework(transcription, transcriptionPeriod);
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text("Transcription"),
-                        ),
-                        ...List<Widget>.from(messages.map((message) {
-                           return TranscriptionSection(
-                             message: message,
-                             player: player,
-                           );
-                        }))
-                      ]
-                    );
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const DeviceSelector(),
+              OutlinedButton(
+                onPressed: () async {
+                  FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false, type: FileType.video);
+                  if (result != null) {
+                    loadFile(result.files.single.path!);
                   }
-                ),
+                }, child: const Text("Select video"),
+              )
+            ],
+          ),
+          DropArea(
+            showChild: file != null,
+            onUpload: loadFile,
+            child: Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SizedBox.expand(
+                      child: Video(controller: controller),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 300,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Builder(
+                          builder: (context) {
+                            final messages = Message.rework(transcription, transcriptionPeriod);
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text("Transcription"),
+                                ),
+                                ...List<Widget>.from(messages.map((message) {
+                                   return TranscriptionSection(
+                                     message: message,
+                                     player: player,
+                                   );
+                                }))
+                              ]
+                            );
+                          }
+                        ),
+                      ),
+                    ),
+                  ),
+
+                ],
               ),
             ),
           ),
-
         ],
       ),
     );
