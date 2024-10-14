@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:inference/header.dart';
 import 'package:inference/inference/device_selector.dart';
 import 'package:inference/inference/model_info.dart';
+import 'package:inference/inference/speech/transcript_section.dart';
+import 'package:inference/interop/speech_to_text.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/speech_inference_provider.dart';
 import 'package:inference/theme.dart';
-import 'package:inference/inference/speech/message.dart';
 import 'package:inference/utils/drop_area.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -58,8 +59,6 @@ class SpeechInferencePage extends StatelessWidget {
     );
   }
 }
-const transcriptionPeriod = 10;
-
 class VideoPlayerWrapper extends StatefulWidget {
   final SpeechInferenceProvider inference;
   const VideoPlayerWrapper(this.inference,  {super.key});
@@ -125,7 +124,7 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   void initializeVideoAndListeners(String source) async {
     await listener?.cancel();
     player.open(Media(source));
-    player.setVolume(0);
+    player.setVolume(0); // TODO: Disable this for release. This is for our sanity
     await widget.inference.loadVideo(source);
     transcribeEntireVideo();
     listener = player.stream.position.listen(positionListener);
@@ -195,49 +194,6 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   }
 }
 
-class TranscriptionSection extends StatelessWidget {
-  const TranscriptionSection({
-    super.key,
-    required this.transcription,
-    required this.player,
-  });
-
-  final Map<int, FutureOr<String>> transcription;
-  final Player player;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 300,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(right: 8.0),
-          child: Builder(
-            builder: (context) {
-              final messages = Message.rework(transcription, transcriptionPeriod);
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text("Transcription"),
-                  ),
-                  ...List<Widget>.from(messages.map((message) {
-                     return TranscriptionLine(
-                       message: message,
-                       player: player,
-                     );
-                  }))
-                ]
-              );
-            }
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class Subtitles extends StatelessWidget {
   const Subtitles({
     super.key,
@@ -291,47 +247,3 @@ class Subtitles extends StatelessWidget {
   }
 }
 
-class TranscriptionLine extends StatelessWidget {
-  final Message message;
-  final Player player;
-  const TranscriptionLine({required this.message, required this.player, super.key});
-
-  String get formattedDuration {
-    return "${message.position.inMinutes.toString().padLeft(2, '0')}:${message.position.inSeconds.remainder(60).toString().padLeft(2, '0')}";
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(formattedDuration, textAlign: TextAlign.end,),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ...message.sentences.map((sentence) {
-                return Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: ElevatedButton(
-                    onPressed: () { player.seek(message.position); },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(4),
-                      backgroundColor: intelGrayDark,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(4)),
-                      ),
-                    ),
-                    child: Text("$sentence."),
-                  ),
-                );
-              })
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-}

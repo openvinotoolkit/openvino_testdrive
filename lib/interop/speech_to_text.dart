@@ -5,8 +5,12 @@ import 'package:ffi/ffi.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 
 final ov = getBindings();
+const transcriptionPeriod = 10;
+
 class SpeechToText {
   final Pointer<StatusOrSpeechToText> instance;
+
+
 
   SpeechToText(this.instance);
 
