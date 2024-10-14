@@ -23,6 +23,7 @@ public:
     AudioGrabber(std::string filename);
     ~AudioGrabber();
     std::vector<float> grab_chunk(uint64_t start_time, uint64_t duration);
+    int64_t get_duration();
 };
 
 

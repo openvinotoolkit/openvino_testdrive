@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:inference/drop_area.dart';
 import 'package:inference/header.dart';
 import 'package:inference/inference/device_selector.dart';
 import 'package:inference/inference/model_info.dart';
@@ -15,8 +14,6 @@ import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
 
-
-const testSource = "C:/data/intel_test_video.mp4";
 
 class SpeechInferencePage extends StatelessWidget {
   final Project project;
@@ -78,6 +75,8 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
 
   Map<int, FutureOr<String>> transcription = {};
 
+  int subtitleIndex = 0;
+
   FutureOr<String> getSegment(int index) async {
     final result = widget.inference.transcribe(index * transcriptionPeriod, transcriptionPeriod);
 
@@ -90,13 +89,23 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
     return result;
   }
 
+  void transcribeEntireVideo() async {
+    int i = 0;
+    while (true){ // getSegment will throw error at end of file...
+      if (!context.mounted) {
+        // Context dropped, so stop this.
+        break;
+      }
+      await getSegment(i);
+      i++;
+    }
+  }
+
   void positionListener(Duration position) {
     int index = (position.inSeconds / transcriptionPeriod).floor();
-    if (transcription.containsKey(index)) {
-
-    } else {
+    if (index != subtitleIndex) {
       setState(() {
-        transcription[index ] = getSegment(index);
+          subtitleIndex = index;
       });
     }
   }
@@ -104,12 +113,17 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   @override
   void initState() {
     super.initState();
+    if (file != null) {
+      initializeVideoAndListeners(file!);
+    }
   }
 
   void initializeVideoAndListeners(String source) async {
     await listener?.cancel();
     player.open(Media(source));
+    player.setVolume(0);
     await widget.inference.loadVideo(source);
+    transcribeEntireVideo();
     listener = player.stream.position.listen(positionListener);
   }
 
@@ -131,7 +145,7 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -147,49 +161,22 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
               )
             ],
           ),
-          DropArea(
-            showChild: file != null,
-            onUpload: loadFile,
-            child: Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: SizedBox.expand(
-                      child: Video(controller: controller),
-                    ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      Video(controller: controller),
+                      Subtitles(transcription: transcription, subtitleIndex: subtitleIndex),
+                    ]
                   ),
-                  SizedBox(
-                    width: 300,
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Builder(
-                          builder: (context) {
-                            final messages = Message.rework(transcription, transcriptionPeriod);
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text("Transcription"),
-                                ),
-                                ...List<Widget>.from(messages.map((message) {
-                                   return TranscriptionSection(
-                                     message: message,
-                                     player: player,
-                                   );
-                                }))
-                              ]
-                            );
-                          }
-                        ),
-                      ),
-                    ),
-                  ),
-
-                ],
-              ),
+                ),
+                TranscriptionSection(transcription: transcription, player: player),
+              ],
             ),
           ),
         ],
@@ -199,9 +186,105 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
 }
 
 class TranscriptionSection extends StatelessWidget {
+  const TranscriptionSection({
+    super.key,
+    required this.transcription,
+    required this.player,
+  });
+
+  final Map<int, FutureOr<String>> transcription;
+  final Player player;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 300,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Builder(
+            builder: (context) {
+              final messages = Message.rework(transcription, transcriptionPeriod);
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text("Transcription"),
+                  ),
+                  ...List<Widget>.from(messages.map((message) {
+                     return TranscriptionLine(
+                       message: message,
+                       player: player,
+                     );
+                  }))
+                ]
+              );
+            }
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class Subtitles extends StatelessWidget {
+  const Subtitles({
+    super.key,
+    required this.transcription,
+    required this.subtitleIndex,
+  });
+
+  final Map<int, FutureOr<String>> transcription;
+  final int subtitleIndex;
+
+  static const double fontSize = 18;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 60),
+      child: SizedBox(
+        height: 100,
+        child: Builder(
+          builder: (context) {
+            if (transcription[subtitleIndex] is String) {
+              return Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Text(
+                    transcription[subtitleIndex] as String,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: fontSize,
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 1
+                        ..color = intelGrayReallyDark,
+                    )
+                  ),
+                  Text(
+                    transcription[subtitleIndex] as String,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: fontSize
+                    )
+                  )
+                ],
+              );
+            }
+            return Container();
+          }
+        ),
+      ),
+    );
+  }
+}
+
+class TranscriptionLine extends StatelessWidget {
   final Message message;
   final Player player;
-  const TranscriptionSection({required this.message, required this.player, super.key});
+  const TranscriptionLine({required this.message, required this.player, super.key});
 
   String get formattedDuration {
     return "${message.position.inMinutes.toString().padLeft(2, '0')}:${message.position.inSeconds.remainder(60).toString().padLeft(2, '0')}";

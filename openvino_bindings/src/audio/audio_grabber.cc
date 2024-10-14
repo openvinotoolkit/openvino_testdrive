@@ -99,3 +99,7 @@ std::vector<float> AudioGrabber::grab_chunk(uint64_t start_time, uint64_t durati
     av_frame_free(&frame);
     return resampledAudio;
 }
+
+int64_t AudioGrabber::get_duration() {
+   return formatContext->duration;
+}

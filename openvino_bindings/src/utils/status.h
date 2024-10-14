@@ -27,6 +27,7 @@ enum StatusEnum {
   SpeechToTextError = -80,
   SpeechToTextFileNotOpened = -81,
   SpeechToTextChunkHasNoData = -82,
+  SpeechToTextChunkOutOfBounds = -83,
 };
 
 #endif // STATUS_H_

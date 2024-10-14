@@ -9,6 +9,13 @@ void SpeechToText::load_video(std::string video_path) {
 }
 
 std::string SpeechToText::transcribe(int start, int duration) {
+    auto video_duration = audio_grabber->get_duration();
+    if (start > video_duration) {
+        throw api_error(SpeechToTextChunkOutOfBounds);
+    }
+    if (start + duration > video_duration) {
+        duration = video_duration - start;
+    }
     if (!audio_grabber) {
         throw api_error(SpeechToTextFileNotOpened);
     }

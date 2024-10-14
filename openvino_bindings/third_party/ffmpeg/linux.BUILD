@@ -3,7 +3,7 @@ licenses(["notice"])  # LGPL
 exports_files(["LICENSE"])
 
 cc_library(
-    name = "libffmpeg",
+    name = "ffmpeg",
     linkopts = [
         "-l:libavcodec.so",
         "-l:libavformat.so",
