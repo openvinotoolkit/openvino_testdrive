@@ -10,6 +10,7 @@ import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/speech_inference_provider.dart';
 import 'package:inference/theme.dart';
 import 'package:inference/inference/speech/message.dart';
+import 'package:inference/utils/drop_area.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
@@ -170,13 +171,18 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      Video(controller: controller),
-                      Subtitles(transcription: transcription, subtitleIndex: subtitleIndex),
-                    ]
+                DropArea(
+                  type: "video",
+                  showChild: file != null,
+                  onUpload: (file) => loadFile(file),
+                  child: Expanded(
+                    child: Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: [
+                        Video(controller: controller),
+                        Subtitles(transcription: transcription, subtitleIndex: subtitleIndex),
+                      ]
+                    ),
                   ),
                 ),
                 TranscriptionSection(transcription: transcription, player: player),

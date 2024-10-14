@@ -6,7 +6,6 @@ import 'dart:ui' as ui;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:inference/drop_area.dart';
 import 'package:inference/inference/camera_page.dart';
 import 'package:inference/canvas/canvas.dart';
 import 'package:inference/inference/device_selector.dart';
@@ -15,6 +14,7 @@ import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/image_inference_provider.dart';
 import 'package:inference/theme.dart';
+import 'package:inference/utils/drop_area.dart';
 import 'package:provider/provider.dart';
 
 
@@ -180,6 +180,8 @@ class _LiveInferenceState extends State<LiveInference> {
                     return CameraPage(inference);
                   }
                   return DropArea(
+                      type: "image",
+                      extensions: const ["jpg, jpeg, bmp, png, tif, tiff"],
                       onUpload: (String path) => uploadFile(path),
                       showChild: inferenceResult != null,
                       child: Padding(
