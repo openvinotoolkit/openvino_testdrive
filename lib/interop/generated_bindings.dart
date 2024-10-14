@@ -608,20 +608,23 @@ class OpenVINO {
     CSpeechToText instance,
     int start,
     int duration,
+    ffi.Pointer<pkg_ffi.Utf8> language,
   ) {
     return _speechToTextTranscribe(
       instance,
       start,
       duration,
+      language,
     );
   }
 
   late final _speechToTextTranscribePtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<StatusOrModelResponse> Function(
-              CSpeechToText, ffi.Int, ffi.Int)>>('speechToTextTranscribe');
+          ffi.Pointer<StatusOrModelResponse> Function(CSpeechToText, ffi.Int,
+              ffi.Int, ffi.Pointer<pkg_ffi.Utf8>)>>('speechToTextTranscribe');
   late final _speechToTextTranscribe = _speechToTextTranscribePtr.asFunction<
-      ffi.Pointer<StatusOrModelResponse> Function(CSpeechToText, int, int)>();
+      ffi.Pointer<StatusOrModelResponse> Function(
+          CSpeechToText, int, int, ffi.Pointer<pkg_ffi.Utf8>)>();
 
   ffi.Pointer<StatusOrDevices> getAvailableDevices() {
     return _getAvailableDevices();

@@ -119,7 +119,7 @@ EXPORT Status* graphRunnerStop(CGraphRunner instance);
 
 EXPORT StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device);
 EXPORT Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path);
-EXPORT StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration);
+EXPORT StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language);
 
 EXPORT StatusOrDevices* getAvailableDevices();
 Status* handle_exceptions();

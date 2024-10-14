@@ -10,6 +10,14 @@ class SpeechInferenceProvider  extends ChangeNotifier {
   Project? _project;
   String? _device;
 
+  String _language = "";
+
+  String get language => _language;
+  set language(String val) {
+    _language = val;
+    notifyListeners();
+  }
+
   SpeechToText? _inference;
 
   SpeechInferenceProvider(Project? project, String? device) {
@@ -32,7 +40,7 @@ class SpeechInferenceProvider  extends ChangeNotifier {
 
   Future<String> transcribe(int start, int duration) async {
     await loaded.future;
-    return await _inference!.transcribe(start, duration);
+    return await _inference!.transcribe(start, duration, _language);
   }
 
   bool sameProps(Project? project, String? device) {

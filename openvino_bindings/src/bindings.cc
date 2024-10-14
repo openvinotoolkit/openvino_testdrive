@@ -11,10 +11,10 @@
 #include "src/llm/llm_inference.h"
 #include "src/utils/errors.h"
 #include "src/utils/utils.h"
+#include "src/utils/status.h"
 #include "src/image/json_serialization.h"
 #include "src/image/csv_serialization.h"
 #include "src/image/overlay.h"
-#include "src/utils/status.h"
 
 void freeStatus(Status *status) {
     //std::cout << "Freeing Status" << std::endl;
@@ -309,10 +309,10 @@ Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path) {
         return handle_exceptions();
     }
 }
-StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration) {
+StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language) {
     try {
         auto object = reinterpret_cast<SpeechToText*>(instance);
-        auto result = object->transcribe(start, duration);
+        auto result = object->transcribe(start, duration, language);
         std::string text = result;
         return new StatusOrModelResponse{OkStatus, "", convertToMetricsStruct(result.perf_metrics), strdup(text.c_str())};
     } catch (...) {

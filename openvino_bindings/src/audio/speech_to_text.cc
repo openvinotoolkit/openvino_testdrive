@@ -8,7 +8,7 @@ void SpeechToText::load_video(std::string video_path) {
     audio_grabber = std::make_unique<AudioGrabber>(video_path);
 }
 
-ov::genai::DecodedResults SpeechToText::transcribe(int start, int duration) {
+ov::genai::DecodedResults SpeechToText::transcribe(int start, int duration, std::string language) {
     auto video_duration = audio_grabber->get_duration();
     if (start > video_duration) {
         throw api_error(SpeechToTextChunkOutOfBounds);
@@ -24,5 +24,8 @@ ov::genai::DecodedResults SpeechToText::transcribe(int start, int duration) {
         throw api_error(SpeechToTextChunkHasNoData);
     }
     config.max_new_tokens = 100;
+    if (!language.empty()){
+        config.language = language;
+    }
     return pipe.generate(data, config);
 }

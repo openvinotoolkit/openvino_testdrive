@@ -155,6 +155,7 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const DeviceSelector(),
+              //LanguageSelector(inference: widget.inference),
               OutlinedButton(
                 onPressed: () async {
                   FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false, type: FileType.video);
@@ -236,3 +237,43 @@ class Subtitles extends StatelessWidget {
   }
 }
 
+const languages = [
+  "",
+  "<|en|>",
+  "<|nl|>",
+];
+
+
+class LanguageSelector extends StatelessWidget {
+  final SpeechInferenceProvider inference;
+  const LanguageSelector({super.key, required this.inference});
+
+  @override
+  Widget build(BuildContext context) {
+      return Row(
+        children: [
+          const Text("Language: "),
+          DropdownButton<String>(
+            onChanged: (value) {
+              inference.language = value!;
+            },
+            underline: Container(
+                    height: 0,
+            ),
+            style: const TextStyle(
+              fontSize: 12.0,
+            ),
+            focusColor: intelGrayDark,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            value: inference.language,
+            items: languages.map<DropdownMenuItem<String>>((value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList()
+          ),
+        ],
+      );
+  }
+}

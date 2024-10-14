@@ -47,10 +47,12 @@ class SpeechToText {
     }
   }
 
-  Future<String> transcribe(int start, int duration) async{
+  Future<String> transcribe(int start, int duration, String language) async{
     int instanceAddress = instance.ref.value.address;
     final result = await Isolate.run(() {
-      final status = ov.speechToTextTranscribe(Pointer<Void>.fromAddress(instanceAddress), start, duration);
+      final languagePtr = language.toNativeUtf8();
+      final status = ov.speechToTextTranscribe(Pointer<Void>.fromAddress(instanceAddress), start, duration, languagePtr);
+      calloc.free(languagePtr);
       return status;
     });
 
