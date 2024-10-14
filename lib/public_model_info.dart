@@ -9,9 +9,9 @@ class PublicModelInfo {
   final String lastModified;
   final int likes;
   final int downloads;
-  final String taskType = "text";
+  String taskType = "text";
 
-  const PublicModelInfo(this.id, this.lastModified, this.likes, this.downloads);
+  PublicModelInfo(this.id, this.lastModified, this.likes, this.downloads);
 
   factory PublicModelInfo.fromJson(Map<String, dynamic> json) {
     return switch (json) {
@@ -49,8 +49,8 @@ class PublicModelInfo {
     project.tasks.add(
       Task(
         genUUID(),
-        "text",
-        "text",
+        model.taskType,
+        model.taskType,
         [],
         null,
         [],

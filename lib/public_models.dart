@@ -9,9 +9,20 @@ import 'package:path/path.dart';
 
 final platformContext = Context(style: Style.platform);
 
-const huggingFaceURL = "https://huggingface.co";
+const huggingFaceURL = "http://huggingface.co";
 
-const huggingFaceCollectionInfoUrl = "https://huggingface.co/api/collections/OpenVINO/llm-6687aaa2abca3bbcec71a9bd";
+class Collection {
+  final String path;
+  final String token;
+  final String type;
+  const Collection(this.path, this.token, this.type);
+
+}
+
+const List<Collection> collections = [
+  Collection("https://huggingface.co/api/collections/OpenVINO/llm-6687aaa2abca3bbcec71a9bd", "", "text"),
+  Collection("https://huggingface.co/api/collections/rhecker/speech-670ba88d40c7862e25913551", "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", "speech"),
+];
 
 void createDirectory(PublicProject project) {
   Directory(project.storagePath).createSync();
@@ -54,9 +65,18 @@ Future<List<PublicModelInfo>> getPublicModels() async {
   //final directory = await getApplicationSupportDirectory();
   List<PublicModelInfo> models = [];
 
-  final collectionInfo = jsonDecode((await http.get(Uri.parse(huggingFaceCollectionInfoUrl))).body);
-  for (final item in collectionInfo["items"]) {
-    models.add(PublicModelInfo.fromJson(item));
+  for (final collection in collections) {
+    final request = await http.get(
+      Uri.parse(collection.path),
+      headers: {
+        "Authorization":"Bearer ${collection.token}",
+      }
+    );
+
+    final collectionInfo = jsonDecode(request.body);
+    for (final item in collectionInfo["items"]) {
+      models.add(PublicModelInfo.fromJson(item)..taskType = collection.type);
+    }
   }
   models.sort((a, b) => a.name.compareTo(b.name));
   return models;
