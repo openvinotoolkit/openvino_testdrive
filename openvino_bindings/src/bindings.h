@@ -14,7 +14,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include "src/utils/status.h"
-#include "src/llm/metrics.h"
+#include "src/utils/metrics.h"
 
 typedef void* CImageInference;
 typedef void* CGraphRunner;
@@ -73,7 +73,7 @@ typedef struct {
     const char* message;
     Metrics metrics;
     const char* value;
-} StatusOrLLMResponse;
+} StatusOrModelResponse;
 
 typedef struct {
     enum StatusEnum status;
@@ -105,7 +105,7 @@ EXPORT Status* load_font(const char* font_path);
 
 EXPORT StatusOrLLMInference* llmInferenceOpen(const char* model_path, const char* device);
 EXPORT Status* llmInferenceSetListener(CLLMInference instance, LLMInferenceCallbackFunction callback);
-EXPORT StatusOrLLMResponse* llmInferencePrompt(CLLMInference instance, const char* message, float temperature, float top_p);
+EXPORT StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, float temperature, float top_p);
 EXPORT Status* llmInferenceClearHistory(CLLMInference instance);
 EXPORT Status* llmInferenceForceStop(CLLMInference instance);
 EXPORT StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance);
@@ -119,7 +119,7 @@ EXPORT Status* graphRunnerStop(CGraphRunner instance);
 
 EXPORT StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device);
 EXPORT Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path);
-EXPORT StatusOrString* speechToTextTranscribe(CSpeechToText instance, int start, int duration);
+EXPORT StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration);
 
 EXPORT StatusOrDevices* getAvailableDevices();
 Status* handle_exceptions();

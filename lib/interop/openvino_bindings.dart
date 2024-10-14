@@ -18,6 +18,13 @@ class SerializationOutput {
 
 }
 
+class ModelResponse {
+  final String content;
+  final Metrics metrics;
+
+  const ModelResponse(this.content, this.metrics);
+}
+
 String getLibraryPath() {
   if (Platform.isWindows) {
     return "windows_bindings.dll";

@@ -383,7 +383,7 @@ class OpenVINO {
       ffi.Pointer<Status> Function(
           CLLMInference, LLMInferenceCallbackFunction)>();
 
-  ffi.Pointer<StatusOrLLMResponse> llmInferencePrompt(
+  ffi.Pointer<StatusOrModelResponse> llmInferencePrompt(
     CLLMInference instance,
     ffi.Pointer<pkg_ffi.Utf8> message,
     double temperature,
@@ -399,13 +399,13 @@ class OpenVINO {
 
   late final _llmInferencePromptPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<StatusOrLLMResponse> Function(
+          ffi.Pointer<StatusOrModelResponse> Function(
               CLLMInference,
               ffi.Pointer<pkg_ffi.Utf8>,
               ffi.Float,
               ffi.Float)>>('llmInferencePrompt');
   late final _llmInferencePrompt = _llmInferencePromptPtr.asFunction<
-      ffi.Pointer<StatusOrLLMResponse> Function(
+      ffi.Pointer<StatusOrModelResponse> Function(
           CLLMInference, ffi.Pointer<pkg_ffi.Utf8>, double, double)>();
 
   ffi.Pointer<Status> llmInferenceClearHistory(
@@ -604,7 +604,7 @@ class OpenVINO {
   late final _speechToTextLoadVideo = _speechToTextLoadVideoPtr.asFunction<
       ffi.Pointer<Status> Function(CSpeechToText, ffi.Pointer<pkg_ffi.Utf8>)>();
 
-  ffi.Pointer<StatusOrString> speechToTextTranscribe(
+  ffi.Pointer<StatusOrModelResponse> speechToTextTranscribe(
     CSpeechToText instance,
     int start,
     int duration,
@@ -618,10 +618,10 @@ class OpenVINO {
 
   late final _speechToTextTranscribePtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<StatusOrString> Function(
+          ffi.Pointer<StatusOrModelResponse> Function(
               CSpeechToText, ffi.Int, ffi.Int)>>('speechToTextTranscribe');
   late final _speechToTextTranscribe = _speechToTextTranscribePtr.asFunction<
-      ffi.Pointer<StatusOrString> Function(CSpeechToText, int, int)>();
+      ffi.Pointer<StatusOrModelResponse> Function(CSpeechToText, int, int)>();
 
   ffi.Pointer<StatusOrDevices> getAvailableDevices() {
     return _getAvailableDevices();
@@ -660,7 +660,9 @@ enum StatusEnum {
   MediapipeNextPackageFailure(-61),
   LLMNoMetricsYet(-71),
   SpeechToTextError(-80),
-  SpeechToTextFileNotOpened(-81);
+  SpeechToTextFileNotOpened(-81),
+  SpeechToTextChunkHasNoData(-82),
+  SpeechToTextChunkOutOfBounds(-83);
 
   final int value;
   const StatusEnum(this.value);
@@ -682,6 +684,8 @@ enum StatusEnum {
         -71 => LLMNoMetricsYet,
         -80 => SpeechToTextError,
         -81 => SpeechToTextFileNotOpened,
+        -82 => SpeechToTextChunkHasNoData,
+        -83 => SpeechToTextChunkOutOfBounds,
         _ => throw ArgumentError("Unknown value for StatusEnum: $value"),
       };
 }
@@ -791,7 +795,7 @@ final class StatusOrLLMInference extends ffi.Struct {
 
 typedef CLLMInference = ffi.Pointer<ffi.Void>;
 
-final class StatusOrLLMResponse extends ffi.Struct {
+final class StatusOrModelResponse extends ffi.Struct {
   @ffi.Int()
   external int status;
 

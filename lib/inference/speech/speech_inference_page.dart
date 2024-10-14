@@ -96,6 +96,9 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
         // Context dropped, so stop this.
         break;
       }
+      if (subtitleIndex > i) {
+        i = subtitleIndex;
+      }
       await getSegment(i);
       i++;
     }
@@ -130,6 +133,7 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   void loadFile(String path) {
     setState(() {
         file = path;
+        subtitleIndex = 0;
         transcription.clear();
         initializeVideoAndListeners(path);
     });

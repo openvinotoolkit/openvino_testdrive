@@ -10,6 +10,7 @@
 #include "src/mediapipe/serialization/serialization_calculators.h"
 #include "src/llm/llm_inference.h"
 #include "src/utils/errors.h"
+#include "src/utils/utils.h"
 #include "src/image/json_serialization.h"
 #include "src/image/csv_serialization.h"
 #include "src/image/overlay.h"
@@ -72,9 +73,7 @@ StatusOrString* imageInferenceInfer(CImageInference instance, unsigned char* ima
         auto image_inference = reinterpret_cast<ImageInference*>(instance);
         std::vector<char> image_vector(image_data, image_data + data_length);
         auto image = cv::imdecode(image_vector, 1);
-        std::cout <<" before infer" << std::endl;
         auto inference_result = image_inference->infer(image);
-        std::cout <<" after infer" << std::endl;
         auto result = image_inference->serialize(inference_result, image, json, csv, overlay).dump();
         return new StatusOrString{OkStatus, "", strdup(result.c_str())};
     } catch (...) {
@@ -189,14 +188,15 @@ Status* llmInferenceSetListener(CLLMInference instance, LLMInferenceCallbackFunc
     }
 }
 
-StatusOrLLMResponse* llmInferencePrompt(CLLMInference instance, const char* message, float temperature, float top_p) {
+StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, float temperature, float top_p) {
     try {
         auto inference = reinterpret_cast<LLMInference*>(instance);
         auto result = inference->prompt(message, temperature, top_p);
-        return new StatusOrLLMResponse{OkStatus, "", inference->get_metrics(), strdup(result.c_str())};
+        std::string text = result;
+        return new StatusOrModelResponse{OkStatus, "", convertToMetricsStruct(result.perf_metrics), strdup(text.c_str())};
     } catch (...) {
         auto except = handle_exceptions();
-        return new StatusOrLLMResponse{except->status, except->message, {}};
+        return new StatusOrModelResponse{except->status, except->message, {}};
     }
 }
 
@@ -309,14 +309,15 @@ Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path) {
         return handle_exceptions();
     }
 }
-StatusOrString* speechToTextTranscribe(CSpeechToText instance, int start, int duration) {
+StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration) {
     try {
         auto object = reinterpret_cast<SpeechToText*>(instance);
         auto result = object->transcribe(start, duration);
-        return new StatusOrString{OkStatus, "", strdup(result.c_str())};
+        std::string text = result;
+        return new StatusOrModelResponse{OkStatus, "", convertToMetricsStruct(result.perf_metrics), strdup(text.c_str())};
     } catch (...) {
         auto except = handle_exceptions();
-        return new StatusOrString{except->status, except->message};
+        return new StatusOrModelResponse{except->status, except->message};
     }
 }
 

@@ -14,6 +14,7 @@ cc_library(
         "@nlohmann_json//:json",
         "//third_party:opencv",
         "//src/utils:status",
+        "//src/utils:utils",
         "//src/image:image_inference",
         "//src/audio:speech_to_text",
         "//src/llm:llm_inference",
@@ -27,7 +28,7 @@ cc_library(
     srcs = ["bindings.cc"],
     deps = [
         ":bindings_deps",
-        "//src/llm:metrics",
+        "//src/utils:metrics",
     ],
     copts = ["-fPIC"],
     alwayslink=1,
