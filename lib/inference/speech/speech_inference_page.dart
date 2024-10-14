@@ -165,27 +165,16 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
               )
             ],
           ),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+          DropArea(
+            type: "video",
+            showChild: file != null,
+            onUpload: (file) => loadFile(file),
+            child: Stack(
+              alignment: Alignment.bottomCenter,
               children: [
-                DropArea(
-                  type: "video",
-                  showChild: file != null,
-                  onUpload: (file) => loadFile(file),
-                  child: Expanded(
-                    child: Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Video(controller: controller),
-                        Subtitles(transcription: transcription, subtitleIndex: subtitleIndex),
-                      ]
-                    ),
-                  ),
-                ),
-                TranscriptionSection(transcription: transcription, player: player),
-              ],
+                Video(controller: controller),
+                Subtitles(transcription: transcription, subtitleIndex: subtitleIndex),
+              ]
             ),
           ),
         ],
@@ -225,7 +214,7 @@ class Subtitles extends StatelessWidget {
                       fontSize: fontSize,
                       foreground: Paint()
                         ..style = PaintingStyle.stroke
-                        ..strokeWidth = 1
+                        ..strokeWidth = 2
                         ..color = intelGrayReallyDark,
                     )
                   ),
