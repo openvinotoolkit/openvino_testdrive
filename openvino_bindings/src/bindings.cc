@@ -309,6 +309,18 @@ Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path) {
         return handle_exceptions();
     }
 }
+
+StatusOrInt* speechToTextVideoDuration(CSpeechToText instance) {
+    try {
+        auto object = reinterpret_cast<SpeechToText*>(instance);
+        object->video_duration();
+        // Deal with long in the future
+        return new StatusOrInt{OkStatus, "", (int)object->video_duration()};
+    } catch (...) {
+        return new StatusOrInt{OkStatus, ""};
+    }
+}
+
 StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language) {
     try {
         auto object = reinterpret_cast<SpeechToText*>(instance);

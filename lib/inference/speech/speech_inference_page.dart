@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:inference/header.dart';
 import 'package:inference/inference/device_selector.dart';
 import 'package:inference/inference/model_info.dart';
-import 'package:inference/inference/speech/transcript_section.dart';
-import 'package:inference/interop/speech_to_text.dart';
+import 'package:inference/inference/speech/transcript_page.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/speech_inference_provider.dart';
@@ -17,24 +16,36 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
 
 
-class SpeechInferencePage extends StatelessWidget {
+class SpeechInferencePage extends StatefulWidget {
   final Project project;
   const SpeechInferencePage(this.project, {super.key});
 
+  @override
+  State<SpeechInferencePage> createState() => _SpeechInferencePageState();
+}
+
+class _SpeechInferencePageState extends State<SpeechInferencePage> with TickerProviderStateMixin{
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, animationDuration: Duration.zero, vsync: this);
+  }
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProxyProvider<PreferenceProvider, SpeechInferenceProvider>(
       update: (_, preferences, speechProvider) {
         if (speechProvider == null) {
-          return SpeechInferenceProvider(project, preferences.device);
+          return SpeechInferenceProvider(widget.project, preferences.device);
         }
-        if (!speechProvider.sameProps(project, preferences.device)) {
-          return SpeechInferenceProvider(project, preferences.device);
+        if (!speechProvider.sameProps(widget.project, preferences.device)) {
+          return SpeechInferenceProvider(widget.project, preferences.device);
         }
         return speechProvider;
       },
       create: (_) {
-        return SpeechInferenceProvider(project, null);
+        return SpeechInferenceProvider(widget.project, null);
       },
       child: Scaffold(
         appBar: const Header(true),
@@ -45,12 +56,35 @@ class SpeechInferencePage extends StatelessWidget {
             children: [
               SizedBox(
                 width: 300,
-                child: ModelInfo(project),
+                child: ModelInfo(widget.project),
               ),
-              Consumer<SpeechInferenceProvider>(
-                builder: (context, inference, child) {
-                  return VideoPlayerWrapper(inference);
-                }
+              Expanded(
+                child: Column(
+                  children: [
+                    TabBar(
+                      isScrollable: true,
+                      tabAlignment: TabAlignment.start,
+                      controller: _tabController,
+                      tabs: const [
+                        Tab(text: "Video"),
+                        Tab(text: "Transcript"),
+                      ],
+                    ),
+                    Expanded(
+                      child: Consumer<SpeechInferenceProvider>(
+                        builder: (context, inference, child) {
+                          return TabBarView(
+                            controller: _tabController,
+                            children: [
+                              VideoPlayerWrapper(inference),
+                              TranscriptPage(inference),
+                            ],
+                          );
+                        }
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -71,41 +105,42 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   late final player = Player();
   late final controller = VideoController(player);
   StreamSubscription<Duration>? listener;
-  String? file;
+  //String? file;
 
-  Map<int, FutureOr<String>> transcription = {};
+  //Map<int, FutureOr<String>> transcription = {};
 
   int subtitleIndex = 0;
 
-  FutureOr<String> getSegment(int index) async {
-    final result = widget.inference.transcribe(index * transcriptionPeriod, transcriptionPeriod);
+  //FutureOr<String> getSegment(int index) async {
+  //  final result = widget.inference.transcribe(index * transcriptionPeriod, transcriptionPeriod);
 
-    result.then((m) {
-      setState(() {
-        transcription[index] = m;
-      });
-    });
+  //  result.then((m) {
+  //    setState(() {
+  //      transcription[index] = m;
+  //    });
+  //  });
 
-    return result;
-  }
+  //  return result;
+  //}
 
-  void transcribeEntireVideo() async {
-    int i = 0;
-    while (true){ // getSegment will throw error at end of file...
-      if (!context.mounted) {
-        // Context dropped, so stop this.
-        break;
-      }
-      if (subtitleIndex > i) {
-        i = subtitleIndex;
-      }
-      await getSegment(i);
-      i++;
-    }
-  }
+  //void transcribeEntireVideo() async {
+  //  int i = 0;
+  //  while (true){ // getSegment will throw error at end of file...
+  //    if (!context.mounted) {
+  //      // Context dropped, so stop this.
+  //      break;
+  //    }
+  //    if (subtitleIndex > i) {
+  //      i = subtitleIndex;
+  //    }
+  //    await getSegment(i);
+  //    i++;
+  //  }
+  //}
 
   void positionListener(Duration position) {
     int index = (position.inSeconds / transcriptionPeriod).floor();
+    widget.inference.skipTo(index);
     if (index != subtitleIndex) {
       setState(() {
           subtitleIndex = index;
@@ -116,8 +151,8 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   @override
   void initState() {
     super.initState();
-    if (file != null) {
-      initializeVideoAndListeners(file!);
+    if (widget.inference.videoPath != null) {
+      initializeVideoAndListeners(widget.inference.videoPath!);
     }
   }
 
@@ -126,15 +161,15 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
     player.open(Media(source));
     player.setVolume(0); // TODO: Disable this for release. This is for our sanity
     await widget.inference.loadVideo(source);
-    transcribeEntireVideo();
+    widget.inference.startTranscribing();
+    //transcribeEntireVideo();
     listener = player.stream.position.listen(positionListener);
   }
 
-  void loadFile(String path) {
+  void loadFile(String path) async {
+    await widget.inference.loadVideo(path);
     setState(() {
-        file = path;
         subtitleIndex = 0;
-        transcription.clear();
         initializeVideoAndListeners(path);
     });
   }
@@ -147,39 +182,37 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const DeviceSelector(),
+            //LanguageSelector(inference: widget.inference),
+            OutlinedButton(
+              onPressed: () async {
+                FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false, type: FileType.video);
+                if (result != null) {
+                  loadFile(result.files.single.path!);
+                }
+              }, child: const Text("Select video"),
+            )
+          ],
+        ),
+        DropArea(
+          type: "video",
+          showChild: widget.inference.videoLoaded,
+          onUpload: (file) => loadFile(file),
+          child: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
-              const DeviceSelector(),
-              //LanguageSelector(inference: widget.inference),
-              OutlinedButton(
-                onPressed: () async {
-                  FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: false, type: FileType.video);
-                  if (result != null) {
-                    loadFile(result.files.single.path!);
-                  }
-                }, child: const Text("Select video"),
-              )
-            ],
+              Video(controller: controller),
+              Subtitles(transcription: widget.inference.transcription, subtitleIndex: subtitleIndex),
+            ]
           ),
-          DropArea(
-            type: "video",
-            showChild: file != null,
-            onUpload: (file) => loadFile(file),
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                Video(controller: controller),
-                Subtitles(transcription: transcription, subtitleIndex: subtitleIndex),
-              ]
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -191,7 +224,7 @@ class Subtitles extends StatelessWidget {
     required this.subtitleIndex,
   });
 
-  final Map<int, FutureOr<String>> transcription;
+  final Map<int, FutureOr<String>>? transcription;
   final int subtitleIndex;
 
   static const double fontSize = 18;
@@ -204,12 +237,15 @@ class Subtitles extends StatelessWidget {
         height: 100,
         child: Builder(
           builder: (context) {
-            if (transcription[subtitleIndex] is String) {
+            if (transcription == null ) {
+              return Container();
+            }
+            if (transcription![subtitleIndex] is String) {
               return Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
                   Text(
-                    transcription[subtitleIndex] as String,
+                    transcription![subtitleIndex] as String,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: fontSize,
@@ -220,7 +256,7 @@ class Subtitles extends StatelessWidget {
                     )
                   ),
                   Text(
-                    transcription[subtitleIndex] as String,
+                    transcription![subtitleIndex] as String,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: fontSize

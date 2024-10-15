@@ -29,3 +29,11 @@ ov::genai::DecodedResults SpeechToText::transcribe(int start, int duration, std:
     }
     return pipe.generate(data, config);
 }
+
+
+int64_t SpeechToText::video_duration() {
+    if (!audio_grabber) {
+        throw api_error(SpeechToTextFileNotOpened);
+    }
+    return audio_grabber->get_duration();
+}

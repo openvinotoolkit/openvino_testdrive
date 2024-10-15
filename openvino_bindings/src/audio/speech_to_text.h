@@ -13,6 +13,7 @@ private:
 public:
     SpeechToText(std::string model_path, std::string device): pipe(model_path, device), config(model_path + "/generation_config.json") {}
     void load_video(std::string video_path);
+    int64_t video_duration();
     ov::genai::DecodedResults transcribe(int start, int duration, std::string language);
 };
 

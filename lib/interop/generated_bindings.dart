@@ -604,6 +604,20 @@ class OpenVINO {
   late final _speechToTextLoadVideo = _speechToTextLoadVideoPtr.asFunction<
       ffi.Pointer<Status> Function(CSpeechToText, ffi.Pointer<pkg_ffi.Utf8>)>();
 
+  ffi.Pointer<StatusOrInt> speechToTextVideoDuration(
+    CSpeechToText instance,
+  ) {
+    return _speechToTextVideoDuration(
+      instance,
+    );
+  }
+
+  late final _speechToTextVideoDurationPtr = _lookup<
+          ffi.NativeFunction<ffi.Pointer<StatusOrInt> Function(CSpeechToText)>>(
+      'speechToTextVideoDuration');
+  late final _speechToTextVideoDuration = _speechToTextVideoDurationPtr
+      .asFunction<ffi.Pointer<StatusOrInt> Function(CSpeechToText)>();
+
   ffi.Pointer<StatusOrModelResponse> speechToTextTranscribe(
     CSpeechToText instance,
     int start,
@@ -752,6 +766,16 @@ final class StatusOrBool extends ffi.Struct {
 
   @ffi.Bool()
   external bool value;
+}
+
+final class StatusOrInt extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  @ffi.Int()
+  external int value;
 }
 
 final class StatusOrImageInference extends ffi.Struct {

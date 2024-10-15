@@ -5,7 +5,6 @@ import 'package:ffi/ffi.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 
 final ov = getBindings();
-const transcriptionPeriod = 10;
 
 class SpeechToText {
   final Pointer<StatusOrSpeechToText> instance;
@@ -33,21 +32,35 @@ class SpeechToText {
     return SpeechToText(result);
   }
 
-  Future<void> loadVideo(String videoPath) async{
+  Future<int> loadVideo(String videoPath) async{
     int instanceAddress = instance.ref.value.address;
-    final result = await Isolate.run(() {
-      final videoPathPtr = videoPath.toNativeUtf8();
-      final status = ov.speechToTextLoadVideo(Pointer<Void>.fromAddress(instanceAddress), videoPathPtr);
-      calloc.free(videoPathPtr);
-      return status;
-    });
+    {
+      final result = await Isolate.run(() {
+        final videoPathPtr = videoPath.toNativeUtf8();
+        final status = ov.speechToTextLoadVideo(Pointer<Void>.fromAddress(instanceAddress), videoPathPtr);
+        calloc.free(videoPathPtr);
+        return status;
+      });
 
-    if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
-      throw "SpeechToText LoadVideo error: ${result.ref.status} ${result.ref.message.toDartString()}";
+      if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+        throw "SpeechToText LoadVideo error: ${result.ref.status} ${result.ref.message.toDartString()}";
+      }
+    }
+
+    {
+      final result = await Isolate.run(() {
+        final status = ov.speechToTextVideoDuration(Pointer<Void>.fromAddress(instanceAddress));
+        return status;
+      });
+      if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+        throw "SpeechToText VideoDuration error: ${result.ref.status} ${result.ref.message.toDartString()}";
+      }
+      return result.ref.value;
     }
   }
 
   Future<String> transcribe(int start, int duration, String language) async{
+    print("Transcribing from $start for $duration seconds");
     int instanceAddress = instance.ref.value.address;
     final result = await Isolate.run(() {
       final languagePtr = language.toNativeUtf8();

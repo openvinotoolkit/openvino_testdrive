@@ -47,6 +47,12 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    int value;
+} StatusOrInt;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     CImageInference value;
 } StatusOrImageInference;
 
@@ -119,6 +125,7 @@ EXPORT Status* graphRunnerStop(CGraphRunner instance);
 
 EXPORT StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device);
 EXPORT Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path);
+EXPORT StatusOrInt* speechToTextVideoDuration(CSpeechToText instance);
 EXPORT StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language);
 
 EXPORT StatusOrDevices* getAvailableDevices();

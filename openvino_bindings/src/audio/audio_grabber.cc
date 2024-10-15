@@ -101,5 +101,5 @@ std::vector<float> AudioGrabber::grab_chunk(uint64_t start_time, uint64_t durati
 }
 
 int64_t AudioGrabber::get_duration() {
-   return formatContext->duration;
+   return formatContext->duration / AV_TIME_BASE;
 }
