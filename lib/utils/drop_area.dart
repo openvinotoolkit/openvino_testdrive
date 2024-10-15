@@ -56,7 +56,10 @@ class _DropAreaState extends State<DropArea> {
         onDragExited: (val) => hideReleaseMessage(),
         onDragEntered: (val) => showReleaseMessage(),
         child: Container(
-          color: intelGray,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4.0),
+            color: intelGray,
+          ),
           child: Builder(
             builder: (context) {
               if (!_showReleaseMessage && widget.showChild) {
