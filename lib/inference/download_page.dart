@@ -46,18 +46,20 @@ class _DownloadPageState extends State<DownloadPage> {
       projectProvider.completeLoading(widget.project);
       widget.onDone();
     } catch(e) {
-      showDialog(context: context, builder: (BuildContext context) => AlertDialog(
-            title: Text('An error occured trying to download ${widget.project.name}'),
-            content: Text(e.toString()),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => context.go('/'),
-                child: const Text('Close'),
-              ),
-            ]
-          ),
+      if (mounted) {
+        showDialog(context: context, builder: (BuildContext context) => AlertDialog(
+              title: Text('An error occured trying to download ${widget.project.name}'),
+              content: Text(e.toString()),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => context.go('/'),
+                  child: const Text('Close'),
+                ),
+              ]
+            ),
 
-      );
+        );
+      }
     }
   }
 
