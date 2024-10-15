@@ -27,7 +27,7 @@ class DownloadProvider extends ChangeNotifier {
   DownloadProvider(this.project);
 
   Future<void> queue(Map<String, String> downloads) async{
-    List<Future<Response>> promises = [];
+    List<Future> promises = [];
 
     _cancelToken = CancelToken();
     for (final url in downloads.keys) {
@@ -41,11 +41,14 @@ class DownloadProvider extends ChangeNotifier {
             state.total = total;
             notifyListeners();
           }
-      });
-      promise.catchError((e) => _cancelToken!.cancel(e.toString()));
-      promise.then((_) => state.done);
+      }).catchError((e) {
+        if (e is DioException && e.type == DioExceptionType.cancel) {
+          print("Download cancelled: $url");
+        } else {
+          _cancelToken?.cancel();
+        }
+      }).then((_) => state.done);
       promises.add(promise);
-      state.done;
     }
 
     await Future.wait(promises, eagerError: true) ;

@@ -44,30 +44,33 @@ class _GetiSearchBarState extends State<GetiSearchBar> {
       child: KeyboardListener(
         focusNode: FocusNode(),
         onKeyEvent: handleKey,
-        child: TextField(
-          onChanged: (value) => onChange(value),
-          controller: controller,
-          textAlign: TextAlign.start,
-          style: const TextStyle(
-            color: textColor,
-            fontSize: 12,
-          ),
-          decoration: InputDecoration(
-            hintText: "Search by name",
-            suffixIcon: IconButton(
-              icon: (isEmpty
-                ? const Icon(Icons.search, color: Colors.white)
-                : const Icon(Icons.clear, color: Colors.white)
-              ),
-              onPressed: () {
-                controller.clear();
-                onChange("");
-              },
+        child: Semantics(
+          explicitChildNodes: true,
+          child: TextField(
+            onChanged: (value) => onChange(value),
+            controller: controller,
+            textAlign: TextAlign.start,
+            style: const TextStyle(
+              color: textColor,
+              fontSize: 12,
             ),
-            enabledBorder: (controller.text.isNotEmpty
-              ? const OutlineInputBorder(borderSide: BorderSide(color: intelBlue, width: 2.0))
-              : null
-            )
+            decoration: InputDecoration(
+              hintText: "Search by name",
+              suffixIcon: IconButton(
+                icon: (isEmpty
+                  ? const Icon(Icons.search, color: Colors.white)
+                  : const Icon(Icons.clear, color: Colors.white)
+                ),
+                onPressed: () {
+                  controller.clear();
+                  onChange("");
+                },
+              ),
+              enabledBorder: (controller.text.isNotEmpty
+                ? const OutlineInputBorder(borderSide: BorderSide(color: intelBlue, width: 2.0))
+                : null
+              )
+            ),
           ),
         ),
       )

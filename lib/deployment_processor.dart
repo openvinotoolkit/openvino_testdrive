@@ -52,6 +52,9 @@ Future<List<Project>> loadProjectsFromStorage() async {
 }
 
 Future<void> deleteProjectData(Project project) async {
-  Directory(project.storagePath).deleteSync(recursive: true);
+  final projectDirectory = Directory(project.storagePath);
+  if (projectDirectory.existsSync()) {
+    projectDirectory.deleteSync(recursive: true);
+  }
 }
 
