@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:inference/inference/speech/message.dart';
-import 'package:inference/interop/speech_to_text.dart';
+import 'package:inference/providers/speech_inference_provider.dart';
 import 'package:inference/theme.dart';
 import 'package:media_kit/media_kit.dart';
 

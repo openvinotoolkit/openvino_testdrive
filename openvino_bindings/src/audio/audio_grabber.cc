@@ -63,13 +63,10 @@ std::vector<float> AudioGrabber::grab_chunk(uint64_t start_time, uint64_t durati
     AVPacket packet;
     std::vector<float> resampledAudio;  // For storing resampled audio data as float
     // Seek to the starting time (start_time in seconds)
-    std::cout << "time base: " << formatContext->streams[audioStreamIndex]->time_base.den << std::endl;
     int64_t startPts = av_rescale_q(start_time * AV_TIME_BASE, AV_TIME_BASE_Q, formatContext->streams[audioStreamIndex]->time_base);
-    std::cout << "startPts" << startPts << std::endl;
     av_seek_frame(formatContext, audioStreamIndex, startPts, AVSEEK_FLAG_ANY);
 
     int audioDurationPts = av_rescale_q(duration * AV_TIME_BASE, AV_TIME_BASE_Q, formatContext->streams[audioStreamIndex]->time_base);
-    std::cout << "audioDurationPts: " << audioDurationPts << std::endl;
     int decoded = 0;
     while (av_read_frame(formatContext, &packet) >= 0 && decoded < audioDurationPts) {
         if (packet.stream_index == audioStreamIndex) {

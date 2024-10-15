@@ -60,7 +60,6 @@ class SpeechToText {
   }
 
   Future<String> transcribe(int start, int duration, String language) async{
-    print("Transcribing from $start for $duration seconds");
     int instanceAddress = instance.ref.value.address;
     final result = await Isolate.run(() {
       final languagePtr = language.toNativeUtf8();

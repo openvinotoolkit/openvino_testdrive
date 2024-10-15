@@ -105,43 +105,13 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   late final player = Player();
   late final controller = VideoController(player);
   StreamSubscription<Duration>? listener;
-  //String? file;
-
-  //Map<int, FutureOr<String>> transcription = {};
 
   int subtitleIndex = 0;
 
-  //FutureOr<String> getSegment(int index) async {
-  //  final result = widget.inference.transcribe(index * transcriptionPeriod, transcriptionPeriod);
-
-  //  result.then((m) {
-  //    setState(() {
-  //      transcription[index] = m;
-  //    });
-  //  });
-
-  //  return result;
-  //}
-
-  //void transcribeEntireVideo() async {
-  //  int i = 0;
-  //  while (true){ // getSegment will throw error at end of file...
-  //    if (!context.mounted) {
-  //      // Context dropped, so stop this.
-  //      break;
-  //    }
-  //    if (subtitleIndex > i) {
-  //      i = subtitleIndex;
-  //    }
-  //    await getSegment(i);
-  //    i++;
-  //  }
-  //}
-
   void positionListener(Duration position) {
     int index = (position.inSeconds / transcriptionPeriod).floor();
-    widget.inference.skipTo(index);
     if (index != subtitleIndex) {
+      widget.inference.skipTo(index);
       setState(() {
           subtitleIndex = index;
       });
@@ -160,9 +130,6 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
     await listener?.cancel();
     player.open(Media(source));
     player.setVolume(0); // TODO: Disable this for release. This is for our sanity
-    await widget.inference.loadVideo(source);
-    widget.inference.startTranscribing();
-    //transcribeEntireVideo();
     listener = player.stream.position.listen(positionListener);
   }
 
@@ -171,6 +138,7 @@ class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
     setState(() {
         subtitleIndex = 0;
         initializeVideoAndListeners(path);
+        widget.inference.startTranscribing();
     });
   }
 
