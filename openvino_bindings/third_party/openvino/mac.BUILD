@@ -6,7 +6,7 @@ filegroup(
     name = "shared_objects",
     srcs = glob([
         "lib/arm64/Release/**/*.so",
-        "3rdparty/tbb/lib/libtbb.12.dylib",
+        "3rdparty/tbb/libtbb.12.dylib",
     ])
 )
 
