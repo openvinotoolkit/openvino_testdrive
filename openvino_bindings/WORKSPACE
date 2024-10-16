@@ -114,6 +114,12 @@ new_local_repository(
 )
 
 new_local_repository(
+    name = "mac_ffmpeg",
+    build_file = "//third_party/ffmpeg:mac.BUILD",
+    path = "/opt/homebrew/Cellar/ffmpeg@6/6.1.2_3"
+)
+
+new_local_repository(
     name = "windows_ffmpeg",
     build_file = "//third_party/ffmpeg:windows.BUILD",
     path = "C:/Users/selse/tmp/vcpkg/packages/ffmpeg_x64-windows",

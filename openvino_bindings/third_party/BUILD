@@ -34,6 +34,7 @@ alias(
     name = "ffmpeg",
     actual = select({
         "@bazel_tools//src/conditions:windows": "@windows_ffmpeg//:ffmpeg",
+        "@bazel_tools//src/conditions:darwin_arm64": "@mac_ffmpeg//:ffmpeg",
         "//conditions:default": "@linux_ffmpeg//:ffmpeg",
     }),
     visibility = ["//visibility:public"],
