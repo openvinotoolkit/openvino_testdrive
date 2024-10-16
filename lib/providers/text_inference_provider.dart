@@ -97,7 +97,9 @@ class TextInferenceProvider extends ChangeNotifier {
        _response = _response! + word;
      }
      _speed = averageElapsed;
-     notifyListeners();
+     if (hasListeners) {
+       notifyListeners();
+     }
      stopWatch.start();
      n++;
   }
@@ -160,7 +162,9 @@ class TextInferenceProvider extends ChangeNotifier {
     }
     _response = null;
     n = 0;
-    notifyListeners();
+    if (hasListeners) {
+      notifyListeners();
+    }
   }
 
   void close() {
