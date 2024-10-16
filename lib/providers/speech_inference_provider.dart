@@ -10,6 +10,7 @@ const transcriptionPeriod = 10;
 class SpeechInferenceProvider  extends ChangeNotifier {
   Completer<void> loaded = Completer<void>();
 
+
   Project? _project;
   String? _device;
 
@@ -69,7 +70,9 @@ class SpeechInferenceProvider  extends ChangeNotifier {
       await _transcription!.process((int i) {
           return transcribe(i * transcriptionPeriod, transcriptionPeriod);
       });
-      notifyListeners();
+      if (hasListeners) {
+        notifyListeners();
+      }
     }
   }
 
