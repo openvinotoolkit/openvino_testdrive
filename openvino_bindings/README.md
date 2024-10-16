@@ -93,6 +93,7 @@ Further dependencies which are explained per platform below:
 [Install OpenVINO Runtime 24.4.0]( https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=WINDOWS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `C:/Intel/openvino_24.4.0`.
 
 Build OpenCV in `C:/opencv/build`.
+Install ffmpeg: `vcpkg install ffmpeg`.
 
 Install [mediapipe requirements](https://ai.google.dev/edge/mediapipe/framework/getting_started/install#installing_on_windows) and setup the environment variables.
 
@@ -105,6 +106,7 @@ The DLLs (with dependencies) will be in `bazel-bin/windows_bindings.tar`
 [Install OpenVINO Runtime 24.4.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=MACOS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `/opt/intel/openvino_24.4.0` and symlink to `/opt/intel/openvino`.
 
 Install OpenCV: `brew install opencv`
+Install ffmpeg: `brew install ffmpeg@6`
 
 Run: `bazel build :macos_bindings`
 
@@ -115,6 +117,7 @@ The .dylib and .so are located in `bazel-bin/macos_bindings.tar`.
 [Install OpenVINO Runtime 24.4.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=LINUX&DISTRIBUTION=ARCHIVE) with GenAI flavor in `/opt/intel/openvino_24.4.0` and symlink to `/opt/intel/openvino`.
 
 Build or install OpenCV to `/usr/local/`.
+Install ffmpeg: `sudo apt-get install ffmpeg`.
 
 `bazel build :linux_bindings`
 
