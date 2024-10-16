@@ -7,9 +7,13 @@ cc_library(
     hdrs = glob([
         "include/**/*.h",
     ]),
-    srcs = glob([
-        "lib/*.dylib",
-    ]),
+    srcs = [
+        "lib/libavdevice.60.dylib",
+        "lib/libavformat.60.dylib",
+        "lib/libavcodec.60.dylib",
+        "lib/libswresample.4.dylib",
+        "lib/libavutil.58.dylib",
+    ],
     includes = [
         "lib",
     ],

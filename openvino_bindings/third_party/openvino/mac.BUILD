@@ -6,7 +6,6 @@ filegroup(
     name = "shared_objects",
     srcs = glob([
         "lib/arm64/Release/**/*.so",
-        "3rdparty/tbb/libtbb.12.dylib",
     ])
 )
 
@@ -34,7 +33,10 @@ cc_library(
         "include/openvino/**/*"
     ]),
     srcs = glob([
-        "lib/arm64/Release/**/*.dylib",
+        "lib/arm64/Release/**/libopenvino_tokenizers.dylib",
+        "lib/arm64/Release/**/libcore_tokenizers.dylib",
+        "lib/arm64/Release/**/*.2450.dylib",
+        "3rdparty/tbb/lib/libtbb.12.dylib",
     ]),
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],

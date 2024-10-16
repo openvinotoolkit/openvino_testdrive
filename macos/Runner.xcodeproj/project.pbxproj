@@ -84,13 +84,10 @@
 		0C5D47B22C6F5C0E00307B37 /* libopenvino_auto_plugin.so in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47AB2C6F59A200307B37 /* libopenvino_auto_plugin.so */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0C5D47B32C6F5C1300307B37 /* libopenvino_hetero_plugin.so in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47AA2C6F59A200307B37 /* libopenvino_hetero_plugin.so */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0CBEF4D82CBFB7DA002A5E32 /* libavcodec.60.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBEF4D72CBFB7DA002A5E32 /* libavcodec.60.dylib */; };
-		0CBEF4DA2CBFB7E4002A5E32 /* libavfilter.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBEF4D92CBFB7E4002A5E32 /* libavfilter.9.dylib */; };
 		0CBEF4DC2CBFB7EC002A5E32 /* libavformat.60.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBEF4DB2CBFB7EC002A5E32 /* libavformat.60.dylib */; };
 		0CBEF4DE2CBFB7F4002A5E32 /* libavutil.58.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBEF4DD2CBFB7F4002A5E32 /* libavutil.58.dylib */; };
-		0CBEF4E32CBFB877002A5E32 /* libpostproc.57.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBEF4DF2CBFB877002A5E32 /* libpostproc.57.dylib */; };
-		0CBEF4E42CBFB877002A5E32 /* libswscale.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBEF4E02CBFB877002A5E32 /* libswscale.7.dylib */; };
 		0CBEF4E52CBFB877002A5E32 /* libswresample.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBEF4E12CBFB877002A5E32 /* libswresample.4.dylib */; };
-		0CBEF4E62CBFB877002A5E32 /* libavdevice.60.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBEF4E22CBFB877002A5E32 /* libavdevice.60.dylib */; };
+		0CBEF4E82CBFE673002A5E32 /* libavdevice.60.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CBEF4E72CBFE673002A5E32 /* libavdevice.60.dylib */; };
 		213B56C50EEAAE6190A0A25B /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5E7865DB70376BADAAEAE6 /* Pods_RunnerTests.framework */; };
 		331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C80D7294CF71000263BE5 /* RunnerTests.swift */; };
 		335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */; };
@@ -191,13 +188,10 @@
 		0C5D47AA2C6F59A200307B37 /* libopenvino_hetero_plugin.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.bundle"; name = libopenvino_hetero_plugin.so; path = ../bindings/libopenvino_hetero_plugin.so; sourceTree = "<group>"; };
 		0C5D47AB2C6F59A200307B37 /* libopenvino_auto_plugin.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.bundle"; name = libopenvino_auto_plugin.so; path = ../bindings/libopenvino_auto_plugin.so; sourceTree = "<group>"; };
 		0CBEF4D72CBFB7DA002A5E32 /* libavcodec.60.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavcodec.60.dylib; path = ../bindings/libavcodec.60.dylib; sourceTree = "<group>"; };
-		0CBEF4D92CBFB7E4002A5E32 /* libavfilter.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavfilter.9.dylib; path = ../bindings/libavfilter.9.dylib; sourceTree = "<group>"; };
 		0CBEF4DB2CBFB7EC002A5E32 /* libavformat.60.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavformat.60.dylib; path = ../bindings/libavformat.60.dylib; sourceTree = "<group>"; };
 		0CBEF4DD2CBFB7F4002A5E32 /* libavutil.58.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavutil.58.dylib; path = ../bindings/libavutil.58.dylib; sourceTree = "<group>"; };
-		0CBEF4DF2CBFB877002A5E32 /* libpostproc.57.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpostproc.57.dylib; path = ../bindings/libpostproc.57.dylib; sourceTree = "<group>"; };
-		0CBEF4E02CBFB877002A5E32 /* libswscale.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswscale.7.dylib; path = ../bindings/libswscale.7.dylib; sourceTree = "<group>"; };
 		0CBEF4E12CBFB877002A5E32 /* libswresample.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libswresample.4.dylib; path = ../bindings/libswresample.4.dylib; sourceTree = "<group>"; };
-		0CBEF4E22CBFB877002A5E32 /* libavdevice.60.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavdevice.60.dylib; path = ../bindings/libavdevice.60.dylib; sourceTree = "<group>"; };
+		0CBEF4E72CBFE673002A5E32 /* libavdevice.60.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavdevice.60.dylib; path = ../bindings/libavdevice.60.dylib; sourceTree = "<group>"; };
 		11E6C6B7198D7B3B20F4A75C /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CCC24E6096F5568CD1642EB /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		331C80D5294CF71000263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -241,10 +235,8 @@
 			files = (
 				0C5D478D2C6F3A9B00307B37 /* libopenvino_pytorch_frontend.2450.dylib in Frameworks */,
 				0C5D47A42C6F3B7000307B37 /* libtbb.12.dylib in Frameworks */,
-				0CBEF4E42CBFB877002A5E32 /* libswscale.7.dylib in Frameworks */,
 				0C5D47902C6F3A9B00307B37 /* libopenvino_onnx_frontend.2450.dylib in Frameworks */,
 				428B81CFE7DD85E5D6A540E5 /* Pods_Runner.framework in Frameworks */,
-				0CBEF4DA2CBFB7E4002A5E32 /* libavfilter.9.dylib in Frameworks */,
 				0C5D478F2C6F3A9B00307B37 /* libopenvino_ir_frontend.2450.dylib in Frameworks */,
 				0CBEF4E52CBFB877002A5E32 /* libswresample.4.dylib in Frameworks */,
 				0C5D47922C6F3A9B00307B37 /* libopenvino_paddle_frontend.2450.dylib in Frameworks */,
@@ -255,13 +247,12 @@
 				0C5D47702C6F397A00307B37 /* libopencv_imgproc.407.dylib in Frameworks */,
 				0C5D47612C6F382800307B37 /* libopencv_calib3d.407.dylib in Frameworks */,
 				0CBEF4DC2CBFB7EC002A5E32 /* libavformat.60.dylib in Frameworks */,
-				0CBEF4E62CBFB877002A5E32 /* libavdevice.60.dylib in Frameworks */,
 				0C5D47942C6F3A9B00307B37 /* libopenvino_tensorflow_frontend.2450.dylib in Frameworks */,
 				0C5D47972C6F3A9B00307B37 /* libopenvino_tensorflow_lite_frontend.2450.dylib in Frameworks */,
 				0C5D473C2C6F357C00307B37 /* libblend2d.dylib in Frameworks */,
 				0C5D476F2C6F397A00307B37 /* libopencv_features2d.407.dylib in Frameworks */,
 				0C5D47732C6F397A00307B37 /* libopencv_flann.407.dylib in Frameworks */,
-				0CBEF4E32CBFB877002A5E32 /* libpostproc.57.dylib in Frameworks */,
+				0CBEF4E82CBFE673002A5E32 /* libavdevice.60.dylib in Frameworks */,
 				0CBEF4DE2CBFB7F4002A5E32 /* libavutil.58.dylib in Frameworks */,
 				0C5D47962C6F3A9B00307B37 /* libcore_tokenizers.dylib in Frameworks */,
 				0CBEF4D82CBFB7DA002A5E32 /* libavcodec.60.dylib in Frameworks */,
@@ -376,13 +367,10 @@
 				0C5D47682C6F397900307B37 /* libopencv_core.407.dylib */,
 				0C5D47652C6F397900307B37 /* libopencv_features2d.407.dylib */,
 				0CBEF4D72CBFB7DA002A5E32 /* libavcodec.60.dylib */,
-				0CBEF4D92CBFB7E4002A5E32 /* libavfilter.9.dylib */,
+				0CBEF4E72CBFE673002A5E32 /* libavdevice.60.dylib */,
 				0CBEF4DB2CBFB7EC002A5E32 /* libavformat.60.dylib */,
 				0CBEF4DD2CBFB7F4002A5E32 /* libavutil.58.dylib */,
-				0CBEF4E22CBFB877002A5E32 /* libavdevice.60.dylib */,
-				0CBEF4DF2CBFB877002A5E32 /* libpostproc.57.dylib */,
 				0CBEF4E12CBFB877002A5E32 /* libswresample.4.dylib */,
-				0CBEF4E02CBFB877002A5E32 /* libswscale.7.dylib */,
 				0C5D47692C6F397900307B37 /* libopencv_flann.407.dylib */,
 				0C5D476C2C6F397A00307B37 /* libopencv_highgui.407.dylib */,
 				0C5D47672C6F397900307B37 /* libopencv_imgcodecs.407.dylib */,
