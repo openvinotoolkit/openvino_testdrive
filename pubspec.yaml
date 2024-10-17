@@ -52,6 +52,9 @@ dependencies:
   http: ^1.2.1
   dio: ^5.5.0+1
   shimmer: ^3.0.0
+  fluent_ui: ^4.9.2
+  system_theme: ^3.1.2
+  window_manager: ^0.4.2
 
 dev_dependencies:
   flutter_test:
