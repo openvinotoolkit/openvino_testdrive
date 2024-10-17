@@ -15,3 +15,10 @@ To set up your development environment, please follow the steps below:
 5. Run `flutter run`
 
 You should now be ready to make changes and create a Pull Request!
+
+## Updating model manifest
+
+OpenVINO TestDrive shows more information on the model than the huggingface API exposes. In order to show this information we use a model manifest.
+You can update this information by running: `dart scripts/create_manifest > assets/manifest.json`.
+
+Not all information can be automatically found. So a couple of manual steps might be required.

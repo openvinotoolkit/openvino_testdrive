@@ -86,6 +86,7 @@ flutter:
   assets:
     - images/
     - images/model_thumbnails/
+    - assets/
   fonts:
     - family: IntelOne
       fonts:

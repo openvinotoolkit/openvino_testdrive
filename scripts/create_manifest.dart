@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart';
+import 'package:collection/collection.dart';
 
 Future<List<Map<String, dynamic>>> getCollectionConfig(String collectionId, String author) async {
   final url = "https://huggingface.co/api/collections/$author/$collectionId";
@@ -11,6 +12,7 @@ Future<List<Map<String, dynamic>>> getCollectionConfig(String collectionId, Stri
 }
 
 class ModelInfo {
+  //Example
   //"Name": "Open Llama",
   //"Id": "open_llama_3b_v2-fp16-ov",
   //"File_Size": "2GB",
@@ -57,14 +59,19 @@ class ModelInfo {
     final fileSize = await getModelSizeCrawler(id, author);
     final description = "Chat with $name model";
 
+    int contextWindow = config["max_position_embeddings"]
+      ?? config["max_seq_len"]
+      ?? config["n_positions"]
+      ?? 0;
+
     return ModelInfo(
       name: getNameFromId(id),
       id: id,
       fileSize: fileSize,
       optimizationPrecision: getOptimizationFromId(id) ?? "",
-      contextWindow: config["max_position_embeddings"],
+      contextWindow: contextWindow,
       description: description,
-      task: collectionConfig["pipeline_tag"],
+      task: collectionConfig["pipeline_tag"] ?? "unknown",
     );
   }
 
@@ -143,14 +150,22 @@ void generate() async {
     "mistral-7b-instruct-v0.1-int8-ov",
     "Phi-3-mini-4k-instruct-int4-ov",
     "open_llama_3b_v2-int8-ov",
+    "open_llama_3b_v2-int8-ov",
+    "open_llama_3b_v2-int8-ov",
   ];
-  final models = await getCollectionConfig("llm-6687aaa2abca3bbcec71a9bd", "OpenVINO");
-  List<Object> result = [];
-  for (int i = 0; i < 2; i++) {
-    final model = models[i];
-    result.add((await ModelInfo.fromCollectionConfig(model, "OpenVINO")).toMap());
+  final collectionModels = await getCollectionConfig("llm-6687aaa2abca3bbcec71a9bd", "OpenVINO");
+  List<ModelInfo> models = [];
+  for (final collectionModel in collectionModels) {
+    models.add(await ModelInfo.fromCollectionConfig(collectionModel, "OpenVINO"));
   }
+
+  Map<String, dynamic> result = {};
+
+  final popularModels = popular.map((id) => models.firstWhereOrNull((r) => r.id == id)).whereType<ModelInfo>();
+
   const encoder = JsonEncoder.withIndent("  ");
+  result['popular_models'] = popularModels.map((m) => m.toMap()).toList();
+  result['all_models'] = models.map((m) => m.toMap()).toList();
 
   print(encoder.convert(result));
 }
