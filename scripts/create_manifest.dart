@@ -138,6 +138,12 @@ class ModelInfo {
 }
 
 void generate() async {
+
+  final popular = [
+    "mistral-7b-instruct-v0.1-int8-ov",
+    "Phi-3-mini-4k-instruct-int4-ov",
+    "open_llama_3b_v2-int8-ov",
+  ];
   final models = await getCollectionConfig("llm-6687aaa2abca3bbcec71a9bd", "OpenVINO");
   List<Object> result = [];
   for (int i = 0; i < 2; i++) {
@@ -145,6 +151,7 @@ void generate() async {
     result.add((await ModelInfo.fromCollectionConfig(model, "OpenVINO")).toMap());
   }
   const encoder = JsonEncoder.withIndent("  ");
+
   print(encoder.convert(result));
 }
 
