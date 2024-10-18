@@ -1,0 +1,996 @@
+{
+  "popular_models": [
+    {
+      "name": "Mistral 7b Instruct V0.1",
+      "id": "mistral-7b-instruct-v0.1-int8-ov",
+      "fileSize": 7824223166,
+      "optimizationPrecision": "int8",
+      "contextWindow": 32768,
+      "description": "Chat with Mistral 7b Instruct V0.1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 3 Mini 4k Instruct",
+      "id": "Phi-3-mini-4k-instruct-int4-ov",
+      "fileSize": 2637358233,
+      "optimizationPrecision": "int4",
+      "contextWindow": 4096,
+      "description": "Chat with Phi 3 Mini 4k Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Open_llama_3b_v2",
+      "id": "open_llama_3b_v2-int8-ov",
+      "fileSize": 3689232132,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Open_llama_3b_v2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Open_llama_3b_v2",
+      "id": "open_llama_3b_v2-int8-ov",
+      "fileSize": 3689232132,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Open_llama_3b_v2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Open_llama_3b_v2",
+      "id": "open_llama_3b_v2-int8-ov",
+      "fileSize": 3689232132,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Open_llama_3b_v2 model",
+      "task": "text-generation"
+    }
+  ],
+  "all_models": [
+    {
+      "name": "Phi 2",
+      "id": "phi-2-fp16-ov",
+      "fileSize": 5978786593,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Phi 2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 2",
+      "id": "phi-2-int8-ov",
+      "fileSize": 3004595529,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Phi 2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Mistral 7b Instruct V0.1",
+      "id": "mistral-7b-instruct-v0.1-int8-ov",
+      "fileSize": 7824223166,
+      "optimizationPrecision": "int8",
+      "contextWindow": 32768,
+      "description": "Chat with Mistral 7b Instruct V0.1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Mistral 7b Instruct V0.1",
+      "id": "mistral-7b-instruct-v0.1-fp16-ov",
+      "fileSize": 15576387089,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 32768,
+      "description": "Chat with Mistral 7b Instruct V0.1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Mistral 7b Instruct V0.1",
+      "id": "mistral-7b-instruct-v0.1-int4-ov",
+      "fileSize": 4967917794,
+      "optimizationPrecision": "int4",
+      "contextWindow": 32768,
+      "description": "Chat with Mistral 7b Instruct V0.1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Codegen25 7b Multi",
+      "id": "codegen25-7b-multi-fp16-ov",
+      "fileSize": 14822539137,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Codegen25 7b Multi model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Codegen25 7b Multi",
+      "id": "codegen25-7b-multi-int8-ov",
+      "fileSize": 7414035410,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Codegen25 7b Multi model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Mixtral 8x7b Instruct V0.1",
+      "id": "mixtral-8x7b-instruct-v0.1-int4-ov",
+      "fileSize": 30833964831,
+      "optimizationPrecision": "int4",
+      "contextWindow": 32768,
+      "description": "Chat with Mixtral 8x7b Instruct V0.1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Mixtral 8x7B Instruct V0.1",
+      "id": "Mixtral-8x7B-Instruct-v0.1-int8-ov",
+      "fileSize": 50160688476,
+      "optimizationPrecision": "int8",
+      "contextWindow": 32768,
+      "description": "Chat with Mixtral 8x7B Instruct V0.1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Notus 7b V1",
+      "id": "notus-7b-v1-fp16-ov",
+      "fileSize": 15576386988,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 32768,
+      "description": "Chat with Notus 7b V1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Notus 7b V1",
+      "id": "notus-7b-v1-int8-ov",
+      "fileSize": 7803125798,
+      "optimizationPrecision": "int8",
+      "contextWindow": 32768,
+      "description": "Chat with Notus 7b V1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Neural Chat 7b V3 3",
+      "id": "neural-chat-7b-v3-3-fp16-ov",
+      "fileSize": 15576386599,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 32768,
+      "description": "Chat with Neural Chat 7b V3 3 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Neural Chat 7b V3 3",
+      "id": "neural-chat-7b-v3-3-int8-ov",
+      "fileSize": 7803125410,
+      "optimizationPrecision": "int8",
+      "contextWindow": 32768,
+      "description": "Chat with Neural Chat 7b V3 3 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Zephyr 7b Beta",
+      "id": "zephyr-7b-beta-int8-ov",
+      "fileSize": 7803126061,
+      "optimizationPrecision": "int8",
+      "contextWindow": 32768,
+      "description": "Chat with Zephyr 7b Beta model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Zephyr 7b Beta",
+      "id": "zephyr-7b-beta-int4-ov",
+      "fileSize": 4904138531,
+      "optimizationPrecision": "int4",
+      "contextWindow": 32768,
+      "description": "Chat with Zephyr 7b Beta model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Dolly V2 3b",
+      "id": "dolly-v2-3b-int4-ov",
+      "fileSize": 2434908470,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Dolly V2 3b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Dolly V2 3b",
+      "id": "dolly-v2-3b-int8-ov",
+      "fileSize": 2993180745,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Dolly V2 3b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Dolly V2 3b",
+      "id": "dolly-v2-3b-fp16-ov",
+      "fileSize": 5967078157,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Dolly V2 3b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Codegen2 3_7B_P",
+      "id": "codegen2-3_7B_P-int4-ov",
+      "fileSize": 2252764320,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Codegen2 3_7B_P model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Codegen2 3_7B_P",
+      "id": "codegen2-3_7B_P-fp16-ov",
+      "fileSize": 7835969716,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Codegen2 3_7B_P model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Zephyr 7b Beta",
+      "id": "zephyr-7b-beta-fp16-ov",
+      "fileSize": 15576387241,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 32768,
+      "description": "Chat with Zephyr 7b Beta model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Codegen2 3_7B_P",
+      "id": "codegen2-3_7B_P-int8-ov",
+      "fileSize": 3927738589,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Codegen2 3_7B_P model",
+      "task": "text-generation"
+    },
+    {
+      "name": "TinyLlama 1.1B Chat V1.0",
+      "id": "TinyLlama-1.1B-Chat-v1.0-fp16-ov",
+      "fileSize": 2368272475,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with TinyLlama 1.1B Chat V1.0 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "TinyLlama 1.1B Chat V1.0",
+      "id": "TinyLlama-1.1B-Chat-v1.0-int4-ov",
+      "fileSize": 668269097,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with TinyLlama 1.1B Chat V1.0 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "TinyLlama 1.1B Chat V1.0",
+      "id": "TinyLlama-1.1B-Chat-v1.0-int8-ov",
+      "fileSize": 1187586826,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with TinyLlama 1.1B Chat V1.0 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Gpt Neox 20b",
+      "id": "gpt-neox-20b-int8-ov",
+      "fileSize": 22128276574,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Gpt Neox 20b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Gpt Neox 20b",
+      "id": "gpt-neox-20b-fp16-ov",
+      "fileSize": 44140098869,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Gpt Neox 20b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Gpt Neox 20b",
+      "id": "gpt-neox-20b-int4-ov",
+      "fileSize": 13968006447,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Gpt Neox 20b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Gpt J 6b",
+      "id": "gpt-j-6b-int4-ov",
+      "fileSize": 4196810211,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Gpt J 6b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Gpt J 6b",
+      "id": "gpt-j-6b-int8-ov",
+      "fileSize": 6515945720,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Gpt J 6b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Gpt J 6b",
+      "id": "gpt-j-6b-fp16-ov",
+      "fileSize": 13001251300,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Gpt J 6b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Falcon 7b Instruct",
+      "id": "falcon-7b-instruct-int4-ov",
+      "fileSize": 3959308647,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Falcon 7b Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Falcon 7b Instruct",
+      "id": "falcon-7b-instruct-fp16-ov",
+      "fileSize": 14825512501,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Falcon 7b Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Falcon 7b Instruct",
+      "id": "falcon-7b-instruct-int8-ov",
+      "fileSize": 7449021953,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Falcon 7b Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Open_llama_7b_v2",
+      "id": "open_llama_7b_v2-int8-ov",
+      "fileSize": 7243946706,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Open_llama_7b_v2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Open_llama_7b_v2",
+      "id": "open_llama_7b_v2-int4-ov",
+      "fileSize": 4581255942,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Open_llama_7b_v2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Open_llama_7b_v2",
+      "id": "open_llama_7b_v2-fp16-ov",
+      "fileSize": 14502136910,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Open_llama_7b_v2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Open_llama_3b_v2",
+      "id": "open_llama_3b_v2-int8-ov",
+      "fileSize": 3689232132,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Open_llama_3b_v2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Open_llama_3b_v2",
+      "id": "open_llama_3b_v2-fp16-ov",
+      "fileSize": 7361187312,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Open_llama_3b_v2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 2",
+      "id": "phi-2-int4-ov",
+      "fileSize": 1963097577,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Phi 2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Neural Chat 7b V3 3",
+      "id": "neural-chat-7b-v3-3-int4-ov",
+      "fileSize": 4957174834,
+      "optimizationPrecision": "int4",
+      "contextWindow": 32768,
+      "description": "Chat with Neural Chat 7b V3 3 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Notus 7b V1",
+      "id": "notus-7b-v1-int4-ov",
+      "fileSize": 4957175373,
+      "optimizationPrecision": "int4",
+      "contextWindow": 32768,
+      "description": "Chat with Notus 7b V1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE Chat 3B V1",
+      "id": "RedPajama-INCITE-Chat-3B-v1-int8-ov",
+      "fileSize": 3003403190,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE Chat 3B V1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE 7B Instruct",
+      "id": "RedPajama-INCITE-7B-Instruct-fp16-ov",
+      "fileSize": 14717999973,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE 7B Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE 7B Instruct",
+      "id": "RedPajama-INCITE-7B-Instruct-int4-ov",
+      "fileSize": 7384270376,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE 7B Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE 7B Chat",
+      "id": "RedPajama-INCITE-7B-Chat-int4-ov",
+      "fileSize": 4753728620,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE 7B Chat model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE 7B Instruct",
+      "id": "RedPajama-INCITE-7B-Instruct-int8-ov",
+      "fileSize": 7384270355,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE 7B Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE 7B Chat",
+      "id": "RedPajama-INCITE-7B-Chat-fp16-ov",
+      "fileSize": 14717999600,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE 7B Chat model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE Chat 3B V1",
+      "id": "RedPajama-INCITE-Chat-3B-v1-int4-ov",
+      "fileSize": 1972726843,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE Chat 3B V1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE 7B Chat",
+      "id": "RedPajama-INCITE-7B-Chat-int8-ov",
+      "fileSize": 7384270239,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE 7B Chat model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE Chat 3B V1",
+      "id": "RedPajama-INCITE-Chat-3B-v1-fp16-ov",
+      "fileSize": 5977741177,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE Chat 3B V1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Dolly V2 12b",
+      "id": "dolly-v2-12b-int4-ov",
+      "fileSize": 8093674841,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Dolly V2 12b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Dolly V2 7b",
+      "id": "dolly-v2-7b-int4-ov",
+      "fileSize": 4753855475,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Dolly V2 7b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Dolly V2 7b",
+      "id": "dolly-v2-7b-int8-ov",
+      "fileSize": 7384407579,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Dolly V2 7b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Dolly V2 7b",
+      "id": "dolly-v2-7b-fp16-ov",
+      "fileSize": 14718147683,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Dolly V2 7b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Mistral 7B Instruct V0.2",
+      "id": "Mistral-7B-Instruct-v0.2-int8-ov",
+      "fileSize": 7823897819,
+      "optimizationPrecision": "int8",
+      "contextWindow": 32768,
+      "description": "Chat with Mistral 7B Instruct V0.2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Dolly V2 12b",
+      "id": "dolly-v2-12b-int8-ov",
+      "fileSize": 12785790267,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Dolly V2 12b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Mistral 7B Instruct V0.2",
+      "id": "Mistral-7B-Instruct-v0.2-int4-ov",
+      "fileSize": 4957164416,
+      "optimizationPrecision": "int4",
+      "contextWindow": 32768,
+      "description": "Chat with Mistral 7B Instruct V0.2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Mistral 7B Instruct V0.2",
+      "id": "Mistral-7B-Instruct-v0.2-fp16-ov",
+      "fileSize": 15576062131,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 32768,
+      "description": "Chat with Mistral 7B Instruct V0.2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Codegen25 7b Multi",
+      "id": "codegen25-7b-multi-int4-ov",
+      "fileSize": 4760257312,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Codegen25 7b Multi model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Persimmon 8b Chat",
+      "id": "persimmon-8b-chat-int4-ov",
+      "fileSize": 6896839595,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Persimmon 8b Chat model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Persimmon 8b Chat",
+      "id": "persimmon-8b-chat-int8-ov",
+      "fileSize": 12791514405,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Persimmon 8b Chat model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 1.4b",
+      "id": "pythia-1.4b-int4-ov",
+      "fileSize": 6890411793,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 1.4b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 1.4b",
+      "id": "pythia-1.4b-int8-ov",
+      "fileSize": 12785086603,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 1.4b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Persimmon 8b Chat",
+      "id": "persimmon-8b-chat-fp16-ov",
+      "fileSize": 25461688234,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Persimmon 8b Chat model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 1.4b",
+      "id": "pythia-1.4b-fp16-ov",
+      "fileSize": 25455260443,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 1.4b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 12b",
+      "id": "pythia-12b-int4-ov",
+      "fileSize": 3824586206,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 12b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 12b",
+      "id": "pythia-12b-int8-ov",
+      "fileSize": 7153039029,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 12b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 2.8b",
+      "id": "pythia-2.8b-int8-ov",
+      "fileSize": 7153039039,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 2.8b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 2.8b",
+      "id": "pythia-2.8b-int4-ov",
+      "fileSize": 3824586216,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 2.8b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 12b",
+      "id": "pythia-12b-fp16-ov",
+      "fileSize": 14293243461,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 12b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 6.9b",
+      "id": "pythia-6.9b-int4-ov",
+      "fileSize": 3824586216,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 6.9b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 6.9b",
+      "id": "pythia-6.9b-int8-ov",
+      "fileSize": 7153039039,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 6.9b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 2.8b",
+      "id": "pythia-2.8b-fp16-ov",
+      "fileSize": 14293243256,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 2.8b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 6.9b",
+      "id": "pythia-6.9b-fp16-ov",
+      "fileSize": 14293243256,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 6.9b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 1b",
+      "id": "pythia-1b-int4-ov",
+      "fileSize": 669587847,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 1b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 1b",
+      "id": "pythia-1b-int8-ov",
+      "fileSize": 1107284420,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 1b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Pythia 1b",
+      "id": "pythia-1b-fp16-ov",
+      "fileSize": 2181025578,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Pythia 1b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Neural Chat 7b V1 1",
+      "id": "neural-chat-7b-v1-1-int4-ov",
+      "fileSize": 3824586268,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Neural Chat 7b V1 1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Neural Chat 7b V1 1",
+      "id": "neural-chat-7b-v1-1-int8-ov",
+      "fileSize": 7153039101,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Neural Chat 7b V1 1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Neural Chat 7b V1 1",
+      "id": "neural-chat-7b-v1-1-fp16-ov",
+      "fileSize": 14293243287,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Neural Chat 7b V1 1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 3 Medium 4k Instruct",
+      "id": "Phi-3-medium-4k-instruct-fp16-ov",
+      "fileSize": 29965606794,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 4096,
+      "description": "Chat with Phi 3 Medium 4k Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 3 Medium 4k Instruct",
+      "id": "Phi-3-medium-4k-instruct-int4-ov",
+      "fileSize": 7964805299,
+      "optimizationPrecision": "int4",
+      "contextWindow": 4096,
+      "description": "Chat with Phi 3 Medium 4k Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 3 Medium 4k Instruct",
+      "id": "Phi-3-medium-4k-instruct-int8-ov",
+      "fileSize": 15040585641,
+      "optimizationPrecision": "int8",
+      "contextWindow": 4096,
+      "description": "Chat with Phi 3 Medium 4k Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Mpt 7b",
+      "id": "mpt-7b-int8-ov",
+      "fileSize": 7146788625,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with Mpt 7b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Mpt 7b",
+      "id": "mpt-7b-fp16-ov",
+      "fileSize": 14286814799,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with Mpt 7b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Starcoder2 15b",
+      "id": "starcoder2-15b-int8-ov",
+      "fileSize": 17190289720,
+      "optimizationPrecision": "int8",
+      "contextWindow": 16384,
+      "description": "Chat with Starcoder2 15b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Starcoder2 15b",
+      "id": "starcoder2-15b-int4-ov",
+      "fileSize": 9169658515,
+      "optimizationPrecision": "int4",
+      "contextWindow": 16384,
+      "description": "Chat with Starcoder2 15b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Starcoder2 15b",
+      "id": "starcoder2-15b-fp16-ov",
+      "fileSize": 34262102706,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 16384,
+      "description": "Chat with Starcoder2 15b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Starcoder2 7b",
+      "id": "starcoder2-7b-fp16-ov",
+      "fileSize": 15470719144,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 16384,
+      "description": "Chat with Starcoder2 7b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Starcoder2 7b",
+      "id": "starcoder2-7b-int4-ov",
+      "fileSize": 4111254624,
+      "optimizationPrecision": "int4",
+      "contextWindow": 16384,
+      "description": "Chat with Starcoder2 7b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Starcoder2 7b",
+      "id": "starcoder2-7b-int8-ov",
+      "fileSize": 7729586294,
+      "optimizationPrecision": "int8",
+      "contextWindow": 16384,
+      "description": "Chat with Starcoder2 7b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Starcoder2 3b",
+      "id": "starcoder2-3b-int4-ov",
+      "fileSize": 1780962229,
+      "optimizationPrecision": "int4",
+      "contextWindow": 16384,
+      "description": "Chat with Starcoder2 3b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Starcoder2 3b",
+      "id": "starcoder2-3b-fp16-ov",
+      "fileSize": 6526229346,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 16384,
+      "description": "Chat with Starcoder2 3b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Starcoder2 3b",
+      "id": "starcoder2-3b-int8-ov",
+      "fileSize": 3273295377,
+      "optimizationPrecision": "int8",
+      "contextWindow": 16384,
+      "description": "Chat with Starcoder2 3b model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 3 Mini 4k Instruct",
+      "id": "Phi-3-mini-4k-instruct-fp16-ov",
+      "fileSize": 8209920736,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 4096,
+      "description": "Chat with Phi 3 Mini 4k Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 3 Mini 128k Instruct",
+      "id": "Phi-3-mini-128k-instruct-fp16-ov",
+      "fileSize": 8210027955,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 131072,
+      "description": "Chat with Phi 3 Mini 128k Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 3 Mini 128k Instruct",
+      "id": "Phi-3-mini-128k-instruct-int4-ov",
+      "fileSize": 2637434178,
+      "optimizationPrecision": "int4",
+      "contextWindow": 131072,
+      "description": "Chat with Phi 3 Mini 128k Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 3 Mini 4k Instruct",
+      "id": "Phi-3-mini-4k-instruct-int4-ov",
+      "fileSize": 2637358233,
+      "optimizationPrecision": "int4",
+      "contextWindow": 4096,
+      "description": "Chat with Phi 3 Mini 4k Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 3 Mini 4k Instruct",
+      "id": "Phi-3-mini-4k-instruct-int8-ov",
+      "fileSize": 4108269167,
+      "optimizationPrecision": "int8",
+      "contextWindow": 4096,
+      "description": "Chat with Phi 3 Mini 4k Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Phi 3 Mini 128k Instruct",
+      "id": "Phi-3-mini-128k-instruct-int8-ov",
+      "fileSize": 4108345114,
+      "optimizationPrecision": "int8",
+      "contextWindow": 131072,
+      "description": "Chat with Phi 3 Mini 128k Instruct model",
+      "task": "text-generation"
+    },
+    {
+      "name": "Open_llama_3b_v2",
+      "id": "open_llama_3b_v2-int4-ov",
+      "fileSize": 1960434251,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with Open_llama_3b_v2 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE Instruct 3B V1",
+      "id": "RedPajama-INCITE-Instruct-3B-v1-fp16-ov",
+      "fileSize": 5975908581,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE Instruct 3B V1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE Instruct 3B V1",
+      "id": "RedPajama-INCITE-Instruct-3B-v1-int4-ov",
+      "fileSize": 1970894247,
+      "optimizationPrecision": "int4",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE Instruct 3B V1 model",
+      "task": "text-generation"
+    },
+    {
+      "name": "RedPajama INCITE Instruct 3B V1",
+      "id": "RedPajama-INCITE-Instruct-3B-v1-int8-ov",
+      "fileSize": 3001571035,
+      "optimizationPrecision": "int8",
+      "contextWindow": 2048,
+      "description": "Chat with RedPajama INCITE Instruct 3B V1 model",
+      "task": "text-generation"
+    }
+  ]
+}

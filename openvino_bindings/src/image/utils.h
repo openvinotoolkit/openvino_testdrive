@@ -1,5 +1,5 @@
-#ifndef UTILS_H_
-#define UTILS_H_
+#ifndef IMAGE_UTILS_H_
+#define IMAGE_UTILS_H_
 
 #include "src/utils/errors.h"
 #include "data_structures.h"

@@ -26,7 +26,7 @@ class DownloadProvider extends ChangeNotifier {
   CancelToken? _cancelToken;
   DownloadProvider(this.project);
 
-  Future<void> queue(Map<String, String> downloads) async{
+  Future<void> queue(Map<String, String> downloads, String? token) async{
     List<Future> promises = [];
 
     _cancelToken = CancelToken();
@@ -35,7 +35,14 @@ class DownloadProvider extends ChangeNotifier {
       final state = DownloadState();
       _downloads[url] = state;
       final destination = downloads[url];
-      final promise = dio.download(url, destination, cancelToken: _cancelToken, onReceiveProgress: (int received, int total) {
+      Map<String, String> headers = {};
+      if (token != null) {
+        headers["Authorization"] = "Bearer $token";
+      }
+      final promise = dio.download(url, destination,
+        cancelToken: _cancelToken,
+        options: Options(headers: headers),
+        onReceiveProgress: (int received, int total) {
           if (!_cancelToken!.isCancelled) {
             state.received = received;
             state.total = total;

@@ -9,7 +9,16 @@ class DropArea extends StatefulWidget {
   final Widget? child;
   final bool showChild;
   final void Function(String) onUpload;
-  const DropArea({required this.child, required this.showChild, required this.onUpload, super.key});
+  final String type;
+  final List<String>? extensions;
+  const DropArea({
+      super.key,
+      required this.child,
+      required this.showChild,
+      required this.onUpload,
+      required this.type,
+      this.extensions
+  });
 
   @override
   State<DropArea> createState() => _DropAreaState();
@@ -47,7 +56,10 @@ class _DropAreaState extends State<DropArea> {
         onDragExited: (val) => hideReleaseMessage(),
         onDragEntered: (val) => showReleaseMessage(),
         child: Container(
-          color: intelGray,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4.0),
+            color: intelGray,
+          ),
           child: Builder(
             builder: (context) {
               if (!_showReleaseMessage && widget.showChild) {
@@ -63,13 +75,20 @@ class _DropAreaState extends State<DropArea> {
                       SvgPicture.asset('images/drop.svg'),
                       ( _showReleaseMessage
                         ? const Text("Release to drop media")
-                        : const Text("Drop image here for testing")
+                        : Text("Drop ${widget.type} here")
                       ),
                       ElevatedButton(
                         onPressed: () => showUploadMenu(),
                         child: const Text("Upload")
                       ),
-                      const Text("jpg, jpeg, bmp, png, tif, tiff")
+                      Builder(
+                        builder: (context) {
+                          if (widget.extensions == null) {
+                            return Container();
+                          }
+                          return Text(widget.extensions!.join(", "));
+                        }
+                      )
                     ],
                   ),
                 ),

@@ -3,11 +3,14 @@ import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/router.dart';
 import 'package:inference/theme_fluent.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 
 const String title = 'OpenVINO TestDrive';
 
 void main() async {
+  MediaKit.ensureInitialized();
+
   runApp(const App());
 }
 

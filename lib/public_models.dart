@@ -11,7 +11,10 @@ final platformContext = Context(style: Style.platform);
 
 const huggingFaceURL = "https://huggingface.co";
 
-const huggingFaceCollectionInfoUrl = "https://huggingface.co/api/collections/OpenVINO/llm-6687aaa2abca3bbcec71a9bd";
+const List<Collection> collections = [
+  Collection("https://huggingface.co/api/collections/OpenVINO/llm-6687aaa2abca3bbcec71a9bd", "", "text"),
+  Collection("https://huggingface.co/api/collections/rhecker/speech-670ba88d40c7862e25913551", "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", "speech"),
+];
 
 void createDirectory(PublicProject project) {
   Directory(project.storagePath).createSync();
@@ -25,24 +28,18 @@ void writeProjectJson(PublicProject project) {
 
 Future<void> getAdditionalModelInfo(PublicProject project) async {
   final configJsonURL = huggingFaceModelFileUrl(project.id, "config.json");
-  final config = jsonDecode((await http.get(Uri.parse(configJsonURL))).body);
+  final config = jsonDecode((await http.get(
+      Uri.parse(configJsonURL),
+      headers: {
+        "Authorization":"Bearer ${project.modelInfo!.collection.token}",
+      }
+  )).body);
   project.tasks[0].architecture = config["architectures"][0];
   writeProjectJson(project);
 }
 
-Map<String, String> llmDownloadFiles(PublicProject project) {
-  const files = [
-    "openvino_model.bin",
-    "openvino_model.xml",
-    "openvino_detokenizer.bin",
-    "openvino_detokenizer.xml",
-    "openvino_tokenizer.bin",
-    "openvino_tokenizer.xml",
-    "tokenizer_config.json",
-    "tokenizer.json",
-    "config.json"
-  ];
-
+Map<String, String> downloadFiles(PublicProject project) {
+  final files = project.modelInfo?.files() ?? [];
   return { for (var v in files) huggingFaceModelFileUrl(project.id, v) : platformContext.join(project.storagePath, v) };
 }
 
@@ -54,9 +51,18 @@ Future<List<PublicModelInfo>> getPublicModels() async {
   //final directory = await getApplicationSupportDirectory();
   List<PublicModelInfo> models = [];
 
-  final collectionInfo = jsonDecode((await http.get(Uri.parse(huggingFaceCollectionInfoUrl))).body);
-  for (final item in collectionInfo["items"]) {
-    models.add(PublicModelInfo.fromJson(item));
+  for (final collection in collections) {
+    final request = await http.get(
+      Uri.parse(collection.path),
+      headers: {
+        "Authorization":"Bearer ${collection.token}",
+      }
+    );
+
+    final collectionInfo = jsonDecode(request.body);
+    for (final item in collectionInfo["items"]) {
+      models.add(PublicModelInfo.fromJson(item, collection.type, collection));
+    }
   }
   models.sort((a, b) => a.name.compareTo(b.name));
   return models;
