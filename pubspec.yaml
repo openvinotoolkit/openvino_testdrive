@@ -52,6 +52,9 @@ dependencies:
   http: ^1.2.1
   dio: ^5.5.0+1
   shimmer: ^3.0.0
+  fluent_ui: ^4.9.2
+  system_theme: ^3.1.2
+  flutter_acrylic: ^1.1.4
 
 dev_dependencies:
   flutter_test:
@@ -67,8 +70,6 @@ dev_dependencies:
   ffigen: ^13.0.0
   integration_test:
     sdk: flutter
-  path_provider_platform_interface: ^2.1.2
-  plugin_platform_interface: ^2.1.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

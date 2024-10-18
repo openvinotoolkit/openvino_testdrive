@@ -1,8 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:inference/openvino_console_app.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
+import 'package:inference/router.dart';
+import 'package:inference/theme_fluent.dart';
 import 'package:provider/provider.dart';
+
+const String title = 'OpenVINO TestDrive';
 
 void main() async {
   runApp(const App());
@@ -17,8 +20,32 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<PreferenceProvider>(create: (_) => PreferenceProvider("AUTO")),
         ChangeNotifierProvider<ProjectProvider>(create: (_) => ProjectProvider([])),
+        ChangeNotifierProvider(create: (_) => AppTheme()),
       ],
-      child: const OpenVINOTestDriveApp(),
+      builder: (context, child) {
+        final theme = context.watch<AppTheme>();
+        return FluentApp.router(
+          title: title,
+          themeMode: theme.mode,
+          debugShowCheckedModeBanner: false,
+          color: theme.color,
+          theme: FluentThemeData(
+            accentColor: theme.color,
+            visualDensity: VisualDensity.standard,
+          ),
+          // locale: theme.locale,
+          builder: (context, child) => NavigationPaneTheme(
+            data: const NavigationPaneThemeData(
+              // backgroundColor: theme.windowEffect != flutter_acrylic.WindowEffect.disabled
+              //   ? Colors.transparent : null,
+            ),
+            child: child!,
+          ),
+          routeInformationParser: router.routeInformationParser,
+          routerDelegate: router.routerDelegate,
+          routeInformationProvider: router.routeInformationProvider,
+        );
+      },
     );
   }
 }
