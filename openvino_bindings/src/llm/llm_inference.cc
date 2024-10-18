@@ -1,3 +1,4 @@
+#include <condition_variable>
 #include <fstream>
 #include <nlohmann/json.hpp>
 
@@ -7,6 +8,9 @@
 void LLMInference::set_streamer(const std::function<void(const std::string& response)> callback) {
     streamer = [callback, this](std::string word) {
         if (_stop) {
+            _done = true;
+            streamer_lock.unlock();
+            cond.notify_all();
             return true;
         }
         callback(word.c_str());
@@ -28,12 +32,17 @@ ov::genai::DecodedResults LLMInference::prompt(std::string message, float temper
     config.top_p = top_p;
     ov::genai::DecodedResults result;
 
+    _done = false;
     if (streamer) {
+        streamer_lock.lock();
         result = pipe.generate(prompt, config, streamer);
+        streamer_lock.unlock();
+        cond.notify_all();
         history.push_back({{"role", "assistant"}, {"content", result}});
     } else {
         result = pipe.generate(prompt, config);
     }
+    _done = true;
 
     return result;
 }
@@ -44,6 +53,10 @@ void LLMInference::clear_history() {
 
 void LLMInference::force_stop() {
     _stop = true;
+    std::unique_lock<std::mutex> lock(streamer_lock);
+    while(!_done) {
+        cond.wait(lock);
+    }
 }
 
 bool LLMInference::has_chat_template() {

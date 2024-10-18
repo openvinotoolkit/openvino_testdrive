@@ -1,6 +1,9 @@
 #ifndef LLM_INFERENCE_H_
 #define LLM_INFERENCE_H_
 
+#include <optional>
+#include <cmath>
+#include <mutex>
 #include "openvino/genai/llm_pipeline.hpp"
 
 class LLMInference {
@@ -8,7 +11,9 @@ class LLMInference {
   ov::genai::ChatHistory history;
   std::function<bool(std::string)> streamer;
   public:
-    LLMInference(std::string model_path, std::string device): model_path(model_path), pipe(model_path, device) {}
+    LLMInference(std::string model_path, std::string device):
+      model_path(model_path),
+      pipe(model_path, device) {}
     void set_streamer(const std::function<void(const std::string& response)> callback);
     ov::genai::DecodedResults prompt(std::string message, float temperature, float top_p);
     void clear_history();
@@ -18,8 +23,9 @@ class LLMInference {
   private:
     bool _stop = false;
     std::string model_path;
-
-
+    std::mutex streamer_lock;
+    std::condition_variable cond;
+    bool _done = true;
 };
 
 
