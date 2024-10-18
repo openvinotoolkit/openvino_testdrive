@@ -4,15 +4,17 @@
 #include <nlohmann/json.hpp>
 #include <openvino/openvino.hpp>
 
+#include "src/audio/speech_to_text.h"
 #include "src/image/image_inference.h"
 #include "src/mediapipe/graph_runner.h"
 #include "src/mediapipe/serialization/serialization_calculators.h"
 #include "src/llm/llm_inference.h"
 #include "src/utils/errors.h"
+#include "src/utils/utils.h"
+#include "src/utils/status.h"
 #include "src/image/json_serialization.h"
 #include "src/image/csv_serialization.h"
 #include "src/image/overlay.h"
-#include "src/utils/status.h"
 
 void freeStatus(Status *status) {
     //std::cout << "Freeing Status" << std::endl;
@@ -25,6 +27,10 @@ void freeStatusOrString(StatusOrString *status) {
         free((void*)status->value);  // Free the allocated memory
         status->value = NULL;        // Prevent dangling pointers
     }
+    delete status;
+}
+
+void freeStatusOrSpeechToText(StatusOrSpeechToText *status) {
     delete status;
 }
 
@@ -67,9 +73,7 @@ StatusOrString* imageInferenceInfer(CImageInference instance, unsigned char* ima
         auto image_inference = reinterpret_cast<ImageInference*>(instance);
         std::vector<char> image_vector(image_data, image_data + data_length);
         auto image = cv::imdecode(image_vector, 1);
-        std::cout <<" before infer" << std::endl;
         auto inference_result = image_inference->infer(image);
-        std::cout <<" after infer" << std::endl;
         auto result = image_inference->serialize(inference_result, image, json, csv, overlay).dump();
         return new StatusOrString{OkStatus, "", strdup(result.c_str())};
     } catch (...) {
@@ -184,14 +188,15 @@ Status* llmInferenceSetListener(CLLMInference instance, LLMInferenceCallbackFunc
     }
 }
 
-StatusOrLLMResponse* llmInferencePrompt(CLLMInference instance, const char* message, float temperature, float top_p) {
+StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, float temperature, float top_p) {
     try {
         auto inference = reinterpret_cast<LLMInference*>(instance);
         auto result = inference->prompt(message, temperature, top_p);
-        return new StatusOrLLMResponse{OkStatus, "", inference->get_metrics(), strdup(result.c_str())};
+        std::string text = result;
+        return new StatusOrModelResponse{OkStatus, "", convertToMetricsStruct(result.perf_metrics), strdup(text.c_str())};
     } catch (...) {
         auto except = handle_exceptions();
-        return new StatusOrLLMResponse{except->status, except->message, {}};
+        return new StatusOrModelResponse{except->status, except->message, {}};
     }
 }
 
@@ -285,6 +290,48 @@ Status* graphRunnerStop(CGraphRunner instance) {
     }
 }
 
+StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device) {
+    try {
+        auto instance = new SpeechToText(model_path, device);
+        return new StatusOrSpeechToText{OkStatus, "", instance};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrSpeechToText{except->status, except->message};
+    }
+}
+
+Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path) {
+    try {
+        auto object = reinterpret_cast<SpeechToText*>(instance);
+        object->load_video(video_path);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
+StatusOrInt* speechToTextVideoDuration(CSpeechToText instance) {
+    try {
+        auto object = reinterpret_cast<SpeechToText*>(instance);
+        object->video_duration();
+        // Deal with long in the future
+        return new StatusOrInt{OkStatus, "", (int)object->video_duration()};
+    } catch (...) {
+        return new StatusOrInt{OkStatus, ""};
+    }
+}
+
+StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language) {
+    try {
+        auto object = reinterpret_cast<SpeechToText*>(instance);
+        auto result = object->transcribe(start, duration, language);
+        std::string text = result;
+        return new StatusOrModelResponse{OkStatus, "", convertToMetricsStruct(result.perf_metrics), strdup(text.c_str())};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrModelResponse{except->status, except->message};
+    }
+}
 
 //void report_rss() {
 //    struct rusage r_usage;

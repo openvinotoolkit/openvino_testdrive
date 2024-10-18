@@ -5,15 +5,6 @@
 #include <cmath>
 #include <mutex>
 #include "openvino/genai/llm_pipeline.hpp"
-#include "metrics.h"
-
-inline float nan_safe(const float& value){
-  if (std::isnan(value)) {
-    return 0.0f;
-  } else {
-    return value;
-  }
-}
 
 class LLMInference {
   ov::genai::LLMPipeline pipe;
@@ -24,13 +15,11 @@ class LLMInference {
       model_path(model_path),
       pipe(model_path, device) {}
     void set_streamer(const std::function<void(const std::string& response)> callback);
-    std::string prompt(std::string message, float temperature, float top_p);
+    ov::genai::DecodedResults prompt(std::string message, float temperature, float top_p);
     void clear_history();
     void force_stop();
     bool has_chat_template();
-    Metrics get_metrics();
 
-    std::optional<ov::genai::PerfMetrics> metrics = {};
   private:
     bool _stop = false;
     std::string model_path;

@@ -10,7 +10,7 @@ cc_library(
         "@nlohmann_json//:json",
          "//third_party:openvino",
          "//src/utils:errors",
-         ":metrics",
+         "//src/utils:utils",
     ],
     visibility = ["//visibility:public"],
 )
@@ -27,12 +27,4 @@ cc_test(
     data = [
         "//data:models",
     ]
-)
-
-cc_library(
-    name = "metrics",
-    hdrs =  [
-        "metrics.h"
-    ],
-    visibility = ["//visibility:public"],
 )

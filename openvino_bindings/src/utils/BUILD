@@ -16,3 +16,24 @@ cc_library(
         "status.h",
     ]
 )
+
+cc_library(
+    name = "metrics",
+    hdrs = [
+        "metrics.h"
+    ],
+)
+
+cc_library(
+    name = "utils",
+    hdrs = [
+        "utils.h"
+    ],
+    srcs = [
+        "utils.cc"
+    ],
+    deps = [
+        "//third_party:openvino",
+        ":metrics",
+    ],
+)

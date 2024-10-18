@@ -36,7 +36,7 @@ class LLMInference {
     return LLMInference(result);
   }
 
-  Future<Message> prompt(String message, double temperature, double topP) async {
+  Future<ModelResponse> prompt(String message, double temperature, double topP) async {
     int instanceAddress = instance.ref.value.address;
     final result = await Isolate.run(() {
       final messagePtr = message.toNativeUtf8();
@@ -50,7 +50,7 @@ class LLMInference {
       throw "LLMInference prompt error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
-    return Message(result.ref.value.toDartString(), result.ref.metrics);
+    return ModelResponse(result.ref.value.toDartString(), result.ref.metrics);
   }
 
   Future<void> setListener(void Function(String) callback) async{
@@ -109,11 +109,4 @@ class LLMInference {
       throw "Clear History: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
   }
-}
-
-class Message {
-  final String content;
-  final Metrics metrics;
-
-  const Message(this.content, this.metrics);
 }

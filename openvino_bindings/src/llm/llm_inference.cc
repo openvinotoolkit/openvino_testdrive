@@ -18,7 +18,7 @@ void LLMInference::set_streamer(const std::function<void(const std::string& resp
     };
 }
 
-std::string LLMInference::prompt(std::string message, float temperature, float top_p) {
+ov::genai::DecodedResults LLMInference::prompt(std::string message, float temperature, float top_p) {
     history.push_back({{"role", "user"}, {"content", message}});
     _stop = false;
 
@@ -44,18 +44,11 @@ std::string LLMInference::prompt(std::string message, float temperature, float t
     }
     _done = true;
 
-    if (metrics.has_value()) {
-        metrics = metrics.value() + result.perf_metrics;
-    } else {
-        metrics = result.perf_metrics;
-    }
-
     return result;
 }
 
 void LLMInference::clear_history() {
     history.clear();
-    metrics.reset();
 }
 
 void LLMInference::force_stop() {
@@ -64,24 +57,6 @@ void LLMInference::force_stop() {
     while(!_done) {
         cond.wait(lock);
     }
-}
-
-Metrics LLMInference::get_metrics() {
-    if (!metrics.has_value()) {
-        throw api_error(LLMNoMetricsYet);
-    }
-    auto m = metrics.value();
-    return Metrics{
-      nan_safe(m.get_load_time()),
-      nan_safe(m.get_generate_duration().mean),
-      nan_safe(m.get_tokenization_duration().mean),
-      nan_safe(m.get_detokenization_duration().mean),
-      nan_safe(m.get_ttft().mean),
-      nan_safe(m.get_tpot().mean),
-      nan_safe(m.get_throughput().mean),
-      int(m.num_generated_tokens),
-      int(m.num_input_tokens)
-    };
 }
 
 bool LLMInference::has_chat_template() {
