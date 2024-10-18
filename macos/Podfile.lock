@@ -15,9 +15,9 @@ PODS:
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - system_theme (0.0.1):
-    - FlutterMacOS
   - screen_brightness_macos (0.1.0):
+    - FlutterMacOS
+  - system_theme (0.0.1):
     - FlutterMacOS
   - wakelock_plus (0.0.1):
     - FlutterMacOS
