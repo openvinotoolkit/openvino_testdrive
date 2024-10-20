@@ -20,6 +20,7 @@ typedef void* CImageInference;
 typedef void* CGraphRunner;
 typedef void* CSpeechToText;
 typedef void* CLLMInference;
+typedef void* CSentenceTransformer;
 
 typedef struct {
     const char* id;
@@ -77,9 +78,22 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    CSentenceTransformer value;
+} StatusOrSentenceTransformer;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     Metrics metrics;
     const char* value;
 } StatusOrModelResponse;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
+    float* value;
+    int size;
+} StatusOrEmbeddings;
 
 typedef struct {
     enum StatusEnum status;
@@ -97,6 +111,7 @@ EXPORT void freeStatusOrImageInference(StatusOrImageInference *status);
 EXPORT void freeStatusOrLLMInference(StatusOrLLMInference *status);
 EXPORT void freeStatusOrSpeechToText(StatusOrSpeechToText *status);
 EXPORT void freeStatusOrDevices(StatusOrDevices *status);
+EXPORT void freeStatusOrEmbeddings(StatusOrEmbeddings *status);
 
 EXPORT StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json);
 EXPORT StatusOrString* imageInferenceInfer(CImageInference instance, unsigned char* image_data, const size_t data_length, bool json, bool csv, bool overlay);
@@ -127,6 +142,10 @@ EXPORT StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char
 EXPORT Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path);
 EXPORT StatusOrInt* speechToTextVideoDuration(CSpeechToText instance);
 EXPORT StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language);
+
+EXPORT StatusOrSentenceTransformer* sentenceTransformerOpen(const char* model_path, const char* device);
+EXPORT StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, const char* prompt);
+EXPORT Status* sentenceTransformerClose(CSentenceTransformer instance);
 
 EXPORT StatusOrDevices* getAvailableDevices();
 Status* handle_exceptions();

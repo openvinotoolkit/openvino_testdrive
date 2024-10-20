@@ -15,6 +15,7 @@
 #include "src/image/json_serialization.h"
 #include "src/image/csv_serialization.h"
 #include "src/image/overlay.h"
+#include "src/sentence_transformer/sentence_transformer_pipeline.h"
 
 void freeStatus(Status *status) {
     //std::cout << "Freeing Status" << std::endl;
@@ -42,7 +43,15 @@ void freeStatusOrImageInference(StatusOrString *status) {
 void freeStatusOrDevices(StatusOrDevices *status) {
     if (status->status == StatusEnum::OkStatus) {
         delete [] status->value;
-        status->value = NULL;        // Prevent dangling pointers
+        status->value = nullptr;
+    }
+    delete status;
+}
+
+void freeStatusOrEmbeddings(StatusOrEmbeddings *status) {
+    if (status->status == StatusEnum::OkStatus) {
+        delete [] status->value;
+        status->value = nullptr;
     }
     delete status;
 }
@@ -332,6 +341,35 @@ StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start,
         return new StatusOrModelResponse{except->status, except->message};
     }
 }
+
+StatusOrSentenceTransformer* sentenceTransformerOpen(const char* model_path, const char* device) {
+    try {
+        auto instance = new SentenceTransformerPipeline(model_path, device);
+        return new StatusOrSentenceTransformer{OkStatus, "", instance};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrSentenceTransformer{except->status, except->message};
+    }
+
+}
+StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, const char* prompt) {
+    try {
+        auto object = reinterpret_cast<SentenceTransformerPipeline*>(instance);
+        auto result = object->generate(prompt);
+        auto data = new std::vector<float>(result.begin(), result.end());
+        return new StatusOrEmbeddings{OkStatus, "", data->data(), (int)data->size()};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrEmbeddings{except->status, except->message};
+    }
+
+}
+Status* sentenceTransformerClose(CSentenceTransformer instance) {
+    auto inference = reinterpret_cast<SentenceTransformerPipeline*>(instance);
+    delete inference;
+    return new Status{OkStatus};
+}
+
 
 //void report_rss() {
 //    struct rusage r_usage;
