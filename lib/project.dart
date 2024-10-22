@@ -112,13 +112,16 @@ class Task {
   }
 }
 
-enum ProjectType { image, text, speech }
+enum ProjectType { image, text, textToImage, speech }
 ProjectType parseProjectType(String name) {
   if (name == "image") {
     return ProjectType.image;
   }
   if (name == "text"){
     return ProjectType.text;
+  }
+  if (name == "textToImage"){
+    return ProjectType.textToImage;
   }
   if (name == "speech") {
     return ProjectType.speech;
@@ -131,6 +134,8 @@ String projectTypeToString(ProjectType type) {
   switch(type){
     case ProjectType.text:
       return "text";
+    case ProjectType.textToImage:
+      return "textToImage";
     case ProjectType.image:
       return "image";
     case ProjectType.speech:

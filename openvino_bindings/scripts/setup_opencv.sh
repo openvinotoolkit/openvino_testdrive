@@ -1,13 +1,14 @@
 #!/bin/bash
-export OPENCV_VERSION=4.3.0
+set -e
+export OPENCV_VERSION=4.5.3
 
 echo "Installing OpenCV from source"
-rm -rf /tmp/build_opencv
-mkdir /tmp/build_opencv
+#rm -rf /tmp/build_opencv
+mkdir -p /tmp/build_opencv
 cd /tmp/build_opencv
-git clone https://github.com/opencv/opencv_contrib.git
-git clone https://github.com/opencv/opencv.git
-mkdir opencv/release
+#git clone https://github.com/opencv/opencv_contrib.git
+#git clone https://github.com/opencv/opencv.git
+mkdir -p opencv/release
 cd opencv_contrib
 git checkout tags/$OPENCV_VERSION
 cd ../opencv
@@ -19,7 +20,7 @@ cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local \
       -DBUILD_PERF_TESTS=OFF \
       -DBUILD_opencv_ts=OFF \
       -DOPENCV_EXTRA_MODULES_PATH=/tmp/build_opencv/opencv_contrib/modules \
-      -DBUILD_opencv_aruco=OFF \
+      -DBUILD_opencv_aruco=ON \
       -DBUILD_opencv_bgsegm=OFF \
       -DBUILD_opencv_bioinspired=OFF \
       -DBUILD_opencv_ccalib=OFF \
@@ -49,12 +50,13 @@ cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local \
       -DWITH_EIGEN=ON \
       -DWITH_PTHREADS=ON \
       -DWITH_PTHREADS_PF=ON \
+      -DWITH_TBB=ON \
       -DWITH_JPEG=ON \
       -DWITH_PNG=ON \
       -DWITH_TIFF=ON
 make -j `nproc`
 make install
-rm -rf /tmp/build_opencv
+#rm -rf /tmp/build_opencv
 echo "OpenCV has been built. You can find the header files and libraries in /usr/local/include/opencv2/ and /usr/local/lib"
 
 # https://github.com/cggos/dip_cvqt/issues/1#issuecomment-284103343
