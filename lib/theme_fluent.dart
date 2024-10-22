@@ -7,6 +7,8 @@ import 'package:flutter_acrylic/flutter_acrylic.dart';
 enum NavigationIndicators { sticky, end }
 
 class AppTheme extends ChangeNotifier {
+  final fontFamily = 'Intel One';
+
   AccentColor? _color;
   AccentColor get color => _color ?? systemAccentColor;
   set color(AccentColor value) {

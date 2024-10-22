@@ -35,6 +35,7 @@ class App extends StatelessWidget {
           theme: FluentThemeData(
             accentColor: theme.color,
             visualDensity: VisualDensity.standard,
+            fontFamily: theme.fontFamily,
           ),
           // locale: theme.locale,
           builder: (context, child) => NavigationPaneTheme(

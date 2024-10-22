@@ -125,14 +125,10 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
 
   @override
   Widget build(BuildContext context) {
-    // return MaterialApp.router(
-    //   theme: intelTheme,
-    //   routerConfig: _router,
-    // );
     return NavigationView(
         appBar: NavigationAppBar(
           leading: Container(),
-          height: 30,
+          height: 48,
         ),
         paneBodyBuilder: (item, child) {
           final name =
