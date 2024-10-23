@@ -3,8 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:inference/pages/home/widgets/model_card.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/pages/home/widgets/project_card.dart';
-import 'package:inference/project.dart';
-import 'package:inference/providers/project_filter_provider.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/widgets/controls/filled_dropdown_button.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +28,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return ScaffoldPage.scrollable(
       padding: const EdgeInsets.all(0),
-      // crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Stack(
           alignment: Alignment.bottomCenter,
@@ -136,7 +133,6 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Consumer<ProjectProvider>(builder: (context, value, child) {
-                      // final selectedProjects = filter
                       return GridView.builder(
                         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 320, crossAxisSpacing: 32, mainAxisSpacing: 32, childAspectRatio: 6/8),
                         shrinkWrap: true,

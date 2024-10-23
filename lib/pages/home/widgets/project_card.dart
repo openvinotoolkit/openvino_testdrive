@@ -1,6 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/project.dart';
+import 'package:inference/providers/project_provider.dart';
 import 'package:inference/widgets/elevation.dart';
+import 'package:provider/provider.dart';
 
 class ProjectCard extends StatelessWidget {
   const ProjectCard({required this.project, super.key});
@@ -92,6 +94,12 @@ class ProjectCard extends StatelessWidget {
                         child: Text('Open'),
                       )
                     ],)),
+                    Consumer<ProjectProvider>(builder: (context, value, child) => DropDownButton(
+                      items: [
+                        MenuFlyoutItem(text: const Text('Delete'), onPressed: () { value.removeProject(project); })
+                      ],
+                      buttonBuilder: (context, onOpen) => IconButton(icon: const Icon(FluentIcons.more), onPressed: onOpen),
+                    ),)
                   ],
                 ),
               )
