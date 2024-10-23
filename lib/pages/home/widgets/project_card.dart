@@ -9,9 +9,7 @@ class ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    return ConstrainedBox(
-    constraints: const BoxConstraints(minHeight: 300, minWidth: 200),
-    child: Elevation(
+    return Elevation(
       backgroundColor: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       elevation: 4.0,
@@ -106,7 +104,6 @@ class ProjectCard extends StatelessWidget {
         ],
       ),
       ),
-    ),
     );
   }
 }

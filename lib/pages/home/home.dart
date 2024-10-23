@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                     child: Consumer<ProjectProvider>(builder: (context, value, child) {
                       // final selectedProjects = filter
                       return GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 300, crossAxisSpacing: 32, mainAxisSpacing: 32, childAspectRatio: 6/8),
+                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 320, crossAxisSpacing: 32, mainAxisSpacing: 32, childAspectRatio: 6/8),
                         shrinkWrap: true,
                         itemCount: value.projects.length,
                         physics: const NeverScrollableScrollPhysics(),
