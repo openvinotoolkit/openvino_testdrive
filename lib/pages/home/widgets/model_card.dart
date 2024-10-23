@@ -35,7 +35,7 @@ class ModelCard extends StatelessWidget {
                 SizedBox(
                 width: 80,
                 height: 80,
-                child: Image.asset("images/model_thumbnails/notus.png", fit: BoxFit.cover)
+                child: model.thumbnail,
                 ),
                 Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12),

@@ -1,7 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+import 'package:inference/utils/get_public_thumbnail.dart';
 
 class Model {
   final String name;
@@ -21,6 +22,10 @@ class Model {
     required this.description,
     required this.task,
   });
+
+  Image get thumbnail {
+    return getThumbnail(id);
+  }
 
   String get kind => task == 'text-generation' ? 'llm' : 'other';
 
