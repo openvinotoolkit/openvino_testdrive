@@ -4,7 +4,10 @@ import 'package:inference/pages/home/widgets/model_card.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/pages/home/widgets/project_card.dart';
 import 'package:inference/project.dart';
+import 'package:inference/providers/project_filter_provider.dart';
+import 'package:inference/providers/project_provider.dart';
 import 'package:inference/widgets/controls/filled_dropdown_button.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -132,17 +135,18 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 300, crossAxisSpacing: 32, mainAxisSpacing: 32),
-                      shrinkWrap: true,
-                      itemCount: 20,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return ProjectCard(project: Project(
-                          '1', '1', '1', 'Project $index', '1.1.1', ProjectType.image, '/path/to/project', true
-                        ));
-                      }
-                    ),
+                    child: Consumer<ProjectProvider>(builder: (context, value, child) {
+                      // final selectedProjects = filter
+                      return GridView.builder(
+                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 300, crossAxisSpacing: 32, mainAxisSpacing: 32, childAspectRatio: 6/8),
+                        shrinkWrap: true,
+                        itemCount: value.projects.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return ProjectCard(project: value.projects.elementAt(index));
+                        }
+                      );
+                    }),
                   ),
                 ],
               ),
