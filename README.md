@@ -33,5 +33,5 @@ Secondly, the bindings and its dependencies for your platform to be added to `./
 
 ## Build bindings
 
-The console uses c bindings to OpenVINO. These are located in `./openvino` folder. See [readme.md](./openvino/README.md).
+The console uses c bindings to OpenVINO. These are located in `./openvino` folder. See [readme.md](./openvino_bindings/README.md).
 
