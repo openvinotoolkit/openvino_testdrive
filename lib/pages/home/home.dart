@@ -2,6 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:inference/pages/home/widgets/model_card.dart';
 import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/pages/home/widgets/project_card.dart';
+import 'package:inference/project.dart';
 import 'package:inference/widgets/controls/filled_dropdown_button.dart';
 
 class HomePage extends StatefulWidget {
@@ -96,34 +98,52 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(left: 32, right: 32, top: 32),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1228),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
-                  const Text('My models',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      IconButton(icon: const Icon(FluentIcons.filter), onPressed: () {}),
-                      IconButton(icon: const Icon(FluentIcons.sort_down), onPressed: () {}),
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(minHeight: 24),
-                        child: const Divider(direction: Axis.vertical,style: DividerThemeData(
-                          verticalMargin: EdgeInsets.symmetric(horizontal: 8),
-                        ),),
+                      const Text('My models',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      FilledDropDownButton(
-                        title: const Text('Import model'),
-                        items: [
-                          MenuFlyoutItem(text: const Text('Hugging Face'), onPressed: () {}),
-                          MenuFlyoutItem(text: const Text('Local disk'), onPressed: () {}),
-                        ]
+                      Row(
+                        children: [
+                          IconButton(icon: const Icon(FluentIcons.filter), onPressed: () {}),
+                          IconButton(icon: const Icon(FluentIcons.sort_down), onPressed: () {}),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(minHeight: 24),
+                            child: const Divider(direction: Axis.vertical,style: DividerThemeData(
+                              verticalMargin: EdgeInsets.symmetric(horizontal: 8),
+                            ),),
+                          ),
+                          FilledDropDownButton(
+                            title: const Text('Import model'),
+                            items: [
+                              MenuFlyoutItem(text: const Text('Hugging Face'), onPressed: () {}),
+                              MenuFlyoutItem(text: const Text('Local disk'), onPressed: () {}),
+                            ]
+                          )
+                        ],
                       )
                     ],
-                  )
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 300, crossAxisSpacing: 32, mainAxisSpacing: 32),
+                      shrinkWrap: true,
+                      itemCount: 20,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return ProjectCard(project: Project(
+                          '1', '1', '1', 'Project $index', '1.1.1', ProjectType.image, '/path/to/project', true
+                        ));
+                      }
+                    ),
+                  ),
                 ],
               ),
             ),
