@@ -20,6 +20,7 @@ typedef void* CImageInference;
 typedef void* CGraphRunner;
 typedef void* CSpeechToText;
 typedef void* CLLMInference;
+typedef void* CTTIInference;
 
 typedef struct {
     const char* id;
@@ -77,6 +78,12 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    CLLMInference value;
+} StatusOrTTIInference;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     Metrics metrics;
     const char* value;
 } StatusOrModelResponse;
@@ -116,6 +123,11 @@ EXPORT Status* llmInferenceClearHistory(CLLMInference instance);
 EXPORT Status* llmInferenceForceStop(CLLMInference instance);
 EXPORT StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance);
 EXPORT Status* llmInferenceClose(CLLMInference instance);
+
+EXPORT StatusOrTTIInference* ttiInferenceOpen(const char* model_path, const char* device);
+EXPORT StatusOrString* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height);
+EXPORT StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance);
+EXPORT Status* ttiInferenceClose(CLLMInference instance);
 
 EXPORT StatusOrGraphRunner* graphRunnerOpen(const char* graph);
 EXPORT Status* graphRunnerQueueImage(CGraphRunner instance, const char* name, int timestamp, unsigned char* image_data, const size_t data_length);

@@ -78,15 +78,17 @@ class _TextToImageInferencePageState extends State<TextToImageInferencePage> wit
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text("Temperature"),
-                                    Text(nf.format(inference.temperature))
+                                    const Text("Width"),
+                                    Text(nf.format(inference.width))
                                   ]
                                 ),
                                 Slider(
-                                  value: inference.temperature,
-                                  max: 2.0,
+                                  value: inference.width.toDouble(),
+                                  max: 1024.0,
+                                  min: 64,
+                                  divisions: (1024-64)~/64,
                                   onChanged: (double value) {
-                                    inference.temperature = value;
+                                    inference.width = value.toInt();
                                   },
 
                                 ),
@@ -100,15 +102,17 @@ class _TextToImageInferencePageState extends State<TextToImageInferencePage> wit
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text("Top P"),
-                                    Text(nf.format(inference.topP))
+                                    const Text("Height"),
+                                    Text(nf.format(inference.height))
                                   ]
                                 ),
                                 Slider(
-                                  value: inference.topP,
-                                  max: 1.0,
+                                  value: inference.height.toDouble(),
+                                  max: 1024.0,
+                                  min: 64,
+                                  divisions: (1024-64)~/64,
                                   onChanged: (double value) {
-                                    inference.topP = value;
+                                    inference.height = value.toInt();
                                   },
 
                                 ),
@@ -128,7 +132,7 @@ class _TextToImageInferencePageState extends State<TextToImageInferencePage> wit
                       tabAlignment: TabAlignment.start,
                       controller: _tabController,
                       tabs: const [
-                        Tab(text: "Yay"),
+                        Tab(text: "Playground"),
                         Tab(text: "Performance metrics"),
                         //Tab(text: "Deploy"),
                       ]

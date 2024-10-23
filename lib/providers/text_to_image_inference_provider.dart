@@ -1,63 +1,59 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:inference/interop/generated_bindings.dart';
+import 'package:inference/interop/tti_inference.dart';
 import 'package:inference/project.dart';
-import 'package:image/image.dart' as img;
 
 enum Speaker { assistant, user }
-
-String speakerRole(Speaker speaker) {
-  switch(speaker) {
-    case Speaker.user:
-      return "user";
-    case Speaker.assistant:
-      return "assistant";
-  }
-}
-
-String speakerName(Speaker speaker) {
-  switch(speaker) {
-    case Speaker.user:
-      return "You";
-    case Speaker.assistant:
-      return "Assistant";
-  }
-}
 
 class Message {
   final Speaker speaker;
   final String message;
   final Image? image;
   final Metrics? metrics;
-  const Message(this.speaker, this.message, this.image, this.metrics);
+  final bool canCopy;
+
+  const Message(this.speaker, this.message, this.image, this.metrics, this.canCopy);
 }
 
 class TextToImageInferenceProvider extends ChangeNotifier {
-
   Completer<void> loaded = Completer<void>();
 
   Project? _project;
   String? _device;
 
   Project? get project => _project;
+
   String? get device => _device;
+
   Metrics? get metrics => _messages.lastOrNull?.metrics;
 
-  double _temperature = 1;
-  double get temperature => _temperature;
-  set temperature(double v) {
-    _temperature = v;
+  int _loadWidth = 512;
+  int _loadHeight = 512;
+
+  int _width = 512;
+
+  int get width => _width;
+
+  set width(int v) {
+    _width = v;
     notifyListeners();
   }
 
-  double _topP = 1;
-  double get topP => _topP;
-  set topP(double v) {
-    _topP = v;
+  int _height = 512;
+
+  int get height => _height;
+
+  set height(int v) {
+    _height = v;
     notifyListeners();
   }
 
+  TTIInference? _inference;
   final stopWatch = Stopwatch();
   int n = 0;
 
@@ -69,61 +65,52 @@ class TextToImageInferenceProvider extends ChangeNotifier {
       print("instantiating project: ${project.name}");
       print(project.storagePath);
       print(device);
+      TTIInference.init(project.storagePath, device).then((instance) {
+        print("done loading");
+        _inference = instance;
+        loaded.complete();
+        notifyListeners();
+      });
     }
-  }
-
-  void onMessage(String word) {
-     stopWatch.stop();
-     if (n == 0) { // dont count first token since it's slow.
-       stopWatch.reset();
-     }
-
-     double timeElapsed = stopWatch.elapsedMilliseconds.toDouble();
-     double averageElapsed = (n == 0 ? 0.0 : timeElapsed / n);
-     if (n == 0) {
-       _response = word;
-     } else {
-       _response = _response! + word;
-     }
-     _speed = averageElapsed;
-     if (hasListeners) {
-       notifyListeners();
-     }
-     stopWatch.start();
-     n++;
   }
 
   bool sameProps(Project? project, String? device) {
     return _project == project && _device == device;
   }
 
-  bool get initialized => true;
+  bool get initialized => loaded.isCompleted;
   final List<Message> _messages = [];
 
   double? _speed;
+
   double? get speed => _speed;
+
   set speed(double? speed) {
     _speed = speed;
     notifyListeners();
   }
 
   String? _response;
+
   String? get response => _response;
+
   set response(String? response) {
     _response = response;
     notifyListeners();
   }
 
   String get task {
-      return "Image Generation";
-
+    return "Image Generation";
   }
 
   Message? get interimResponse {
     if (_response == null) {
       return null;
     }
-    return Message(Speaker.assistant, response!, null, null);
+    final loadingImage = Image.asset('images/intel-loading.gif',
+        width: _loadWidth.toDouble(), height: _loadHeight.toDouble(), fit: BoxFit.contain);
+
+    return Message(Speaker.assistant, response!, loadingImage, null, false);
   }
 
   List<Message> get messages {
@@ -133,20 +120,27 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     return [..._messages, interimResponse!];
   }
 
+  Future<ui.Image> createImage(Uint8List bytes) async {
+    return await decodeImageFromList(bytes);
+  }
+
   Future<void> message(String message) async {
-    _response = "...";
-    _messages.add(Message(Speaker.user, message, null, null));
+    _response = "Generating image...";
+
+    _messages.add(Message(Speaker.user, message, null, null, false));
     notifyListeners();
 
+    _loadWidth = width;
+    _loadHeight = height;
+    final response = await _inference!.prompt(message, width, height);
 
-    // final response = await _inference!.prompt(message, temperature, topP);
-
-    final image = Image.asset('images/generated_image.jpg', width: 400);
+    final image = Image.memory(base64Decode(response.content), width: _loadWidth.toDouble(), height: _loadHeight.toDouble());
 
     if (_messages.isNotEmpty) {
-      _messages.add(Message(Speaker.assistant, "Generated image", image, null));
+      _messages.add(Message(Speaker.assistant, "Generated image", image, null, true));
     }
     _response = null;
+
     n = 0;
     if (hasListeners) {
       notifyListeners();
@@ -155,23 +149,34 @@ class TextToImageInferenceProvider extends ChangeNotifier {
 
   void close() {
     _messages.clear();
+    _inference?.close();
     _response = null;
+    if (_inference != null) {
+      _inference!.close();
+    }
   }
 
   void forceStop() {
+    // Todo
   }
 
   void reset() {
     //_inference?.close();
+    // _inference?.forceStop();
+    // _inference?.clearHistory();
     _messages.clear();
     _response = null;
     notifyListeners();
   }
 
-
   @override
   void dispose() {
+    if (_inference != null) {
+      _inference?.close();
+      super.dispose();
+    } else {
       close();
       super.dispose();
+    }
   }
 }

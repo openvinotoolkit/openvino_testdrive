@@ -10,6 +10,7 @@ cc_library(
         "//src/image:image_inference",
         "//src/audio:speech_to_text",
         "//src/llm:llm_inference",
+        "//src/tti:tti_inference",
         "//src/mediapipe:graph_runner",
     ],
 )

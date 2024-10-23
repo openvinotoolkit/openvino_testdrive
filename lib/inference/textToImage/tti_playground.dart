@@ -33,17 +33,17 @@ class _PlaygroundState extends State<TTIPlayground> {
     if (message.isEmpty) {
       return;
     }
-    final llm = provider();
-    if (!llm.initialized) {
+    final tti = provider();
+    if (!tti.initialized) {
       return;
     }
 
-    if (llm.response != null) {
+    if (tti.response != null) {
       return;
     }
     _controller.text = "";
     jumpToBottom(offset: 110); //move to bottom including both
-    llm.message(message);
+    tti.message(message);
   }
 
   TextToImageInferenceProvider provider() => Provider.of<TextToImageInferenceProvider>(context, listen: false);
@@ -174,23 +174,23 @@ class _PlaygroundState extends State<TTIPlayground> {
                         }),
                       ),
 
-                      SizedBox(
-                        height: 30,
-                        child: Builder(
-                          builder: (context) {
-                            if (inference.interimResponse == null){
-                              return Container();
-                            }
-                            return Center(
-                              child: OutlinedButton.icon(
-                                onPressed: () => inference.forceStop(),
-                                icon: const Icon(Icons.stop),
-                                label: const Text("Stop responding")
-                              ),
-                            );
-                          }
-                        ),
-                      ),
+                      // SizedBox(
+                      //   height: 30,
+                      //   child: Builder(
+                      //     builder: (context) {
+                      //       if (inference.interimResponse == null){
+                      //         return Container();
+                      //       }
+                      //       return Center(
+                      //         child: OutlinedButton.icon(
+                      //           onPressed: () => inference.forceStop(),
+                      //           icon: const Icon(Icons.stop),
+                      //           label: const Text("Stop responding")
+                      //         ),
+                      //       );
+                      //     }
+                      //   ),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.only(left: 45, right: 45, top: 10, bottom: 25),
                         child: SizedBox(
@@ -302,12 +302,12 @@ class GeneratedImageMessage extends StatelessWidget {
               width: 20,
             ),
           ),
-          ImageWidget(message: message.message, image: message.image!),
+          ImageWidget(message: message.message, image: message.image),
           Padding(
             padding: const EdgeInsets.only(left: 28, top: 5),
             child: Builder(
               builder: (context) {
-                if (message.metrics == null) {
+                if (message.speaker == Speaker.user) {
                   return Container();
                 }
                 return Row(
@@ -326,7 +326,7 @@ class GeneratedImageMessage extends StatelessWidget {
                       padding: const EdgeInsets.all(4),
                       constraints: const BoxConstraints(),
                       tooltip: "Copy to clipboard",
-                      onPressed: () {
+                      onPressed: message.canCopy == false ? null : () {
                         Clipboard.setData(ClipboardData(text: message.message));
                       },
                     ),
@@ -424,7 +424,7 @@ class MessageWidget extends StatelessWidget {
 
 class ImageWidget extends StatelessWidget {
   final String message;
-  final Image image;
+  final Image? image;
   const ImageWidget({super.key, required this.message, required this.image});
 
   @override
@@ -435,7 +435,7 @@ class ImageWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Image widget goes here
-          image,
+          image ?? Container(),
           const SizedBox(height: 8), // Add some spacing between image and text
           SelectableText(
             message,
