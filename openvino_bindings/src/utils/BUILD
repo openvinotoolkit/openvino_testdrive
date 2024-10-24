@@ -14,26 +14,34 @@ cc_library(
     name = "status",
     hdrs = [
         "status.h",
-    ]
+    ],
 )
 
 cc_library(
     name = "metrics",
     hdrs = [
-        "metrics.h"
+        "metrics.h",
+    ],
+)
+
+cc_library(
+    name = "tti_metrics",
+    hdrs = [
+        "tti_metrics.h",
     ],
 )
 
 cc_library(
     name = "utils",
-    hdrs = [
-        "utils.h"
-    ],
     srcs = [
-        "utils.cc"
+        "utils.cc",
+    ],
+    hdrs = [
+        "utils.h",
     ],
     deps = [
-        "//third_party:openvino",
         ":metrics",
+        ":tti_metrics",
+        "//third_party:openvino",
     ],
 )

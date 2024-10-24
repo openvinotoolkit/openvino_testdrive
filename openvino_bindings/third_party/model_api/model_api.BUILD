@@ -24,8 +24,8 @@ cmake(
         "OpenCV_DIR": "/opt/homebrew/Cellar/opencv/4.10.0_9",
     },
     env = {
-        "HTTP_PROXY": "http://proxy-dmz.intel.com:911",
-        "HTTPS_PROXY": "http://proxy-dmz.intel.com:912",
+#        "HTTP_PROXY": "http://proxy-dmz.intel.com:911",
+#        "HTTPS_PROXY": "http://proxy-dmz.intel.com:912",
     },
     lib_source = ":all_srcs",
     out_static_libs = ["libmodel_api.a"],
@@ -48,8 +48,8 @@ cmake(
         "OpenVINO_DIR": "/opt/intel/openvino/runtime/cmake",
     },
     env = {
-        "HTTP_PROXY": "http://proxy-dmz.intel.com:911",
-        "HTTPS_PROXY": "http://proxy-dmz.intel.com:912",
+#        "HTTP_PROXY": "http://proxy-dmz.intel.com:911",
+#        "HTTPS_PROXY": "http://proxy-dmz.intel.com:912",
     },
     lib_source = ":all_srcs",
     out_static_libs = ["libmodel_api.a"],

@@ -3,47 +3,48 @@ load(":windows_dll_library.bzl", "windows_dll_library")
 cc_library(
     name = "bindings_deps",
     deps = [
-        "@nlohmann_json//:json",
-        "//third_party:opencv",
-        "//src/utils:status",
-        "//src/utils:utils",
-        "//src/image:image_inference",
         "//src/audio:speech_to_text",
+        "//src/image:image_inference",
         "//src/llm:llm_inference",
-        "//src/tti:tti_inference",
         "//src/mediapipe:graph_runner",
+        "//src/tti:tti_inference",
+        "//src/utils",
+        "//src/utils:status",
+        "//third_party:opencv",
+        "@nlohmann_json//:json",
     ],
 )
 
 cc_library(
     name = "bindings",
-    hdrs = ["bindings.h"],
     srcs = ["bindings.cc"],
+    hdrs = ["bindings.h"],
+    copts = ["-fPIC"],
+    linkopts = ["-Wl,-rpath,$$ORIGIN"],
     deps = [
         ":bindings_deps",
         "//src/utils:metrics",
+        "//src/utils:tti_metrics",
     ],
-    copts = ["-fPIC"],
-    alwayslink=1,
-    linkopts = ["-Wl,-rpath,$$ORIGIN"],
+    alwayslink = 1,
 )
 
 cc_binary(
     name = "macos_bindings",
+    linkshared = 1,
+    visibility = ["//visibility:public"],
     deps = [
         ":bindings",
     ],
-    linkshared=1,
-    visibility = ["//visibility:public"],
 )
 
 cc_binary(
     name = "linux_bindings",
+    linkshared = 1,
+    visibility = ["//visibility:public"],
     deps = [
         ":bindings",
     ],
-    linkshared=1,
-    visibility = ["//visibility:public"],
 )
 
 cc_test(
@@ -51,23 +52,23 @@ cc_test(
     srcs = [
         "bindings_test.cc",
     ],
-    deps = [
-        "@gtest//:gtest_main",
-        ":bindings",
-    ],
     data = [
         "//data:models",
-    ]
+    ],
+    deps = [
+        ":bindings",
+        "@gtest//:gtest_main",
+    ],
 )
 
 windows_dll_library(
     name = "windows_bindings",
-    hdrs = ["bindings.h"],
     srcs = ["bindings.cc"],
-    deps = [
-        ":bindings_deps",
-    ],
+    hdrs = ["bindings.h"],
     copts = ["/DCOMPILING_DLL"],
     target_compatible_with = ["@platforms//os:windows"],
     visibility = ["//visibility:public"],
+    deps = [
+        ":bindings_deps",
+    ],
 )

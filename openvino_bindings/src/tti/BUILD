@@ -11,6 +11,7 @@ cc_library(
         "//src/image:serialization",
         "//src/utils",
         "//src/utils:errors",
+        "//src/utils:tti_metrics",
         "//third_party:opencv",
         "//third_party:openvino",
         "@nlohmann_json//:json",

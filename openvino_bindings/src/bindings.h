@@ -15,6 +15,7 @@
 #include <stdbool.h>
 #include "src/utils/status.h"
 #include "src/utils/metrics.h"
+#include "utils/tti_metrics.h"
 
 typedef void* CImageInference;
 typedef void* CGraphRunner;
@@ -91,6 +92,13 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    TTIMetrics metrics;
+    const char* value;
+} StatusOrTTIModelResponse;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     Device* value;
     int size;
 } StatusOrDevices;
@@ -125,7 +133,7 @@ EXPORT StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance);
 EXPORT Status* llmInferenceClose(CLLMInference instance);
 
 EXPORT StatusOrTTIInference* ttiInferenceOpen(const char* model_path, const char* device);
-EXPORT StatusOrString* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height);
+EXPORT StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height, int rounds);
 EXPORT StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance);
 EXPORT Status* ttiInferenceClose(CLLMInference instance);
 

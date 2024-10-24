@@ -22,6 +22,7 @@ filegroup(
         "lib/intel64/libopenvino_intel_cpu_plugin.so",
         "lib/intel64/libopenvino_intel_gpu_plugin.so",
         "lib/intel64/libopenvino_intel_npu_plugin.so",
+        "lib/intel64/libopenvino_ir_frontend.so." + OPENVINO_VERSION,
         "lib/intel64/libopenvino_pytorch_frontend.so",
         "lib/intel64/libopenvino_pytorch_frontend.so." + OPENVINO_VERSION,
         "lib/intel64/libopenvino_auto_batch_plugin.so",

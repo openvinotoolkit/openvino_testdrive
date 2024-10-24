@@ -27,8 +27,9 @@ class ModelResponse {
 
 class TTIModelResponse {
   final String content;
+  final TTIMetrics metrics;
 
-  const TTIModelResponse(this.content);
+  const TTIModelResponse(this.content, this.metrics);
 }
 
 

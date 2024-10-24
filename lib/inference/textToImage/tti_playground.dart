@@ -1,15 +1,15 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:inference/config.dart';
 import 'package:inference/hint.dart';
 import 'package:inference/inference/device_selector.dart';
-import 'package:inference/inference/text/metric_widgets.dart';
+import 'package:inference/inference/textToImage/tti_metric_widgets.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/providers/text_to_image_inference_provider.dart';
 import 'package:inference/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:super_clipboard/super_clipboard.dart';
 
 class TTIPlayground extends StatefulWidget {
   const TTIPlayground({super.key});
@@ -302,7 +302,7 @@ class GeneratedImageMessage extends StatelessWidget {
               width: 20,
             ),
           ),
-          ImageWidget(message: message.message, image: message.image),
+          ImageWidget(message: message.message, image: Image.memory(message.imageContent!.imageData, width: message.imageContent!.width.toDouble(), height: message.imageContent!.height.toDouble(), fit: message.imageContent!.boxFit)),
           Padding(
             padding: const EdgeInsets.only(left: 28, top: 5),
             child: Builder(
@@ -312,46 +312,58 @@ class GeneratedImageMessage extends StatelessWidget {
                 }
                 return Row(
                   children: [
-                    IconButton.filled(
-                      icon: SvgPicture.asset("images/copy.svg",
-                        colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
-                        width: 20,
+                      Opacity(
+                        opacity: message.allowedCopy ? 1.0 : 0.25,
+                        child:
+                            IconButton.filled(
+                              icon: SvgPicture.asset("images/copy.svg",
+                                colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
+                                width: 20,
+                              ),
+                              style: IconButton.styleFrom(
+                                backgroundColor: intelGrayLight,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                                ),
+                              ),
+                              padding: const EdgeInsets.all(4),
+                              constraints: const BoxConstraints(),
+                              tooltip: message.allowedCopy ? "Copy to clipboard" : null,
+                              onPressed: message.imageContent?.imageData == null || message.allowedCopy == false ? null : () {
+
+                                final clipboard = SystemClipboard.instance;
+                                if (clipboard == null) {
+                                  return; // Clipboard API is not supported on this platform.
+                                }
+                                final item = DataWriterItem();
+                                item.add(Formats.jpeg(message.imageContent!.imageData));
+                                clipboard.write([item]);
+
+                              },
+                            )
                       ),
-                      style: IconButton.styleFrom(
-                        backgroundColor: intelGrayLight,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(4)),
-                        ),
-                      ),
-                      padding: const EdgeInsets.all(4),
-                      constraints: const BoxConstraints(),
-                      tooltip: "Copy to clipboard",
-                      onPressed: message.canCopy == false ? null : () {
-                        Clipboard.setData(ClipboardData(text: message.message));
-                      },
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: IconButton(
-                        style: IconButton.styleFrom(
-                          backgroundColor: intelGrayLight,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: IconButton(
+                          style: IconButton.styleFrom(
+                            backgroundColor: intelGrayLight,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(4)),
+                            ),
                           ),
+                          padding: const EdgeInsets.all(4),
+                          constraints: const BoxConstraints(),
+                          icon: SvgPicture.asset("images/stats.svg",
+                            colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
+                            width: 20,
+                          ),
+                          tooltip: "Show stats",
+                          onPressed: () {
+                            showMetricsDialog(context, message.metrics!);
+                          },
                         ),
-                        padding: const EdgeInsets.all(4),
-                        constraints: const BoxConstraints(),
-                        icon: SvgPicture.asset("images/stats.svg",
-                          colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
-                          width: 20,
-                        ),
-                        tooltip: "Show stats",
-                        onPressed: () {
-                          showMetricsDialog(context, message.metrics!);
-                        },
                       ),
-                    ),
-                  ],
+                    ],
                 );
               }
             ),
@@ -362,12 +374,12 @@ class GeneratedImageMessage extends StatelessWidget {
   }
 }
 
-void showMetricsDialog(BuildContext context, Metrics metrics) {
+void showMetricsDialog(BuildContext context, TTIMetrics metrics) {
   showDialog<Metrics>(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        content: CirclePropRow(
+        content: TTICirclePropRow(
           metrics: metrics
         )
       );

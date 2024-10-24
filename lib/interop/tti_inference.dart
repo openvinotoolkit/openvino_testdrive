@@ -34,7 +34,7 @@ class TTIInference {
   }
 
   Future<TTIModelResponse> prompt(
-      String message, int width, int height) async {
+      String message, int width, int height, int rounds) async {
     int instanceAddress = instance.ref.value.address;
     final result = await Isolate.run(() {
       final messagePtr = message.toNativeUtf8();
@@ -42,7 +42,8 @@ class TTIInference {
           Pointer<Void>.fromAddress(instanceAddress),
           messagePtr,
           width,
-          height);
+          height,
+          rounds);
       calloc.free(messagePtr);
       return status;
     });
@@ -51,10 +52,9 @@ class TTIInference {
       throw "TTIInference prompt error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
-    return TTIModelResponse(result.ref.value.toDartString());
+    return TTIModelResponse(
+        result.ref.value.toDartString(), result.ref.metrics);
   }
-
-
 
   bool hasModelIndex() {
     final status = tti_ov.ttiInferenceHasModelIndex(instance.ref.value);
@@ -74,5 +74,4 @@ class TTIInference {
     }
     tti_ov.freeStatus(status);
   }
-
 }

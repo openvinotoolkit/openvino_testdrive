@@ -247,15 +247,16 @@ StatusOrTTIInference* ttiInferenceOpen(const char* model_path, const char* devic
     }
 }
 
-StatusOrString* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height) {
+StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height, int rounds) {
     try {
         auto inference = reinterpret_cast<TTIInference*>(instance);
-        auto result = inference->prompt(message, width, height);
-        std::string text = result;
-        return new StatusOrString{OkStatus, {}, strdup(text.c_str())};
+        auto result = inference->prompt(message, width, height, rounds);
+        auto text = result.string;
+        auto metrics = result.metrics;
+        return new StatusOrTTIModelResponse{OkStatus, {}, metrics, text};
     } catch (...) {
         auto except = handle_exceptions();
-        return new StatusOrString{except->status, except->message, {}};
+        return new StatusOrTTIModelResponse{except->status, except->message, {}, {}};
     }
 }
 

@@ -4,20 +4,30 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:inference/interop/generated_bindings.dart';
 import 'package:inference/interop/tti_inference.dart';
 import 'package:inference/project.dart';
 
 enum Speaker { assistant, user }
 
+class ImageContent {
+  final Uint8List imageData;
+  final int width;
+  final int height;
+  final BoxFit boxFit;
+  const ImageContent(this.imageData, this.width, this.height, this.boxFit);
+
+}
+
 class Message {
   final Speaker speaker;
   final String message;
-  final Image? image;
-  final Metrics? metrics;
-  final bool canCopy;
+  final ImageContent? imageContent;
+  final TTIMetrics? metrics;
+  final bool allowedCopy; // Don't allow loading images to be copied
 
-  const Message(this.speaker, this.message, this.image, this.metrics, this.canCopy);
+  const Message(this.speaker, this.message, this.imageContent, this.metrics, this.allowedCopy);
 }
 
 class TextToImageInferenceProvider extends ChangeNotifier {
@@ -30,7 +40,9 @@ class TextToImageInferenceProvider extends ChangeNotifier {
 
   String? get device => _device;
 
-  Metrics? get metrics => _messages.lastOrNull?.metrics;
+  TTIMetrics? get metrics => _messages.lastOrNull?.metrics;
+
+  Uint8List? _imageBytes;
 
   int _loadWidth = 512;
   int _loadHeight = 512;
@@ -53,6 +65,15 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  int _rounds = 20;
+
+  int get rounds => _rounds;
+
+  set rounds(int v) {
+    _rounds = v;
+    notifyListeners();
+  }
+
   TTIInference? _inference;
   final stopWatch = Stopwatch();
   int n = 0;
@@ -62,6 +83,7 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     _device = device;
 
     if (project != null && device != null) {
+      preloadImageBytes();
       print("instantiating project: ${project.name}");
       print(project.storagePath);
       print(device);
@@ -73,6 +95,15 @@ class TextToImageInferenceProvider extends ChangeNotifier {
       });
     }
   }
+
+  void preloadImageBytes() {
+    rootBundle.load('images/intel-loading.gif').then((data) {
+      _imageBytes = data.buffer.asUint8List();
+      // Optionally notify listeners if you need to update UI
+      notifyListeners();
+    });
+  }
+
 
   bool sameProps(Project? project, String? device) {
     return _project == project && _device == device;
@@ -107,10 +138,9 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     if (_response == null) {
       return null;
     }
-    final loadingImage = Image.asset('images/intel-loading.gif',
-        width: _loadWidth.toDouble(), height: _loadHeight.toDouble(), fit: BoxFit.contain);
+    final imageContent = ImageContent(_imageBytes ?? Uint8List(0), _loadWidth, _loadHeight, BoxFit.contain);
 
-    return Message(Speaker.assistant, response!, loadingImage, null, false);
+    return Message(Speaker.assistant, response!, imageContent, null, false);
   }
 
   List<Message> get messages {
@@ -132,12 +162,13 @@ class TextToImageInferenceProvider extends ChangeNotifier {
 
     _loadWidth = width;
     _loadHeight = height;
-    final response = await _inference!.prompt(message, width, height);
+    final response = await _inference!.prompt(message, width, height, rounds);
 
-    final image = Image.memory(base64Decode(response.content), width: _loadWidth.toDouble(), height: _loadHeight.toDouble());
+    final imageData  = base64Decode(response.content);
+    final imageContent = ImageContent(imageData, _loadWidth, _loadHeight, BoxFit.contain);
 
     if (_messages.isNotEmpty) {
-      _messages.add(Message(Speaker.assistant, "Generated image", image, null, true));
+      _messages.add(Message(Speaker.assistant, "Generated image", imageContent, response.metrics, true));
     }
     _response = null;
 

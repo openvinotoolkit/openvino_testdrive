@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inference/header.dart';
 import 'package:inference/inference/model_info.dart';
-import 'package:inference/inference/text/performance_metrics.dart';
+import 'package:inference/inference/textToImage/tti_performance_metrics.dart';
 import 'package:inference/inference/textToImage/tti_playground.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
@@ -119,6 +119,30 @@ class _TextToImageInferencePageState extends State<TextToImageInferencePage> wit
                               ],
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 12, top: 12, right: 20.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text("Rounds"),
+                                    Text(nf.format(inference.rounds))
+                                  ]
+                                ),
+                                Slider(
+                                  value: inference.rounds.toDouble(),
+                                  max: 80,
+                                  min: 1,
+                                  divisions: (80-1)~/1,
+                                  onChanged: (double value) {
+                                    inference.rounds = value.toInt();
+                                  },
+
+                                ),
+                              ],
+                            ),
+                          ),
                         ]
                       ),
                     );
@@ -144,7 +168,7 @@ class _TextToImageInferencePageState extends State<TextToImageInferencePage> wit
                           controller: _tabController,
                           children: const [
                             TTIPlayground(),
-                            PerformanceMetricsPage(),
+                            TTIPerformanceMetricsPage(),
                             //Container(),
                           ]
                         ),
