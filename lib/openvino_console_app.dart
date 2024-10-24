@@ -73,7 +73,7 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
 
   late final List<NavigationPaneItem> originalNavigationItems = [
     PaneItem(
-      key: const ValueKey('/'),
+      key: const ValueKey('/home'),
       icon: const Icon(FluentIcons.home),
       title: const Text('Home'),
       body: const SizedBox.shrink()
@@ -116,7 +116,9 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
   int? _calculateSelectedIndex(BuildContext context) {
     final uri = GoRouterState.of(context).uri.toString();
     int? index = originalNavigationItems
-      .indexWhere((item) => item.key == Key(uri));
+      .indexWhere((item) {
+        return uri.startsWith((item.key as ValueKey).value);
+    });
     if (index == -1) {
       index = null;
     }
