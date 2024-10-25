@@ -52,24 +52,33 @@ class ModelCard extends StatelessWidget {
                 ),
               ],
               ),
-              Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-              child: Text(model.name,
-                style: const TextStyle(
-                fontSize: 24,
-                )
-              ),
-              ),
-              Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Text(model.description),
-              ),
-              Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 2),
-                child: IconButton(icon: const Icon(FluentIcons.pop_expand), onPressed: () {}),
-              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                          child: Text(model.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Text(model.description, style: const TextStyle(fontSize: 12)),
+                        ),
+                      ],
+                    ),
+                    Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 2),
+                      child: IconButton(icon: const Icon(FluentIcons.pop_expand, size: 14), onPressed: () {}),
+                    ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
