@@ -1,5 +1,5 @@
 name: inference
-description: "OpenVINO TestDrive"
+description: "OpenVINO Test Drive"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -156,7 +156,7 @@ ffigen:
 
 
 msix_config:
-  display_name: OpenVINO TestDrive
+  display_name: OpenVINO Test Drive
   publisher_display_name: Intel
   identity_name: intel.openvino.testdrive
   msix_version: 24.4.2.0

@@ -1,8 +1,8 @@
-# OpenVINO TestDrive Bindings
+# OpenVINO Test Drive Bindings
 
 ## Introduction
 
-This repo contains the dart bindings for OpenVINO TestDrive to run GenAI and Geti Image models.
+This repo contains the dart bindings for OpenVINO Test Drive to run GenAI and Geti Image models.
 This acts as c api layer between OpenVINO and dart, wrapping and keeping the state.
 
 ## Design
