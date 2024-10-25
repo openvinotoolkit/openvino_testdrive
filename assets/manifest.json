@@ -1,7 +1,7 @@
 {
   "popular_models": [
     {
-      "name": "Mistral 7b Instruct V0.1",
+      "name": "Mistral 7b Instruct",
       "id": "mistral-7b-instruct-v0.1-int8-ov",
       "fileSize": 7824223166,
       "optimizationPrecision": "int8",
@@ -10,7 +10,7 @@
       "task": "text-generation"
     },
     {
-      "name": "Phi 3 Mini 4k Instruct",
+      "name": "Phi 3 Mini 4k",
       "id": "Phi-3-mini-4k-instruct-int4-ov",
       "fileSize": 2637358233,
       "optimizationPrecision": "int4",
