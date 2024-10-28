@@ -1,6 +1,6 @@
 # OpenVINO™ Test Drive
 
-Welcome to Intel OpenVINO Test Drive. This application allows you to run LLMs and Geti trained models directly on your computer using OpenVINO.
+Welcome to Intel OpenVINO Test Drive. This application allows you to run LLMs and [Intel Geti](https://geti.intel.com/) trained models directly on your computer using OpenVINO.
 
 * LLM Inference
 * Image inference:
