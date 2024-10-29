@@ -52,34 +52,40 @@ class _PerformanceMetricsPageState extends State<PerformanceMetricsPage> {
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             color: intelGray,
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                CirclePropRow(metrics: metrics),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: GridView.count(
-                      physics: const NeverScrollableScrollPhysics(),
-                      childAspectRatio: 2.0,
-                      padding: const EdgeInsets.only(right: 20.0),
-                      crossAxisSpacing: 4.0,
-                      crossAxisCount: 3,
-                      children: [
-                       Statistic(header: "Tokenization duration", value: nf.format(metrics.tokenization_time), unit: "ms"),
-                       Statistic(header: "Detokenization duration", value: nf.format(metrics.detokenization_time), unit: "ms"),
-                       Statistic(header: "Generated tokens", value: nf.format(metrics.number_of_generated_tokens), unit: ""),
-                       Statistic(header: "Load time", value: nf.format(metrics.load_time), unit: "ms"),
-                       Statistic(header: "Tokens in the input prompt", value: nf.format(metrics.number_of_input_tokens), unit: ""),
-                       Statistic(header: "Throughput", value: nf.format(metrics.throughput), unit: "tokens/sec"),
-                      ]
-                    ),
-                  ),
-                )
-              ],
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1000),
+              child: Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    CirclePropRow(metrics: metrics),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: GridView.count(
+                          physics: const NeverScrollableScrollPhysics(),
+                          childAspectRatio: 2.0,
+                          padding: const EdgeInsets.only(right: 20.0),
+                          crossAxisSpacing: 4.0,
+                          crossAxisCount: 3,
+                          children: [
+                           Statistic(header: "Tokenization duration", value: nf.format(metrics.tokenization_time), unit: "ms"),
+                           Statistic(header: "Detokenization duration", value: nf.format(metrics.detokenization_time), unit: "ms"),
+                           Statistic(header: "Generated tokens", value: nf.format(metrics.number_of_generated_tokens), unit: ""),
+                           Statistic(header: "Load time", value: nf.format(metrics.load_time), unit: "ms"),
+                           Statistic(header: "Tokens in the input prompt", value: nf.format(metrics.number_of_input_tokens), unit: ""),
+                           Statistic(header: "Throughput", value: nf.format(metrics.throughput), unit: "tokens/sec"),
+                          ]
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         );
