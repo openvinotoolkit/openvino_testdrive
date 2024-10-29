@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inference/inference/text/metric_widgets.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/theme.dart';
+import 'package:inference/utils/dialogs.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class _PerformanceMetricsPageState extends State<PerformanceMetricsPage> {
     final provider = Provider.of<TextInferenceProvider>(context, listen: false);
     if (provider.metrics == null) {
       provider.loaded.future.then((_) {
-          provider.message("What is the purpose of OpenVINO?");
+          provider.message("What is the purpose of OpenVINO?").catchError(onExceptionDialog(context));
       });
     }
   }
