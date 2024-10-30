@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:inference/openvino_console_app.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
@@ -7,6 +10,10 @@ import 'package:provider/provider.dart';
 
 void main() async {
   MediaKit.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
+
+  ByteData data = await PlatformAssetBundle().load('assets/amazon_root_ca_1.pem');
+  SecurityContext.defaultContext.setTrustedCertificatesBytes(data.buffer.asUint8List());
 
   runApp(const App());
 }
