@@ -18,7 +18,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<PreferenceProvider>(create: (_) => PreferenceProvider("AUTO")),
+        ChangeNotifierProvider<PreferenceProvider>(create: (_) => PreferenceProvider(PreferenceProvider.defaultDevice)),
         ChangeNotifierProvider<ProjectProvider>(create: (_) => ProjectProvider([])),
       ],
       child: const OpenVINOTestDriveApp(),
