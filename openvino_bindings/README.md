@@ -1,8 +1,8 @@
-# OpenVINO TestDrive Bindings
+# OpenVINO Test Drive Bindings
 
 ## Introduction
 
-This repo contains the dart bindings for OpenVINO TestDrive to run GenAI and Geti Image models.
+This repo contains the dart bindings for OpenVINO Test Drive to run GenAI and Geti Image models.
 This acts as c api layer between OpenVINO and dart, wrapping and keeping the state.
 
 ## Design
@@ -89,6 +89,8 @@ Further dependencies which are explained per platform below:
 - OpenCV
 
 ### Windows
+
+A step by step guide can be found [here]('./docs/WINDOWS.md').
 
 [Install OpenVINO Runtime 24.4.0]( https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=WINDOWS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `C:/Intel/openvino_24.4.0`.
 

@@ -1,4 +1,4 @@
-We appreciate any contribution to the OpenVINO TestDrive, whether it's in the form of a
+We appreciate any contribution to the OpenVINO Test Drive, whether it's in the form of a
 Pull Request, Feature Request or general comment/issue that you found. For feature
 requests and issues, please feel free to create a GitHub Issue in this repository.
 
@@ -18,7 +18,7 @@ You should now be ready to make changes and create a Pull Request!
 
 ## Updating model manifest
 
-OpenVINO TestDrive shows more information on the model than the huggingface API exposes. In order to show this information we use a model manifest.
+OpenVINO Test Drive shows more information on the model than the huggingface API exposes. In order to show this information we use a model manifest.
 You can update this information by running: `dart scripts/create_manifest > assets/manifest.json`.
 
 Not all information can be automatically found. So a couple of manual steps might be required.
