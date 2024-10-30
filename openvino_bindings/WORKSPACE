@@ -113,11 +113,11 @@ git_repository(
 #    path = "/usr"
 #)
 #
-#new_local_repository(
-#    name = "mac_ffmpeg",
-#    build_file = "//third_party/ffmpeg:mac.BUILD",
-#    path = "/opt/homebrew/Cellar/ffmpeg@6/6.1.2_3"
-#)
+new_local_repository(
+    name = "mac_ffmpeg",
+    build_file = "//third_party/ffmpeg:mac.BUILD",
+    path = "/opt/homebrew/Cellar/ffmpeg@6/6.1.2_3"
+)
 #
 #new_local_repository(
 #    name = "windows_ffmpeg",

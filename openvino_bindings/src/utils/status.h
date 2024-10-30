@@ -21,6 +21,7 @@ enum StatusEnum {
   CameraNotOpenend = -50,
 
   MediapipeNextPackageFailure = -61,
+  MediapipeGraphError = -62,
 
   LLMNoMetricsYet = -71,
 
