@@ -6,8 +6,8 @@ Get started with OpenVINO Test Drive, an application that allows you to run LLMs
 ### LLM models
 + **Text Generation**: Generate text and engage in chat experiences.
 + **Performance metrics**: Evaluate model performance on your computer or edge device.
-### Comouter vision models
-+ **Single Image Inference**: Perform inference on individual images with predictions.
+### Computer vision models
++ **Single Image Inference**: Perform inference on individual images.
 + **Batch Inference**: Conduct inference on batches of images.
 
 # High level architecture
