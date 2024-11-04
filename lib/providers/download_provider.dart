@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:inference/deployment_processor.dart';
 import 'package:inference/project.dart';
-
-final dio = Dio();
+import 'package:inference/utils.dart';
 
 class DownloadState {
   int received = 0;
@@ -27,6 +29,8 @@ class DownloadProvider extends ChangeNotifier {
   DownloadProvider(this.project);
 
   Future<void> queue(Map<String, String> downloads, String? token) async{
+    final dio = dioClient();
+
     List<Future> promises = [];
 
     _cancelToken = CancelToken();

@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:http/http.dart' as http;
 import 'package:inference/project.dart';
 import 'package:inference/public_model_info.dart';
+import 'package:inference/utils.dart';
 import 'package:path/path.dart';
 
 final platformContext = Context(style: Style.platform);
@@ -48,18 +51,14 @@ String huggingFaceModelFileUrl(String modelId, String name) {
 }
 
 Future<List<PublicModelInfo>> getPublicModels() async {
-  //final directory = await getApplicationSupportDirectory();
   List<PublicModelInfo> models = [];
 
-  for (final collection in collections) {
-    final request = await http.get(
-      Uri.parse(collection.path),
-      headers: {
-        "Authorization":"Bearer ${collection.token}",
-      }
-    );
+  final dio = dioClient();
 
-    final collectionInfo = jsonDecode(request.body);
+  for (final collection in collections) {
+    final request = await dio.get(collection.path);
+    final body = request.toString();
+    final collectionInfo = jsonDecode(body);
     for (final item in collectionInfo["items"]) {
       models.add(PublicModelInfo.fromJson(item, collection.type, collection));
     }
