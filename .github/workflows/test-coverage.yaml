@@ -10,7 +10,7 @@ on:
 
 # This workaround will be fixed after integration with the building workflow for OpenVINO bindings
 env:
-  BINDINGS_URL: https://github.com/openvinotoolkit/openvino_testdrive/releases/download/untagged-7fa30b9a6a885e38ac9d/linux_bindings.tgz
+  BINDINGS_RELEASE: untagged-7fa30b9a6a885e38ac9d
 
 jobs:
   test:
@@ -22,7 +22,7 @@ jobs:
 
       - name: Download OpenVINO bindings
         run: |
-          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L $BINDINGS_URL -o linux_bindings.tgz
+          gh release download $BINDINGS_RELEASE -D bindings -p linux_bindings.tgz
           tar -xzf linux_bindings.tgz -C bindings
           rm linux_bindings.tgz
 
@@ -56,7 +56,7 @@ jobs:
 
       - name: Download OpenVINO bindings
         run: |
-          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L $BINDINGS_URL -o linux_bindings.tgz
+          gh release download $BINDINGS_RELEASE -D bindings -p linux_bindings.tgz
           tar -xzf linux_bindings.tgz -C bindings
           rm linux_bindings.tgz
 
