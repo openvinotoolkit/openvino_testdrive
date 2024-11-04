@@ -12,7 +12,8 @@ on:
 env:
   BINDINGS_RELEASE: untagged-7fa30b9a6a885e38ac9d
 
-permissions: read-all
+permissions:
+  contents: write
 
 jobs:
   test:
