@@ -10,7 +10,7 @@ on:
 
 # This workaround will be fixed after integration with the building workflow for OpenVINO bindings
 env:
-  BINDINGS_RELEASE: untagged-7fa30b9a6a885e38ac9d
+  BINDINGS_RELEASE: untagged-23b9989200adfb8baec8
 
 permissions:
   contents: write
