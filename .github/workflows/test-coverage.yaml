@@ -77,7 +77,7 @@ jobs:
         run: flutter pub get
 
       - name: Run integration tests
-        run: flutter test --coverage --no-pub integration_test
+        run: flutter test --coverage --no-pub integration_test -d linux
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
