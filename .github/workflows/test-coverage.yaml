@@ -1,7 +1,14 @@
 name: Test Coverage
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
+# This workaround will be fixed after integration with the building workflow for OpenVINO bindings
 env:
   BINDINGS_URL: https://github.com/openvinotoolkit/openvino_testdrive/releases/download/untagged-7fa30b9a6a885e38ac9d/linux_bindings.tgz
 
@@ -15,8 +22,9 @@ jobs:
 
       - name: Download OpenVINO bindings
         run: |
-          curl -L $BINDINGS_URL -o linux_bindings.tgz
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L $BINDINGS_URL -o linux_bindings.tgz
           tar -xzf linux_bindings.tgz -C bindings
+          rm linux_bindings.tgz
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -48,8 +56,9 @@ jobs:
 
       - name: Download OpenVINO bindings
         run: |
-          curl -L $BINDINGS_URL -o linux_bindings.tgz
+          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -L $BINDINGS_URL -o linux_bindings.tgz
           tar -xzf linux_bindings.tgz -C bindings
+          rm linux_bindings.tgz
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
