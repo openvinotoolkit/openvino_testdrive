@@ -1,0 +1,73 @@
+name: Test Coverage
+
+on: [push, pull_request]
+
+env:
+  BINDINGS_URL: https://github.com/openvinotoolkit/openvino_testdrive/releases/download/untagged-7fa30b9a6a885e38ac9d/linux_bindings.tgz
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download OpenVINO bindings
+        run: |
+          curl -L $BINDINGS_URL -o linux_bindings.tgz
+          tar -xzf linux_bindings.tgz -C bindings
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test --coverage --no-pub
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          files: coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  integration_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Download OpenVINO bindings
+        run: |
+          curl -L $BINDINGS_URL -o linux_bindings.tgz
+          tar -xzf linux_bindings.tgz -C bindings
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run integration tests
+        run: flutter test --coverage --no-pub integration_test
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          files: coverage/lcov.info
+          flags: integrationtests
+          name: codecov-umbrella
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
