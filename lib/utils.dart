@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -32,4 +34,14 @@ ${stack.toString()}
       File(errorPath).writeAsStringSync(contents, mode: FileMode.append);
       return true;
     };
+}
+
+Dio dioClient() {
+  final dio = Dio();
+  (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
+    final HttpClient client = HttpClient(context: SecurityContext(withTrustedRoots: false));
+    client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+    return client;
+  };
+  return dio;
 }
