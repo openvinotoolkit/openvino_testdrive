@@ -4,11 +4,24 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:inference/config.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 Dio dioClient() {
-  return Dio();
+  final dio = Dio();
+  if (Config.proxyDirect) {
+    dio.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        final client = HttpClient();
+        client.findProxy = (uri) {
+          return 'DIRECT';
+        };
+        return client;
+      }
+    );
+  }
+  return dio;
 }
 
 void setupErrors() async {

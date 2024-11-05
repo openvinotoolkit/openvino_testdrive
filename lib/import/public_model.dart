@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:inference/import/optimization_filter_button.dart';
 import 'package:inference/projects/task_type_filter.dart';
@@ -7,6 +8,7 @@ import 'package:inference/public_model_info.dart';
 import 'package:inference/public_models.dart';
 import 'package:inference/searchbar.dart';
 import 'package:inference/theme.dart';
+import 'package:inference/utils/dialogs.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:go_router/go_router.dart';
@@ -23,14 +25,26 @@ class _PublicModelPageState extends State<PublicModelPage> {
 
   PublicModelInfo? selectedModelForImport;
 
+  void loadModels() async {
+    try {
+    final publicModels = await getPublicModels();
+    setState(() {
+      models = publicModels;
+    });
+  } on DioException catch(ex) {
+    if (ex.type == DioExceptionType.connectionError) {
+      if (context.mounted) {
+        errorDialog(context, "Connection error", (ex.message ?? "") + "\nPlease disable the proxy or VPN and try again.");
+      }
+    }
+  }
+
+  }
+
   @override
   void initState() {
     super.initState();
-    getPublicModels().then((p) {
-      setState(() {
-          models = p;
-      });
-    });
+    loadModels();
   }
 
   List<Widget> buildList(ProjectFilterProvider filter) {
