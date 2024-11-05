@@ -16,7 +16,6 @@ const huggingFaceURL = "https://huggingface.co";
 
 const List<Collection> collections = [
   Collection("https://huggingface.co/api/collections/OpenVINO/llm-6687aaa2abca3bbcec71a9bd", "", "text"),
-  //Collection("https://huggingface.co/api/collections/rhecker/speech-670ba88d40c7862e25913551", "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", "speech"),
 ];
 
 void createDirectory(PublicProject project) {
