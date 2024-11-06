@@ -168,4 +168,5 @@ msix_config:
       show_prompt: true
       force_update_from_any_version: false
   sign_msix: false
+  build_windows: false
   publisher: "CN=Intel Corporation, O=Intel Corporation, S=California, C=US"

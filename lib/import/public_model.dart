@@ -34,7 +34,7 @@ class _PublicModelPageState extends State<PublicModelPage> {
   } on DioException catch(ex) {
     if (ex.type == DioExceptionType.connectionError) {
       if (context.mounted) {
-        errorDialog(context, "Connection error", (ex.message ?? "") + "\nPlease disable the proxy or VPN and try again.");
+        errorDialog(context, "Connection error","Unable to connect to HuggingFace to load the OpenVINO model collections.\nPlease disable your proxy or VPN and try again.");
       }
     }
   }
