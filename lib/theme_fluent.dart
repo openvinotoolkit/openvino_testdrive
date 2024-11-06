@@ -91,6 +91,7 @@ final AccentColor electricCosmos = AccentColor.swatch(const {
 
 final AccentColor cosmos = AccentColor.swatch(const {
   'normal': Color(0xFFAF98FF),
+  'lightest': Color(0xFFEFEAFF),
 });
 
 final AccentColor darkCosmos = AccentColor.swatch(const {

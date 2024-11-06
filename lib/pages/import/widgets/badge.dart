@@ -14,10 +14,12 @@ class Badge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    return Container(
+    return AnimatedContainer(
+      duration: theme.fastAnimationDuration,
+      curve: theme.animationCurve,
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
       decoration: BoxDecoration(
-        color: cosmos.tertiaryBrushFor(theme.brightness),
+        color: theme.brightness == Brightness.light ? cosmos.lightest : darkCosmos,
         borderRadius: BorderRadius.circular(4.0),
       ),
       child: Row(
@@ -25,7 +27,7 @@ class Badge extends StatelessWidget {
         children: [
           Text(
             text,
-            style: TextStyle(color: darkCosmos),
+            style: TextStyle(color: theme.brightness == Brightness.light ? darkCosmos : cosmos),
           ),
           const SizedBox(width: 8.0),
           MouseRegion(
@@ -35,7 +37,7 @@ class Badge extends StatelessWidget {
               child: Icon(
                 FluentIcons.clear,
                 size: 12.0,
-                color: darkCosmos,
+                color: theme.brightness == Brightness.light ? darkCosmos : cosmos,
               ),
             ),
           ),
