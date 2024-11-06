@@ -9,6 +9,7 @@ import 'package:inference/inference/text/metric_widgets.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/theme.dart';
+import 'package:inference/utils/dialogs.dart';
 import 'package:provider/provider.dart';
 
 class Playground extends StatefulWidget {
@@ -43,7 +44,8 @@ class _PlaygroundState extends State<Playground> {
     }
     _controller.text = "";
     jumpToBottom(offset: 110); //move to bottom including both
-    llm.message(message);
+    llm.message(message).catchError(onExceptionDialog(context));
+
   }
 
   TextInferenceProvider provider() => Provider.of<TextInferenceProvider>(context, listen: false);
