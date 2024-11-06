@@ -45,7 +45,7 @@ class ModelList extends StatelessWidget {
                             itemCount: filtered.length,
                             physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) {
-                              return ModelCard(project: filtered.elementAt(index));
+                              return ModelCard(project: filtered[index]);
                             }
                           );
                         }),

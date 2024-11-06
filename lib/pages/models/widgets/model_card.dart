@@ -87,7 +87,7 @@ class _ModelCardState extends State<ModelCard> with SingleTickerProviderStateMix
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ModelProperty(name: "Task", value: widget.project.taskName()),
-                              ModelProperty(name: "Architecture", value: widget.project.tasks[0].architecture.substring(0, 10)),
+                              ModelProperty(name: "Architecture", value: widget.project.architecture),
                             ],
                           ),
                         )
