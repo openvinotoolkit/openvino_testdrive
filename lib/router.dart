@@ -3,6 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/openvino_console_app.dart';
 import 'package:inference/pages/home/home.dart';
+import 'package:inference/pages/import/import.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -18,7 +19,8 @@ final router = GoRouter(navigatorKey: rootNavigatorKey,
       routes: [
         GoRoute(path: '/home', builder: (context, state) => const HomePage()),
         GoRoute(path: '/models', builder: (context, state) => Container(color: Colors.blue, child: const Text('Models'),)),
-        GoRoute(path: '/models/import', builder: (context, state) => Container(color: Colors.blue, child: const Text('Import from HG'),)),
+        GoRoute(path: '/models/import', builder: (context, state) => const ImportPage()),
+        GoRoute(path: '/models/import/:id', builder: (context, state) => Container(color: Colors.blue, child: Text('Importing model: ${state.pathParameters['id']}'))),
       ],
     )
   ]

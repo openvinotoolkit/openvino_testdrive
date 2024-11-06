@@ -12,7 +12,9 @@ class Elevation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    return Container(
+    return AnimatedContainer(
+      duration: theme.mediumAnimationDuration,
+      curve: theme.animationCurve,
       decoration: ShapeDecoration(
         color: backgroundColor,
         shape: shape,
@@ -22,7 +24,7 @@ class Elevation extends StatelessWidget {
             blurRadius: 0.9 * elevation,
             offset: Offset(0, 0.4 * elevation),
           ),
-            BoxShadow(
+          BoxShadow(
             color: (shadowColor ?? theme.shadowColor).withOpacity(0.11),
             blurRadius: 0.225 * elevation,
             offset: Offset(0, 0.085 * elevation),

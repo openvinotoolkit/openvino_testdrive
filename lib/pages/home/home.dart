@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                           FilledDropDownButton(
                             title: const Text('Import model'),
                             items: [
-                              MenuFlyoutItem(text: const Text('Hugging Face'), onPressed: () { GoRouter.of(context).go('/models/import'); }),
+                              MenuFlyoutItem(text: const Text('Hugging Face'), onPressed: () { GoRouter.of(context).push('/models/import'); }),
                               MenuFlyoutItem(text: const Text('Local disk'), onPressed: () {}),
                             ]
                           )

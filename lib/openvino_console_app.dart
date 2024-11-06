@@ -9,6 +9,7 @@ import 'package:inference/project.dart';
 import 'package:inference/projects/projects_page.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
+import 'package:inference/theme_fluent.dart';
 import 'package:inference/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -107,11 +108,32 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
     onTap: () {
       final path = (item.key as ValueKey).value;
       if (GoRouterState.of(context).uri.toString() != path) {
-        GoRouter.of(context).go(path);
+        GoRouter.of(context).push(path);
       }
       item.onTap?.call();
     },
   )).toList();
+
+  late final List<NavigationPaneItem> footerNavigationItems = [
+    PaneItem(
+      title: const Text('Dark mode'),
+      icon: Builder(builder: (context) {
+        final appTheme = context.watch<AppTheme>();
+        if (appTheme.mode == ThemeMode.dark) {
+          return const Icon(FluentIcons.clear_night);
+        } else if (appTheme.mode == ThemeMode.light) {
+          return const Icon(FluentIcons.brightness);
+        } else {
+          return const Icon(FluentIcons.half_alpha);
+        }
+      }),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        final appTheme = context.read<AppTheme>();
+        appTheme.toggleTheme();
+      },
+    ),
+  ];
 
   int? _calculateSelectedIndex(BuildContext context) {
     final uri = GoRouterState.of(context).uri.toString();
@@ -145,6 +167,7 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
           toggleable: false,
           displayMode: PaneDisplayMode.compact,
           items: originalNavigationItems,
+          footerItems: footerNavigationItems,
         ),
       );
   }

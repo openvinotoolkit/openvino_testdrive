@@ -1,7 +1,5 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/foundation.dart';
-import 'package:system_theme/system_theme.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 
 enum NavigationIndicators { sticky, end }
@@ -10,9 +8,16 @@ class AppTheme extends ChangeNotifier {
   final fontFamily = 'Intel One';
 
   AccentColor? _color;
-  AccentColor get color => _color ?? systemAccentColor;
+  AccentColor get color => _color ?? electricCosmos;
   set color(AccentColor value) {
     _color = value;
+    notifyListeners();
+  }
+
+  AccentColor? _darkColor;
+  AccentColor get darkColor => _darkColor ?? cosmos;
+  set darkColor(AccentColor value) {
+    _darkColor = value;
     notifyListeners();
   }
 
@@ -21,6 +26,20 @@ class AppTheme extends ChangeNotifier {
   set mode(ThemeMode value) {
     _mode = value;
     notifyListeners();
+  }
+
+  void toggleTheme() {
+    switch (mode) {
+      case ThemeMode.system:
+        mode = ThemeMode.light;
+        break;
+      case ThemeMode.light:
+        mode = ThemeMode.dark;
+        break;
+      case ThemeMode.dark:
+        mode = ThemeMode.system;
+        break;
+    }
   }
 
   PaneDisplayMode _paneMode = PaneDisplayMode.auto;
@@ -63,19 +82,18 @@ class AppTheme extends ChangeNotifier {
     _textDirection = direction;
     notifyListeners();
   }
+
 }
 
-AccentColor get systemAccentColor {
-  if (defaultTargetPlatform == TargetPlatform.windows) {
-    return AccentColor.swatch({
-      'darkest': SystemTheme.accentColor.darkest,
-      'darker': SystemTheme.accentColor.darker,
-      'dark': SystemTheme.accentColor.dark,
-      'normal': SystemTheme.accentColor.accent,
-      'light': SystemTheme.accentColor.light,
-      'lighter': SystemTheme.accentColor.lighter,
-      'lightest': SystemTheme.accentColor.lightest,
-    });
-  }
-  return Colors.purple;
-}
+final AccentColor electricCosmos = AccentColor.swatch(const {
+  'normal': Color(0xFF7000FF),
+});
+
+final AccentColor cosmos = AccentColor.swatch(const {
+  'normal': Color(0xFFAF98FF),
+});
+
+final AccentColor darkCosmos = AccentColor.swatch(const {
+  'normal': Color(0xFF38007F),
+});
+
