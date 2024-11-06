@@ -10,6 +10,7 @@ cc_library(
     srcs = glob(
         [
             "lib/libopencv_*.so",
+            "lib/libopencv_*.so.4*",
         ],
     ),
     hdrs = glob(["include/opencv4/opencv2/**/*.h*"]),
