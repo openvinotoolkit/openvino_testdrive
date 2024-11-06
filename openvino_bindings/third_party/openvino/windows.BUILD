@@ -2,6 +2,13 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
+filegroup(
+    name = "cache",
+    srcs = [
+         "/lib/intel64/Release/cache.json",
+    ],
+)
+
 cc_library(
     name = "openvino_old_headers",
     hdrs = glob([
@@ -62,6 +69,9 @@ cc_library(
     }),
     strip_include_prefix = "include/ie",
     visibility = ["//visibility:public"],
+    data = [
+        ":cache",
+    ],
     deps = [
         ":ngraph",
         ":openvino_new_headers",
