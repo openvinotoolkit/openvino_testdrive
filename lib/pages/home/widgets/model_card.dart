@@ -27,48 +27,56 @@ class ModelCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: model.thumbnail,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: model.thumbnail,
+                    ),
+                    Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      color: Color(0x11000000),
+                    ),
+                    child: Text(model.kind.toUpperCase(),
+                      style: const TextStyle(
+                      fontSize: 12,
+                      )
+                    ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+                            child: Text(model.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: Text(model.description, style: const TextStyle(fontSize: 12)),
+                          ),
+                        ],
+                      ),
+                      Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 2),
+                        child: IconButton(icon: const Icon(FluentIcons.pop_expand, size: 14), onPressed: () {}),
+                      ),
+                      ),
+                    ],
                   ),
-                  Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    color: Color(0x11000000),
-                  ),
-                  child: Text(model.kind.toUpperCase(),
-                    style: const TextStyle(
-                    fontSize: 12,
-                    )
-                  ),
-                  ),
-                ],
-                ),
-                Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                child: Text(model.name,
-                  style: const TextStyle(
-                  fontSize: 24,
-                  )
-                ),
-                ),
-                const Spacer(),
-                Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Text(model.description),
-                ),
-                Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 2),
-                  child: IconButton(icon: const Icon(FluentIcons.pop_expand), onPressed: () {}),
-                ),
                 ),
               ],
             ),
