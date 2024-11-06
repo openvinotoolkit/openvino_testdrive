@@ -2,8 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:inference/deployment_processor.dart';
 import 'package:inference/project.dart';
-
-final dio = Dio();
+import 'package:inference/utils.dart';
 
 class DownloadState {
   int received = 0;
@@ -29,6 +28,7 @@ class DownloadProvider extends ChangeNotifier {
   Future<void> queue(Map<String, String> downloads, String? token) async{
     List<Future> promises = [];
 
+    final dio = dioClient();
     _cancelToken = CancelToken();
     for (final url in downloads.keys) {
       print("downloading: $url");
@@ -48,13 +48,15 @@ class DownloadProvider extends ChangeNotifier {
             state.total = total;
             notifyListeners();
           }
-      }).catchError((e) {
+      });
+      promise.catchError((e) {
         if (e is DioException && e.type == DioExceptionType.cancel) {
           print("Download cancelled: $url");
         } else {
           _cancelToken?.cancel();
         }
-      }).then((_) => state.done);
+      });
+      promise.then((_) => state.done);
       promises.add(promise);
     }
 
