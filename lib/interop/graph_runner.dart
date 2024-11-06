@@ -29,13 +29,15 @@ class GraphRunner {
     return GraphRunner(result);
   }
 
-  String get() {
-    final status = ov.graphRunnerGet(instance.ref.value);
+  Future<String> get() async {
+    return await Isolate.run(() {
+      final status = ov.graphRunnerGet(instance.ref.value);
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
-      throw "QueueSerializationOutput error: ${status.ref.status} ${status.ref.message.toDartString()}";
-    }
-    return status.ref.value.toDartString();
+      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+        throw "QueueSerializationOutput error: ${status.ref.status} ${status.ref.message.toDartString()}";
+      }
+      return status.ref.value.toDartString();
+    });
   }
 
   Future<void> queueImage(String nodeName, int timestamp, Uint8List file) async {
