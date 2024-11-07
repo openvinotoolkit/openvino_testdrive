@@ -11,7 +11,7 @@ Project testProject(String name) {
   return PublicProject(
     "test_id", "llm-model", "1.0.0", name, "2024-04-25T19:16:51.714000+00:00", ProjectType.text, "/dev/null", Image.asset("images/model_thumbnails/llama.jpg"), null
   )
-  ..tasks.add(Task("task_id", "LLM", "LLM", [], null, [], "LLamaForCasualLM","int8"));
+  ..tasks.add(Task("task_id", "LLM", "LLM", [], null, [], "LLama","int8"));
 }
 
 Widget renderWidget(ProjectProvider provider, ProjectFilterProvider filterProvider) {

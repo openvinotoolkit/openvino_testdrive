@@ -13,17 +13,30 @@ class ModelProperty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
-        style: const TextStyle(
-          color: Color(0xFF242424),
-          fontSize: 12,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: const BorderRadius.all(Radius.circular(4)),
+          color: const Color(0xFFF5F5F5),
         ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+          child: RichText(
+            text: TextSpan(
+              style: const TextStyle(
+                color: Color(0xFF242424),
+                fontSize: 12,
+              ),
 
-        children: <TextSpan>[
-          TextSpan(text: "$name: "),
-          TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.bold)),
-        ],
+              children: <TextSpan>[
+                TextSpan(text: "$name: "),
+                TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

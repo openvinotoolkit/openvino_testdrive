@@ -43,6 +43,7 @@ class _ModelCardState extends State<ModelCard> with SingleTickerProviderStateMix
         cursor: SystemMouseCursors.click,
         child: Elevation(
           elevation: animation.value,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
@@ -55,15 +56,18 @@ class _ModelCardState extends State<ModelCard> with SingleTickerProviderStateMix
               children: [
                 AspectRatio(
                   aspectRatio: 5/4,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: const Color(0x0D000000),
-                        width: 1,
-                      ),
-                      image: DecorationImage(
-                        image: widget.project.thumbnailImage(),
-                        fit: BoxFit.cover,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color(0x0D000000),
+                          width: 1,
+                        ),
+                        image: DecorationImage(
+                          image: widget.project.thumbnailImage(),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
