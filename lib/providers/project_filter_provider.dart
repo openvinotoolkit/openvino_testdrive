@@ -1,7 +1,5 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:inference/config.dart';
-import 'package:inference/inference/model_info.dart';
 import 'package:inference/project.dart';
 import 'package:inference/public_model_info.dart';
 
