@@ -21,7 +21,7 @@ class ModelCard extends StatelessWidget {
       builder: (context, constraints) {
         final showDescription = constraints.maxHeight > 300;
         return GestureDetector(
-          onTap: () => onChecked(!checked),
+          onTap: () { onChecked(!checked); },
           child: Elevation(
             backgroundColor: theme.cardColor,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
