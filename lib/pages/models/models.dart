@@ -48,7 +48,6 @@ class _ModelsPageState extends State<ModelsPage> {
             ),
             Expanded(
               child: Column(
-                //crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GridContainer(
                     color: Colors.white,
@@ -74,7 +73,7 @@ class _ModelsPageState extends State<ModelsPage> {
                       ],
                     ),
                   ),
-                  const ModelList(),
+                  const Expanded(child: ModelList()),
                 ],
               ),
             ),
