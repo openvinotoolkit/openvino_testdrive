@@ -1,5 +1,7 @@
 # OpenVINO™ Test Drive
 
+[![codecov](https://codecov.io/gh/openvinotoolkit/openvino_testdrive/graph/badge.svg?token=DH98FAPH65)](https://codecov.io/gh/openvinotoolkit/openvino_testdrive)
+
 Get started with OpenVINO Test Drive, an application that allows you to run LLMs and models trained by [Intel Geti](https://geti.intel.com/) directly on your computer or edge device using OpenVINO.
 
 # Features
