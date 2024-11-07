@@ -150,6 +150,4 @@ When applying changes to bindings.h you can update the bindings from the root fo
 
 ## Known issues
 
-* Test data is not shared yet.
-* OpenVINO CPU plugin has memory leak.
-* Proper setup to use dart_bindings as plugin need to be set up.
+* Auto plugin might cause in LLM
