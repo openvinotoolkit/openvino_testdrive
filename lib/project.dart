@@ -151,6 +151,14 @@ class Project {
   bool isPublic;
   bool hasSample = false;
 
+  String get architecture {
+    if (tasks.length > 1) {
+      return "Task Chain";
+    }
+    return tasks.first.architecture;
+  }
+
+
   List<Label> labels() {
     return tasks.map((t) => t.labels).expand((i) => i).where((label) => !label.isEmpty).toList();
   }
@@ -160,7 +168,10 @@ class Project {
   }
 
   String taskName() {
-    return tasks.map((task) => task.name).join('->');
+    if (tasks.length > 1) {
+      return "Task Chain";
+    }
+    return tasks.first.name;
   }
 
   List<Label> get labelDefinitions {
