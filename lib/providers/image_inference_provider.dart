@@ -49,7 +49,7 @@ class ImageInferenceProvider extends ChangeNotifier {
     _inference!.queueImage("input", timestamp, file);
     _inference!.queueSerializationOutput("serialization_output", timestamp, output);
     timestamp += 1;
-    final result = _inference!.get();
+    final result = await _inference!.get();
     return ImageInferenceResult.fromJson(jsonDecode(result));
   }
 

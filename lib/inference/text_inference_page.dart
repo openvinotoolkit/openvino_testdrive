@@ -7,6 +7,7 @@ import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/theme.dart';
+import 'package:inference/utils/dialogs.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -43,11 +44,12 @@ class _TextInferencePageState extends State<TextInferencePage> with TickerProvid
         return TextInferenceProvider(widget.project, null);
       },
       update: (_, preferences, textInferenceProvider) {
-        if (textInferenceProvider == null) {
-          return TextInferenceProvider(widget.project, preferences.device);
-        }
-        if (!textInferenceProvider.sameProps(widget.project, preferences.device)) {
-          return TextInferenceProvider(widget.project, preferences.device);
+        final init = textInferenceProvider == null ||
+          !textInferenceProvider.sameProps(widget.project, preferences.device);
+        if (init) {
+          final textInferenceProvider = TextInferenceProvider(widget.project, preferences.device);
+          textInferenceProvider.loadModel().catchError(onExceptionDialog(context));
+          return textInferenceProvider;
         }
         return textInferenceProvider;
       },

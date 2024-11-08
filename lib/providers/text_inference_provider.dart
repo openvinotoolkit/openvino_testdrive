@@ -83,6 +83,13 @@ class TextInferenceProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> loadModel() async {
+    _inference = await LLMInference.init(project!.storagePath, device!)
+        ..setListener(onMessage);
+    loaded.complete();
+    notifyListeners();
+  }
+
   void onMessage(String word) {
      stopWatch.stop();
      if (n == 0) { // dont count first token since it's slow.
