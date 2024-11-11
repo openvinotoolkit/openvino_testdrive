@@ -40,7 +40,7 @@ Check C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MS
 
 ## OpenVINO
 
-[Install OpenVINO with GenAI](https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2024.4/windows) and install to `C:\Intel\openvino_2024.4.0`
+[Install OpenVINO with GenAI](https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2024.5/windows) and install to `C:\Intel\openvino_2024.5.0`
 
 
 

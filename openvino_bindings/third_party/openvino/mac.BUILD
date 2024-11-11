@@ -35,7 +35,7 @@ cc_library(
     srcs = glob([
         "lib/arm64/Release/**/libopenvino_tokenizers.dylib",
         "lib/arm64/Release/**/libcore_tokenizers.dylib",
-        "lib/arm64/Release/**/*.2440.dylib",
+        "lib/arm64/Release/**/*.2500.dylib",
         "3rdparty/tbb/lib/libtbb.12.dylib",
     ]),
     strip_include_prefix = "include",

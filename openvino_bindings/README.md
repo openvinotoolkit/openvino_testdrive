@@ -92,7 +92,7 @@ Further dependencies which are explained per platform below:
 
 A step by step guide can be found [here]('./docs/WINDOWS.md').
 
-[Install OpenVINO Runtime 24.4.0]( https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=WINDOWS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `C:/Intel/openvino_24.4.0`.
+[Install OpenVINO Runtime 24.5.0]( https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=WINDOWS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `C:/Intel/openvino_24.5.0`.
 
 Build OpenCV in `C:/opencv/build`.
 Install ffmpeg: `vcpkg install ffmpeg`.
@@ -105,7 +105,7 @@ The DLLs (with dependencies) will be in `bazel-bin/windows_bindings.tar`
 
 ### MacOS
 
-[Install OpenVINO Runtime 24.4.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=MACOS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `/opt/intel/openvino_24.4.0` and symlink to `/opt/intel/openvino`.
+[Install OpenVINO Runtime 24.5.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=MACOS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `/opt/intel/openvino_24.5.0` and symlink to `/opt/intel/openvino`.
 
 Install OpenCV: `brew install opencv`
 Install ffmpeg: `brew install ffmpeg@6`
@@ -116,7 +116,7 @@ The .dylib and .so are located in `bazel-bin/macos_bindings.tar`.
 
 ### Linux
 
-[Install OpenVINO Runtime 24.4.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=LINUX&DISTRIBUTION=ARCHIVE) with GenAI flavor in `/opt/intel/openvino_24.4.0` and symlink to `/opt/intel/openvino`.
+[Install OpenVINO Runtime 24.5.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=LINUX&DISTRIBUTION=ARCHIVE) with GenAI flavor in `/opt/intel/openvino_24.5.0` and symlink to `/opt/intel/openvino`.
 
 Build or install OpenCV to `/usr/local/`.
 Install ffmpeg: `sudo apt-get install ffmpeg`.

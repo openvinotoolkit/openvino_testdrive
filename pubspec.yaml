@@ -70,6 +70,7 @@ dev_dependencies:
     sdk: flutter
   path_provider_platform_interface: ^2.1.2
   plugin_platform_interface: ^2.1.8
+  build_runner: ^2.4.13
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -156,7 +157,7 @@ msix_config:
   display_name: OpenVINO Test Drive
   publisher_display_name: Intel
   identity_name: intel.openvino.testdrive
-  msix_version: 24.4.0.0
+  msix_version: 24.5.0.0
   trim_logo: false
   capabilities: "internetClient"
   logo_path: "images/openvino_eye.png"
