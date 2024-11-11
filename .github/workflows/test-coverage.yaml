@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Download OpenVINO bindings
         env:
@@ -44,7 +44,7 @@ jobs:
         run: flutter test --coverage --no-pub
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v4
         with:
           files: coverage/lcov.info
           flags: unittests
@@ -60,7 +60,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev libglu1-mesa xvfb
@@ -91,7 +91,7 @@ jobs:
         run: flutter test --coverage --no-pub integration_test -d linux
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v4
         with:
           files: coverage/lcov.info
           flags: integrationtests
