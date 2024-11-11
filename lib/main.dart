@@ -37,6 +37,12 @@ class App extends StatelessWidget {
             visualDensity: VisualDensity.standard,
             fontFamily: theme.fontFamily,
           ),
+          darkTheme: FluentThemeData(
+            brightness: Brightness.dark,
+            accentColor: theme.darkColor,
+            visualDensity: VisualDensity.standard,
+            fontFamily: theme.fontFamily,
+          ),
           // locale: theme.locale,
           builder: (context, child) => NavigationPaneTheme(
             data: const NavigationPaneThemeData(

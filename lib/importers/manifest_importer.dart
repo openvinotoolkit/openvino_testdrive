@@ -29,6 +29,19 @@ class Model {
 
   String get kind => task == 'text-generation' ? 'llm' : 'other';
 
+  String get readableFileSize {
+    const suffixes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    var size = fileSize.toDouble();
+    var suffixIndex = 0;
+
+    while (size >= 1024 && suffixIndex < suffixes.length - 1) {
+      size /= 1024;
+      suffixIndex++;
+    }
+
+    return '${size.toStringAsFixed(2)} ${suffixes[suffixIndex]}';
+  }
+
   factory Model.fromJson(Map<String, dynamic> json) {
     return Model(
       name: json['name'],
