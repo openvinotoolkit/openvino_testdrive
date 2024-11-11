@@ -1,4 +1,4 @@
-display_name: OpenVINO TestDrive
+display_name: OpenVINO Test Drive
 package_name: openvinotestdrive
 
 maintainer:
@@ -27,7 +27,7 @@ keywords:
   - OpenVINO
   - Inference
 
-generic_name: OpenVINO TestDrive
+generic_name: OpenVINO Test Drive
 
 categories:
   - Development

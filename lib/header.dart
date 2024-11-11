@@ -41,7 +41,7 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
                       padding: const EdgeInsets.only(right: 10.0, top: 2),
                       child: SvgPicture.asset("images/openvino_logo.svg"),
                     ),
-                    const Text("TestDrive", style: TextStyle(
+                    const Text("Test Drive", style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                     )),
