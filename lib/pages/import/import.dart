@@ -67,7 +67,7 @@ class _ImportPageState extends State<ImportPage> {
             Row(
               children: [
                 FilledButton(onPressed: selectedModel == null ? (null) : () {
-                  GoRouter.of(context).go('/models/import/${selectedModel!.id}');
+                  GoRouter.of(context).go('/models/download', extra: selectedModel);
                  }, child: const Text('Import selected model'),),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),

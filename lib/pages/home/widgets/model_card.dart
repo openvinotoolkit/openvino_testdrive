@@ -60,7 +60,7 @@ class ModelCard extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
-                            child: Text(model.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                            child: Text(model.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 4),
