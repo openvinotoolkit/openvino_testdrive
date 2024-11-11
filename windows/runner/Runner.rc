@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "intel.openvino" "\0"
-            VALUE "FileDescription", "inference" "\0"
+            VALUE "FileDescription", "OpenVINO Test Drive" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "inference" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
+            VALUE "InternalName", "OpenVINO Test Drive" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024. Intel Corporation" "\0"
             VALUE "OriginalFilename", "inference.exe" "\0"
-            VALUE "ProductName", "inference" "\0"
+            VALUE "ProductName", "OpenVINO Test Drive" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

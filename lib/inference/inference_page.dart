@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inference/inference/download_page.dart';
 import 'package:inference/inference/image_inference_page.dart';
-import 'package:inference/inference/speech/speech_inference_page.dart';
 import 'package:inference/inference/text_inference_page.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/download_provider.dart';
@@ -25,7 +24,7 @@ class _InferencePageState extends State<InferencePage> {
         case ProjectType.text:
           return TextInferencePage(widget.project);
         case ProjectType.speech:
-          return SpeechInferencePage(widget.project);
+          return Container();
       }
     } else {
       return ChangeNotifierProvider<DownloadProvider>(
