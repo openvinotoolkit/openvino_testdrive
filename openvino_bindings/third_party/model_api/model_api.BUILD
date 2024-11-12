@@ -23,10 +23,6 @@ cmake(
         "OpenVINO_DIR": "/opt/intel/openvino/runtime/cmake",
         "OpenCV_DIR": "/opt/homebrew/Cellar/opencv/4.10.0_9",
     },
-#    env = {
-#        "HTTP_PROXY": "http://proxy-dmz.intel.com:911",
-#        "HTTPS_PROXY": "http://proxy-dmz.intel.com:912",
-#    },
     lib_source = ":all_srcs",
     out_static_libs = ["libmodel_api.a"],
     tags = ["requires-network"],
@@ -47,10 +43,6 @@ cmake(
         "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
         "OpenVINO_DIR": "/opt/intel/openvino/runtime/cmake",
     },
-#    env = {
-#        "HTTP_PROXY": "http://proxy-dmz.intel.com:911",
-#        "HTTPS_PROXY": "http://proxy-dmz.intel.com:912",
-#    },
     lib_source = ":all_srcs",
     out_static_libs = ["libmodel_api.a"],
     tags = ["requires-network"],
@@ -72,10 +64,6 @@ cmake(
         "OpenVINO_DIR": "C:/Intel/openvino_2024.5.0/runtime/cmake",
         "OpenCV_DIR": "C:/opencv/build",
     },
-    #env = {
-    #    "HTTP_PROXY": "{http_proxy}",
-    #    "HTTPS_PROXY": "{https_proxy}",
-    #},
     lib_source = ":all_srcs",
     out_static_libs = ["model_api.lib"],
     tags = ["requires-network"],
