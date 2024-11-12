@@ -1,8 +1,8 @@
-# OpenVINO TestDrive Bindings
+# OpenVINO Test Drive Bindings
 
 ## Introduction
 
-This repo contains the dart bindings for OpenVINO TestDrive to run GenAI and Geti Image models.
+This repo contains the dart bindings for OpenVINO Test Drive to run GenAI and Geti Image models.
 This acts as c api layer between OpenVINO and dart, wrapping and keeping the state.
 
 ## Design
@@ -90,7 +90,9 @@ Further dependencies which are explained per platform below:
 
 ### Windows
 
-[Install OpenVINO Runtime 24.4.0]( https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=WINDOWS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `C:/Intel/openvino_24.4.0`.
+A step by step guide can be found [here]('./docs/WINDOWS.md').
+
+[Install OpenVINO Runtime 24.5.0]( https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=WINDOWS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `C:/Intel/openvino_24.5.0`.
 
 Build OpenCV in `C:/opencv/build`.
 Install ffmpeg: `vcpkg install ffmpeg`.
@@ -103,7 +105,7 @@ The DLLs (with dependencies) will be in `bazel-bin/windows_bindings.tar`
 
 ### MacOS
 
-[Install OpenVINO Runtime 24.4.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=MACOS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `/opt/intel/openvino_24.4.0` and symlink to `/opt/intel/openvino`.
+[Install OpenVINO Runtime 24.5.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=MACOS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `/opt/intel/openvino_24.5.0` and symlink to `/opt/intel/openvino`.
 
 Install OpenCV: `brew install opencv`
 Install ffmpeg: `brew install ffmpeg@6`
@@ -114,7 +116,7 @@ The .dylib and .so are located in `bazel-bin/macos_bindings.tar`.
 
 ### Linux
 
-[Install OpenVINO Runtime 24.4.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=LINUX&DISTRIBUTION=ARCHIVE) with GenAI flavor in `/opt/intel/openvino_24.4.0` and symlink to `/opt/intel/openvino`.
+[Install OpenVINO Runtime 24.5.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=LINUX&DISTRIBUTION=ARCHIVE) with GenAI flavor in `/opt/intel/openvino_24.5.0` and symlink to `/opt/intel/openvino`.
 
 Build or install OpenCV to `/usr/local/`.
 Install ffmpeg: `sudo apt-get install ffmpeg`.
@@ -150,6 +152,4 @@ When applying changes to bindings.h you can update the bindings from the root fo
 
 ## Known issues
 
-* Test data is not shared yet.
-* OpenVINO CPU plugin has memory leak.
-* Proper setup to use dart_bindings as plugin need to be set up.
+* Auto plugin might cause in LLM

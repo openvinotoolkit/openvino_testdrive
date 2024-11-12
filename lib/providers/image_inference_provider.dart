@@ -17,11 +17,7 @@ class ImageInferenceProvider extends ChangeNotifier {
   GraphRunner? _inference;
   GraphRunner? get inference => _inference;
 
-  ImageInferenceProvider(this.project, this.device) {
-    ImageGraphBuilder(project, device).buildGraph().then((graph) {
-      init(graph);
-    });
-  }
+  ImageInferenceProvider(this.project, this.device);
 
   bool _locked = false;
 
@@ -39,7 +35,8 @@ class ImageInferenceProvider extends ChangeNotifier {
 
   bool get isReady => _inference != null;
 
-  Future<void> init(String graph) async {
+  Future<void> init() async {
+    final graph = await ImageGraphBuilder(project, device).buildGraph();
     _inference = await GraphRunner.init(graph);
     loaded.complete();
     notifyListeners();
@@ -49,7 +46,7 @@ class ImageInferenceProvider extends ChangeNotifier {
     _inference!.queueImage("input", timestamp, file);
     _inference!.queueSerializationOutput("serialization_output", timestamp, output);
     timestamp += 1;
-    final result = _inference!.get();
+    final result = await _inference!.get();
     return ImageInferenceResult.fromJson(jsonDecode(result));
   }
 

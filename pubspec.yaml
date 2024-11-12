@@ -1,5 +1,5 @@
 name: inference
-description: "OpenVINO TestDrive"
+description: "OpenVINO Test Drive"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -55,9 +55,6 @@ dependencies:
   fluent_ui: ^4.9.2
   system_theme: ^3.1.2
   flutter_acrylic: ^1.1.4
-  media_kit: ^1.1.11 # Primary package.
-  media_kit_video: ^1.2.5 # For video rendering.
-  media_kit_libs_video: ^1.0.5 # Native video dependencies.
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +71,9 @@ dev_dependencies:
   html: ^0.15.4
   integration_test:
     sdk: flutter
+  path_provider_platform_interface: ^2.1.2
+  plugin_platform_interface: ^2.1.8
+  build_runner: ^2.4.13
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -157,10 +157,10 @@ ffigen:
 
 
 msix_config:
-  display_name: OpenVINO TestDrive
+  display_name: OpenVINO Test Drive
   publisher_display_name: Intel
   identity_name: intel.openvino.testdrive
-  msix_version: 24.4.2.0
+  msix_version: 24.5.0.0
   trim_logo: false
   capabilities: "internetClient"
   logo_path: "images/openvino_eye.png"
@@ -172,4 +172,5 @@ msix_config:
       show_prompt: true
       force_update_from_any_version: false
   sign_msix: false
-  publisher: "CN=geti-inference-app-prod-newkey-2, O=Intel Corporation, L=Santa Clara, S=CA"
+  build_windows: false
+  publisher: "CN=Intel Corporation, O=Intel Corporation, S=California, C=US"

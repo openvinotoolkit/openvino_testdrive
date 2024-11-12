@@ -1,14 +1,12 @@
-
 workspace(name = "console_bindings")
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 bind(
     name = "python_headers",
     actual = "@local_config_python//:python_headers",
 )
-
 
 ########################################################### Compile_commands
 
@@ -16,15 +14,16 @@ bind(
 # https://github.com/hedronvision/bazel-compile-commands-extractor
 http_archive(
     name = "hedron_compile_commands",
+    strip_prefix = "bazel-compile-commands-extractor-0e990032f3c5a866e72615cf67e5ce22186dcb97",
 
     # Replace the commit hash (0e990032f3c5a866e72615cf67e5ce22186dcb97) in both places (below) with the latest (https://github.com/hedronvision/bazel-compile-commands-extractor/commits/main), rather than using the stale one here.
     # Even better, set up Renovate and let it do the work for you (see "Suggestion: Updates" in the README).
     url = "https://github.com/hedronvision/bazel-compile-commands-extractor/archive/0e990032f3c5a866e72615cf67e5ce22186dcb97.tar.gz",
-    strip_prefix = "bazel-compile-commands-extractor-0e990032f3c5a866e72615cf67e5ce22186dcb97",
     # When you first run this tool, it'll recommend a sha256 hash to put here with a message like: "DEBUG: Rule 'hedron_compile_commands' indicated that a canonical reproducible form can be obtained by modifying arguments sha256 = ..."
 )
 
 load("@hedron_compile_commands//:workspace_setup.bzl", "hedron_compile_commands_setup")
+
 hedron_compile_commands_setup()
 
 new_local_repository(
@@ -47,26 +46,26 @@ new_local_repository(
 
 git_repository(
     name = "rules_foreign_cc",
-    remote = "https://github.com/bazelbuild/rules_foreign_cc.git",
     commit = "9d5727d5e51bf1be8423dff7996bdb4d847b47e6",
- #   strip_prefix = "rules_foreign_cc-0.9.0",
+    remote = "https://github.com/bazelbuild/rules_foreign_cc.git",
+    #   strip_prefix = "rules_foreign_cc-0.9.0",
 )
 
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
 
-rules_foreign_cc_dependencies(cmake_version="3.26.2")
+rules_foreign_cc_dependencies(cmake_version = "3.26.2")
 
 git_repository(
     name = "gtest",
-    remote = "https://github.com/google/googletest",
     branch = "v1.15.x",
+    remote = "https://github.com/google/googletest",
 )
 
 git_repository(
     name = "model_api",
-    remote = "https:///github.com/openvinotoolkit/model_api/",
     build_file = "//third_party/model_api:model_api.BUILD",
-    commit = "eb9fcfb1e1eebc047ff144707f76203b132e1aa6"
+    commit = "eb9fcfb1e1eebc047ff144707f76203b132e1aa6",
+    remote = "https:///github.com/openvinotoolkit/model_api/",
 )
 
 new_local_repository(
@@ -89,16 +88,16 @@ new_local_repository(
 
 git_repository(
     name = "asmjit",
-    remote = "https://github.com/asmjit/asmjit",
-    commit = "330aa64386f394e090eb1062c645f9d021a761bc",
     build_file = "//third_party:asmjit.BUILD",
+    commit = "330aa64386f394e090eb1062c645f9d021a761bc",
+    remote = "https://github.com/asmjit/asmjit",
 )
 
 git_repository(
     name = "blend2d",
-    remote = "https://github.com/blend2d/blend2d",
-    commit = "c08b6c3c08d6cadf033e27fd108a494200ec0da1",
     build_file = "//third_party:blend2d.BUILD",
+    commit = "c08b6c3c08d6cadf033e27fd108a494200ec0da1",
+    remote = "https://github.com/blend2d/blend2d",
 )
 
 git_repository(
@@ -107,46 +106,52 @@ git_repository(
     tag = "v3.11.3",
 )
 
-new_local_repository(
-    name = "linux_ffmpeg",
-    build_file = "//third_party/ffmpeg:linux.BUILD",
-    path = "/usr"
-)
-
+#new_local_repository(
+#    name = "linux_ffmpeg",
+#    build_file = "//third_party/ffmpeg:linux.BUILD",
+#    path = "/usr"
+#)
+#
 new_local_repository(
     name = "mac_ffmpeg",
     build_file = "//third_party/ffmpeg:mac.BUILD",
-    path = "/opt/homebrew/Cellar/ffmpeg@6/6.1.2_3"
+    path = "/opt/homebrew/Cellar/ffmpeg@6/6.1.2_3",
 )
-
-new_local_repository(
-    name = "windows_ffmpeg",
-    build_file = "//third_party/ffmpeg:windows.BUILD",
-    path = "C:/vcpkg/packages/ffmpeg_x64-windows",
-)
+#
+#new_local_repository(
+#    name = "windows_ffmpeg",
+#    build_file = "//third_party/ffmpeg:windows.BUILD",
+#    path = "C:/vcpkg/packages/ffmpeg_x64-windows",
+#)
 
 http_archive(
     name = "rules_pkg",
+    sha256 = "8f9ee2dc10c1ae514ee599a8b42ed99fa262b757058f65ad3c384289ff70c4b8",
     urls = [
         "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.9.1/rules_pkg-0.9.1.tar.gz",
         "https://github.com/bazelbuild/rules_pkg/releases/download/0.9.1/rules_pkg-0.9.1.tar.gz",
     ],
-    sha256 = "8f9ee2dc10c1ae514ee599a8b42ed99fa262b757058f65ad3c384289ff70c4b8",
 )
+
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+
 rules_pkg_dependencies()
 
 load("//bazel:mediapipe_deps.bzl", "mediapipe_deps")
+
 mediapipe_deps()
 
 #load("@rules_python//python:repositories.bzl", "py_repositories")
 
 load("@build_bazel_rules_nodejs//:repositories.bzl", "build_bazel_rules_nodejs_dependencies")
+
 build_bazel_rules_nodejs_dependencies()
 
 # fetches nodejs, npm, and yarn
 load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
+
 node_repositories()
+
 yarn_install(
     name = "npm",
     package_json = "@mediapipe//:package.json",
@@ -154,6 +159,9 @@ yarn_install(
 )
 
 load("@org_tensorflow//tensorflow:workspace3.bzl", "tf_workspace3")
+
 tf_workspace3()
+
 load("@org_tensorflow//tensorflow:workspace2.bzl", "tf_workspace2")
+
 tf_workspace2()

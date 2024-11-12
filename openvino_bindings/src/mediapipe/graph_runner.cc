@@ -8,6 +8,10 @@ void GraphRunner::open_graph(std::string graph_content) {
     graph = std::make_shared<mediapipe::CalculatorGraph>(graph_config);
     poller = std::make_shared<mediapipe::OutputStreamPoller>(mediapipe::OutputStreamPoller(graph->AddOutputStreamPoller("output").value()));
     graph->StartRun({});
+    auto status = graph->WaitUntilIdle();
+    if (!status.ok()) {
+        throw api_error(MediapipeGraphError, std::string{status.message()});
+    }
 }
 
 std::string GraphRunner::get() {

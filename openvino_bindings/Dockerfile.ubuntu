@@ -15,9 +15,9 @@ RUN curl -fSsL -O https://github.com/bazelbuild/bazel/releases/download/$BAZEL_V
     rm -f /bazel/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
 
 RUN cd /tmp && mkdir -p /opt/intel && \
-    curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2024.3/linux/openvino_genai_ubuntu22_2024.3.0.0_x86_64.tar.gz \
-    --output openvino.tgz && tar -xf openvino.tgz && \
-    mv openvino_genai_ubuntu22_2024.3.0.0_x86_64 /opt/intel/openvino && rm /tmp/openvino.tgz
+    curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/nightly/2025.0.0.0.dev20241105/openvino_genai_ubuntu22_2025.0.0.0.dev20241105_x86_64.tar.gz \
+    --output openvino.tgz && tar -xf openvino.tgz && ls -la && \
+    mv openvino_genai_ubuntu22_2025.0.0.0.dev20241105_x86_64 /opt/intel/openvino && rm /tmp/openvino.tgz
 
 RUN cd /opt/intel/openvino && ./install_dependencies/install_openvino_dependencies.sh -y
 
@@ -27,7 +27,16 @@ RUN ./setup_opencv.sh
 
 RUN pip3 install numpy
 
-ADD . /build
+COPY bazel /build/bazel
+COPY src /build/src
+COPY BUILD /build/BUILD
+COPY WORKSPACE /build/WORKSPACE
+COPY third_party /build/third_party
+COPY .bazelrc /build/.bazelrc
+COPY .bazelversion /build/.bazelversion
+
 WORKDIR /build
 
-RUN bazel build src:linux_bindings
+RUN mkdir -p /bazel-out
+RUN bazel build //:linux_bindings
+RUN mkdir -p /bindings-out/ && mv bazel-bin/linux_bindings.tgz /bindings-out/
