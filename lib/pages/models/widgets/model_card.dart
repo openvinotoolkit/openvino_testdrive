@@ -12,40 +12,20 @@ class ModelCard extends StatefulWidget {
   State<ModelCard> createState() => _ModelCardState();
 }
 
-class _ModelCardState extends State<ModelCard> with SingleTickerProviderStateMixin {
+class _ModelCardState extends State<ModelCard>{
   bool isHovered = false;
-  late Animation<double> animation;
-  late AnimationController controller;
 
-  @override
-  void initState() {
-    super.initState();
-    controller = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
-    animation = Tween<double>(begin: 2, end: 8).animate(controller)..addListener(() {
-      setState(() {});
-    });
-    controller.reset();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
+    @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
 
     return GestureDetector(
       onTap: () => GoRouter.of(context).go("/models/inference", extra: widget.project),
       child: MouseRegion(
-        onEnter: (_) => controller.forward(),
-        onExit: (_) => controller.reverse(),
         cursor: SystemMouseCursors.click,
         child: Elevation(
           backgroundColor: theme.cardColor,
-          elevation: animation.value,
+          elevation: 4,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           child: Container(
             decoration: BoxDecoration(
@@ -53,7 +33,7 @@ class _ModelCardState extends State<ModelCard> with SingleTickerProviderStateMix
               borderRadius: const BorderRadius.all(Radius.circular(4)),
               border: theme.brightness.isDark
                 ? Border.all(
-                  color: theme.shadowColor,
+                  color: const Color(0xFF464646),
                   width: 1,
                 )
                 : null,

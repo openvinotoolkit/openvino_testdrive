@@ -31,7 +31,7 @@ class _ModelsPageState extends State<ModelsPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   GridContainer(
-                    color: theme.acrylicBackgroundColor,
+                    color: theme.navigationPaneTheme.backgroundColor,
                     padding: const EdgeInsets.all(16),
                     child: Text("My Models",
                       style: const TextStyle(
@@ -42,7 +42,7 @@ class _ModelsPageState extends State<ModelsPage> {
                   ),
                   Expanded(
                     child: GridContainer(
-                    color: theme.acrylicBackgroundColor,
+                    color: theme.navigationPaneTheme.backgroundColor,
                       padding: const EdgeInsets.all(13),
                       child: const ModelFilter()
                     ),

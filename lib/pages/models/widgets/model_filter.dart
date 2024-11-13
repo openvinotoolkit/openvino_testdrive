@@ -111,12 +111,14 @@ class FilterOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 7),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(4),
         child: Container(
-          color: (enabled ? Colors.white : null),
+          color: (enabled ? theme.scaffoldBackgroundColor : null),
           child: GestureDetector(
             onTap: onTap,
             child: Padding(
