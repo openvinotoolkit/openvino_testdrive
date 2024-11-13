@@ -38,7 +38,7 @@ class _DownloadPageState extends State<DownloadPage> {
     final downloadProvider = Provider.of<DownloadProvider>(context, listen: false);
     final projectProvider = Provider.of<ProjectProvider>(context, listen: false);
 
-    final files = downloadFiles(widget.project);
+    final files = await downloadFiles(widget.project);
 
     try {
       await downloadProvider.queue(files, widget.project.modelInfo?.collection.token);

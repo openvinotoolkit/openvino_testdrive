@@ -1,3 +1,5 @@
+OPENVINO_VERSION = "2450"
+
 package(
     default_visibility = ["//visibility:public"],
 )
@@ -32,12 +34,20 @@ cc_library(
     hdrs = glob([
         "include/openvino/**/*"
     ]),
-    srcs = glob([
-        "lib/arm64/Release/**/libopenvino_tokenizers.dylib",
-        "lib/arm64/Release/**/libcore_tokenizers.dylib",
-        "lib/arm64/Release/**/*.2450.dylib",
+    srcs = [
+        "lib/arm64/Release/libopenvino_tokenizers.dylib",
+        "lib/arm64/Release/libcore_tokenizers.dylib",
+        "lib/arm64/Release/libopenvino." + OPENVINO_VERSION +".dylib",
+        "lib/arm64/Release/libopenvino_c." + OPENVINO_VERSION + ".dylib",
+        "lib/arm64/Release/libopenvino_genai." + OPENVINO_VERSION + ".dylib",
+        "lib/arm64/Release/libopenvino_ir_frontend." + OPENVINO_VERSION + ".dylib",
+        "lib/arm64/Release/libopenvino_onnx_frontend." + OPENVINO_VERSION + ".dylib",
+        "lib/arm64/Release/libopenvino_paddle_frontend." + OPENVINO_VERSION + ".dylib",
+        "lib/arm64/Release/libopenvino_pytorch_frontend." + OPENVINO_VERSION + ".dylib",
+        "lib/arm64/Release/libopenvino_tensorflow_frontend." + OPENVINO_VERSION + ".dylib",
+        "lib/arm64/Release/libopenvino_tensorflow_lite_frontend." + OPENVINO_VERSION + ".dylib",
         "3rdparty/tbb/lib/libtbb.12.dylib",
-    ]),
+    ],
     strip_include_prefix = "include",
     visibility = ["//visibility:public"],
     data = [

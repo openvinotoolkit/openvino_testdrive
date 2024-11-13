@@ -68,18 +68,14 @@ class TextInferenceProvider extends ChangeNotifier {
   TextInferenceProvider(Project? project, String? device) {
     _project = project;
     _device = device;
+  }
 
+  Future<void> loadModel() async {
     if (project != null && device != null) {
-      print("instantiating project: ${project.name}");
-      print(project.storagePath);
-      print(device);
-      LLMInference.init(project.storagePath, device).then((instance) {
-          print("done loading");
-          _inference = instance;
-          instance.setListener(onMessage);
-          loaded.complete();
-          notifyListeners();
-      });
+      _inference = await LLMInference.init(project!.storagePath, device!)
+        ..setListener(onMessage);
+      loaded.complete();
+      notifyListeners();
     }
   }
 

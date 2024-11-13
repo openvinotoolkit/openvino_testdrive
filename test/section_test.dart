@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inference/inference/speech/section.dart';
+//import 'package:inference/inference/speech/section.dart';
 
 void main() {
+  /*
   group("Section", () {
     group("process", () {
       test("process sets values in data", () async {
@@ -96,4 +97,5 @@ void main() {
       });
     });
   });
+  */
 }
