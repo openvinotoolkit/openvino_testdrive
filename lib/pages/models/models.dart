@@ -16,6 +16,8 @@ class ModelsPage extends StatefulWidget {
 class _ModelsPageState extends State<ModelsPage> {
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
     return ChangeNotifierProvider(
       create: (_) => ProjectFilterProvider(),
       child: ScaffoldPage(
@@ -29,6 +31,7 @@ class _ModelsPageState extends State<ModelsPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   GridContainer(
+                    color: theme.acrylicBackgroundColor,
                     padding: const EdgeInsets.all(16),
                     child: Text("My Models",
                       style: const TextStyle(
@@ -38,9 +41,10 @@ class _ModelsPageState extends State<ModelsPage> {
                     ),
                   ),
                   Expanded(
-                    child: const GridContainer(
-                      padding: EdgeInsets.all(13),
-                      child: ModelFilter()
+                    child: GridContainer(
+                    color: theme.acrylicBackgroundColor,
+                      padding: const EdgeInsets.all(13),
+                      child: const ModelFilter()
                     ),
                   ),
                 ],
@@ -50,8 +54,8 @@ class _ModelsPageState extends State<ModelsPage> {
               child: Column(
                 children: [
                   GridContainer(
-                    color: Colors.white,
-                    padding: const EdgeInsets.all(13),
+                    color: theme.scaffoldBackgroundColor,
+                    padding: const EdgeInsets.all(13.5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

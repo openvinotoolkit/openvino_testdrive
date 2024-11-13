@@ -13,26 +13,27 @@ class ModelProperty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+    final backgroundColor = theme.brightness.isDark
+     ? theme.scaffoldBackgroundColor
+     : const Color(0x0F0F0FFF);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           borderRadius: const BorderRadius.all(Radius.circular(4)),
-          color: const Color(0xFFF5F5F5),
+          color: backgroundColor,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
           child: RichText(
             text: TextSpan(
-              style: const TextStyle(
-                color: Color(0xFF242424),
-                fontSize: 12,
-              ),
-
+              style: DefaultTextStyle.of(context).style.apply(fontSizeDelta: -2),
               children: <TextSpan>[
                 TextSpan(text: "$name: "),
-                TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.w500)),
               ],
             ),
           ),

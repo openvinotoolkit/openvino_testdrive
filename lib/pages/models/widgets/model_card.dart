@@ -35,6 +35,8 @@ class _ModelCardState extends State<ModelCard> with SingleTickerProviderStateMix
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
     return GestureDetector(
       onTap: () => GoRouter.of(context).go("/models/inference", extra: widget.project),
       child: MouseRegion(
@@ -42,13 +44,20 @@ class _ModelCardState extends State<ModelCard> with SingleTickerProviderStateMix
         onExit: (_) => controller.reverse(),
         cursor: SystemMouseCursors.click,
         child: Elevation(
+          backgroundColor: theme.cardColor,
           elevation: animation.value,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               borderRadius: const BorderRadius.all(Radius.circular(4)),
-              color: Colors.white,
+              border: theme.brightness.isDark
+                ? Border.all(
+                  color: theme.shadowColor,
+                  width: 1,
+                )
+                : null,
+              color: theme.cardColor,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -60,10 +69,6 @@ class _ModelCardState extends State<ModelCard> with SingleTickerProviderStateMix
                     borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     child: Container(
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: const Color(0x0D000000),
-                          width: 1,
-                        ),
                         image: DecorationImage(
                           image: widget.project.thumbnailImage(),
                           fit: BoxFit.cover,
@@ -82,7 +87,7 @@ class _ModelCardState extends State<ModelCard> with SingleTickerProviderStateMix
                         Text(widget.project.name,
                           style: const TextStyle(
                             fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w400,
                           )
                         ),
                         Padding(

@@ -13,8 +13,10 @@ class ModelList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
     return GridContainer(
-      color: Colors.white,
+      color: theme.scaffoldBackgroundColor,
       child: Consumer<ProjectFilterProvider>(builder: (context, filter, child) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
