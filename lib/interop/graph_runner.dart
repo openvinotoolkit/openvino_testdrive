@@ -18,24 +18,27 @@ class GraphRunner {
       final graphPtr = graph.toNativeUtf8();
       final status = ov.graphRunnerOpen(graphPtr);
       calloc.free(graphPtr);
-
       return status;
     });
 
     if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
-      throw "QueueSerializationOutput error: ${result.ref.status} ${result.ref.message.toDartString()}";
+      throw "GraphRunner::Init error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
     return GraphRunner(result);
   }
 
-  String get() {
-    final status = ov.graphRunnerGet(instance.ref.value);
+  Future<String> get() async {
+    return await Isolate.run(() {
+      final status = ov.graphRunnerGet(instance.ref.value);
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
-      throw "QueueSerializationOutput error: ${status.ref.status} ${status.ref.message.toDartString()}";
-    }
-    return status.ref.value.toDartString();
+      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+        throw "GraphRunner::get error: ${status.ref.status} ${status.ref.message.toDartString()}";
+      }
+      final content = status.ref.value.toDartString();
+      ov.freeStatusOrString(status);
+      return content;
+    });
   }
 
   Future<void> queueImage(String nodeName, int timestamp, Uint8List file) async {

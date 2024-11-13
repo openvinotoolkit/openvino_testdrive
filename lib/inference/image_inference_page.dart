@@ -8,6 +8,7 @@ import 'package:inference/project.dart';
 import 'package:inference/providers/image_inference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/providers/preference_provider.dart';
+import 'package:inference/utils/dialogs.dart';
 import 'package:provider/provider.dart';
 
 class ImageInferencePage extends StatefulWidget {
@@ -62,13 +63,13 @@ class _ImageInferencePageState extends State<ImageInferencePage>
         lazy: false,
         create: (_) {
           final device = Provider.of<PreferenceProvider>(context, listen: false).device;
-          return ImageInferenceProvider(widget.project, device);
+          return ImageInferenceProvider(widget.project, device)..init().catchError(onExceptionDialog(context));
         },
         update: (_, preferences, imageInferenceProvider) {
           if (imageInferenceProvider != null && imageInferenceProvider.device == preferences.device) {
             return imageInferenceProvider;
           }
-          return ImageInferenceProvider(widget.project, preferences.device);
+          return ImageInferenceProvider(widget.project, preferences.device)..init().catchError(onExceptionDialog(context));
         },
         child: Scaffold(
           appBar: Header(true, onBack: (context) => onBack(context)),

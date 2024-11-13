@@ -14,10 +14,10 @@ class GetiCalculatorBase : public CalculatorBase {
       return GetiOpen(cc);
     } catch (const std::exception& e) {
       LOG(ERROR) << "Caught exception with message: " << e.what();
-      RET_CHECK(false);
+      return mediapipe::UnknownError(e.what());
     } catch (...) {
       LOG(ERROR) << "Caught unknown exception";
-      RET_CHECK(false);
+      return mediapipe::UnknownError("Caught unknown exception");
     }
   }
 
@@ -26,10 +26,10 @@ class GetiCalculatorBase : public CalculatorBase {
       return GetiProcess(cc);
     } catch (const std::exception& e) {
       std::cout << "Caught exception with message: " << e.what() << std::endl;
-      RET_CHECK(false);
+      return mediapipe::UnknownError(e.what());
     } catch (...) {
       std::cout << "Caught unknown exception" << std::endl;
-      RET_CHECK(false);
+      return mediapipe::UnknownError("Caught unknown exception");
     }
   }
   virtual absl::Status GetiOpen(CalculatorContext* cc) = 0;

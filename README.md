@@ -1,18 +1,21 @@
-# OpenVINO™ TestDrive
+# OpenVINO™ Test Drive
 
-Welcome to Intel OpenVINO TestDrive. This application allows you to run LLMs and Geti trained models directly on your computer using OpenVINO.
+Get started with OpenVINO Test Drive, an application that allows you to run LLMs and models trained by [Intel Geti](https://geti.intel.com/) directly on your computer or edge device using OpenVINO.
 
-* LLM Inference
-* Image inference:
-    * Output CSV, JSON and/or Overlay image 
-    * Run a batch inference task on a folder
-    * Open camera and run inference (WIP)
+# Features
+### LLM models
++ **Text Generation**: Generate text and engage in chat experiences.
++ **Performance metrics**: Evaluate model performance on your computer or edge device.
+### Computer vision models
++ **Single Image Inference**: Perform inference on individual images.
++ **Batch Inference**: Conduct inference on batches of images.
 
+# High level architecture
 ![Design Graph](./design_graph.png)
 
-# Using the TestDrive
+# Using the Test Drive
 
-When the application is started you can import a model using either Huggingface for LLMs or "from local disk" for geti models.
+Upon starting the application, you can import a model using either Huggingface for LLMs or “from local disk” for Geti models.
 
 ![Preview](./preview.png)
 
@@ -20,7 +23,7 @@ When the application is started you can import a model using either Huggingface 
 
 ## Release
 
-Download and install a release from the Releases page.
+Download the latest release from the [Releases page](https://github.com/openvinotoolkit/openvino_testdrive/releases).
 
 ## Build
 
@@ -33,5 +36,5 @@ Secondly, the bindings and its dependencies for your platform to be added to `./
 
 ## Build bindings
 
-The console uses c bindings to OpenVINO. These are located in `./openvino` folder. See [readme.md](./openvino/README.md).
+The Test Drive uses c bindings to OpenVINO. These are located in `./openvino_bindings` folder. See [readme.md](./openvino_bindings/README.md).
 

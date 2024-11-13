@@ -4,7 +4,7 @@
 #include <nlohmann/json.hpp>
 #include <openvino/openvino.hpp>
 
-#include "src/audio/speech_to_text.h"
+//#include "src/audio/speech_to_text.h"
 #include "src/image/image_inference.h"
 #include "src/mediapipe/graph_runner.h"
 #include "src/mediapipe/serialization/serialization_calculators.h"
@@ -30,9 +30,9 @@ void freeStatusOrString(StatusOrString *status) {
     delete status;
 }
 
-void freeStatusOrSpeechToText(StatusOrSpeechToText *status) {
-    delete status;
-}
+//void freeStatusOrSpeechToText(StatusOrSpeechToText *status) {
+//    delete status;
+//}
 
 void freeStatusOrImageInference(StatusOrString *status) {
     //std::cout << "Freeing StatusOrImageInference" << std::endl;
@@ -290,48 +290,48 @@ Status* graphRunnerStop(CGraphRunner instance) {
     }
 }
 
-StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device) {
-    try {
-        auto instance = new SpeechToText(model_path, device);
-        return new StatusOrSpeechToText{OkStatus, "", instance};
-    } catch (...) {
-        auto except = handle_exceptions();
-        return new StatusOrSpeechToText{except->status, except->message};
-    }
-}
-
-Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path) {
-    try {
-        auto object = reinterpret_cast<SpeechToText*>(instance);
-        object->load_video(video_path);
-        return new Status{OkStatus, ""};
-    } catch (...) {
-        return handle_exceptions();
-    }
-}
-
-StatusOrInt* speechToTextVideoDuration(CSpeechToText instance) {
-    try {
-        auto object = reinterpret_cast<SpeechToText*>(instance);
-        object->video_duration();
-        // Deal with long in the future
-        return new StatusOrInt{OkStatus, "", (int)object->video_duration()};
-    } catch (...) {
-        return new StatusOrInt{OkStatus, ""};
-    }
-}
-
-StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language) {
-    try {
-        auto object = reinterpret_cast<SpeechToText*>(instance);
-        auto result = object->transcribe(start, duration, language);
-        std::string text = result;
-        return new StatusOrModelResponse{OkStatus, "", convertToMetricsStruct(result.perf_metrics), strdup(text.c_str())};
-    } catch (...) {
-        auto except = handle_exceptions();
-        return new StatusOrModelResponse{except->status, except->message};
-    }
-}
+//StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device) {
+//    try {
+//        auto instance = new SpeechToText(model_path, device);
+//        return new StatusOrSpeechToText{OkStatus, "", instance};
+//    } catch (...) {
+//        auto except = handle_exceptions();
+//        return new StatusOrSpeechToText{except->status, except->message};
+//    }
+//}
+//
+//Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path) {
+//    try {
+//        auto object = reinterpret_cast<SpeechToText*>(instance);
+//        object->load_video(video_path);
+//        return new Status{OkStatus, ""};
+//    } catch (...) {
+//        return handle_exceptions();
+//    }
+//}
+//
+//StatusOrInt* speechToTextVideoDuration(CSpeechToText instance) {
+//    try {
+//        auto object = reinterpret_cast<SpeechToText*>(instance);
+//        object->video_duration();
+//        // Deal with long in the future
+//        return new StatusOrInt{OkStatus, "", (int)object->video_duration()};
+//    } catch (...) {
+//        return new StatusOrInt{OkStatus, ""};
+//    }
+//}
+//
+//StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language) {
+//    try {
+//        auto object = reinterpret_cast<SpeechToText*>(instance);
+//        auto result = object->transcribe(start, duration, language);
+//        std::string text = result;
+//        return new StatusOrModelResponse{OkStatus, "", convertToMetricsStruct(result.perf_metrics), strdup(text.c_str())};
+//    } catch (...) {
+//        auto except = handle_exceptions();
+//        return new StatusOrModelResponse{except->status, except->message};
+//    }
+//}
 
 //void report_rss() {
 //    struct rusage r_usage;

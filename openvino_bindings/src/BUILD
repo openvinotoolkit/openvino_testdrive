@@ -8,7 +8,6 @@ cc_library(
         "//src/utils:status",
         "//src/utils:utils",
         "//src/image:image_inference",
-        "//src/audio:speech_to_text",
         "//src/llm:llm_inference",
         "//src/mediapipe:graph_runner",
     ],
