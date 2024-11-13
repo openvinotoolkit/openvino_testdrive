@@ -3,7 +3,7 @@ import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/pages/models/widgets/model_filter.dart';
 import 'package:inference/pages/models/widgets/model_list.dart';
 import 'package:inference/providers/project_filter_provider.dart';
-import 'package:inference/widgets/controls/filled_dropdown_button.dart';
+import 'package:inference/widgets/import_model_button.dart';
 import 'package:provider/provider.dart';
 
 class ModelsPage extends StatefulWidget {
@@ -67,13 +67,7 @@ class _ModelsPageState extends State<ModelsPage> {
                             ),
                           );
                         }),
-                        FilledDropDownButton(
-                          title: const Text('Import model'),
-                          items: [
-                            MenuFlyoutItem(text: const Text('Hugging Face'), onPressed: () {}),
-                            MenuFlyoutItem(text: const Text('Local disk'), onPressed: () {}),
-                          ]
-                        )
+                        const ImportModelButton(),
                       ],
                     ),
                   ),
