@@ -1,11 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:inference/pages/home/widgets/model_card.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/pages/home/widgets/project_card.dart';
+import 'package:inference/widgets/import_model_button.dart';
 import 'package:inference/providers/project_provider.dart';
-import 'package:inference/widgets/controls/filled_dropdown_button.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -120,13 +119,7 @@ class _HomePageState extends State<HomePage> {
                               verticalMargin: EdgeInsets.symmetric(horizontal: 8),
                             ),),
                           ),
-                          FilledDropDownButton(
-                            title: const Text('Import model'),
-                            items: [
-                              MenuFlyoutItem(text: const Text('Hugging Face'), onPressed: () { GoRouter.of(context).push('/models/import'); }),
-                              MenuFlyoutItem(text: const Text('Local disk'), onPressed: () {}),
-                            ]
-                          )
+                          const ImportModelButton(),
                         ],
                       )
                     ],

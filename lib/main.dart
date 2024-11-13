@@ -49,12 +49,14 @@ class App extends StatelessWidget {
           color: theme.color,
           theme: FluentThemeData(
             accentColor: theme.color,
+            scaffoldBackgroundColor: const Color(0x80FFFFFF),
             visualDensity: VisualDensity.standard,
             fontFamily: theme.fontFamily,
           ),
           darkTheme: FluentThemeData(
             brightness: Brightness.dark,
             accentColor: theme.darkColor,
+            cardColor: const Color(0xFF383838),
             visualDensity: VisualDensity.standard,
             fontFamily: theme.fontFamily,
           ),

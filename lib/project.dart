@@ -151,6 +151,16 @@ class Project {
   bool isPublic;
   bool hasSample = false;
 
+  int? size;
+
+  String get architecture {
+    if (tasks.length > 1) {
+      return "Task Chain";
+    }
+    return tasks.first.architecture;
+  }
+
+
   List<Label> labels() {
     return tasks.map((t) => t.labels).expand((i) => i).where((label) => !label.isEmpty).toList();
   }
@@ -160,7 +170,10 @@ class Project {
   }
 
   String taskName() {
-    return tasks.map((task) => task.name).join('->');
+    if (tasks.length > 1) {
+      return "Task Chain";
+    }
+    return tasks.first.name;
   }
 
   List<Label> get labelDefinitions {
@@ -169,7 +182,9 @@ class Project {
 
   bool get isDownloaded => true;
 
-  Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic);
+  Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic) {
+    size = Directory(storagePath).listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
+  }
 
   Object toMap() {
     return {

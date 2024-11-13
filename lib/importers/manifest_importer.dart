@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:inference/utils/get_public_thumbnail.dart';
+import 'package:inference/utils.dart';
 
 class Model {
   final String name;
@@ -30,16 +31,7 @@ class Model {
   String get kind => task == 'text-generation' ? 'llm' : 'other';
 
   String get readableFileSize {
-    const suffixes = ['B', 'KB', 'MB', 'GB', 'TB'];
-    var size = fileSize.toDouble();
-    var suffixIndex = 0;
-
-    while (size >= 1024 && suffixIndex < suffixes.length - 1) {
-      size /= 1024;
-      suffixIndex++;
-    }
-
-    return '${size.toStringAsFixed(2)} ${suffixes[suffixIndex]}';
+    return fileSize.toDouble().readableFileSize();
   }
 
   factory Model.fromJson(Map<String, dynamic> json) {
