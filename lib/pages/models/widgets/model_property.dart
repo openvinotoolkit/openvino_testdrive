@@ -16,7 +16,7 @@ class ModelProperty extends StatelessWidget {
     final theme = FluentTheme.of(context);
     final backgroundColor = theme.brightness.isDark
      ? theme.scaffoldBackgroundColor
-     : const Color(0x0F0F0FFF);
+     : const Color(0xFFF5F5F5);
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
