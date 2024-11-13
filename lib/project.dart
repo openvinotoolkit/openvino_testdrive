@@ -151,6 +151,8 @@ class Project {
   bool isPublic;
   bool hasSample = false;
 
+  int? size;
+
   String get architecture {
     if (tasks.length > 1) {
       return "Task Chain";
@@ -180,7 +182,9 @@ class Project {
 
   bool get isDownloaded => true;
 
-  Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic);
+  Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic) {
+    size = Directory(storagePath).listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
+  }
 
   Object toMap() {
     return {

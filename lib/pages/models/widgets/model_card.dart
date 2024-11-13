@@ -2,7 +2,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/pages/models/widgets/model_property.dart';
 import 'package:inference/project.dart';
+import 'package:inference/utils.dart';
 import 'package:inference/widgets/elevation.dart';
+import 'package:intl/intl.dart';
 
 class ModelCard extends StatefulWidget {
   final Project project;
@@ -65,18 +67,36 @@ class _ModelCardState extends State<ModelCard>{
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(widget.project.name,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                           )
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 14),
+                          padding: const EdgeInsets.only(top: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ModelProperty(name: "Task", value: widget.project.taskName()),
                               ModelProperty(name: "Architecture", value: widget.project.architecture),
+                              Row(
+                                children: [
+                                  ModelProperty(name: "Size", value: widget.project.size?.readableFileSize() ?? ""),
+                                  Builder(
+                                    builder: (context) {
+                                      if (widget.project is GetiProject && widget.project.tasks.first.performance != null) {
+                                        Locale locale = Localizations.localeOf(context);
+                                        final formatter = NumberFormat.percentPattern(locale.languageCode);
+                                        return ModelProperty(
+                                          name: "Accuracy",
+                                          value: formatter.format(widget.project.tasks.first.performance!.score));
+                                      }
+                                      return Container();
+                                    }
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         )

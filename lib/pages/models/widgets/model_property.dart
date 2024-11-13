@@ -29,6 +29,7 @@ class ModelProperty extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
           child: RichText(
+            overflow: TextOverflow.ellipsis,
             text: TextSpan(
               style: DefaultTextStyle.of(context).style.apply(fontSizeDelta: -2),
               children: <TextSpan>[
