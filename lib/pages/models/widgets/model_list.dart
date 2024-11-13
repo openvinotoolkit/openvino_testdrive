@@ -4,6 +4,7 @@ import 'package:inference/pages/models/widgets/model_card.dart';
 import 'package:inference/pages/models/widgets/searchbar.dart';
 import 'package:inference/providers/project_filter_provider.dart';
 import 'package:inference/providers/project_provider.dart';
+import 'package:inference/widgets/fixed_grid.dart';
 import 'package:provider/provider.dart';
 
 class ModelList extends StatelessWidget {
@@ -37,15 +38,13 @@ class ModelList extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 65, vertical: 2),
                       child: Consumer<ProjectProvider>(builder: (context, projectProvider, child) {
                         final filtered = filter.applyFilter(projectProvider.projects);
-
-                        return GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 240, crossAxisSpacing: 24, mainAxisSpacing: 24, childAspectRatio: 10/13),
-                          shrinkWrap: true,
+                        return FixedGrid(
+                          tileWidth: 240,
+                          spacing: 24,
                           itemCount: filtered.length,
-                          physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             return ModelCard(project: filtered[index]);
-                          }
+                          },
                         );
                       }),
                     ),
