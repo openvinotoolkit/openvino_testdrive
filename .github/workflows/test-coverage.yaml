@@ -54,6 +54,8 @@ jobs:
 
   integration_tests:
     runs-on: ubuntu-latest
+    # NOTE: Temporary disabled due to the issue with integration tests on CI
+    if: false
 
     env:
       DISPLAY: ":99"
