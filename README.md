@@ -28,11 +28,9 @@ Download the latest release from the [Releases repository](https://storage.openv
   <img src="./docs/win_inst.gif" width="500">
 </p>
 
-:::info
+> [!NOTE]
+> To verify downloaded file integrity, you can generate a SHA-256 of the downloaded file and compare it to the SHA-256 from corresponding `.sha256` file published in Releases repository. 
 
-To verify downloaded file integrity, you can generate a SHA-256 of the downloaded file and compare it to the SHA-256 from corresponding `.sha256` file published in Releases repository. 
-
-:::
 
 2. Extract zip archive double-click the MSIX installation package, click `Install` button and it will display the installation process
 
@@ -71,11 +69,8 @@ Upon starting the application, you can import a model using either Hugging Face 
   <img src="./docs/geti_download.gif" width="500">
 </p>
 
-:::info
-
-Please check [Intel® Geti™ documentation](https://docs.geti.intel.com) for more details.
-
-:::
+> [!NOTE]
+> Please check [Intel® Geti™ documentation](https://docs.geti.intel.com) for more details.
 
 2. Import deployment code into OpenVINO™ Test Drive using `Import model` -> `Local disk` button.
 
