@@ -230,14 +230,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.7"
-  dbus:
-    dependency: transitive
-    description:
-      name: dbus
-      sha256: "365c771ac3b0e58845f39ec6deebc76e3276aa9922b0cc60840712094d9047ac"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.10"
   desktop_drop:
     dependency: "direct main"
     description:
@@ -716,62 +708,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.2"
-  safe_local_storage:
-    dependency: transitive
-    description:
-      name: safe_local_storage
-      sha256: ede4eb6cb7d88a116b3d3bf1df70790b9e2038bc37cb19112e381217c74d9440
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
-  screen_brightness:
-    dependency: transitive
-    description:
-      name: screen_brightness
-      sha256: ed8da4a4511e79422fc1aa88138e920e4008cd312b72cdaa15ccb426c0faaedd
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.2+1"
-  screen_brightness_android:
-    dependency: transitive
-    description:
-      name: screen_brightness_android
-      sha256: "3df10961e3a9e968a5e076fe27e7f4741fa8a1d3950bdeb48cf121ed529d0caf"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0+2"
-  screen_brightness_ios:
-    dependency: transitive
-    description:
-      name: screen_brightness_ios
-      sha256: "99adc3ca5490b8294284aad5fcc87f061ad685050e03cf45d3d018fe398fd9a2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
-  screen_brightness_macos:
-    dependency: transitive
-    description:
-      name: screen_brightness_macos
-      sha256: "64b34e7e3f4900d7687c8e8fb514246845a73ecec05ab53483ed025bd4a899fd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0+1"
-  screen_brightness_platform_interface:
-    dependency: transitive
-    description:
-      name: screen_brightness_platform_interface
-      sha256: b211d07f0c96637a15fb06f6168617e18030d5d74ad03795dd8547a52717c171
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
-  screen_brightness_windows:
-    dependency: transitive
-    description:
-      name: screen_brightness_windows
-      sha256: "9261bf33d0fc2707d8cf16339ce25768100a65e70af0fcabaf032fc12408ba86"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.3"
   shelf:
     dependency: transitive
     description:
@@ -937,30 +873,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.2.5"
-  volume_controller:
-    dependency: transitive
-    description:
-      name: volume_controller
-      sha256: c71d4c62631305df63b72da79089e078af2659649301807fa746088f365cb48e
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.8"
-  wakelock_plus:
-    dependency: transitive
-    description:
-      name: wakelock_plus
-      sha256: bf4ee6f17a2fa373ed3753ad0e602b7603f8c75af006d5b9bdade263928c0484
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.8"
-  wakelock_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: wakelock_plus_platform_interface
-      sha256: "422d1cdbb448079a8a62a5a770b69baa489f8f7ca21aef47800c726d404f9d16"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.1"
   watcher:
     dependency: transitive
     description:

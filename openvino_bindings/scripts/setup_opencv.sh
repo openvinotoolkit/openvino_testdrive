@@ -1,13 +1,13 @@
 #!/bin/bash
-export OPENCV_VERSION=4.3.0
+export OPENCV_VERSION=4.10.0
 
 echo "Installing OpenCV from source"
 rm -rf /tmp/build_opencv
-mkdir /tmp/build_opencv
+mkdir -p /tmp/build_opencv
 cd /tmp/build_opencv
 git clone https://github.com/opencv/opencv_contrib.git
 git clone https://github.com/opencv/opencv.git
-mkdir opencv/release
+mkdir -p opencv/release
 cd opencv_contrib
 git checkout tags/$OPENCV_VERSION
 cd ../opencv
@@ -51,7 +51,10 @@ cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local \
       -DWITH_PTHREADS_PF=ON \
       -DWITH_JPEG=ON \
       -DWITH_PNG=ON \
-      -DWITH_TIFF=ON
+      -DWITH_TIFF=ON \
+      -DOBSENSOR_USE_ORBBEC_SDK=OFF \
+      -DWITH_OBSENSOR=OFF \
+      -D CMAKE_OSX_ARCHITECTURES=arm64
 make -j `nproc`
 make install
 rm -rf /tmp/build_opencv
