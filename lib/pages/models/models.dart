@@ -33,8 +33,8 @@ class _ModelsPageState extends State<ModelsPage> {
                   GridContainer(
                     color: theme.navigationPaneTheme.backgroundColor,
                     padding: const EdgeInsets.all(16),
-                    child: Text("My Models",
-                      style: const TextStyle(
+                    child: const Text("My Models",
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),

@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:inference/pages/home/widgets/model_card.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/pages/home/widgets/project_card.dart';
+import 'package:inference/widgets/fixed_grid.dart';
 import 'package:inference/widgets/import_model_button.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:provider/provider.dart';
@@ -127,11 +128,10 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Consumer<ProjectProvider>(builder: (context, value, child) {
-                      return GridView.builder(
-                        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 320, crossAxisSpacing: 32, mainAxisSpacing: 32, childAspectRatio: 6/8),
-                        shrinkWrap: true,
+                      return FixedGrid(
+                        tileWidth: 268,
+                        spacing: 36,
                         itemCount: value.projects.length,
-                        physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           return ProjectCard(project: value.projects.elementAt(index));
                         }

@@ -4,11 +4,13 @@ class FixedGrid extends StatelessWidget {
   final double spacing;
   final double tileWidth;
   final int itemCount;
+  final bool centered;
   final NullableIndexedWidgetBuilder itemBuilder;
 
   const FixedGrid({
       required this.tileWidth,
       required this.itemBuilder,
+      this.centered = false,
       this.spacing = 0,
       this.itemCount = 0,
       super.key,
@@ -20,10 +22,10 @@ class FixedGrid extends StatelessWidget {
         builder: (context, constraints) {
           final int columns = ((constraints.maxWidth + spacing) / (tileWidth + spacing)).floor();
           final double totalTilesWidth = columns * tileWidth + (columns - 1) * spacing;
-          final double sidePadding = (constraints.maxWidth - totalTilesWidth);
+          final double padding = (constraints.maxWidth - totalTilesWidth);
 
           return Padding(
-            padding: EdgeInsets.only(right: sidePadding),
+            padding: centered ? EdgeInsets.symmetric(horizontal: padding / 2) : EdgeInsets.only(right: padding),
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: columns,

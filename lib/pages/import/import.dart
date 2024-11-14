@@ -5,6 +5,7 @@ import 'package:inference/pages/import/widgets/model_card.dart';
 import 'package:inference/widgets/controls/search_bar.dart';
 import 'package:inference/widgets/controls/dropdown_multiple_select.dart';
 import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/widgets/fixed_grid.dart';
 
 class ImportPage extends StatefulWidget {
   const ImportPage({super.key});
@@ -147,27 +148,20 @@ class _ImportPageState extends State<ImportPage> {
                         return const Text('No models available');
                       } else {
                         var allModels = filterModels(snapshot.data!);
-                        return GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 300,
-                            crossAxisSpacing: 24,
-                            mainAxisSpacing: 24,
-                            childAspectRatio: 3/4,
-                          ),
-                          shrinkWrap: true,
+                        return FixedGrid(
+                          tileWidth: 226,
+                          spacing: 24,
+                          centered: true,
                           itemCount: allModels.length,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return ModelCard(
-                              model: allModels[index],
-                              checked: selectedModel == allModels[index],
-                              onChecked: (value) {
-                                setState(() {
-                                  selectedModel = value ? allModels[index] : null;
-                                });
-                              },
-                            );
-                          },
+                          itemBuilder: (context, index) => ModelCard(
+                            model: allModels[index],
+                            checked: selectedModel == allModels[index],
+                            onChecked: (value) {
+                              setState(() {
+                                selectedModel = value ? allModels[index] : null;
+                              });
+                            },
+                          ),
                         );
                       }
                     },
