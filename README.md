@@ -25,7 +25,7 @@ Upon starting the application, you can import a model using either Huggingface f
 
 ## Release
 
-Download the latest release from the Releases page.
+Download the latest release from the [Releases page](https://github.com/openvinotoolkit/openvino_testdrive/releases).
 
 ## Build
 
@@ -38,5 +38,5 @@ Secondly, the bindings and its dependencies for your platform to be added to `./
 
 ## Build bindings
 
-The Test Drive uses c bindings to OpenVINO. These are located in `./openvino` folder. See [readme.md](./openvino/README.md).
+The Test Drive uses c bindings to OpenVINO. These are located in `./openvino_bindings` folder. See [readme.md](./openvino_bindings/README.md).
 
