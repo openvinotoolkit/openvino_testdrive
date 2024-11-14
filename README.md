@@ -19,6 +19,9 @@ With use of OpenVINO™ Test Drive you can:
 
 Download the latest release from the [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/packages/).
 
+> [!NOTE]
+> To verify downloaded file integrity, you can generate a SHA-256 of the downloaded file and compare it to the SHA-256 from corresponding `.sha256` file published in Releases repository. 
+
 <details>
 <summary>Installation on Windows</summary>
 
@@ -27,10 +30,6 @@ Download the latest release from the [Releases repository](https://storage.openv
 <p align="left">
   <img src="./docs/win_inst.gif" width="500">
 </p>
-
-> [!NOTE]
-> To verify downloaded file integrity, you can generate a SHA-256 of the downloaded file and compare it to the SHA-256 from corresponding `.sha256` file published in Releases repository. 
-
 
 2. Extract zip archive double-click the MSIX installation package, click `Install` button and it will display the installation process
 
@@ -42,11 +41,12 @@ Download the latest release from the [Releases repository](https://storage.openv
 
 </details>
 
-
 ## Quick start
+
 Upon starting the application, you can import a model using either Hugging Face for LLMs or upload Intel® Geti™ models from local disk.
 
 ### Text generation and LLM performance evaluation
+
 1. Find a model on Hugging Face and import it
 <p align="left">
   <img src="./docs/llm_import.gif" width="500">
@@ -63,6 +63,7 @@ Upon starting the application, you can import a model using either Hugging Face 
 </p>
 
 ### Images inference with models trained by Intel® Geti™
+
 1. Download deployment code for the model OpenVINO IR format trained by Intel® Geti™. 
 
 <p align="left">
