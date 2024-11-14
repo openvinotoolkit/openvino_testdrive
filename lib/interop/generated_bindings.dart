@@ -465,6 +465,81 @@ class OpenVINO {
   late final _llmInferenceClose = _llmInferenceClosePtr
       .asFunction<ffi.Pointer<Status> Function(CLLMInference)>();
 
+  ffi.Pointer<StatusOrTTIInference> ttiInferenceOpen(
+    ffi.Pointer<pkg_ffi.Utf8> model_path,
+    ffi.Pointer<pkg_ffi.Utf8> device,
+  ) {
+    return _ttiInferenceOpen(
+      model_path,
+      device,
+    );
+  }
+
+  late final _ttiInferenceOpenPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrTTIInference> Function(ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('ttiInferenceOpen');
+  late final _ttiInferenceOpen = _ttiInferenceOpenPtr.asFunction<
+      ffi.Pointer<StatusOrTTIInference> Function(
+          ffi.Pointer<pkg_ffi.Utf8>, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<StatusOrTTIModelResponse> ttiInferencePrompt(
+    CTTIInference instance,
+    ffi.Pointer<pkg_ffi.Utf8> message,
+    int width,
+    int height,
+    int rounds,
+  ) {
+    return _ttiInferencePrompt(
+      instance,
+      message,
+      width,
+      height,
+      rounds,
+    );
+  }
+
+  late final _ttiInferencePromptPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrTTIModelResponse> Function(
+              CTTIInference,
+              ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int)>>('ttiInferencePrompt');
+  late final _ttiInferencePrompt = _ttiInferencePromptPtr.asFunction<
+      ffi.Pointer<StatusOrTTIModelResponse> Function(
+          CTTIInference, ffi.Pointer<pkg_ffi.Utf8>, int, int, int)>();
+
+  ffi.Pointer<StatusOrBool> ttiInferenceHasModelIndex(
+    CTTIInference instance,
+  ) {
+    return _ttiInferenceHasModelIndex(
+      instance,
+    );
+  }
+
+  late final _ttiInferenceHasModelIndexPtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Pointer<StatusOrBool> Function(CTTIInference)>>(
+      'ttiInferenceHasModelIndex');
+  late final _ttiInferenceHasModelIndex = _ttiInferenceHasModelIndexPtr
+      .asFunction<ffi.Pointer<StatusOrBool> Function(CTTIInference)>();
+
+  ffi.Pointer<Status> ttiInferenceClose(
+    CLLMInference instance,
+  ) {
+    return _ttiInferenceClose(
+      instance,
+    );
+  }
+
+  late final _ttiInferenceClosePtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<Status> Function(CLLMInference)>>(
+          'ttiInferenceClose');
+  late final _ttiInferenceClose = _ttiInferenceClosePtr
+      .asFunction<ffi.Pointer<Status> Function(CLLMInference)>();
+
   ffi.Pointer<StatusOrGraphRunner> graphRunnerOpen(
     ffi.Pointer<pkg_ffi.Utf8> graph,
   ) {
@@ -667,6 +742,20 @@ final class Metrics extends ffi.Struct {
   external int number_of_input_tokens;
 }
 
+final class TTIMetrics extends ffi.Struct {
+  @ffi.Float()
+  external double load_time;
+
+  @ffi.Float()
+  external double generate_time;
+}
+
+final class StringWithMetrics extends ffi.Struct {
+  external ffi.Pointer<pkg_ffi.Utf8> string;
+
+  external TTIMetrics metrics;
+}
+
 final class Device extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> id;
 
@@ -753,6 +842,15 @@ final class StatusOrLLMInference extends ffi.Struct {
 
 typedef CLLMInference = ffi.Pointer<ffi.Void>;
 
+final class StatusOrTTIInference extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external CLLMInference value;
+}
+
 final class StatusOrModelResponse extends ffi.Struct {
   @ffi.Int()
   external int status;
@@ -760,6 +858,17 @@ final class StatusOrModelResponse extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
   external Metrics metrics;
+
+  external ffi.Pointer<pkg_ffi.Utf8> value;
+}
+
+final class StatusOrTTIModelResponse extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external TTIMetrics metrics;
 
   external ffi.Pointer<pkg_ffi.Utf8> value;
 }
@@ -788,3 +897,4 @@ typedef LLMInferenceCallbackFunctionFunction = ffi.Void Function(
     ffi.Pointer<StatusOrString>);
 typedef DartLLMInferenceCallbackFunctionFunction = void Function(
     ffi.Pointer<StatusOrString>);
+typedef CTTIInference = ffi.Pointer<ffi.Void>;
