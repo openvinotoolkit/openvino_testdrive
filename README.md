@@ -69,7 +69,7 @@ Upon starting the application, you can import a model using either Hugging Face 
 
 ### Images inference with models trained by Intel® Geti™
 
-1. Download deployment code for the model in OpenVINO IR format trained by Intel® Geti™. 
+1. Download deployment code for the model in OpenVINO format trained by Intel® Geti™. 
 
 <p align="left">
   <img src="./docs/geti_download.gif" width="500">
