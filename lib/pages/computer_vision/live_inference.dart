@@ -68,7 +68,6 @@ class _LiveInferenceState extends State<LiveInference> {
               SizedBox(
                 height: 64,
                 child: GridContainer(
-                  borderLeft: false,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
