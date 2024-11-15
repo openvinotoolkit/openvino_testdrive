@@ -1,9 +1,14 @@
 <div align="center">
 
 # OpenVINO™ Test Drive
+
+[![codecov](https://codecov.io/gh/openvinotoolkit/openvino_testdrive/graph/badge.svg?token=DH98FAPH65)](https://codecov.io/gh/openvinotoolkit/openvino_testdrive)
+[![openvino](https://img.shields.io/badge/openvino-2024.4-blue)]()
+
 </div>
 
 Get started with OpenVINO™ Test Drive, an application that allows you to run LLMs and models trained by [Intel® Geti™](https://docs.geti.intel.com/) directly on your computer or edge device using [OpenVINO™ Runtime](https://github.com/openvinotoolkit/openvino).
+
 
 <p align="center">
   <img src="./docs/readme.gif" width="600" alt="sample">
@@ -34,7 +39,7 @@ Download the latest release from the [Releases repository](https://storage.openv
 2. Extract zip archive double-click the MSIX installation package, click `Install` button and it will display the installation process
 
 <p align="left">
-  <img src="./docs/win_inst2.gif" width="500">
+  <img src="./docs/win_inst2.gif" width="350">
 </p>
 
 3. Click on the application name on Windows app list to launch OpenVINO™ Test Drive.
@@ -64,7 +69,7 @@ Upon starting the application, you can import a model using either Hugging Face 
 
 ### Images inference with models trained by Intel® Geti™
 
-1. Download deployment code for the model OpenVINO IR format trained by Intel® Geti™. 
+1. Download deployment code for the model in OpenVINO IR format trained by Intel® Geti™. 
 
 <p align="left">
   <img src="./docs/geti_download.gif" width="500">
