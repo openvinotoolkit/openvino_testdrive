@@ -11,7 +11,7 @@ class GridContainer extends StatelessWidget {
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: color ?? const Color(0x80FFFFFF),
+        color: color,
         border: const Border(
           top: BorderSide(
             color: Color(0x0D000000),

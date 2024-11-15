@@ -6,6 +6,8 @@ import 'package:inference/openvino_console_app.dart';
 import 'package:inference/pages/home/home.dart';
 import 'package:inference/pages/import/import.dart';
 import 'package:inference/pages/models/models.dart';
+import 'package:inference/pages/inference/inference.dart';
+import 'package:inference/project.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -23,6 +25,7 @@ final router = GoRouter(navigatorKey: rootNavigatorKey,
         GoRoute(path: '/models', builder: (context, state) => const ModelsPage()),
         GoRoute(path: '/models/import', builder: (context, state) => const ImportPage()),
         GoRoute(path: '/models/download', builder: (context, state) => Container(color: Colors.blue, child: Text('Downloading model: ${(state.extra as Model).id}'))),
+        GoRoute(path: '/models/inference', builder: (context, state) => InferencePage(state.extra as Project)),
       ],
     )
   ]
