@@ -6,7 +6,7 @@ import 'package:inference/openvino_console_app.dart';
 import 'package:inference/pages/home/home.dart';
 import 'package:inference/pages/import/import.dart';
 import 'package:inference/pages/models/models.dart';
-import 'package:inference/pages/inference/inference.dart';
+import 'package:inference/pages/models/inference.dart';
 import 'package:inference/project.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
