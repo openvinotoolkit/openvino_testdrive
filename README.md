@@ -110,7 +110,7 @@ Secondly, the bindings and its dependencies for your platform to be added to `./
 - [OpenVINO™](https://github.com/openvinotoolkit/openvino)  - software toolkit for optimizing and deploying deep learning models.
 - [GenAI Repository](https://github.com/openvinotoolkit/openvino.genai) and [OpenVINO Tokenizers](https://github.com/openvinotoolkit/openvino_tokenizers) - resources and tools for developing and optimizing Generative AI applications.
 - [Intel® Geti™](https://docs.geti.intel.com/) - software for building computer vision models.
-- [OpenVINO™ Vision API](https://github.com/openvinotoolkit/model_api) - a set of wrapper classes for particular tasks and model architectures, simplifying data preprocess and postprocess as well as routine procedures.
+- [OpenVINO™ Vision ModelAPI](https://github.com/openvinotoolkit/model_api) - a set of wrapper classes for particular tasks and model architectures, simplifying data preprocess and postprocess as well as routine procedures.
 
 ## Contributing
 
