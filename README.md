@@ -102,7 +102,7 @@ The application requires the flutter SDK and the dependencies for your specific 
 Secondly, the bindings and its dependencies for your platform to be added to `./bindings`.
 
 1. [Install flutter sdk](https://docs.flutter.dev/get-started/install). Make sure to follow the guide for flutter dependencies.
-2. Build the bindings and put them to `./bindings` folder. OpenVINO™ Test Drive uses bindings to OpenVINO™ located in `./openvino_bindings` folder. See [readme](./openvino_bindings/README.md) for more details.
+2. Build the bindings and put them to `./bindings` folder. OpenVINO™ Test Drive uses bindings to OpenVINO™ GenAI and OpenVINO™ Vision ModelAPI located in `./openvino_bindings` folder. See [readme](./openvino_bindings/README.md) for more details.
 3. Once done you can start the application: `flutter run`
 
 ## Ecosystem
