@@ -15,7 +15,7 @@ Get started with OpenVINO™ Test Drive, an application that allows you to run L
 </p>
 
 With use of OpenVINO™ Test Drive you can:
-+ **Chat with LLMs**, including passing document as context to LLMs and asking questions about contents and evaluating model performance on your computer or edge device
++ **Chat with LLMs**, and evaluating model performance on your computer or edge device
 + **Experiment with different text prompts** to generate images using Stable Diffusion and Stable DiffusionXL models (coming soon)
 + **Transcribe speech from video** using Whisper models, including generation of timestamps (coming soon)
 + **Run and visualize results of models** trained by Intel® Geti™ using single image inference or batch inference mode
