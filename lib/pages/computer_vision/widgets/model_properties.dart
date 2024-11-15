@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/theme_fluent.dart';
 import 'package:inference/utils.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/providers/image_inference_provider.dart';
@@ -72,6 +73,8 @@ class ModelProperty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
     return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -84,9 +87,9 @@ class ModelProperty extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 16),
-          child: Text(value, style: const TextStyle(
+          child: Text(value, style: TextStyle(
               fontSize: 16,
-              color: Color(0xFF616161),
+              color: subtleTextColor.of(theme),
           )),
         ),
       ]

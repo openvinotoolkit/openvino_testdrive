@@ -3,6 +3,7 @@ import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/pages/models/widgets/model_filter.dart';
 import 'package:inference/pages/models/widgets/model_list.dart';
 import 'package:inference/providers/project_filter_provider.dart';
+import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/import_model_button.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +32,10 @@ class _ModelsPageState extends State<ModelsPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   GridContainer(
-                    color: theme.navigationPaneTheme.backgroundColor,
+                    color: backgroundColor.of(theme),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                    ),
                     padding: const EdgeInsets.all(16),
                     child: Text("My Models",
                       style: const TextStyle(
@@ -42,7 +46,7 @@ class _ModelsPageState extends State<ModelsPage> {
                   ),
                   Expanded(
                     child: GridContainer(
-                    color: theme.navigationPaneTheme.backgroundColor,
+                    color: backgroundColor.of(theme),
                       padding: const EdgeInsets.all(13),
                       child: const ModelFilter()
                     ),
@@ -55,7 +59,7 @@ class _ModelsPageState extends State<ModelsPage> {
                 children: [
                   GridContainer(
                     color: theme.scaffoldBackgroundColor,
-                    padding: const EdgeInsets.all(13.5),
+                    padding: const EdgeInsets.all(13),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

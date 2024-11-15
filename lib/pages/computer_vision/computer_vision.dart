@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/pages/computer_vision/batch_inference.dart';
 import 'package:inference/pages/computer_vision/live_inference.dart';
+import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/image_inference_provider.dart';
 import 'package:inference/providers/preference_provider.dart';
@@ -16,9 +17,18 @@ class ComputerVisionPage extends StatefulWidget {
 }
 
 class _ComputerVisionPageState extends State<ComputerVisionPage> {
+
+
   int selected = 0;
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+    final updatedTheme = theme.copyWith(
+        navigationPaneTheme: theme.navigationPaneTheme.merge(NavigationPaneThemeData(
+            backgroundColor: theme.scaffoldBackgroundColor,
+        ))
+    );
+
     return ChangeNotifierProxyProvider<PreferenceProvider, ImageInferenceProvider>(
       lazy: false,
       create: (_) {
@@ -33,50 +43,54 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
       },
       child: Stack(
         children: [
-          NavigationView(
-            pane: NavigationPane(
-              size: const NavigationPaneSize(topHeight: 64),
-              header: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4.0),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: widget.project.thumbnailImage(),
-                              fit: BoxFit.cover),
+          FluentTheme(
+            data: updatedTheme,
+            child: NavigationView(
+              pane: NavigationPane(
+                size: const NavigationPaneSize(topHeight: 64),
+                header: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4.0),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: widget.project.thumbnailImage(),
+                                fit: BoxFit.cover),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(widget.project.name,
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(widget.project.name,
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
                     ),
+                  ],
+                ),
+                //customPane: CustomNavigationPane(),
+                selected: selected,
+                onChanged: (i) => setState(() {selected = i;}),
+                displayMode: PaneDisplayMode.top,
+                items: [
+                  PaneItem(
+                    icon: const Icon(FluentIcons.processing),
+                    title: const Text("Live Inference"),
+                    body: LiveInference(project: widget.project),
+                  ),
+                  PaneItem(
+                    icon: const Icon(FluentIcons.project_collection),
+                    title: const Text("Batch Inference"),
+                    body: const BatchInference(),
                   ),
                 ],
-              ),
-              selected: selected,
-              onChanged: (i) => setState(() {selected = i;}),
-              displayMode: PaneDisplayMode.top,
-              items: [
-                PaneItem(
-                  icon: const Icon(FluentIcons.processing),
-                  title: const Text("Live Inference"),
-                  body: LiveInference(project: widget.project),
-                ),
-                PaneItem(
-                  icon: const Icon(FluentIcons.project_collection),
-                  title: const Text("Batch Inference"),
-                  body: const BatchInference(),
-                ),
-              ],
-            )
+              )
+            ),
           ),
           SizedBox(
             height: 64,
@@ -102,6 +116,12 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
                   Padding(
                     padding: const EdgeInsets.all(4),
                     child: OutlinedButton(
+                      style: ButtonStyle(
+                        shape:WidgetStatePropertyAll(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                          side:  const BorderSide(color: Color(0XFF545454)),
+                        )),
+                      ),
                       child: const Text("Close"),
                       onPressed: () =>  GoRouter.of(context).go("/models"),
                     ),

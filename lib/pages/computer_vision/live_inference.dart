@@ -9,6 +9,7 @@ import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/image_inference_provider.dart';
+import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/device_selector.dart';
 import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
@@ -67,25 +68,23 @@ class _LiveInferenceState extends State<LiveInference> {
               SizedBox(
                 height: 64,
                 child: GridContainer(
+                  borderLeft: false,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
                       children: [
                         DropDownButton(
                           buttonBuilder: (context, callback) {
                             return NoOutlineButton(
                               onPressed: callback,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    const Text("Choose image file"),
-                                    const Padding(
-                                      padding: EdgeInsets.only(left: 8),
-                                      child: Icon(FluentIcons.chevron_down, size: 12),
-                                    ),
-                                  ],
-                                ),
+                              child: Row(
+                                children: [
+                                  const Text("Choose image file"),
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 8),
+                                    child: Icon(FluentIcons.chevron_down, size: 12),
+                                  ),
+                                ],
                               ),
                             );
                           },
@@ -97,7 +96,7 @@ class _LiveInferenceState extends State<LiveInference> {
                             }),
                           ]
                         ),
-                        DeviceSelector(),
+                        const DeviceSelector(),
                       ],
                     ),
                   ),
@@ -105,7 +104,7 @@ class _LiveInferenceState extends State<LiveInference> {
               ),
               Expanded(
                 child: GridContainer(
-                  color: theme.navigationPaneTheme.backgroundColor,
+                  color: backgroundColor.of(theme),
                   child: Builder(
                     builder: (context) {
                       return DropArea(

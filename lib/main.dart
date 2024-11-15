@@ -55,6 +55,7 @@ class App extends StatelessWidget {
           ),
           darkTheme: FluentThemeData(
             brightness: Brightness.dark,
+            scaffoldBackgroundColor: const Color(0xFF2C2C2C),
             accentColor: theme.darkColor,
             cardColor: const Color(0xFF383838),
             visualDensity: VisualDensity.standard,
