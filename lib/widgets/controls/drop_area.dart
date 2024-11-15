@@ -58,39 +58,39 @@ class _DropAreaState extends State<DropArea> {
 
       child: Builder(
         builder: (context) {
-          if (widget.showChild) {
+          if (widget.showChild && !_showReleaseMessage) {
             return widget.child ?? Container();
           }
 
-        final String text = _showReleaseMessage
-          ? "Release to drop media"
-          : "Drag and drop ${widget.type} here for testing";
+          final String text = _showReleaseMessage
+            ? "Release to drop media"
+            : "Drag and drop ${widget.type} here for testing";
 
 
-        return Center(
-          child: SizedBox(
-            height: 310,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(text, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500)),
-                (theme.brightness.isDark
-                  ? SvgPicture.asset('images/drop.svg')
-                  : SvgPicture.asset('images/drop_light.svg')
-                ),
-                Builder(
-                  builder: (context) {
-                    if (widget.extensions == null) {
-                      return Container();
+          return Center(
+            child: SizedBox(
+              height: 310,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(text, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500)),
+                  (theme.brightness.isDark
+                    ? SvgPicture.asset('images/drop.svg')
+                    : SvgPicture.asset('images/drop_light.svg')
+                  ),
+                  Builder(
+                    builder: (context) {
+                      if (widget.extensions == null) {
+                        return Container();
+                      }
+                      return Text(widget.extensions!.join(", "));
                     }
-                    return Text(widget.extensions!.join(", "));
-                  }
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-          ),
-        );
+          );
         }
       )
     );

@@ -23,17 +23,7 @@ class NoOutlineButton extends BaseButton {
     return ButtonStyle(
       padding: const WidgetStatePropertyAll(kDefaultButtonPadding),
       foregroundColor: WidgetStatePropertyAll(theme.inactiveColor),
-      backgroundColor: WidgetStateProperty.resolveWith((states) {
-        if (states.isDisabled) {
-          return theme.resources.controlFillColorDisabled.withOpacity(0.30);
-        } else if (states.isPressed) {
-          return theme.inactiveColor.withOpacity(0.10);
-        } else if (states.isHovered) {
-          return theme.inactiveColor.withOpacity(0.10);
-        } else {
-          return Colors.transparent;
-        }
-      }),
+      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
       textStyle: const WidgetStatePropertyAll(TextStyle(
         fontSize: 13.0,
         letterSpacing: 0.5,

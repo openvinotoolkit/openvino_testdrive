@@ -9,6 +9,7 @@ import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/image_inference_provider.dart';
+import 'package:inference/widgets/device_selector.dart';
 import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
 import 'package:inference/canvas/canvas.dart';
@@ -55,46 +56,56 @@ class _LiveInferenceState extends State<LiveInference> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: Column(
             children: [
-              GridContainer(
-                child: Row(
-                  children: [
-                    DropDownButton(
-                      buttonBuilder: (context, callback) {
-                        return NoOutlineButton(
-                          onPressed: callback,
-                          child: SizedBox(
-                            height: 64,
-                            child: Row(
-                              children: [
-                                const Text("Choose image file"),
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 8),
-                                  child: Icon(FluentIcons.chevron_down, size: 12),
+              SizedBox(
+                height: 64,
+                child: GridContainer(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      children: [
+                        DropDownButton(
+                          buttonBuilder: (context, callback) {
+                            return NoOutlineButton(
+                              onPressed: callback,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    const Text("Choose image file"),
+                                    const Padding(
+                                      padding: EdgeInsets.only(left: 8),
+                                      child: Icon(FluentIcons.chevron_down, size: 12),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                      items: [
-                        MenuFlyoutItem(text: const Text("Choose image file"), onPressed: showUploadMenu),
-                        MenuFlyoutItem(text: const Text("Camera"), onPressed: () {}),
-                        MenuFlyoutItem(text: const Text("Sample image"), onPressed: () {
-                          uploadFile(widget.project.samplePath());
-                        }),
-                      ]
+                              ),
+                            );
+                          },
+                          items: [
+                            MenuFlyoutItem(text: const Text("Choose image file"), onPressed: showUploadMenu),
+                            //MenuFlyoutItem(text: const Text("Camera"), onPressed: () {}),
+                            MenuFlyoutItem(text: const Text("Sample image"), onPressed: () {
+                              uploadFile(widget.project.samplePath());
+                            }),
+                          ]
+                        ),
+                        DeviceSelector(),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
               Expanded(
                 child: GridContainer(
+                  color: theme.navigationPaneTheme.backgroundColor,
                   child: Builder(
                     builder: (context) {
                       return DropArea(
