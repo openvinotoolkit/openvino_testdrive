@@ -46,9 +46,16 @@ class ModelProperties extends StatelessWidget {
                         title: "Size",
                         value: inference.project.size?.readableFileSize() ?? "",
                       ),
-                      ModelProperty(
-                        title: "Accuracy",
-                        value: formatter.format(inference.project.tasks.first.performance!.score)
+                      Builder(
+                        builder: (context) {
+                          if (inference.project.tasks.first.performance == null) {
+                            return Container();
+                          }
+                          return ModelProperty(
+                            title: "Accuracy",
+                            value: formatter.format(inference.project.tasks.first.performance!.score)
+                          );
+                        }
                       ),
                     ],
                   ),

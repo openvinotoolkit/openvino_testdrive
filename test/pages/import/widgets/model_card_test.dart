@@ -30,7 +30,7 @@ void main() {
     expect(find.text('Test Model'), findsOneWidget);
     expect(find.text('This is a test model description.'), findsOneWidget);
     expect(find.text('Optimization: FP16', findRichText: true), findsOneWidget);
-    expect(find.text('Size: 1.00 KB', findRichText: true), findsOneWidget);
+    expect(find.text('Size: 1 kB', findRichText: true), findsOneWidget);
     expect(find.text('classification'), findsOneWidget);
   });
 

@@ -86,7 +86,6 @@ class BatchInferenceProvider extends ChangeNotifier {
   }
 
   void start() async {
-    print("Starting...");
     _forceStop = false;
     await imageInference.loaded.future;
     final platformContext = Context(style: Style.platform);
@@ -146,13 +145,8 @@ class BatchInferenceProvider extends ChangeNotifier {
 
   Future<List<FileSystemEntity>> getFiles() async {
     if (!validSetup()){
-      print("sourceFolder: $sourceFolder");
-      print("destinationFolder: $destinationFolder");
-      print("output: ${output.any()}");
       throw Exception("Setup was invalid");
-
     }
-    //final platformContext = Context(style: Style.platform);
     final dir = Directory(sourceFolder!);
     final listener = dir.list(recursive: true);
     return listener.where((b) => isImage(b.path)).toList();
