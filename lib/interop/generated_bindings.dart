@@ -569,6 +569,77 @@ class OpenVINO {
   late final _graphRunnerStop = _graphRunnerStopPtr
       .asFunction<ffi.Pointer<Status> Function(CGraphRunner)>();
 
+  ffi.Pointer<StatusOrSpeechToText> speechToTextOpen(
+    ffi.Pointer<pkg_ffi.Utf8> model_path,
+    ffi.Pointer<pkg_ffi.Utf8> device,
+  ) {
+    return _speechToTextOpen(
+      model_path,
+      device,
+    );
+  }
+
+  late final _speechToTextOpenPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrSpeechToText> Function(ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('speechToTextOpen');
+  late final _speechToTextOpen = _speechToTextOpenPtr.asFunction<
+      ffi.Pointer<StatusOrSpeechToText> Function(
+          ffi.Pointer<pkg_ffi.Utf8>, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<Status> speechToTextLoadVideo(
+    CSpeechToText instance,
+    ffi.Pointer<pkg_ffi.Utf8> video_path,
+  ) {
+    return _speechToTextLoadVideo(
+      instance,
+      video_path,
+    );
+  }
+
+  late final _speechToTextLoadVideoPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<Status> Function(CSpeechToText,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('speechToTextLoadVideo');
+  late final _speechToTextLoadVideo = _speechToTextLoadVideoPtr.asFunction<
+      ffi.Pointer<Status> Function(CSpeechToText, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<StatusOrInt> speechToTextVideoDuration(
+    CSpeechToText instance,
+  ) {
+    return _speechToTextVideoDuration(
+      instance,
+    );
+  }
+
+  late final _speechToTextVideoDurationPtr = _lookup<
+          ffi.NativeFunction<ffi.Pointer<StatusOrInt> Function(CSpeechToText)>>(
+      'speechToTextVideoDuration');
+  late final _speechToTextVideoDuration = _speechToTextVideoDurationPtr
+      .asFunction<ffi.Pointer<StatusOrInt> Function(CSpeechToText)>();
+
+  ffi.Pointer<StatusOrModelResponse> speechToTextTranscribe(
+    CSpeechToText instance,
+    int start,
+    int duration,
+    ffi.Pointer<pkg_ffi.Utf8> language,
+  ) {
+    return _speechToTextTranscribe(
+      instance,
+      start,
+      duration,
+      language,
+    );
+  }
+
+  late final _speechToTextTranscribePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrModelResponse> Function(CSpeechToText, ffi.Int,
+              ffi.Int, ffi.Pointer<pkg_ffi.Utf8>)>>('speechToTextTranscribe');
+  late final _speechToTextTranscribe = _speechToTextTranscribePtr.asFunction<
+      ffi.Pointer<StatusOrModelResponse> Function(
+          CSpeechToText, int, int, ffi.Pointer<pkg_ffi.Utf8>)>();
+
   ffi.Pointer<StatusOrDevices> getAvailableDevices() {
     return _getAvailableDevices();
   }

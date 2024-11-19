@@ -9,6 +9,7 @@ cc_library(
         "//src/utils:utils",
         "//src/image:image_inference",
         "//src/llm:llm_inference",
+        "//src/audio:speech_to_text",
         "//src/mediapipe:graph_runner",
     ],
 )

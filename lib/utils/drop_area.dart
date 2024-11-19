@@ -50,51 +50,49 @@ class _DropAreaState extends State<DropArea> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: DropTarget(
-        onDragDone: (details) => handleDrop(details),
-        onDragExited: (val) => hideReleaseMessage(),
-        onDragEntered: (val) => showReleaseMessage(),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4.0),
-            color: intelGray,
-          ),
-          child: Builder(
-            builder: (context) {
-              if (!_showReleaseMessage && widget.showChild) {
-                return widget.child!;
-              }
-              return Center(
-                child: SizedBox(
-                  height: 310,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SvgPicture.asset('images/drop.svg'),
-                      ( _showReleaseMessage
-                        ? const Text("Release to drop media")
-                        : Text("Drop ${widget.type} here")
-                      ),
-                      ElevatedButton(
-                        onPressed: () => showUploadMenu(),
-                        child: const Text("Upload")
-                      ),
-                      Builder(
-                        builder: (context) {
-                          if (widget.extensions == null) {
-                            return Container();
-                          }
-                          return Text(widget.extensions!.join(", "));
-                        }
-                      )
-                    ],
-                  ),
-                ),
-              );
+    return DropTarget(
+      onDragDone: (details) => handleDrop(details),
+      onDragExited: (val) => hideReleaseMessage(),
+      onDragEntered: (val) => showReleaseMessage(),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4.0),
+          color: intelGray,
+        ),
+        child: Builder(
+          builder: (context) {
+            if (!_showReleaseMessage && widget.showChild) {
+              return widget.child!;
             }
-          ),
+            return Center(
+              child: SizedBox(
+                height: 310,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SvgPicture.asset('images/drop.svg'),
+                    ( _showReleaseMessage
+                      ? const Text("Release to drop media")
+                      : Text("Drop ${widget.type} here")
+                    ),
+                    ElevatedButton(
+                      onPressed: () => showUploadMenu(),
+                      child: const Text("Upload")
+                    ),
+                    Builder(
+                      builder: (context) {
+                        if (widget.extensions == null) {
+                          return Container();
+                        }
+                        return Text(widget.extensions!.join(", "));
+                      }
+                    )
+                  ],
+                ),
+              ),
+            );
+          }
         ),
       ),
     );
