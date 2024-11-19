@@ -44,7 +44,7 @@ class ProjectCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
-                  color: theme.activeColor,
+                  color: theme.menuColor,
                 ),
                 child: Text(project.type.name),
                 ),

@@ -31,7 +31,7 @@ void main() {
     expect(find.text('This is a test model description.'), findsOneWidget);
     expect(find.text('Optimization: FP16', findRichText: true), findsOneWidget);
     expect(find.text('Size: 1 kB', findRichText: true), findsOneWidget);
-    expect(find.text('classification'), findsOneWidget);
+    expect(find.text('Task: classification', findRichText: true), findsOneWidget);
   });
 
   testWidgets('ModelCard calls onChecked when tapped', (WidgetTester tester) async {

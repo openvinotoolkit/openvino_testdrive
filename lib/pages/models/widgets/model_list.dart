@@ -27,7 +27,7 @@ class ModelList extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SearchBar(onChange: (f) => filter.name = f),
-                  IconButton(icon: Icon(filter.order ? FluentIcons.ascending : FluentIcons.descending), onPressed: () => filter.order = !filter.order),
+                  IconButton(icon: Icon(filter.order ? FluentIcons.descending : FluentIcons.ascending, size: 18,), onPressed: () => filter.order = !filter.order,),
                 ],
               ),
             ),
