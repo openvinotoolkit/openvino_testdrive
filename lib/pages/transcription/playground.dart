@@ -1,15 +1,19 @@
+import 'dart:async';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
+import 'package:inference/pages/transcription/widgets/subtitles.dart';
 import 'package:inference/project.dart';
 import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/utils/drop_area.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
 import 'package:inference/widgets/device_selector.dart';
-//import 'package:media_kit/media_kit.dart';
-//import 'package:media_kit_video/media_kit_video.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
 
 class Playground extends StatefulWidget {
@@ -20,9 +24,12 @@ class Playground extends StatefulWidget {
   State<Playground> createState() => _PlaygroundState();
 }
 
-class _PlaygroundState extends State<Playground> {
-  //late final player = Player();
-  //late final controller = VideoController(player);
+class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
+  final player = Player();
+  late final controller = VideoController(player);
+  int subtitleIndex = 0;
+  StreamSubscription<Duration>? listener;
+
 
   void showUploadMenu() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.video);
@@ -32,10 +39,29 @@ class _PlaygroundState extends State<Playground> {
     }
   }
 
+  void positionListener(Duration position) {
+    int index = (position.inSeconds / transcriptionPeriod).floor();
+    if (index != subtitleIndex) {
+      final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
+      inference.skipTo(index);
+      setState(() {
+          subtitleIndex = index;
+      });
+    }
+  }
+
+  void initializeVideoAndListeners(String source) async {
+    await listener?.cancel();
+    player.open(Media(source));
+    player.setVolume(0); // TODO: Disable this for release. This is for our sanity
+    listener = player.stream.position.listen(positionListener);
+  }
+
   void uploadFile(String file) async {
     final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
     await inference.loadVideo(file);
     inference.startTranscribing();
+    initializeVideoAndListeners(file);
   }
 
   @override
@@ -72,24 +98,31 @@ class _PlaygroundState extends State<Playground> {
                   ),
                 ),
               ),
-              Expanded(
-                child: GridContainer(
-                  color: backgroundColor.of(theme),
-                  child: Builder(
-                    builder: (context) {
-                      return DropArea(
-                        type: "video",
-                        showChild: false,
-                        onUpload: (String file) { uploadFile(file); },
-                        extensions: const [],
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(),
-                        ),
-                      );
-                    }
-                  ),
-                ),
+              Consumer<SpeechInferenceProvider>(
+                builder: (context, inference, child) {
+                  return Expanded(
+                    child: GridContainer(
+                      color: backgroundColor.of(theme),
+                      child: Builder(
+                        builder: (context) {
+                          return DropArea(
+                            type: "video",
+                            showChild: inference.videoLoaded,
+                            onUpload: (String file) { uploadFile(file); },
+                            extensions: const [],
+                            child: Stack(
+                              alignment: Alignment.bottomCenter,
+                              children: [
+                                Video(controller: controller),
+                                Subtitles(transcription: inference.transcription, subtitleIndex: subtitleIndex),
+                              ]
+                            ),
+                          );
+                        }
+                      ),
+                    ),
+                  );
+                }
               )
             ],
           ),
