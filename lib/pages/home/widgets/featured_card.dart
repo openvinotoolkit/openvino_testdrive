@@ -2,9 +2,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/widgets/elevation.dart';
 
-class ModelCard extends StatelessWidget {
+class FeaturedCard extends StatelessWidget {
   final Model model;
-  const ModelCard({required this.model, super.key});
+  const FeaturedCard({required this.model, super.key});
 
   @override
   Widget build(BuildContext context) {
