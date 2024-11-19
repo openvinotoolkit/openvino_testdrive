@@ -63,7 +63,7 @@ void main() {
       expect(titles, expected);
     }
 
-    await tester.tap(find.byWidgetPredicate((widget) => widget is Icon && widget.icon == FluentIcons.descending));
+    await tester.tap(find.byWidgetPredicate((widget) => widget is Icon && widget.icon == FluentIcons.ascending));
 
     await tester.pumpAndSettle();
 
