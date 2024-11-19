@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -33,6 +35,7 @@ class _FolderSelectorState extends State<FolderSelector> {
 
   @override
   Widget build(BuildContext context) {
+    bool disable = Platform.isMacOS;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -48,6 +51,7 @@ class _FolderSelectorState extends State<FolderSelector> {
         Row(
           children: [
             Expanded(child: TextBox(
+                enabled: !disable,
                 controller: controller,
                 placeholder: "Drop ${widget.label.toLowerCase()} in",
                 onChanged: widget.onSubmit,
