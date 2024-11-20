@@ -82,6 +82,9 @@ class _ParagraphState extends State<Paragraph> {
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                 child: RichText(
                   text: TextSpan(
+                    style: TextStyle(
+                      color: theme.inactiveColor
+                    ),
                     children: pieces
                   )
                 )
