@@ -66,6 +66,12 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
   }
 
   @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
     return Row(
