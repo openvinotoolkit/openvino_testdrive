@@ -10,7 +10,7 @@ import 'package:inference/pages/transcription/utils/message.dart';
 import 'package:inference/project.dart';
 import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
-import 'package:inference/utils/drop_area.dart';
+import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
 import 'package:inference/widgets/device_selector.dart';
 import 'package:media_kit/media_kit.dart';
