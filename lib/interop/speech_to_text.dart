@@ -9,8 +9,6 @@ final ov = getBindings();
 class SpeechToText {
   final Pointer<StatusOrSpeechToText> instance;
 
-
-
   SpeechToText(this.instance);
 
   static Future<SpeechToText> init(String modelPath, String device) async {

@@ -118,18 +118,21 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                                     alignment: Alignment.bottomCenter,
                                     children: [
                                       Video(controller: controller),
-                                      Subtitles(transcription: inference.transcription, subtitleIndex: subtitleIndex),
+                                      Subtitles(
+                                        transcription: inference.transcription?.data,
+                                        subtitleIndex: subtitleIndex,
+                                      ),
                                     ]
                                   ),
                                 ),
                               ),
                               SizedBox(
-                                width: 312,
+                                width: 360,
                                 child: GridContainer(
                                   color: backgroundColor.of(theme),
                                   child: Transcription(
                                     onSeek: player.seek,
-                                    transcription: inference.transcription
+                                    transcription: inference.transcription,
                                   ),
                                 ),
                               )

@@ -20,8 +20,11 @@ class SpeechInferenceProvider  extends ChangeNotifier {
 
   bool get videoLoaded => _videoPath != null;
 
-  DynamicRangeLoading<FutureOr<TranscriptionModelResponse>>? _transcription;
-  Map<int, FutureOr<TranscriptionModelResponse>>? get transcription => _transcription?.data;
+  DynamicRangeLoading<FutureOr<TranscriptionModelResponse>>? transcription;
+
+  bool get transcriptionComplete {
+    return transcription?.complete ?? false;
+  }
 
   String _language = "";
 
@@ -47,7 +50,7 @@ class SpeechInferenceProvider  extends ChangeNotifier {
   }
 
   void skipTo(int index) {
-    _transcription!.skipTo(index);
+    transcription!.skipTo(index);
   }
 
   Future<void> loadVideo(String path) async {
@@ -55,20 +58,20 @@ class SpeechInferenceProvider  extends ChangeNotifier {
     _videoPath = path;
     final duration = await _inference!.loadVideo(path);
     final sections = (duration / transcriptionPeriod).ceil();
-    _transcription = DynamicRangeLoading<FutureOr<TranscriptionModelResponse>>(Section(0, sections));
+    transcription = DynamicRangeLoading<FutureOr<TranscriptionModelResponse>>(Section(0, sections));
     notifyListeners();
   }
 
   Future<void> startTranscribing() async {
-    if (_transcription == null) {
+    if (transcription == null) {
       throw Exception("Can't transcribe before loading video");
     }
 
-    while (!_transcription!.complete) {
-      if (_transcription == null) {
+    while (!transcription!.complete) {
+      if (transcription == null) {
         return;
       }
-      await _transcription!.process((int i) {
+      await transcription!.process((int i) {
           return transcribe(i * transcriptionPeriod, transcriptionPeriod);
       });
       if (hasListeners) {
