@@ -60,7 +60,7 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
       fontPath().then((font) => ImageInference.setupFont(font));
     });
 
-    setupErrors();
+    // setupErrors();
 
     Device.getDevices().then((devices) {
         devices.forEach((p) => print("${p.id}, ${p.name}"));

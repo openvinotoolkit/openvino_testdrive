@@ -85,6 +85,8 @@ class AppTheme extends ChangeNotifier {
 
 }
 
+const foreground3Color = Color(0xFF616161);
+
 final AccentColor electricCosmos = AccentColor.swatch(const {
   'normal': Color(0xFF7000FF),
 });

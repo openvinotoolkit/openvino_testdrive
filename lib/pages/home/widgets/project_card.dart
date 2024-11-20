@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:go_router/go_router.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/widgets/elevation.dart';
@@ -11,6 +12,7 @@ class ProjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
+    final router = GoRouter.of(context);
     return Elevation(
       backgroundColor: theme.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -87,7 +89,9 @@ class ProjectCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    FilledButton(onPressed: () {}, child: const Row(children: [
+                    FilledButton(onPressed: () {
+                      project.isDownloaded ? router.push('/models/inference', extra: project) : router.push('/models/download', extra: project);
+                    }, child: const Row(children: [
                       Icon(FluentIcons.pop_expand,),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),

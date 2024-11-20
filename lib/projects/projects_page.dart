@@ -44,10 +44,10 @@ class _ProjectPageState extends State<ProjectsPage> with TickerProviderStateMixi
   void initState() {
     super.initState();
 
-    FlutterError.onError = (details) {
-      FlutterError.presentError(details);
-      //showErrorDialog(details.exception.toString(), details.stack.toString());
-    };
+    // FlutterError.onError = (details) {
+    //   FlutterError.presentError(details);
+    //   //showErrorDialog(details.exception.toString(), details.stack.toString());
+    // };
     //PlatformDispatcher.instance.onError = (error, stack) {
     //  showErrorDialog(error.toString(), stack.toString());
     //  return true;

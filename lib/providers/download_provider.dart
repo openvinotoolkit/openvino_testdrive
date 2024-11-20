@@ -39,7 +39,7 @@ class DownloadProvider extends ChangeNotifier {
       _downloads[url] = state;
       final destination = downloads[url];
       Map<String, String> headers = {};
-      if (token != null) {
+      if (token != null && token.isNotEmpty) {
         headers["Authorization"] = "Bearer $token";
       }
       final promise = dio.download(url, destination,
@@ -51,15 +51,16 @@ class DownloadProvider extends ChangeNotifier {
             state.total = total;
             notifyListeners();
           }
-      });
-      promise.catchError((e) {
+        },
+      ).catchError((e) {
         if (e is DioException && e.type == DioExceptionType.cancel) {
           print("Download cancelled: $url");
+          return Response(requestOptions: RequestOptions(path: url));
         } else {
           _cancelToken?.cancel();
+          throw e;
         }
-      });
-      promise.then((_) => state.done);
+      }).then((_) => state.done);
       promises.add(promise);
     }
 

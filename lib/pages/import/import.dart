@@ -42,6 +42,7 @@ class _ImportPageState extends State<ImportPage> {
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
+    final router = GoRouter.of(context);
     return ScaffoldPage.scrollable(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8.0),
       header: Container(
@@ -68,11 +69,14 @@ class _ImportPageState extends State<ImportPage> {
             Row(
               children: [
                 FilledButton(onPressed: selectedModel == null ? (null) : () {
-                  GoRouter.of(context).go('/models/download', extra: selectedModel);
+                  selectedModel?.convertToProject().then((project) {
+                    router.push('/models/download', extra: project);
+                  });
+
                  }, child: const Text('Import selected model'),),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: Button(child: const Text('Close'), onPressed: () { GoRouter.of(context).pop(); }),
+                  child: Button(child: const Text('Close'), onPressed: () { router.pop(); }),
                 )
               ],
              )
@@ -89,9 +93,12 @@ class _ImportPageState extends State<ImportPage> {
                     children: [
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 280),
-                        child: SearchBar(onChange: (value) { setState(() {
-                          searchValue = value;
-                        }); }, placeholder: 'Find a model',),
+                        child: Semantics(
+                          label: 'Find a model',
+                          child: SearchBar(onChange: (value) { setState(() {
+                            searchValue = value;
+                          }); }, placeholder: 'Find a model',),
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8),

@@ -30,7 +30,7 @@ void writeProjectJson(PublicProject project) {
 }
 
 Future<void> getAdditionalModelInfo(PublicProject project) async {
-  final configJsonURL = huggingFaceModelFileUrl(project.id, "config.json");
+  final configJsonURL = huggingFaceModelFileUrl(project.modelId, "config.json");
   final config = jsonDecode((await http.get(
       Uri.parse(configJsonURL),
       headers: {
@@ -48,8 +48,8 @@ Future<List<String>> getFilesForModel(String modelId) async {
 }
 
 Future<Map<String, String>> downloadFiles(PublicProject project) async {
-  final files = await getFilesForModel(project.id);
-  return { for (var v in files) huggingFaceModelFileUrl(project.id, v) : platformContext.join(project.storagePath, v) };
+  final files = await getFilesForModel(project.modelId);
+  return { for (var v in files) huggingFaceModelFileUrl(project.modelId, v) : platformContext.join(project.storagePath, v) };
 }
 
 String huggingFaceModelFileUrl(String modelId, String name) {

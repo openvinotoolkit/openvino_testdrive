@@ -13,7 +13,7 @@ const String title = 'OpenVINO TestDrive';
 
 void testConnection() async {
   final dio = Dio(BaseOptions(connectTimeout: Duration(seconds: 10)));
-  
+
   try {
     await dio.get(collections[0].path);
   } on DioException catch(ex) {
