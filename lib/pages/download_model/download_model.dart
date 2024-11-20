@@ -39,8 +39,6 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
     final router = GoRouter.of(context);
     late Map<String, String> files;
 
-    projectProvider.addProject(widget.project);
-
     try {
       files = await downloadFiles(widget.project);
     } catch (e) {
@@ -60,6 +58,7 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
 
     try {
       await downloadProvider.queue(files, widget.project.modelInfo?.collection.token);
+      projectProvider.addProject(widget.project);
       await getAdditionalModelInfo(widget.project);
       projectProvider.completeLoading(widget.project);
       router.go("/models/inference", extra: widget.project);
