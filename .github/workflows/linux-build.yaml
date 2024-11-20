@@ -79,7 +79,7 @@ jobs:
     steps:
       # Step 0: Pre-reqs
       - name: Install Xvfb
-        run: sudo apt-get install -y xvfb
+        run: sudo apt-get install -y xvfb libgl1-mesa-glx libegl1-mesa libx11-dev
 
       # Step 1: Check out the repository
       - name: Checkout repository
