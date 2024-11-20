@@ -9,7 +9,6 @@ import 'package:inference/config.dart';
 import 'package:inference/header.dart';
 import 'package:inference/importers/importer.dart';
 import 'package:inference/project.dart';
-import 'package:inference/projects/task_type_filter.dart';
 import 'package:inference/providers/project_filter_provider.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/searchbar.dart';
@@ -44,10 +43,10 @@ class _ProjectPageState extends State<ProjectsPage> with TickerProviderStateMixi
   void initState() {
     super.initState();
 
-    // FlutterError.onError = (details) {
-    //   FlutterError.presentError(details);
-    //   //showErrorDialog(details.exception.toString(), details.stack.toString());
-    // };
+    FlutterError.onError = (details) {
+      FlutterError.presentError(details);
+      //showErrorDialog(details.exception.toString(), details.stack.toString());
+    };
     //PlatformDispatcher.instance.onError = (error, stack) {
     //  showErrorDialog(error.toString(), stack.toString());
     //  return true;
