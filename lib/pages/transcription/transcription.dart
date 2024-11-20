@@ -80,11 +80,11 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
                     title: const Text("Playground"),
                     body: Playground(project: widget.project),
                   ),
-                  PaneItem(
-                    icon: const Icon(FluentIcons.project_collection),
-                    title: const Text("Performance metrics"),
-                    body: Container(),
-                  ),
+                  //PaneItem(
+                  //  icon: const Icon(FluentIcons.project_collection),
+                  //  title: const Text("Performance metrics"),
+                  //  body: Container(),
+                  //),
                 ],
               )
             ),
