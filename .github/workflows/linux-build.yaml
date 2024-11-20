@@ -125,8 +125,7 @@ jobs:
         run: |
           export DISPLAY=:99
           Xvfb :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-          cd flutter
-          openvinoconsole --test-bindings
+          flutter/openvinoconsole --test-bindings
 
       # Step 7: Archive combined folder
       - name: Archive Release artifact
