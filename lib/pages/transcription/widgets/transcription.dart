@@ -5,27 +5,26 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/pages/transcription/utils/message.dart';
-import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
 import 'package:inference/pages/transcription/utils/section.dart';
-import 'package:inference/theme_fluent.dart';
+import 'package:inference/pages/transcription/widgets/paragraph.dart';
 import 'package:inference/widgets/controls/search_bar.dart';
 
-String formatDuration(int totalSeconds) {
-  final duration = Duration(seconds: totalSeconds);
-  final minutes = duration.inMinutes;
-  final seconds = totalSeconds % 60;
 
-  final minutesString = '$minutes'.padLeft(2, '0');
-  final secondsString = '$seconds'.padLeft(2, '0');
-  return '$minutesString:$secondsString';
-}
-
-
-
-class Transcription extends StatelessWidget {
+class Transcription extends StatefulWidget {
   final DynamicRangeLoading<FutureOr<TranscriptionModelResponse>>? transcription;
   final Function(Duration)? onSeek;
-  const Transcription({super.key, this.onSeek, this.transcription});
+  final List<Message> messages;
+  const Transcription({super.key, this.onSeek, this.transcription, required this.messages});
+
+  @override
+  State<Transcription> createState() => _TranscriptionState();
+}
+
+class _TranscriptionState extends State<Transcription> {
+  final List<GlobalKey> _paragraphKeys = [];
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey scrollKey = GlobalKey();
+  String? searchText;
 
   void saveTranscript() async {
     final file = await FilePicker.platform.saveFile(
@@ -37,9 +36,9 @@ class Transcription extends StatelessWidget {
     }
 
     String contents = "";
-    final indices = transcription!.data.keys.toList()..sort();
+    final indices = widget.transcription!.data.keys.toList()..sort();
     for (int i in indices) {
-      final part = transcription!.data[i] as TranscriptionModelResponse;
+      final part = widget.transcription!.data[i] as TranscriptionModelResponse;
       for (final chunk in part.chunks) {
         contents += chunk.text;
       }
@@ -48,29 +47,55 @@ class Transcription extends StatelessWidget {
     await File(file).writeAsString(contents);
   }
 
+  void search(String text) {
+     setState(() {
+         searchText = text;
+     });
+
+    final pattern = RegExp(text, caseSensitive: false);
+    int? index;
+    for (int i = 0; i < widget.messages.length; i++) {
+      if (widget.messages[i].message.contains(pattern)) {
+        index = i;
+        break;
+      }
+
+    }
+    if (index != null){
+      final context = _paragraphKeys[index].currentContext;
+
+      if (context != null) {
+        final renderBox = context.findRenderObject() as RenderBox?;
+        if (renderBox != null) {
+          final position = renderBox.localToGlobal(Offset.zero, ancestor: scrollKey.currentContext?.findRenderObject());
+          final offset = _scrollController.offset + position.dy;
+          _scrollController.animateTo(
+            offset,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (transcription == null) {
-      return Container();
-    }
-
-    final messages = Message.parse(transcription!.data, transcriptionPeriod);
-
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 14),
           child: Row(
             children: [
-              SearchBar(onChange: (p) {}, placeholder: "Search in transcript",),
+              SearchBar(onChange: search, placeholder: "Search in transcript",),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Tooltip(
-                  message: transcription!.complete
+                  message: widget.transcription!.complete
                     ? "Download transcript"
                     : "Transcribing...",
                   child: Button(
-                    onPressed: transcription!.complete
+                    onPressed: widget.transcription?.complete ?? false
                       ? () => saveTranscript()
                       : null,
                     child: const Padding(
@@ -85,76 +110,32 @@ class Transcription extends StatelessWidget {
         ),
         Expanded(
           child: SingleChildScrollView(
+            key: scrollKey,
+            controller: _scrollController,
             child: Padding(
               padding: const EdgeInsets.only(left: 10, right: 18),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (final message in messages)
-                    TranscriptionMessage(message: message, onSeek: onSeek)
-                ],
+                children: List.generate(widget.messages.length, (index) {
+                    //Adjusting state in render is ugly. But might just work
+                    if (_paragraphKeys.length <= index) {
+                      print("length: ${_paragraphKeys.length}, index: $index");
+                      _paragraphKeys.add(GlobalKey());
+                    }
+
+                    return Paragraph(
+                      key: _paragraphKeys[index],
+                      message: widget.messages[index],
+                      highlightedText: searchText,
+                      onSeek: widget.onSeek,
+                    );
+
+                }),
               ),
             ),
           ),
         ),
       ],
-    );
-  }
-}
-
-class TranscriptionMessage extends StatefulWidget {
-  final Function(Duration)? onSeek;
-  final Message message;
-
-  const TranscriptionMessage({super.key, required this.message, this.onSeek});
-
-  @override
-  State<TranscriptionMessage> createState() => _TranscriptionMessageState();
-}
-
-class _TranscriptionMessageState extends State<TranscriptionMessage> {
-  bool hover = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = FluentTheme.of(context);
-    return MouseRegion(
-      onEnter: (_) {
-        setState(() => hover = true);
-      },
-      onExit: (_) {
-        setState(() => hover = false);
-      },
-      child: GestureDetector(
-        onTap: () {
-          widget.onSeek?.call(widget.message.position);
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Text(formatDuration(widget.message.position.inSeconds),
-                  style: TextStyle(
-                    fontSize: 9,
-                    color: subtleTextColor.of(theme),
-                  )
-                )
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: hover ? subtleTextColor.of(theme).withOpacity(0.3) : null,
-                  borderRadius: const BorderRadius.all(Radius.circular(4)),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                child: Text(widget.message.message)
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

@@ -10,9 +10,10 @@ void moveToEnd<I>(List<I> list, I item) {
 
 class DynamicRangeLoading<I> {
   List<Section> sections = [];
+  int? size;
   Map<int, I> data = {};
 
-  DynamicRangeLoading(Section section): sections = [section];
+  DynamicRangeLoading(Section section): sections = [section], size = section.end;
 
   Section get activeSection => sections.first;
 

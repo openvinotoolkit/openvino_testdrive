@@ -6,6 +6,7 @@ import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/pages/transcription/widgets/subtitles.dart';
 import 'package:inference/pages/transcription/widgets/transcription.dart';
+import 'package:inference/pages/transcription/utils/message.dart';
 import 'package:inference/project.dart';
 import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
@@ -130,9 +131,17 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                                 width: 360,
                                 child: GridContainer(
                                   color: backgroundColor.of(theme),
-                                  child: Transcription(
-                                    onSeek: player.seek,
-                                    transcription: inference.transcription,
+                                  child: Builder(
+                                    builder: (context) {
+                                      if (inference.transcription == null) {
+                                        return Container();
+                                      }
+                                      return Transcription(
+                                        onSeek: player.seek,
+                                        transcription: inference.transcription!,
+                                        messages: Message.parse(inference.transcription!.data, transcriptionPeriod),
+                                      );
+                                    }
                                   ),
                                 ),
                               )
