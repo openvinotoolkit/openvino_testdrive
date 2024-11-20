@@ -42,6 +42,10 @@ class ImageInferenceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool sameProps(Project project, String device) {
+    return this.project == project && this.device == device;
+  }
+
   Future<ImageInferenceResult> infer(Uint8List file, SerializationOutput output) async {
     _inference!.queueImage("input", timestamp, file);
     _inference!.queueSerializationOutput("serialization_output", timestamp, output);

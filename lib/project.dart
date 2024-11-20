@@ -274,7 +274,6 @@ class GetiProject extends Project {
 
   @override
   bool operator ==(rhs) {
-    print("operator: ");
     if (rhs is! Project){
       return false;
     }

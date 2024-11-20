@@ -85,6 +85,25 @@ class AppTheme extends ChangeNotifier {
 
 }
 
+class DarkLightColor {
+  final Color light;
+  final Color dark;
+
+  const DarkLightColor(this.light, this.dark);
+
+  Color of(FluentThemeData data) {
+    if (data.brightness.isDark) {
+      return dark;
+    } else {
+      return light;
+    }
+  }
+}
+
+const borderColor = DarkLightColor(Color(0xFFF0F0F0), Color(0xFF3B3B3B));
+const backgroundColor = DarkLightColor(Color(0xFFF9F9F9), Color(0xFF282828));
+const subtleTextColor = DarkLightColor(Color(0xFF616161), Color(0xFF9F9F9F));
+
 final AccentColor electricCosmos = AccentColor.swatch(const {
   'normal': Color(0xFF7000FF),
 });
