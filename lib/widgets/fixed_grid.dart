@@ -5,11 +5,13 @@ class FixedGrid extends StatelessWidget {
   final double tileWidth;
   final int itemCount;
   final bool centered;
+  final Widget? header;
   final NullableIndexedWidgetBuilder itemBuilder;
 
   const FixedGrid({
       required this.tileWidth,
       required this.itemBuilder,
+      this.header,
       this.centered = false,
       this.spacing = 0,
       this.itemCount = 0,
@@ -26,17 +28,22 @@ class FixedGrid extends StatelessWidget {
 
           return Padding(
             padding: centered ? EdgeInsets.symmetric(horizontal: padding / 2) : EdgeInsets.only(right: padding),
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: columns,
-                crossAxisSpacing: spacing,
-                mainAxisSpacing: spacing,
-                childAspectRatio: 10/13
-              ),
-              shrinkWrap: true,
-              itemCount: itemCount,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: itemBuilder,
+            child: Column(
+              children: [
+                if (header != null) header!,
+                GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: columns,
+                    crossAxisSpacing: spacing,
+                    mainAxisSpacing: spacing,
+                    childAspectRatio: 10/13
+                  ),
+                  shrinkWrap: true,
+                  itemCount: itemCount,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: itemBuilder,
+                ),
+              ],
             ),
           );
         }

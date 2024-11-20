@@ -1,8 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:inference/pages/home/widgets/model_card.dart';
+import 'package:inference/pages/home/widgets/featured_card.dart';
+import 'package:inference/pages/models/widgets/model_card.dart';
 import 'package:inference/importers/manifest_importer.dart';
-import 'package:inference/pages/home/widgets/project_card.dart';
 import 'package:inference/widgets/fixed_grid.dart';
 import 'package:inference/widgets/import_model_button.dart';
 import 'package:inference/providers/project_provider.dart';
@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.only(
                           right: popularModels.indexOf(model) == popularModels.length - 1 ? 0 : 32,
                           ),
-                          child: ModelCard(model: model),
+                          child: FeaturedCard(model: model),
                       )).toList(),
                       ),
                     ),
@@ -99,47 +99,44 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.only(left: 32, right: 32, top: 32),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1228),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('My models',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          IconButton(icon: const Icon(FluentIcons.filter), onPressed: () {}),
-                          IconButton(icon: const Icon(FluentIcons.sort_down), onPressed: () {}),
-                          ConstrainedBox(
-                            constraints: const BoxConstraints(minHeight: 24),
-                            child: const Divider(direction: Axis.vertical,style: DividerThemeData(
-                              verticalMargin: EdgeInsets.symmetric(horizontal: 8),
-                            ),),
+              child: Consumer<ProjectProvider>(builder: (context, value, child) {
+                return FixedGrid(
+                  tileWidth: 268,
+                  centered: true,
+                  spacing: 36,
+                  itemCount: value.projects.length,
+                  header: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('My models',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
-                          const ImportModelButton(),
-                        ],
-                      )
-                    ],
+                        ),
+                        Row(
+                          children: [
+                            IconButton(icon: const Icon(FluentIcons.filter), onPressed: () {}),
+                            IconButton(icon: const Icon(FluentIcons.sort_down), onPressed: () {}),
+                            ConstrainedBox(
+                              constraints: const BoxConstraints(minHeight: 24),
+                              child: const Divider(direction: Axis.vertical,style: DividerThemeData(
+                                verticalMargin: EdgeInsets.symmetric(horizontal: 8),
+                              ),),
+                            ),
+                            const ImportModelButton(),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: Consumer<ProjectProvider>(builder: (context, value, child) {
-                      return FixedGrid(
-                        tileWidth: 268,
-                        spacing: 36,
-                        itemCount: value.projects.length,
-                        itemBuilder: (context, index) {
-                          return ProjectCard(project: value.projects.elementAt(index));
-                        }
-                      );
-                    }),
-                  ),
-                ],
-              ),
+                  itemBuilder: (context, index) {
+                    return ModelCard(project: value.projects.elementAt(index));
+                  }
+                );
+              }),
             ),
           ),
         ),
