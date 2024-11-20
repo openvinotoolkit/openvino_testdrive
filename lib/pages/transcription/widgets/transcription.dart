@@ -117,9 +117,9 @@ class _TranscriptionState extends State<Transcription> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: List.generate(widget.messages.length, (index) {
-                    //Adjusting state in render is ugly. But might just work
+                    // Adjusting state in render is ugly. But works.
+                    // This is done because we need a global key but the paragraphs are added as you go.
                     if (_paragraphKeys.length <= index) {
-                      print("length: ${_paragraphKeys.length}, index: $index");
                       _paragraphKeys.add(GlobalKey());
                     }
 
