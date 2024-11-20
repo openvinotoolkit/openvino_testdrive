@@ -92,6 +92,37 @@ class OpenVINO {
   late final _freeStatusOrSpeechToText = _freeStatusOrSpeechToTextPtr
       .asFunction<void Function(ffi.Pointer<StatusOrSpeechToText>)>();
 
+  void freeStatusOrModelResponse(
+    ffi.Pointer<StatusOrModelResponse> status,
+  ) {
+    return _freeStatusOrModelResponse(
+      status,
+    );
+  }
+
+  late final _freeStatusOrModelResponsePtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<StatusOrModelResponse>)>>(
+      'freeStatusOrModelResponse');
+  late final _freeStatusOrModelResponse = _freeStatusOrModelResponsePtr
+      .asFunction<void Function(ffi.Pointer<StatusOrModelResponse>)>();
+
+  void freeStatusOrWhisperModelResponse(
+    ffi.Pointer<StatusOrWhisperModelResponse> status,
+  ) {
+    return _freeStatusOrWhisperModelResponse(
+      status,
+    );
+  }
+
+  late final _freeStatusOrWhisperModelResponsePtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<StatusOrWhisperModelResponse>)>>(
+      'freeStatusOrWhisperModelResponse');
+  late final _freeStatusOrWhisperModelResponse =
+      _freeStatusOrWhisperModelResponsePtr.asFunction<
+          void Function(ffi.Pointer<StatusOrWhisperModelResponse>)>();
+
   void freeStatusOrDevices(
     ffi.Pointer<StatusOrDevices> status,
   ) {
@@ -618,7 +649,7 @@ class OpenVINO {
   late final _speechToTextVideoDuration = _speechToTextVideoDurationPtr
       .asFunction<ffi.Pointer<StatusOrInt> Function(CSpeechToText)>();
 
-  ffi.Pointer<StatusOrModelResponse> speechToTextTranscribe(
+  ffi.Pointer<StatusOrWhisperModelResponse> speechToTextTranscribe(
     CSpeechToText instance,
     int start,
     int duration,
@@ -634,10 +665,13 @@ class OpenVINO {
 
   late final _speechToTextTranscribePtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<StatusOrModelResponse> Function(CSpeechToText, ffi.Int,
-              ffi.Int, ffi.Pointer<pkg_ffi.Utf8>)>>('speechToTextTranscribe');
+          ffi.Pointer<StatusOrWhisperModelResponse> Function(
+              CSpeechToText,
+              ffi.Int,
+              ffi.Int,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('speechToTextTranscribe');
   late final _speechToTextTranscribe = _speechToTextTranscribePtr.asFunction<
-      ffi.Pointer<StatusOrModelResponse> Function(
+      ffi.Pointer<StatusOrWhisperModelResponse> Function(
           CSpeechToText, int, int, ffi.Pointer<pkg_ffi.Utf8>)>();
 
   ffi.Pointer<StatusOrDevices> getAvailableDevices() {
@@ -744,6 +778,16 @@ final class Device extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> name;
 }
 
+final class TranscriptionChunk extends ffi.Struct {
+  @ffi.Float()
+  external double start_ts;
+
+  @ffi.Float()
+  external double end_ts;
+
+  external ffi.Pointer<pkg_ffi.Utf8> text;
+}
+
 final class Status extends ffi.Struct {
   @ffi.Int()
   external int status;
@@ -833,6 +877,22 @@ final class StatusOrModelResponse extends ffi.Struct {
   external Metrics metrics;
 
   external ffi.Pointer<pkg_ffi.Utf8> value;
+}
+
+final class StatusOrWhisperModelResponse extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external Metrics metrics;
+
+  external ffi.Pointer<TranscriptionChunk> value;
+
+  @ffi.Int()
+  external int size;
+
+  external ffi.Pointer<pkg_ffi.Utf8> text;
 }
 
 final class StatusOrDevices extends ffi.Struct {

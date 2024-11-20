@@ -5,13 +5,13 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/pages/transcription/widgets/subtitles.dart';
+import 'package:inference/pages/transcription/widgets/transcription.dart';
 import 'package:inference/project.dart';
 import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/utils/drop_area.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
 import 'package:inference/widgets/device_selector.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
@@ -101,25 +101,42 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
               Consumer<SpeechInferenceProvider>(
                 builder: (context, inference, child) {
                   return Expanded(
-                    child: GridContainer(
-                      color: backgroundColor.of(theme),
-                      child: Builder(
-                        builder: (context) {
-                          return DropArea(
-                            type: "video",
-                            showChild: inference.videoLoaded,
-                            onUpload: (String file) { uploadFile(file); },
-                            extensions: const [],
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: [
-                                Video(controller: controller),
-                                Subtitles(transcription: inference.transcription, subtitleIndex: subtitleIndex),
-                              ]
-                            ),
-                          );
-                        }
-                      ),
+                    child: Builder(
+                      builder: (context) {
+                        return DropArea(
+                          type: "video",
+                          showChild: inference.videoLoaded,
+                          onUpload: (String file) { uploadFile(file); },
+                          extensions: const [],
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Expanded(
+                                child: GridContainer(
+                                  color: backgroundColor.of(theme),
+                                  child: Stack(
+                                    alignment: Alignment.bottomCenter,
+                                    children: [
+                                      Video(controller: controller),
+                                      Subtitles(transcription: inference.transcription, subtitleIndex: subtitleIndex),
+                                    ]
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 312,
+                                child: GridContainer(
+                                  color: backgroundColor.of(theme),
+                                  child: Transcription(
+                                    onSeek: player.seek,
+                                    transcription: inference.transcription
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      }
                     ),
                   );
                 }
@@ -132,3 +149,4 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
     );
   }
 }
+

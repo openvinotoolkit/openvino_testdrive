@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/interop/openvino_bindings.dart';
 
 class Subtitles extends StatelessWidget {
   const Subtitles({
@@ -9,7 +10,7 @@ class Subtitles extends StatelessWidget {
     required this.subtitleIndex,
   });
 
-  final Map<int, FutureOr<String>>? transcription;
+  final Map<int, FutureOr<TranscriptionModelResponse>>? transcription;
   final int subtitleIndex;
 
   static const double fontSize = 18;
@@ -25,12 +26,12 @@ class Subtitles extends StatelessWidget {
             if (transcription == null ) {
               return Container();
             }
-            if (transcription![subtitleIndex] is String) {
+            if (transcription![subtitleIndex] is TranscriptionModelResponse) {
+              final text = (transcription![subtitleIndex] as TranscriptionModelResponse).text;
               return Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
-                  Text(
-                    transcription![subtitleIndex] as String,
+                  Text(text,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: fontSize,
@@ -40,8 +41,7 @@ class Subtitles extends StatelessWidget {
                         ..color = Colors.black,
                     )
                   ),
-                  Text(
-                    transcription![subtitleIndex] as String,
+                  Text(text,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: fontSize

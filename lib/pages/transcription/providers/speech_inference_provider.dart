@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/interop/speech_to_text.dart';
 import 'package:inference/pages/transcription/utils/section.dart';
 import 'package:inference/project.dart';
@@ -19,8 +20,8 @@ class SpeechInferenceProvider  extends ChangeNotifier {
 
   bool get videoLoaded => _videoPath != null;
 
-  DynamicRangeLoading<FutureOr<String>>? _transcription;
-  Map<int, FutureOr<String>>? get transcription => _transcription?.data;
+  DynamicRangeLoading<FutureOr<TranscriptionModelResponse>>? _transcription;
+  Map<int, FutureOr<TranscriptionModelResponse>>? get transcription => _transcription?.data;
 
   String _language = "";
 
@@ -54,7 +55,7 @@ class SpeechInferenceProvider  extends ChangeNotifier {
     _videoPath = path;
     final duration = await _inference!.loadVideo(path);
     final sections = (duration / transcriptionPeriod).ceil();
-    _transcription = DynamicRangeLoading<FutureOr<String>>(Section(0, sections));
+    _transcription = DynamicRangeLoading<FutureOr<TranscriptionModelResponse>>(Section(0, sections));
     notifyListeners();
   }
 
@@ -76,7 +77,7 @@ class SpeechInferenceProvider  extends ChangeNotifier {
     }
   }
 
-  Future<String> transcribe(int start, int duration) async {
+  Future<TranscriptionModelResponse> transcribe(int start, int duration) async {
     await loaded.future;
     return await _inference!.transcribe(start, duration, _language);
   }

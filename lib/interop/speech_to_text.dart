@@ -59,7 +59,7 @@ class SpeechToText {
     }
   }
 
-  Future<String> transcribe(int start, int duration, String language) async{
+  Future<TranscriptionModelResponse> transcribe(int start, int duration, String language) async{
     int instanceAddress = instance.ref.value.address;
     final result = await Isolate.run(() {
       final languagePtr = language.toNativeUtf8();
@@ -72,6 +72,18 @@ class SpeechToText {
       throw "SpeechToText LoadVideo error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
-    return result.ref.value.toDartString();
+    List<Chunk> chunks = [];
+    for (int i = 0; i < result.ref.size; i++) {
+      chunks.add(Chunk(
+        result.ref.value[i].start_ts,
+        result.ref.value[i].end_ts,
+        result.ref.value[i].text.toDartString()
+      ));
+    }
+    final metrics = result.ref.metrics;
+    final text = result.ref.text.toDartString();
+    ov.freeStatusOrWhisperModelResponse(result);
+
+    return TranscriptionModelResponse(chunks, metrics, text);
   }
 }

@@ -39,6 +39,19 @@ void freeStatusOrImageInference(StatusOrString *status) {
     delete status;
 }
 
+void freeStatusOrModelResponse(StatusOrModelResponse *status) {
+    //std::cout << "Freeing StatusOrImageInference" << std::endl;
+    delete status;
+}
+
+void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *status) {
+    if (status->status == StatusEnum::OkStatus) {
+        delete [] status->value;
+        status->value = NULL;        // Prevent dangling pointers
+    }
+    delete status;
+}
+
 void freeStatusOrDevices(StatusOrDevices *status) {
     if (status->status == StatusEnum::OkStatus) {
         delete [] status->value;
@@ -321,15 +334,21 @@ StatusOrInt* speechToTextVideoDuration(CSpeechToText instance) {
     }
 }
 
-StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language) {
+StatusOrWhisperModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language) {
     try {
         auto object = reinterpret_cast<SpeechToText*>(instance);
-        auto result = object->transcribe(start, duration, language);
-        std::string text = result;
-        return new StatusOrModelResponse{OkStatus, "", convertToMetricsStruct(result.perf_metrics), strdup(text.c_str())};
+        auto transcription_result = object->transcribe(start, duration, language);
+        auto chunks = transcription_result.chunks.value();
+        std::string text = transcription_result;
+        TranscriptionChunk* result = new TranscriptionChunk[chunks.size()];
+        for (int i = 0; i < chunks.size(); i++) {
+            auto r = chunks[i];
+            result[i] = TranscriptionChunk{r.start_ts + start, r.end_ts + start, strdup(r.text.c_str())};
+        }
+        return new StatusOrWhisperModelResponse{OkStatus, "", convertToMetricsStruct(transcription_result.perf_metrics), result, (int)chunks.size(), strdup(text.c_str())};
     } catch (...) {
         auto except = handle_exceptions();
-        return new StatusOrModelResponse{except->status, except->message};
+        return new StatusOrWhisperModelResponse{except->status, except->message};
     }
 }
 

@@ -108,7 +108,7 @@ The DLLs (with dependencies) will be in `bazel-bin/windows_bindings.tar`
 [Install OpenVINO Runtime 24.5.0](https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=MACOS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `/opt/intel/openvino_24.5.0` and symlink to `/opt/intel/openvino`.
 
 Install OpenCV: `brew install opencv`
-Install ffmpeg: `brew install ffmpeg@6`
+Install ffmpeg: `brew install ffmpeg@6 && brew link ffmpeg@6`
 
 Run: `bazel build :macos_bindings`
 
