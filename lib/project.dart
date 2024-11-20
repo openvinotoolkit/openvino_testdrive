@@ -183,7 +183,10 @@ class Project {
   bool get isDownloaded => true;
 
   Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic) {
-    size = Directory(storagePath).listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
+    final dir = Directory(storagePath);
+    if (dir.existsSync()) {
+      size = dir.listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
+    }
   }
 
   Object toMap() {
@@ -271,7 +274,6 @@ class GetiProject extends Project {
 
   @override
   bool operator ==(rhs) {
-    print("operator: ");
     if (rhs is! Project){
       return false;
     }

@@ -9,6 +9,7 @@ import 'package:inference/pages/models/models.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/download_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:inference/pages/models/inference.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -28,6 +29,7 @@ final router = GoRouter(navigatorKey: rootNavigatorKey,
         GoRoute(path: '/models/download', builder: (context, state) => ChangeNotifierProvider<DownloadProvider>(create: (_) =>
           DownloadProvider(state.extra as PublicProject), child: DownloadModelPage(project: state.extra as PublicProject)),
         ),
+        GoRoute(path: '/models/inference', builder: (context, state) => InferencePage(state.extra as Project)),
       ],
     )
   ]

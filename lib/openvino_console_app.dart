@@ -108,7 +108,7 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
     onTap: () {
       final path = (item.key as ValueKey).value;
       if (GoRouterState.of(context).uri.toString() != path) {
-        GoRouter.of(context).push(path);
+        GoRouter.of(context).go(path);
       }
       item.onTap?.call();
     },
