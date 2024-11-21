@@ -95,7 +95,11 @@ A step by step guide can be found [here]('./docs/WINDOWS.md').
 [Install OpenVINO Runtime 24.5.0]( https://docs.openvino.ai/2024/get-started/install-openvino.html?PACKAGE=OPENVINO_GENAI&VERSION=v_2024_4_0&OP_SYSTEM=WINDOWS&DISTRIBUTION=ARCHIVE)  with GenAI flavor in `C:/Intel/openvino_24.5.0`.
 
 Build OpenCV in `C:/opencv/build`.
-Install ffmpeg: `vcpkg install ffmpeg`.
+Install ffmpeg: 
+```sh
+cd openvino_bindings/third_party
+vcpkg install
+```
 
 Install [mediapipe requirements](https://ai.google.dev/edge/mediapipe/framework/getting_started/install#installing_on_windows) and setup the environment variables.
 

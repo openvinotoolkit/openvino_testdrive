@@ -76,7 +76,8 @@ jobs:
         run: |
           git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
           C:\vcpkg\bootstrap-vcpkg.bat
-          C:\vcpkg\vcpkg install ffmpeg
+          cd openvino_bindings/third_party
+          C:\vcpkg\vcpkg install
         shell: cmd
 
       # Step 10: Download and Install OpenVINO Runtime
