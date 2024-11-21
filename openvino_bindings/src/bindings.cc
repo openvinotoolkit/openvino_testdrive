@@ -9,6 +9,7 @@
 #include "src/mediapipe/graph_runner.h"
 #include "src/mediapipe/serialization/serialization_calculators.h"
 #include "src/llm/llm_inference.h"
+#include "src/tti/tti_inference.h"
 #include "src/utils/errors.h"
 #include "src/utils/utils.h"
 #include "src/utils/status.h"
@@ -234,6 +235,48 @@ Status* llmInferenceClose(CLLMInference instance) {
     delete inference;
     return new Status{OkStatus};
 }
+
+
+StatusOrTTIInference* ttiInferenceOpen(const char* model_path, const char* device) {
+    try {
+        auto instance = new TTIInference(model_path, device);
+        return new StatusOrTTIInference{OkStatus, "", instance};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrTTIInference{except->status, except->message};
+    }
+}
+
+StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height, int rounds) {
+    try {
+        auto inference = reinterpret_cast<TTIInference*>(instance);
+        auto result = inference->prompt(message, width, height, rounds);
+        auto text = result.string;
+        auto metrics = result.metrics;
+        return new StatusOrTTIModelResponse{OkStatus, {}, metrics, text};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrTTIModelResponse{except->status, except->message, {}, {}};
+    }
+}
+
+StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance) {
+    try {
+        bool has_chat_template = reinterpret_cast<TTIInference*>(instance)->has_model_index();
+        return new StatusOrBool{OkStatus, "", has_chat_template};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrBool{except->status, except->message};
+    }
+}
+
+Status* ttiInferenceClose(CTTIInference instance) {
+    auto inference = reinterpret_cast<TTIInference*>(instance);
+    //inference->stop();
+    delete inference;
+    return new Status{OkStatus};
+}
+
 
 StatusOrGraphRunner* graphRunnerOpen(const char* graph) {
     try {
