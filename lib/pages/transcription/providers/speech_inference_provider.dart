@@ -20,6 +20,8 @@ class SpeechInferenceProvider  extends ChangeNotifier {
   String? _videoPath;
   String? get videoPath => _videoPath;
 
+  bool forceStop = false;
+
   bool get videoLoaded => _videoPath != null;
 
   DynamicRangeLoading<FutureOr<TranscriptionModelResponse>>? transcription;
@@ -79,13 +81,17 @@ class SpeechInferenceProvider  extends ChangeNotifier {
       throw Exception("Can't transcribe before loading video");
     }
 
-    while (!transcription!.complete) {
+    forceStop = false;
+
+    while ((!transcription!.complete) || !forceStop) {
       if (transcription == null) {
         return;
       }
       await transcription!.process((int i) {
           final request = transcribe(i * transcriptionPeriod, transcriptionPeriod);
-          request.then(addMetrics);
+          if (!forceStop) {
+            request.then(addMetrics);
+          }
           return request;
       });
       if (hasListeners) {
@@ -101,6 +107,12 @@ class SpeechInferenceProvider  extends ChangeNotifier {
 
   bool sameProps(Project? project, String? device) {
     return _project == project && _device == device;
+  }
+
+  @override
+  void dispose() {
+    forceStop = true;
+    super.dispose();
   }
 
 }
