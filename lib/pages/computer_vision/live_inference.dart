@@ -135,7 +135,7 @@ class _LiveInferenceState extends State<LiveInference> {
             ],
           ),
         ),
-        const ModelProperties(),
+        ModelProperties(project: widget.project),
       ],
     );
   }
