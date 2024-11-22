@@ -84,7 +84,7 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
                   PaneItem(
                     icon: const Icon(FluentIcons.line_chart),
                     title: const Text("Performance metrics"),
-                    body: const PerformanceMetrics(),
+                    body: PerformanceMetrics(project: widget.project),
                   ),
                 ],
               )
