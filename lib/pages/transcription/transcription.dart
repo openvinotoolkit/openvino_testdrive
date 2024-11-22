@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
+import 'package:inference/pages/transcription/performance_metrics.dart';
 import 'package:inference/pages/transcription/playground.dart';
 import 'package:provider/provider.dart';
 
@@ -80,11 +81,11 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
                     title: const Text("Playground"),
                     body: Playground(project: widget.project),
                   ),
-                  //PaneItem(
-                  //  icon: const Icon(FluentIcons.project_collection),
-                  //  title: const Text("Performance metrics"),
-                  //  body: Container(),
-                  //),
+                  PaneItem(
+                    icon: const Icon(FluentIcons.line_chart),
+                    title: const Text("Performance metrics"),
+                    body: const PerformanceMetrics(),
+                  ),
                 ],
               )
             ),

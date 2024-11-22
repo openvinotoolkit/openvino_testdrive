@@ -44,7 +44,8 @@ class Subtitles extends StatelessWidget {
                   Text(text,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      fontSize: fontSize
+                      fontSize: fontSize,
+                      color: Colors.white,
                     )
                   )
                 ],

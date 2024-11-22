@@ -66,6 +66,15 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
   }
 
   @override
+  void initState() {
+    super.initState();
+    final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
+    if (inference.videoPath != null) {
+      initializeVideoAndListeners(inference.videoPath!);
+    }
+  }
+
+  @override
   void dispose() {
     player.dispose();
     super.dispose();

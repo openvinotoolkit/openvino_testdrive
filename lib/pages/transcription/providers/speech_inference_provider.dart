@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/interop/speech_to_text.dart';
+import 'package:inference/pages/transcription/utils/metrics.dart';
 import 'package:inference/pages/transcription/utils/section.dart';
 import 'package:inference/project.dart';
+
 
 const transcriptionPeriod = 10;
 
@@ -21,6 +23,7 @@ class SpeechInferenceProvider  extends ChangeNotifier {
   bool get videoLoaded => _videoPath != null;
 
   DynamicRangeLoading<FutureOr<TranscriptionModelResponse>>? transcription;
+  DMetrics? metrics;
 
   bool get transcriptionComplete {
     return transcription?.complete ?? false;
@@ -62,6 +65,15 @@ class SpeechInferenceProvider  extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addMetrics(TranscriptionModelResponse response) {
+    if (metrics == null) {
+      metrics = DMetrics.fromCMetrics(response.metrics);
+    } else {
+      metrics!.addCMetrics(response.metrics);
+    }
+    notifyListeners();
+  }
+
   Future<void> startTranscribing() async {
     if (transcription == null) {
       throw Exception("Can't transcribe before loading video");
@@ -72,7 +84,9 @@ class SpeechInferenceProvider  extends ChangeNotifier {
         return;
       }
       await transcription!.process((int i) {
-          return transcribe(i * transcriptionPeriod, transcriptionPeriod);
+          final request = transcribe(i * transcriptionPeriod, transcriptionPeriod);
+          request.then(addMetrics);
+          return request;
       });
       if (hasListeners) {
         notifyListeners();
