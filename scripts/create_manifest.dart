@@ -5,8 +5,16 @@ import 'package:http/http.dart' as http;
 import 'package:html/dom.dart';
 import 'package:collection/collection.dart';
 
-Future<List<Map<String, dynamic>>> getCollectionConfig(String collectionId, String author) async {
-  final url = "https://huggingface.co/api/collections/$author/$collectionId";
+class Collection {
+  final String path;
+  final String author;
+  final String fallbackTask;
+  final String Function(String) descriptionFormat;
+  const Collection(this.path, this.author, this.fallbackTask, this.descriptionFormat);
+}
+
+Future<List<Map<String, dynamic>>> getCollectionConfig(Collection collection) async {
+  final url = "https://huggingface.co/api/collections/${collection.author}/${collection.path}";
   final request = await http.get(Uri.parse(url));
   return List<Map<String, dynamic>>.from(jsonDecode(request.body)["items"]);
 }
@@ -28,6 +36,8 @@ class ModelInfo {
   final int contextWindow;
   final String description;
   final String task;
+  final String author;
+  final String collection;
 
   const ModelInfo({
       required this.name,
@@ -36,7 +46,9 @@ class ModelInfo {
       required this.optimizationPrecision,
       required this.contextWindow,
       required this.description,
-      required this.task
+      required this.task,
+      required this.author,
+      required this.collection,
   });
 
   Object toMap() {
@@ -48,16 +60,18 @@ class ModelInfo {
         "contextWindow": contextWindow,
         "description": description,
         "task": task,
+        "author": author,
+        "collection": collection,
     };
   }
 
-  static Future<ModelInfo> fromCollectionConfig(Map<String, dynamic> collectionConfig, String author) async {
+  static Future<ModelInfo> fromCollectionConfig(Map<String, dynamic> collectionConfig, Collection collection) async {
     final id = getIdFromHuggingFaceId(collectionConfig["id"]);
     final name = getNameFromId(id);
 
-    final config = await getConfigFromRepo(id, author);
-    final fileSize = await getModelSizeCrawler(id, author);
-    final description = "Chat with $name model";
+    final config = await getConfigFromRepo(id, collection.author);
+    final fileSize = await getModelSizeCrawler(id, collection.author);
+    final description = collection.descriptionFormat(name);
 
     int contextWindow = config["max_position_embeddings"]
       ?? config["max_seq_len"]
@@ -71,7 +85,9 @@ class ModelInfo {
       optimizationPrecision: getOptimizationFromId(id) ?? "",
       contextWindow: contextWindow,
       description: description,
-      task: collectionConfig["pipeline_tag"] ?? "unknown",
+      task: collectionConfig["pipeline_tag"] ?? collection.fallbackTask,
+      author: collection.author,
+      collection: collection.path,
     );
   }
 
@@ -85,7 +101,11 @@ class ModelInfo {
 
     int total = 0;
     for (final v in files) {
-      final text = v.nodes.whereType<Text>().first.text.trim();
+      final text = v.nodes.first.text?.trim();
+      if (text == null) {
+        continue;
+      }
+      //print(text);
       final match = pattern.firstMatch(text);
       if (match == null){
         continue;
@@ -149,24 +169,29 @@ void generate() async {
   final popular = [
     "mistral-7b-instruct-v0.1-int8-ov",
     "Phi-3-mini-4k-instruct-int4-ov",
-    "open_llama_3b_v2-int8-ov",
-    "open_llama_3b_v2-int8-ov",
+    "distil-whisper-base-fp16-ov",
     "open_llama_3b_v2-int8-ov",
   ];
-  final collectionModels = await getCollectionConfig("llm-6687aaa2abca3bbcec71a9bd", "OpenVINO");
+  final List<Collection> collections = [
+    Collection("speech-to-text-672321d5c070537a178a8aeb", "OpenVINO", "speech", (String name) => "Transcribe video with $name"),
+    Collection("llm-6687aaa2abca3bbcec71a9bd", "OpenVINO", "text-generation", (String name) => "Chat with $name"),
+  ];
   List<ModelInfo> models = [];
-  for (final collectionModel in collectionModels) {
-    models.add(await ModelInfo.fromCollectionConfig(collectionModel, "OpenVINO"));
+  for (final collection in collections) {
+    final collectionModels = await getCollectionConfig(collection);
+    for (final collectionModel in collectionModels) {
+      models.add(await ModelInfo.fromCollectionConfig(collectionModel, collection));
+    }
   }
 
   Map<String, dynamic> result = {};
 
   final popularModels = popular.map((id) => models.firstWhereOrNull((r) => r.id == id)).whereType<ModelInfo>();
 
-  const encoder = JsonEncoder.withIndent("  ");
   result['popular_models'] = popularModels.map((m) => m.toMap()).toList();
   result['all_models'] = models.map((m) => m.toMap()).toList();
 
+  const encoder = JsonEncoder.withIndent("  ");
   print(encoder.convert(result));
 }
 

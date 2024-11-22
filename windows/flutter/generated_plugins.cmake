@@ -5,9 +5,11 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
   flutter_acrylic
+  irondash_engine_context
   media_kit_libs_windows_video
   media_kit_video
   screen_brightness_windows
+  super_native_extensions
   system_theme
 )
 

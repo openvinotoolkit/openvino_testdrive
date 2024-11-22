@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inference/inference/download_page.dart';
 import 'package:inference/inference/image_inference_page.dart';
 import 'package:inference/inference/text_inference_page.dart';
+import 'package:inference/inference/text_to_image_inference_page.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/download_provider.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,8 @@ class _InferencePageState extends State<InferencePage> {
           return ImageInferencePage(widget.project);
         case ProjectType.text:
           return TextInferencePage(widget.project);
+        case ProjectType.textToImage:
+          return TextToImageInferencePage(widget.project);
         case ProjectType.speech:
           return Container();
       }

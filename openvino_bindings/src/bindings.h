@@ -15,11 +15,13 @@
 #include <stdbool.h>
 #include "src/utils/status.h"
 #include "src/utils/metrics.h"
+#include "utils/tti_metrics.h"
 
 typedef void* CImageInference;
 typedef void* CGraphRunner;
 typedef void* CSpeechToText;
 typedef void* CLLMInference;
+typedef void* CTTIInference;
 
 typedef struct {
     const char* id;
@@ -82,6 +84,12 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    CLLMInference value;
+} StatusOrTTIInference;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     Metrics metrics;
     const char* value;
 } StatusOrModelResponse;
@@ -94,6 +102,13 @@ typedef struct {
     int size;
     const char* text;
 } StatusOrWhisperModelResponse;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
+    TTIMetrics metrics;
+    const char* value;
+} StatusOrTTIModelResponse;
 
 typedef struct {
     enum StatusEnum status;
@@ -132,6 +147,11 @@ EXPORT Status* llmInferenceClearHistory(CLLMInference instance);
 EXPORT Status* llmInferenceForceStop(CLLMInference instance);
 EXPORT StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance);
 EXPORT Status* llmInferenceClose(CLLMInference instance);
+
+EXPORT StatusOrTTIInference* ttiInferenceOpen(const char* model_path, const char* device);
+EXPORT StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height, int rounds);
+EXPORT StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance);
+EXPORT Status* ttiInferenceClose(CLLMInference instance);
 
 EXPORT StatusOrGraphRunner* graphRunnerOpen(const char* graph);
 EXPORT Status* graphRunnerQueueImage(CGraphRunner instance, const char* name, int timestamp, unsigned char* image_data, const size_t data_length);
