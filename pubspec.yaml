@@ -20,7 +20,7 @@ version: 1.0.2+1
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
-  flutter: 3.24.3
+  flutter: 3.24.5
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -56,6 +56,7 @@ dependencies:
   fluent_ui: ^4.9.2
   system_theme: ^3.1.2
   flutter_acrylic: ^1.1.4
+  super_clipboard: ^0.8.24
 
 dev_dependencies:
   flutter_test:

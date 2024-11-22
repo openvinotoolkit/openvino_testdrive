@@ -5,6 +5,8 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
   flutter_acrylic
+  irondash_engine_context
+  super_native_extensions
   system_theme
 )
 

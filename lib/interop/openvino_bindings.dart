@@ -25,6 +25,14 @@ class ModelResponse {
   const ModelResponse(this.content, this.metrics);
 }
 
+class TTIModelResponse {
+  final String content;
+  final TTIMetrics metrics;
+
+  const TTIModelResponse(this.content, this.metrics);
+}
+
+
 String getLibraryPath() {
   if (Platform.isWindows) {
     return "windows_bindings.dll";

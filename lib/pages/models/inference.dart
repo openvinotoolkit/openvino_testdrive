@@ -15,6 +15,8 @@ class InferencePage extends StatelessWidget {
         return Container();
       case ProjectType.speech:
         return Container();
+      case ProjectType.textToImage:
+        return Container();
     }
   }
 
