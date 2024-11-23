@@ -9,6 +9,7 @@
 #include "src/mediapipe/graph_runner.h"
 #include "src/mediapipe/serialization/serialization_calculators.h"
 #include "src/llm/llm_inference.h"
+#include "src/sentence_transformer/sentence_transformer_pipeline.h"
 #include "src/tti/tti_inference.h"
 #include "src/utils/errors.h"
 #include "src/utils/utils.h"
@@ -44,6 +45,14 @@ void freeStatusOrDevices(StatusOrDevices *status) {
     if (status->status == StatusEnum::OkStatus) {
         delete [] status->value;
         status->value = NULL;        // Prevent dangling pointers
+    }
+    delete status;
+}
+
+void freeStatusOrEmbeddings(StatusOrEmbeddings *status) {
+    if (status->status == StatusEnum::OkStatus) {
+        delete [] status->value;
+        status->value = nullptr;
     }
     delete status;
 }
@@ -333,48 +342,33 @@ Status* graphRunnerStop(CGraphRunner instance) {
     }
 }
 
-//StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device) {
-//    try {
-//        auto instance = new SpeechToText(model_path, device);
-//        return new StatusOrSpeechToText{OkStatus, "", instance};
-//    } catch (...) {
-//        auto except = handle_exceptions();
-//        return new StatusOrSpeechToText{except->status, except->message};
-//    }
-//}
-//
-//Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path) {
-//    try {
-//        auto object = reinterpret_cast<SpeechToText*>(instance);
-//        object->load_video(video_path);
-//        return new Status{OkStatus, ""};
-//    } catch (...) {
-//        return handle_exceptions();
-//    }
-//}
-//
-//StatusOrInt* speechToTextVideoDuration(CSpeechToText instance) {
-//    try {
-//        auto object = reinterpret_cast<SpeechToText*>(instance);
-//        object->video_duration();
-//        // Deal with long in the future
-//        return new StatusOrInt{OkStatus, "", (int)object->video_duration()};
-//    } catch (...) {
-//        return new StatusOrInt{OkStatus, ""};
-//    }
-//}
-//
-//StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language) {
-//    try {
-//        auto object = reinterpret_cast<SpeechToText*>(instance);
-//        auto result = object->transcribe(start, duration, language);
-//        std::string text = result;
-//        return new StatusOrModelResponse{OkStatus, "", convertToMetricsStruct(result.perf_metrics), strdup(text.c_str())};
-//    } catch (...) {
-//        auto except = handle_exceptions();
-//        return new StatusOrModelResponse{except->status, except->message};
-//    }
-//}
+StatusOrSentenceTransformer* sentenceTransformerOpen(const char* model_path, const char* device) {
+    try {
+        auto instance = new SentenceTransformerPipeline(model_path, device);
+        return new StatusOrSentenceTransformer{OkStatus, "", instance};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrSentenceTransformer{except->status, except->message};
+    }
+
+}
+StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, const char* prompt) {
+    try {
+        auto object = reinterpret_cast<SentenceTransformerPipeline*>(instance);
+        auto result = object->generate(prompt);
+        auto data = new std::vector<float>(result.begin(), result.end());
+        return new StatusOrEmbeddings{OkStatus, "", data->data(), (int)data->size()};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrEmbeddings{except->status, except->message};
+    }
+
+}
+Status* sentenceTransformerClose(CSentenceTransformer instance) {
+    auto inference = reinterpret_cast<SentenceTransformerPipeline*>(instance);
+    delete inference;
+    return new Status{OkStatus};
+}
 
 //void report_rss() {
 //    struct rusage r_usage;

@@ -1,4 +1,11 @@
 load(":windows_dll_library.bzl", "windows_dll_library")
+cc_binary(
+    name = "scratch",
+    srcs = ["scratch.cc"],
+    deps = [
+        "//src/sentence_transformer:sentence_transformer_pipeline",
+    ],
+)
 
 cc_library(
     name = "bindings_deps",
@@ -8,6 +15,7 @@ cc_library(
         "//src/utils:status",
         "//src/utils:utils",
         "//src/image:image_inference",
+        "//src/sentence_transformer:sentence_transformer_pipeline",
         "//src/llm:llm_inference",
         "//src/mediapipe:graph_runner",
         "//src/tti:tti_inference",

@@ -106,6 +106,21 @@ class OpenVINO {
   late final _freeStatusOrDevices = _freeStatusOrDevicesPtr
       .asFunction<void Function(ffi.Pointer<StatusOrDevices>)>();
 
+  void freeStatusOrEmbeddings(
+    ffi.Pointer<StatusOrEmbeddings> status,
+  ) {
+    return _freeStatusOrEmbeddings(
+      status,
+    );
+  }
+
+  late final _freeStatusOrEmbeddingsPtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Void Function(ffi.Pointer<StatusOrEmbeddings>)>>(
+      'freeStatusOrEmbeddings');
+  late final _freeStatusOrEmbeddings = _freeStatusOrEmbeddingsPtr
+      .asFunction<void Function(ffi.Pointer<StatusOrEmbeddings>)>();
+
   ffi.Pointer<StatusOrImageInference> imageInferenceOpen(
     ffi.Pointer<pkg_ffi.Utf8> model_path,
     ffi.Pointer<pkg_ffi.Utf8> task,
@@ -644,6 +659,59 @@ class OpenVINO {
   late final _graphRunnerStop = _graphRunnerStopPtr
       .asFunction<ffi.Pointer<Status> Function(CGraphRunner)>();
 
+  ffi.Pointer<StatusOrSentenceTransformer> sentenceTransformerOpen(
+    ffi.Pointer<pkg_ffi.Utf8> model_path,
+    ffi.Pointer<pkg_ffi.Utf8> device,
+  ) {
+    return _sentenceTransformerOpen(
+      model_path,
+      device,
+    );
+  }
+
+  late final _sentenceTransformerOpenPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrSentenceTransformer> Function(
+              ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('sentenceTransformerOpen');
+  late final _sentenceTransformerOpen = _sentenceTransformerOpenPtr.asFunction<
+      ffi.Pointer<StatusOrSentenceTransformer> Function(
+          ffi.Pointer<pkg_ffi.Utf8>, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<StatusOrEmbeddings> sentenceTransformerGenerate(
+    CSentenceTransformer instance,
+    ffi.Pointer<pkg_ffi.Utf8> prompt,
+  ) {
+    return _sentenceTransformerGenerate(
+      instance,
+      prompt,
+    );
+  }
+
+  late final _sentenceTransformerGeneratePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrEmbeddings> Function(CSentenceTransformer,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('sentenceTransformerGenerate');
+  late final _sentenceTransformerGenerate =
+      _sentenceTransformerGeneratePtr.asFunction<
+          ffi.Pointer<StatusOrEmbeddings> Function(
+              CSentenceTransformer, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<Status> sentenceTransformerClose(
+    CSentenceTransformer instance,
+  ) {
+    return _sentenceTransformerClose(
+      instance,
+    );
+  }
+
+  late final _sentenceTransformerClosePtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Pointer<Status> Function(CSentenceTransformer)>>(
+      'sentenceTransformerClose');
+  late final _sentenceTransformerClose = _sentenceTransformerClosePtr
+      .asFunction<ffi.Pointer<Status> Function(CSentenceTransformer)>();
+
   ffi.Pointer<StatusOrDevices> getAvailableDevices() {
     return _getAvailableDevices();
   }
@@ -820,6 +888,17 @@ final class StatusOrGraphRunner extends ffi.Struct {
 
 typedef CGraphRunner = ffi.Pointer<ffi.Void>;
 
+final class StatusOrSentenceTransformer extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external CSentenceTransformer value;
+}
+
+typedef CSentenceTransformer = ffi.Pointer<ffi.Void>;
+
 final class StatusOrSpeechToText extends ffi.Struct {
   @ffi.Int()
   external int status;
@@ -871,6 +950,18 @@ final class StatusOrTTIModelResponse extends ffi.Struct {
   external TTIMetrics metrics;
 
   external ffi.Pointer<pkg_ffi.Utf8> value;
+}
+
+final class StatusOrEmbeddings extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external ffi.Pointer<ffi.Float> value;
+
+  @ffi.Int()
+  external int size;
 }
 
 final class StatusOrDevices extends ffi.Struct {
