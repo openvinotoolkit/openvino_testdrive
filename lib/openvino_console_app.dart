@@ -93,7 +93,7 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
       enabled: false,
     ),
     PaneItem(
-      key: const ValueKey('/rag'),
+      key: const ValueKey('/knowledge_base'),
       icon: const Icon(FluentIcons.library),
       title: const Text('Knowledge base'),
       body: const SizedBox.shrink(),
