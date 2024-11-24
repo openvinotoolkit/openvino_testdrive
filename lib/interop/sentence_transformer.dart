@@ -18,6 +18,7 @@ class SentenceTransformer {
       final status = ov.sentenceTransformerOpen(modelPathPtr, devicePtr);
       calloc.free(modelPathPtr);
       calloc.free(devicePtr);
+      return status;
     });
 
 
