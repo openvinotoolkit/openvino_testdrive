@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/config.dart';
+import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/router.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/providers/preference_provider.dart';
@@ -24,8 +25,10 @@ void testConnection() async {
   }
 }
 
-void main() {
+void main() async  {
+  WidgetsFlutterBinding.ensureInitialized();
   testConnection();
+  await ObjectBox.create();
   runApp(const App());
 }
 

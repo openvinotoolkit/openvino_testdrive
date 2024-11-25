@@ -58,6 +58,8 @@ dependencies:
   flutter_acrylic: ^1.1.4
   super_clipboard: ^0.8.24
   langchain: ^0.7.7+1
+  objectbox: ^4.0.3
+  objectbox_flutter_libs: any
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +79,7 @@ dev_dependencies:
   path_provider_platform_interface: ^2.1.2
   plugin_platform_interface: ^2.1.8
   build_runner: ^2.4.13
+  objectbox_generator: any
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

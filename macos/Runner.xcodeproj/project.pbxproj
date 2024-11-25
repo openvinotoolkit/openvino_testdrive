@@ -772,6 +772,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 24.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openvino.console;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -926,6 +927,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 24.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openvino.console;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -957,6 +959,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 24.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openvino.console;
 				PROVISIONING_PROFILE_SPECIFIER = "";

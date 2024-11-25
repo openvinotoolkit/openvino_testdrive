@@ -1,8 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/llm_inference.dart';
-import 'package:inference/interop/sentence_transformer.dart';
+import 'package:inference/langchain/object_box/embedding_entity.dart';
+import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/langchain/openvino_embeddings.dart';
 import 'package:inference/langchain/openvino_llm.dart';
+import 'package:inference/objectbox.g.dart';
 import 'package:langchain/langchain.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -18,8 +20,11 @@ class _KnowledgeBaseState extends State<KnowledgeBase> {
   final controller = TextEditingController();
   MemoryVectorStore? vs;
   OpenVINOLLM? model;
+  OpenVINOEmbeddings? embeddingsModel;
   Runnable? chain;
   Future<String>? response;
+  late Box<EmbeddingEntity> embeddingsBox;
+
 
   void initMemoryStore() async {
     final platformContext = Context(style: Style.platform);
@@ -27,8 +32,8 @@ class _KnowledgeBaseState extends State<KnowledgeBase> {
     final device = "CPU";
     final embeddingsModelPath = platformContext.join(directory.path, "test", "all-MiniLM-L6-v2", "fp16");
     final llmModelPath = platformContext.join(directory.path, "test", "TinyLlama-1.1B-Chat-v1.0-int8-ov");
-    final embeddings = await OpenVINOEmbeddings.init(embeddingsModelPath, device);
-    vs = MemoryVectorStore(embeddings:  embeddings);
+    embeddingsModel = await OpenVINOEmbeddings.init(embeddingsModelPath, device);
+    vs = MemoryVectorStore(embeddings:  embeddingsModel!);
     vs!.addDocuments(documents: const [
         Document(pageContent: 'Payment methods: iDEAL, PayPal and credit card'),
         Document(pageContent: 'Free shipping: on orders over 30€'),
@@ -59,21 +64,37 @@ Answer the question based only on the following context without specifically nam
   @override
   void initState() {
     super.initState();
+
+    embeddingsBox = ObjectBox.instance.store.box<EmbeddingEntity>();
     initMemoryStore();
+  }
+
+  void addToEmbeddings() async {
+    final text = controller.text;
+
+    embeddingsBox.put(EmbeddingEntity(text, await embeddingsModel!.embedQuery(text)));
   }
 
   //final modelPath = "/Users/rhecker/data/genai/all-MiniLM-L6-v2/fp16";
   void test() async {
-    //model!.inference.clearHistory();
-    final output = chain!.invoke(controller.text);
-    setState(() {
-      response = output.then((p) => p.toString());
-    });
-    //await chain!.stream(controller.text).forEach((p) => print(p));
-    //print(await vs!.similaritySearch(query: controller.text));
+    print("all embeddings: ");
+    for (final embedding in embeddingsBox.getAll()) {
+      print(embedding.text);
+    }
+    final promptEmbeddings = await embeddingsModel!.embedQuery(controller.text);
+    final query = embeddingsBox
+      .query(EmbeddingEntity_.embeddings.nearestNeighborsF32(promptEmbeddings, 2))
+      .build();
 
-    //final transformer = await SentenceTransformer.init(modelPath, "CPU");
-    //print(await transformer.generate(controller.text));
+    final results = query.findWithScores();
+    for (final result in results) {
+      print("Embedding ID: ${result.object.id}, distance: ${result.score}, text: ${result.object.text}");
+    }
+
+    //final output = chain!.invoke(controller.text);
+    //setState(() {
+    //  response = output.then((p) => p.toString());
+    //});
   }
 
   @override
@@ -84,8 +105,12 @@ Answer the question based only on the following context without specifically nam
           controller: controller,
         ),
         Button(
+            onPressed: () => addToEmbeddings(),
+            child: const Text("add query to embeddings"),
+        ),
+        Button(
             onPressed: () => test(),
-            child: const Text("test"),
+            child: const Text("search embeddings with above"),
         ),
         FutureBuilder<String>(
           future: response,
