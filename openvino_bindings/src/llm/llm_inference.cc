@@ -18,11 +18,11 @@ void LLMInference::set_streamer(const std::function<void(const std::string& resp
     };
 }
 
-ov::genai::DecodedResults LLMInference::prompt(std::string message, float temperature, float top_p) {
+ov::genai::DecodedResults LLMInference::prompt(std::string message, bool apply_template, float temperature, float top_p) {
     history.push_back({{"role", "user"}, {"content", message}});
     _stop = false;
 
-    auto prompt = (has_chat_template()
+    auto prompt = (apply_template && has_chat_template()
         ? pipe.get_tokenizer().apply_chat_template(history, true)
         : message);
 

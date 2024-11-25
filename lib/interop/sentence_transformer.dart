@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:isolate';
+import 'dart:math';
 
 import 'package:ffi/ffi.dart';
 import 'package:inference/interop/openvino_bindings.dart';
@@ -58,5 +59,27 @@ class SentenceTransformer {
       throw "Close error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
     ov.freeStatus(status);
+  }
+
+  static double cosineSimilarity(List<double> vec1, List<double> vec2) {
+    if (vec1.length != vec2.length) {
+        throw Exception("Vectors must be of the same size");
+    }
+
+    double dotProduct = 0.0;
+    double normVec1 = 0.0;
+    double normVec2 = 0.0;
+
+    for (int i = 0; i < vec1.length; ++i) {
+        dotProduct += vec1[i] * vec2[i];
+        normVec1 += vec1[i] * vec1[i];
+        normVec2 += vec2[i] * vec2[i];
+    }
+
+    if (normVec1 == 0 || normVec2 == 0) {
+        throw Exception("Vectors must not be zero-vectors");
+    }
+
+    return dotProduct / (sqrt(normVec1) * sqrt(normVec2));
   }
 }

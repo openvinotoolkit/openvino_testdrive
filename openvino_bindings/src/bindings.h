@@ -141,7 +141,7 @@ EXPORT Status* load_font(const char* font_path);
 
 EXPORT StatusOrLLMInference* llmInferenceOpen(const char* model_path, const char* device);
 EXPORT Status* llmInferenceSetListener(CLLMInference instance, LLMInferenceCallbackFunction callback);
-EXPORT StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, float temperature, float top_p);
+EXPORT StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, bool apply_template, float temperature, float top_p);
 EXPORT Status* llmInferenceClearHistory(CLLMInference instance);
 EXPORT Status* llmInferenceForceStop(CLLMInference instance);
 EXPORT StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance);

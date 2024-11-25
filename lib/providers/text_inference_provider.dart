@@ -151,7 +151,7 @@ class TextInferenceProvider extends ChangeNotifier {
     _response = "...";
     _messages.add(Message(Speaker.user, message, null));
     notifyListeners();
-    final response = await _inference!.prompt(message, temperature, topP);
+    final response = await _inference!.prompt(message, true, temperature, topP);
 
     if (_messages.isNotEmpty) {
       _messages.add(Message(Speaker.assistant, response.content, response.metrics));

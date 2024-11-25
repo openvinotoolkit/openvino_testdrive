@@ -401,12 +401,14 @@ class OpenVINO {
   ffi.Pointer<StatusOrModelResponse> llmInferencePrompt(
     CLLMInference instance,
     ffi.Pointer<pkg_ffi.Utf8> message,
+    bool apply_template,
     double temperature,
     double top_p,
   ) {
     return _llmInferencePrompt(
       instance,
       message,
+      apply_template,
       temperature,
       top_p,
     );
@@ -417,11 +419,12 @@ class OpenVINO {
           ffi.Pointer<StatusOrModelResponse> Function(
               CLLMInference,
               ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Bool,
               ffi.Float,
               ffi.Float)>>('llmInferencePrompt');
   late final _llmInferencePrompt = _llmInferencePromptPtr.asFunction<
       ffi.Pointer<StatusOrModelResponse> Function(
-          CLLMInference, ffi.Pointer<pkg_ffi.Utf8>, double, double)>();
+          CLLMInference, ffi.Pointer<pkg_ffi.Utf8>, bool, double, double)>();
 
   ffi.Pointer<Status> llmInferenceClearHistory(
     CLLMInference instance,

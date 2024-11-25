@@ -198,10 +198,10 @@ Status* llmInferenceSetListener(CLLMInference instance, LLMInferenceCallbackFunc
     }
 }
 
-StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, float temperature, float top_p) {
+StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, bool apply_template, float temperature, float top_p) {
     try {
         auto inference = reinterpret_cast<LLMInference*>(instance);
-        auto result = inference->prompt(message, temperature, top_p);
+        auto result = inference->prompt(message, temperature, apply_template, top_p);
         std::string text = result;
         return new StatusOrModelResponse{OkStatus, "", convertToMetricsStruct(result.perf_metrics), strdup(text.c_str())};
     } catch (...) {

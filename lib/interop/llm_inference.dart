@@ -36,11 +36,11 @@ class LLMInference {
     return LLMInference(result);
   }
 
-  Future<ModelResponse> prompt(String message, double temperature, double topP) async {
+  Future<ModelResponse> prompt(String message, bool applyTemplate, double temperature, double topP) async {
     int instanceAddress = instance.ref.value.address;
     final result = await Isolate.run(() {
       final messagePtr = message.toNativeUtf8();
-      final status = llm_ov.llmInferencePrompt(Pointer<Void>.fromAddress(instanceAddress), messagePtr, temperature, topP);
+      final status = llm_ov.llmInferencePrompt(Pointer<Void>.fromAddress(instanceAddress), messagePtr, applyTemplate, temperature, topP);
       calloc.free(messagePtr);
       return status;
     })
