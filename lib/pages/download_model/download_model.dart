@@ -40,7 +40,7 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
     late Map<String, String> files;
 
     try {
-      files = await downloadFiles(widget.project);
+      files = await listDownloadFiles(widget.project);
     } catch (e) {
       await showDialog(context: context, builder: (BuildContext context) => ContentDialog(
         title: const Text('Model was not found'),

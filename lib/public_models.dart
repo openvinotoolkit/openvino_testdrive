@@ -47,7 +47,7 @@ Future<List<String>> getFilesForModel(String modelId) async {
   return List<String>.from(result.data[0]["siblings"].map((m) => m.values.first));
 }
 
-Future<Map<String, String>> downloadFiles(PublicProject project) async {
+Future<Map<String, String>> listDownloadFiles(PublicProject project) async {
   final files = await getFilesForModel(project.modelId);
   return { for (var v in files) huggingFaceModelFileUrl(project.modelId, v) : platformContext.join(project.storagePath, v) };
 }
