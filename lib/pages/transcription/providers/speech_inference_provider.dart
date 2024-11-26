@@ -62,9 +62,7 @@ class SpeechInferenceProvider  extends ChangeNotifier {
   Future<void> loadVideo(String path) async {
     await loaded.future;
     forceStop = true;
-    if (activeTranscriptionProcess != null) {
-      await activeTranscriptionProcess!;
-    }
+    await activeTranscriptionProcess;
     _videoPath = path;
     final duration = await _inference!.loadVideo(path);
     final sections = (duration / transcriptionPeriod).ceil();
@@ -116,9 +114,7 @@ class SpeechInferenceProvider  extends ChangeNotifier {
   @override
   void dispose() async {
     forceStop = true;
-    if (activeTranscriptionProcess != null) {
-      await activeTranscriptionProcess!;
-    }
+    await activeTranscriptionProcess;
     super.dispose();
   }
 
