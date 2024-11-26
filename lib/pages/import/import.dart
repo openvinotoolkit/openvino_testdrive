@@ -70,7 +70,7 @@ class _ImportPageState extends State<ImportPage> {
               children: [
                 FilledButton(onPressed: selectedModel == null ? (null) : () {
                   selectedModel?.convertToProject().then((project) {
-                    router.push('/models/download', extra: project);
+                    router.go('/models/download', extra: project);
                   });
 
                  }, child: const Text('Import selected model'),),

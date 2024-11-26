@@ -19,11 +19,11 @@ class DownloadStats {
 }
 
 class DownloadProvider extends ChangeNotifier {
-  final Project? project;
   final Map<String, DownloadState> _downloads = {};
 
   CancelToken? _cancelToken;
-  DownloadProvider(this.project);
+  Function? onCancel;
+  DownloadProvider();
 
   Future<void> queue(Map<String, String> downloads, String? token) async{
     List<Future> promises = [];
@@ -90,7 +90,7 @@ class DownloadProvider extends ChangeNotifier {
 
   void cancel() {
     _cancelToken?.cancel();
-    deleteProjectData(project!);
+    onCancel?.call();
   }
 
   @override

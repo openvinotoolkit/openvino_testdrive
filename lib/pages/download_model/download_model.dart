@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:inference/deployment_processor.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/download_provider.dart';
 import 'package:inference/providers/project_provider.dart';
@@ -14,23 +15,33 @@ String formatBytes(int bytes) {
   return "${NumberFormat("#,##0").format(bytes / pow(1024, 2))} MB";
 }
 
+
+class DownloadPage extends StatelessWidget {
+  final PublicProject project;
+  const DownloadPage({super.key, required this.project});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<DownloadProvider>(
+      create: (_) => DownloadProvider(),
+      child: DownloadModelPage(project: project),
+    );
+  }
+}
+
 class DownloadModelPage extends StatefulWidget {
   final PublicProject project;
   const DownloadModelPage({super.key, required this.project});
+
   @override
-  _DownloadModelPageState createState() => _DownloadModelPageState();
+  State<DownloadModelPage> createState() => _DownloadModelPageState();
 }
 
 class _DownloadModelPageState extends State<DownloadModelPage> {
-  bool _isInitialized = false;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_isInitialized) {
-      _isInitialized = true;
-      Future.microtask(() { startDownload(); });
-    }
+  void initState() {
+    super.initState();
+    startDownload();
   }
 
   void startDownload() async {
@@ -57,6 +68,7 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
     }
 
     try {
+      downloadProvider.onCancel = () => deleteProjectData(widget.project);
       await downloadProvider.queue(files, widget.project.modelInfo?.collection.token);
       projectProvider.addProject(widget.project);
       await getAdditionalModelInfo(widget.project);

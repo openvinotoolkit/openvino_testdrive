@@ -28,7 +28,7 @@ class _InferencePageState extends State<InferencePage> {
       }
     } else {
       return ChangeNotifierProvider<DownloadProvider>(
-          create: (_) => DownloadProvider(widget.project),
+          create: (_) => DownloadProvider(),
           child:  DownloadPage(widget.project as PublicProject,
             onDone: () => setState(() {}), //trigger rerender.
           )

@@ -26,9 +26,7 @@ final router = GoRouter(navigatorKey: rootNavigatorKey,
         GoRoute(path: '/home', builder: (context, state) => const HomePage()),
         GoRoute(path: '/models', builder: (context, state) => const ModelsPage()),
         GoRoute(path: '/models/import', builder: (context, state) => const ImportPage()),
-        GoRoute(path: '/models/download', builder: (context, state) => ChangeNotifierProvider<DownloadProvider>(create: (_) =>
-          DownloadProvider(state.extra as PublicProject), child: DownloadModelPage(project: state.extra as PublicProject)),
-        ),
+        GoRoute(path: '/models/download', builder: (context, state) => DownloadPage(project: state.extra as PublicProject)),
         GoRoute(path: '/models/inference', builder: (context, state) => InferencePage(state.extra as Project)),
       ],
     )
