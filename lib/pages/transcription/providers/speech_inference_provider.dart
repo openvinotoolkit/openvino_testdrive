@@ -25,6 +25,7 @@ class SpeechInferenceProvider  extends ChangeNotifier {
   bool get videoLoaded => _videoPath != null;
 
   DynamicRangeLoading<FutureOr<TranscriptionModelResponse>>? transcription;
+  Future<void>? activeTranscriptionProcess;
   DMetrics? metrics;
 
   bool get transcriptionComplete {
@@ -60,10 +61,15 @@ class SpeechInferenceProvider  extends ChangeNotifier {
 
   Future<void> loadVideo(String path) async {
     await loaded.future;
+    forceStop = true;
+    if (activeTranscriptionProcess != null) {
+      await activeTranscriptionProcess!;
+    }
     _videoPath = path;
     final duration = await _inference!.loadVideo(path);
     final sections = (duration / transcriptionPeriod).ceil();
     transcription = DynamicRangeLoading<FutureOr<TranscriptionModelResponse>>(Section(0, sections));
+    activeTranscriptionProcess = startTranscribing();
     notifyListeners();
   }
 
@@ -83,15 +89,13 @@ class SpeechInferenceProvider  extends ChangeNotifier {
 
     forceStop = false;
 
-    while ((!transcription!.complete) || !forceStop) {
+    while (!forceStop && (!transcription!.complete)) {
       if (transcription == null) {
         return;
       }
       await transcription!.process((int i) {
           final request = transcribe(i * transcriptionPeriod, transcriptionPeriod);
-          if (!forceStop) {
-            request.then(addMetrics);
-          }
+          request.then(addMetrics);
           return request;
       });
       if (hasListeners) {
@@ -110,8 +114,11 @@ class SpeechInferenceProvider  extends ChangeNotifier {
   }
 
   @override
-  void dispose() {
+  void dispose() async {
     forceStop = true;
+    if (activeTranscriptionProcess != null) {
+      await activeTranscriptionProcess!;
+    }
     super.dispose();
   }
 

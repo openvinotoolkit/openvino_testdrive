@@ -61,7 +61,6 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
   void uploadFile(String file) async {
     final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
     await inference.loadVideo(file);
-    inference.startTranscribing();
     initializeVideoAndListeners(file);
   }
 
@@ -121,46 +120,53 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                       builder: (context) {
                         return DropArea(
                           type: "video",
-                          showChild: inference.videoLoaded,
+                          showChild: inference.videoPath != null,
                           onUpload: (String file) { uploadFile(file); },
                           extensions: const [],
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Expanded(
-                                child: GridContainer(
-                                  color: backgroundColor.of(theme),
-                                  child: Stack(
-                                    alignment: Alignment.bottomCenter,
-                                    children: [
-                                      Video(controller: controller),
-                                      Subtitles(
-                                        transcription: inference.transcription?.data,
-                                        subtitleIndex: subtitleIndex,
+                          child: Builder(
+                            builder: (context) {
+                              if (!inference.loaded.isCompleted) {
+                                return Center(child: Image.asset('images/intel-loading.gif', width: 100));
+                              }
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Expanded(
+                                    child: GridContainer(
+                                      color: backgroundColor.of(theme),
+                                      child: Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                          Video(controller: controller),
+                                          Subtitles(
+                                            transcription: inference.transcription?.data,
+                                            subtitleIndex: subtitleIndex,
+                                          ),
+                                        ]
                                       ),
-                                    ]
+                                    ),
                                   ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 360,
-                                child: GridContainer(
-                                  color: backgroundColor.of(theme),
-                                  child: Builder(
-                                    builder: (context) {
-                                      if (inference.transcription == null) {
-                                        return Container();
-                                      }
-                                      return Transcription(
-                                        onSeek: player.seek,
-                                        transcription: inference.transcription!,
-                                        messages: Message.parse(inference.transcription!.data, transcriptionPeriod),
-                                      );
-                                    }
-                                  ),
-                                ),
-                              )
-                            ],
+                                  SizedBox(
+                                    width: 360,
+                                    child: GridContainer(
+                                      color: backgroundColor.of(theme),
+                                      child: Builder(
+                                        builder: (context) {
+                                          if (inference.transcription == null) {
+                                            return Container();
+                                          }
+                                          return Transcription(
+                                            onSeek: player.seek,
+                                            transcription: inference.transcription!,
+                                            messages: Message.parse(inference.transcription!.data, transcriptionPeriod),
+                                          );
+                                        }
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              );
+                            }
                           ),
                         );
                       }
