@@ -22,7 +22,13 @@ class _ModelCardState extends State<ModelCard>{
     final theme = FluentTheme.of(context);
 
     return GestureDetector(
-      onTap: () => GoRouter.of(context).go("/models/inference", extra: widget.project),
+      onTap: () {
+        if (widget.project.isDownloaded) {
+          GoRouter.of(context).go("/models/inference", extra: widget.project);
+        } else {
+          GoRouter.of(context).go("/models/download", extra: widget.project);
+        }
+      },
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         child: Elevation(

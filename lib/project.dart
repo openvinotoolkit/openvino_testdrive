@@ -117,7 +117,7 @@ ProjectType parseProjectType(String name) {
   if (name == "image") {
     return ProjectType.image;
   }
-  if (name == "text"){
+  if (name == "text" || name == "text-generation"){
     return ProjectType.text;
   }
   if (name == "textToImage"){
