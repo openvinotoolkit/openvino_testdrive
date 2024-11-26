@@ -18,6 +18,20 @@ class SerializationOutput {
 
 }
 
+class Chunk {
+  final double start;
+  final double end;
+  final String text;
+  const Chunk(this.start, this.end, this.text);
+}
+
+class TranscriptionModelResponse {
+  final List<Chunk> chunks;
+  final Metrics metrics;
+  final String text;
+  const TranscriptionModelResponse(this.chunks, this.metrics, this.text);
+}
+
 class ModelResponse {
   final String content;
   final Metrics metrics;

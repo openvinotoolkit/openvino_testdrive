@@ -1,21 +1,21 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inference/pages/computer_vision/batch_inference.dart';
-import 'package:inference/pages/computer_vision/live_inference.dart';
 import 'package:inference/project.dart';
-import 'package:inference/providers/image_inference_provider.dart';
 import 'package:inference/providers/preference_provider.dart';
+import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
+import 'package:inference/pages/transcription/performance_metrics.dart';
+import 'package:inference/pages/transcription/playground.dart';
 import 'package:provider/provider.dart';
 
-class ComputerVisionPage extends StatefulWidget {
+class TranscriptionPage extends StatefulWidget {
   final Project project;
-  const ComputerVisionPage(this.project, {super.key});
+  const TranscriptionPage(this.project, {super.key});
 
   @override
-  State<ComputerVisionPage> createState() => _ComputerVisionPageState();
+  State<TranscriptionPage> createState() => _TranscriptionPageState();
 }
 
-class _ComputerVisionPageState extends State<ComputerVisionPage> {
+class _TranscriptionPageState extends State<TranscriptionPage> {
 
 
   int selected = 0;
@@ -27,20 +27,19 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
             backgroundColor: theme.scaffoldBackgroundColor,
         ))
     );
-
-    return ChangeNotifierProxyProvider<PreferenceProvider, ImageInferenceProvider>(
+    return ChangeNotifierProxyProvider<PreferenceProvider, SpeechInferenceProvider>(
       lazy: false,
       create: (_) {
         final device = Provider.of<PreferenceProvider>(context, listen: false).device;
-        return ImageInferenceProvider(widget.project, device)..init();
+        return SpeechInferenceProvider(widget.project, device);
       },
       update: (_, preferences, imageInferenceProvider) {
         if (imageInferenceProvider != null && imageInferenceProvider.sameProps(widget.project, preferences.device)) {
           return imageInferenceProvider;
         }
-        return ImageInferenceProvider(widget.project, preferences.device)..init();
+        return SpeechInferenceProvider(widget.project, preferences.device);
       },
-      child: Stack(
+      child:  Stack(
         children: [
           FluentTheme(
             data: updatedTheme,
@@ -79,13 +78,13 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
                 items: [
                   PaneItem(
                     icon: const Icon(FluentIcons.processing),
-                    title: const Text("Live Inference"),
-                    body: LiveInference(project: widget.project),
+                    title: const Text("Playground"),
+                    body: Playground(project: widget.project),
                   ),
                   PaneItem(
-                    icon: const Icon(FluentIcons.project_collection),
-                    title: const Text("Batch Inference"),
-                    body: const BatchInference(),
+                    icon: const Icon(FluentIcons.line_chart),
+                    title: const Text("Performance metrics"),
+                    body: PerformanceMetrics(project: widget.project),
                   ),
                 ],
               )
@@ -98,20 +97,6 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  //Padding(
-                  //  padding: const EdgeInsets.all(4),
-                  //  child: FilledButton(
-                  //    child: const Text("Download"),
-                  //    onPressed: () => print("close")
-                  //  ),
-                  //),
-                  //Padding(
-                  // padding: const EdgeInsets.all(4),
-                  // child: OutlinedButton(
-                  //   child: const Text("Fine-tune"),
-                  //    onPressed: () => print("close")
-                  //  ),
-                  //),
                   Padding(
                     padding: const EdgeInsets.all(4),
                     child: OutlinedButton(
@@ -130,7 +115,7 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
             ),
           )
         ],
-      ),
+      )
     );
   }
 }

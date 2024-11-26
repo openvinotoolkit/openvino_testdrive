@@ -106,23 +106,23 @@ git_repository(
     tag = "v3.11.3",
 )
 
-#new_local_repository(
-#    name = "linux_ffmpeg",
-#    build_file = "//third_party/ffmpeg:linux.BUILD",
-#    path = "/usr"
-#)
-#
+new_local_repository(
+    name = "linux_ffmpeg",
+    build_file = "//third_party/ffmpeg:linux.BUILD",
+    path = "/usr"
+)
+
 new_local_repository(
     name = "mac_ffmpeg",
     build_file = "//third_party/ffmpeg:mac.BUILD",
-    path = "/opt/homebrew/Cellar/ffmpeg@6/6.1.2_6",
+    path = "/opt/homebrew/opt/ffmpeg@6",
 )
-#
-#new_local_repository(
-#    name = "windows_ffmpeg",
-#    build_file = "//third_party/ffmpeg:windows.BUILD",
-#    path = "C:/vcpkg/packages/ffmpeg_x64-windows",
-#)
+
+new_local_repository(
+    name = "windows_ffmpeg",
+    build_file = "//third_party/ffmpeg:windows.BUILD",
+    path = "./third_party/vcpkg_installed/x64-windows",
+)
 
 http_archive(
     name = "rules_pkg",
