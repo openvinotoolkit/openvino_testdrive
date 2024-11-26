@@ -169,7 +169,7 @@ void generate() async {
   final popular = [
     "mistral-7b-instruct-v0.1-int8-ov",
     "Phi-3-mini-4k-instruct-int4-ov",
-    "distil-whisper-base-fp16-ov",
+    "whisper-base-fp16-ov",
     "open_llama_3b_v2-int8-ov",
   ];
   final List<Collection> collections = [
