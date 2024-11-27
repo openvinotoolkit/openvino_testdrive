@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/pages/knowledge_base/providers/knowledge_base_provider.dart';
+import 'package:inference/pages/knowledge_base/widgets/documents_list.dart';
 import 'package:inference/pages/knowledge_base/widgets/tree.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/theme_fluent.dart';
@@ -63,6 +64,9 @@ class KnowledgeBase extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          const Expanded(
+            child: DocumentsList(),
           ),
         ],
       ),
