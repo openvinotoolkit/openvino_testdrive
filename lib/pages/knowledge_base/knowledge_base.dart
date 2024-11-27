@@ -3,11 +3,28 @@ import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/langchain/openvino_embeddings.dart';
 import 'package:inference/objectbox.g.dart';
+import 'package:inference/pages/knowledge_base/providers/knowledge_base_provider.dart';
 import 'package:inference/pages/knowledge_base/widgets/tree.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
+
+class KnowledgeBasePage extends StatelessWidget {
+  const KnowledgeBasePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => KnowledgeBaseProvider(
+        groupBox: ObjectBox.instance.store.box<KnowledgeGroup>()
+      ),
+      child: const KnowledgeBase()
+    );
+  }
+
+}
 
 class KnowledgeBase extends StatefulWidget {
   const KnowledgeBase({super.key});
@@ -61,88 +78,42 @@ class _KnowledgeBaseState extends State<KnowledgeBase> {
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 280,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              GridContainer(
-                color: backgroundColor.of(theme),
-                padding: const EdgeInsets.all(16),
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                ),
-                child: const Text("Knowledge Base",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: () {
+        final data = Provider.of<KnowledgeBaseProvider>(context, listen: false);
+        print("on tap outside");
+        if (data.isEditingId != null) {
+          data.isEditingId = null;
+        }
+      },
+      behavior: HitTestBehavior.deferToChild,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 280,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                GridContainer(
+                  color: backgroundColor.of(theme),
+                  padding: const EdgeInsets.all(16),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                  ),
+                  child: const Text("Knowledge Base",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-              const Expanded(
-                child: Tree(),
-              ),
-            ],
+                const Expanded(
+                  child: Tree(),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
-    );
-  }
-}
-
-class GroupItem extends StatefulWidget {
-  final KnowledgeGroup group;
-  final bool editable;
-  final Function(String)? onRename;
-  final Function()? onDelete;
-  final Function()? onMakeEditable;
-  const GroupItem({
-      super.key,
-      required this.group,
-      required this.editable,
-      this.onRename,
-      this.onDelete,
-      this.onMakeEditable,
-  });
-
-  @override
-  State<GroupItem> createState() => _GroupItemState();
-}
-
-class _GroupItemState extends State<GroupItem> {
-  final controller = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    controller.text = widget.group.name;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.editable) {
-      return TextBox(
-        controller: controller,
-        onSubmitted: (value) {
-          widget.onRename?.call(value);
-        },
-      );
-    }
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onDoubleTap: () {
-        widget.onMakeEditable?.call();
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(widget.group.name),
-          IconButton(icon: const Icon(FluentIcons.delete_rows), onPressed: () {
-              widget.onDelete?.call();
-          }),
         ],
       ),
     );

@@ -27,7 +27,7 @@ final router = GoRouter(navigatorKey: rootNavigatorKey,
         GoRoute(path: '/models/import', builder: (context, state) => const ImportPage()),
         GoRoute(path: '/models/download', builder: (context, state) => Container(color: Colors.blue, child: Text('Downloading model: ${(state.extra as Model).id}'))),
         GoRoute(path: '/models/inference', builder: (context, state) => InferencePage(state.extra as Project)),
-        GoRoute(path: '/knowledge_base', builder: (context, state) => const KnowledgeBase()),
+        GoRoute(path: '/knowledge_base', builder: (context, state) => const KnowledgeBasePage()),
       ],
     )
   ]
