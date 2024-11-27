@@ -48,7 +48,7 @@ class _GroupItemState extends State<GroupItem> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(widget.group.name),
-          IconButton(icon: const Icon(FluentIcons.delete_rows), onPressed: () {
+          IconButton(icon: const Icon(FluentIcons.delete), onPressed: () {
               widget.onDelete?.call();
           }),
         ],
