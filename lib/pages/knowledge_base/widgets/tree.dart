@@ -1,7 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/langchain/object_box/embedding_entity.dart';
-import 'package:inference/langchain/object_box/object_box.dart';
-import 'package:inference/objectbox.g.dart';
 import 'package:inference/pages/knowledge_base/providers/knowledge_base_provider.dart';
 import 'package:inference/pages/knowledge_base/widgets/group_item.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
@@ -29,13 +26,10 @@ class _TreeState extends State<Tree> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TreeView(
-                selectionMode: TreeViewSelectionMode.single,
-                //onSelectionChanged: (selection) async {
-                // print((selection.first.value as KnowledgeGroup).name);
-                // setState(() {
-                //   activeGroup = selection.first.value;
-                // });
-                //},
+                onSelectionChanged: (selection) async {
+                 data.activeGroup = selection.first.value;
+                },
+                selectionMode:  TreeViewSelectionMode.single,
                 items: [
                   for (final group in data.groups)
                     TreeViewItem(

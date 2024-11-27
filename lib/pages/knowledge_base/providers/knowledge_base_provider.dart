@@ -34,6 +34,7 @@ class KnowledgeBaseProvider extends ChangeNotifier {
   void deleteGroup(KnowledgeGroup group) {
     groupBox.remove(group.internalId);
     groups.remove(group);
+    notifyListeners();
   }
 
   void addGroup() {
