@@ -31,6 +31,11 @@ typedef struct {
 
 
 typedef struct {
+    const char* sentence;
+} Sentence;
+
+
+typedef struct {
     enum StatusEnum status;
     const char* message;
 } Status;
@@ -117,6 +122,13 @@ typedef struct {
     int size;
 } StatusOrDevices;
 
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
+    Sentence* value;
+    int size;
+} StatusOrSentences;
+
 typedef void (*ImageInferenceCallbackFunction)(StatusOrString*);
 typedef void (*LLMInferenceCallbackFunction)(StatusOrString*);
 
@@ -127,6 +139,7 @@ EXPORT void freeStatusOrLLMInference(StatusOrLLMInference *status);
 EXPORT void freeStatusOrSpeechToText(StatusOrSpeechToText *status);
 EXPORT void freeStatusOrDevices(StatusOrDevices *status);
 EXPORT void freeStatusOrEmbeddings(StatusOrEmbeddings *status);
+EXPORT void freeStatusOrSentences(StatusOrSentences *status);
 
 EXPORT StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json);
 EXPORT StatusOrString* imageInferenceInfer(CImageInference instance, unsigned char* image_data, const size_t data_length, bool json, bool csv, bool overlay);
@@ -161,6 +174,9 @@ EXPORT Status* graphRunnerStop(CGraphRunner instance);
 EXPORT StatusOrSentenceTransformer* sentenceTransformerOpen(const char* model_path, const char* device);
 EXPORT StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, const char* prompt);
 EXPORT Status* sentenceTransformerClose(CSentenceTransformer instance);
+
+EXPORT StatusOrSentences* pdfExtractSentences(const char* pdf_path);
+EXPORT StatusOrString* pdfExtractText(const char* pdf_path);
 
 EXPORT StatusOrDevices* getAvailableDevices();
 Status* handle_exceptions();

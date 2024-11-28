@@ -90,7 +90,10 @@ final _entities = <obx_int.ModelEntity>[
             relationTarget: 'KnowledgeGroup')
       ],
       relations: <obx_int.ModelRelation>[],
-      backlinks: <obx_int.ModelBacklink>[]),
+      backlinks: <obx_int.ModelBacklink>[
+        obx_int.ModelBacklink(
+            name: 'sections', srcEntity: 'EmbeddingEntity', srcField: '')
+      ]),
   obx_int.ModelEntity(
       id: const obx_int.IdUid(4, 2067005318326451866),
       name: 'KnowledgeGroup',
@@ -109,7 +112,10 @@ final _entities = <obx_int.ModelEntity>[
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
-      backlinks: <obx_int.ModelBacklink>[])
+      backlinks: <obx_int.ModelBacklink>[
+        obx_int.ModelBacklink(
+            name: 'documents', srcEntity: 'KnowledgeDocument', srcField: '')
+      ])
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -212,7 +218,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
     KnowledgeDocument: obx_int.EntityDefinition<KnowledgeDocument>(
         model: _entities[1],
         toOneRelations: (KnowledgeDocument object) => [object.group],
-        toManyRelations: (KnowledgeDocument object) => {},
+        toManyRelations: (KnowledgeDocument object) => {
+              obx_int.RelInfo<EmbeddingEntity>.toOneBacklink(
+                      7,
+                      object.internalId,
+                      (EmbeddingEntity srcObject) => srcObject.document):
+                  object.sections
+            },
         getId: (KnowledgeDocument object) => object.internalId,
         setId: (KnowledgeDocument object, int id) {
           object.internalId = id;
@@ -229,20 +241,33 @@ obx_int.ModelDefinition getObjectBoxModel() {
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-          final internalIdParam =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final sourceParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 6, '');
-          final object = KnowledgeDocument(internalIdParam, sourceParam);
+          final object = KnowledgeDocument(sourceParam)
+            ..internalId =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           object.group.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
           object.group.attach(store);
+          obx_int.InternalToManyAccess.setRelInfo<KnowledgeDocument>(
+              object.sections,
+              store,
+              obx_int.RelInfo<EmbeddingEntity>.toOneBacklink(
+                  7,
+                  object.internalId,
+                  (EmbeddingEntity srcObject) => srcObject.document));
           return object;
         }),
     KnowledgeGroup: obx_int.EntityDefinition<KnowledgeGroup>(
         model: _entities[2],
         toOneRelations: (KnowledgeGroup object) => [],
-        toManyRelations: (KnowledgeGroup object) => {},
+        toManyRelations: (KnowledgeGroup object) => {
+              obx_int.RelInfo<KnowledgeDocument>.toOneBacklink(
+                      3,
+                      object.internalId,
+                      (KnowledgeDocument srcObject) => srcObject.group):
+                  object.documents
+            },
         getId: (KnowledgeGroup object) => object.internalId,
         setId: (KnowledgeGroup object, int id) {
           object.internalId = id;
@@ -263,7 +288,13 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final object = KnowledgeGroup(nameParam)
             ..internalId =
                 const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
-
+          obx_int.InternalToManyAccess.setRelInfo<KnowledgeGroup>(
+              object.documents,
+              store,
+              obx_int.RelInfo<KnowledgeDocument>.toOneBacklink(
+                  3,
+                  object.internalId,
+                  (KnowledgeDocument srcObject) => srcObject.group));
           return object;
         })
   };
@@ -313,6 +344,11 @@ class KnowledgeDocument_ {
   static final group =
       obx.QueryRelationToOne<KnowledgeDocument, KnowledgeGroup>(
           _entities[1].properties[2]);
+
+  /// see [KnowledgeDocument.sections]
+  static final sections =
+      obx.QueryBacklinkToMany<EmbeddingEntity, KnowledgeDocument>(
+          EmbeddingEntity_.document);
 }
 
 /// [KnowledgeGroup] entity fields to define ObjectBox queries.
@@ -324,4 +360,9 @@ class KnowledgeGroup_ {
   /// See [KnowledgeGroup.name].
   static final name =
       obx.QueryStringProperty<KnowledgeGroup>(_entities[2].properties[1]);
+
+  /// see [KnowledgeGroup.documents]
+  static final documents =
+      obx.QueryBacklinkToMany<KnowledgeDocument, KnowledgeGroup>(
+          KnowledgeDocument_.group);
 }

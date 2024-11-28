@@ -3,6 +3,7 @@ cc_binary(
     name = "scratch",
     srcs = ["scratch.cc"],
     deps = [
+        "//src/pdf:sentence_extractor",
         "//src/sentence_transformer:sentence_transformer_pipeline",
     ],
 )
@@ -17,6 +18,7 @@ cc_library(
         "//src/image:image_inference",
         "//src/sentence_transformer:sentence_transformer_pipeline",
         "//src/llm:llm_inference",
+        "//src/pdf:sentence_extractor",
         "//src/mediapipe:graph_runner",
         "//src/tti:tti_inference",
     ],

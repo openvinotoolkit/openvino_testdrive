@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		0C004E202CF751B9003B9A15 /* libpodofo.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C004E1F2CF751B9003B9A15 /* libpodofo.2.dylib */; };
+		0C004E212CF751E0003B9A15 /* libpodofo.2.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C004E1F2CF751B9003B9A15 /* libpodofo.2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0C42C75B2CE386520079F72B /* libopenvino_tensorflow_frontend.2450.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C7582CE386520079F72B /* libopenvino_tensorflow_frontend.2450.dylib */; };
 		0C42C75C2CE386520079F72B /* libopenvino_tensorflow_lite_frontend.2450.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C7592CE386520079F72B /* libopenvino_tensorflow_lite_frontend.2450.dylib */; };
 		0C42C75D2CE386520079F72B /* libopenvino_paddle_frontend.2450.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C7562CE386520079F72B /* libopenvino_paddle_frontend.2450.dylib */; };
@@ -129,6 +131,7 @@
 				0C5D47802C6F398400307B37 /* libopencv_videoio.407.dylib in Bundle Framework */,
 				0C5D47792C6F398400307B37 /* libopencv_features2d.407.dylib in Bundle Framework */,
 				0C42C7682CE386680079F72B /* libopenvino_pytorch_frontend.2450.dylib in Bundle Framework */,
+				0C004E212CF751E0003B9A15 /* libpodofo.2.dylib in Bundle Framework */,
 				0C42C76A2CE386680079F72B /* libopenvino_tensorflow_lite_frontend.2450.dylib in Bundle Framework */,
 				0C5D47632C6F391C00307B37 /* libopencv_calib3d.407.dylib in Bundle Framework */,
 				0C5D477A2C6F398400307B37 /* libopencv_flann.407.dylib in Bundle Framework */,
@@ -152,6 +155,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0C004E1F2CF751B9003B9A15 /* libpodofo.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpodofo.2.dylib; path = ../bindings/libpodofo.2.dylib; sourceTree = SOURCE_ROOT; };
 		0C42C7522CE386520079F72B /* libopenvino_c.2450.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_c.2450.dylib; path = ../bindings/libopenvino_c.2450.dylib; sourceTree = SOURCE_ROOT; };
 		0C42C7532CE386520079F72B /* libopenvino_genai.2450.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_genai.2450.dylib; path = ../bindings/libopenvino_genai.2450.dylib; sourceTree = SOURCE_ROOT; };
 		0C42C7542CE386520079F72B /* libopenvino_ir_frontend.2450.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_ir_frontend.2450.dylib; path = ../bindings/libopenvino_ir_frontend.2450.dylib; sourceTree = SOURCE_ROOT; };
@@ -232,6 +236,7 @@
 				0C5D473C2C6F357C00307B37 /* libblend2d.dylib in Frameworks */,
 				0C5D476F2C6F397A00307B37 /* libopencv_features2d.407.dylib in Frameworks */,
 				0C5D47732C6F397A00307B37 /* libopencv_flann.407.dylib in Frameworks */,
+				0C004E202CF751B9003B9A15 /* libpodofo.2.dylib in Frameworks */,
 				0C5D47962C6F3A9B00307B37 /* libcore_tokenizers.dylib in Frameworks */,
 				0C5D47742C6F397A00307B37 /* libopencv_optflow.407.dylib in Frameworks */,
 				0C5D47762C6F397A00307B37 /* libopencv_highgui.407.dylib in Frameworks */,
@@ -332,6 +337,7 @@
 		D73912EC22F37F3D000D13A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0C004E1F2CF751B9003B9A15 /* libpodofo.2.dylib */,
 				0C5D47A92C6F59A200307B37 /* libopenvino_arm_cpu_plugin.so */,
 				0C5D47A82C6F59A200307B37 /* libopenvino_auto_batch_plugin.so */,
 				0C5D47AB2C6F59A200307B37 /* libopenvino_auto_plugin.so */,

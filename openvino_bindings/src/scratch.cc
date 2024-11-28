@@ -1,14 +1,17 @@
-//#include "src/sentence_transformer/sentence_transformer_pipeline.h"
 #include <iostream>
-#include "src/sentence_transformer/sentence_transformer_pipeline.h"
+
+#include "src/pdf/sentence_extractor.h"
 
 
-int main() {
-  std::string model_path = "/Users/rhecker/data/genai/all-MiniLM-L6-v2/fp16";
+int main(int argc, char** argv) {
+  std::string input = argv[1];
 
-  SentenceTransformerPipeline pipeline(model_path, "CPU");
-  auto vec1 =  pipeline.generate("Obama speaks to the media in Illinois");
-  auto vec2 =  pipeline.generate("Obama speaks to the media in Chicago");
+  auto sentences = sentence_extractor::extract_sentences_from_pdf(input);
+  for (auto &sentence: sentences) {
+    std::cout << sentence << std::endl;
+  }
 
-  std::cout << SentenceTransformerPipeline::cosine_similarity(vec1, vec2);
+
+  std::cout << "done" << std::endl;
+  return 0;
 }

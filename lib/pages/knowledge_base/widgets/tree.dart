@@ -25,27 +25,23 @@ class _TreeState extends State<Tree> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TreeView(
-                onSelectionChanged: (selection) async {
-                 data.activeGroup = selection.first.value;
-                },
-                selectionMode:  TreeViewSelectionMode.single,
-                items: [
+              Column(
+                children: [
                   for (final group in data.groups)
-                    TreeViewItem(
-                      value: group,
-                      selected: data.activeGroup == group,
-                      content: GroupItem(
-                        editable: data.isEditingId == group.internalId,
-                        group: group,
-                        onRename: (value) => data.renameGroup(group, value),
-                        onMakeEditable: () {
-                          setState(() {
-                              data.isEditingId = group.internalId;
-                          });
-                        },
-                        onDelete: () => data.deleteGroup(group),
-                      )
+                    GroupItem(
+                      isActive: data.activeGroup == group,
+                      editable: data.isEditingId == group.internalId,
+                      group: group,
+                      onActivate: () {
+                        data.activeGroup = group;
+                      },
+                      onRename: (value) => data.renameGroup(group, value),
+                      onMakeEditable: () {
+                        setState(() {
+                            data.isEditingId = group.internalId;
+                        });
+                      },
+                      onDelete: () => data.deleteGroup(group),
                     ),
                 ]
               ),

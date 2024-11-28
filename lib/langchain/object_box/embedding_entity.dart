@@ -7,6 +7,9 @@ class KnowledgeGroup {
 
   String name;
 
+  @Backlink()
+  final documents = ToMany<KnowledgeDocument>();
+
   KnowledgeGroup(
     this.name,
   );
@@ -21,8 +24,10 @@ class KnowledgeDocument {
 
   final group = ToOne<KnowledgeGroup>();
 
+  @Backlink()
+  final sections = ToMany<EmbeddingEntity>();
+
   KnowledgeDocument(
-    this.internalId,
     this.source,
   );
 }

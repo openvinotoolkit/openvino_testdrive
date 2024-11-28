@@ -65,8 +65,15 @@ class KnowledgeBase extends StatelessWidget {
               ],
             ),
           ),
-          const Expanded(
-            child: DocumentsList(),
+          Expanded(
+            child: Consumer<KnowledgeBaseProvider>(
+              builder: (context, data, child) {
+                if (data.activeGroup == null) {
+                  return const Center(child: Text("Select a group from the list to the left"));
+                }
+                return DocumentsList(group: data.activeGroup!);
+              }
+            ),
           ),
         ],
       ),

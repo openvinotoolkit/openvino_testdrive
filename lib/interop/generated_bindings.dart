@@ -121,6 +121,21 @@ class OpenVINO {
   late final _freeStatusOrEmbeddings = _freeStatusOrEmbeddingsPtr
       .asFunction<void Function(ffi.Pointer<StatusOrEmbeddings>)>();
 
+  void freeStatusOrSentences(
+    ffi.Pointer<StatusOrSentences> status,
+  ) {
+    return _freeStatusOrSentences(
+      status,
+    );
+  }
+
+  late final _freeStatusOrSentencesPtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Void Function(ffi.Pointer<StatusOrSentences>)>>(
+      'freeStatusOrSentences');
+  late final _freeStatusOrSentences = _freeStatusOrSentencesPtr
+      .asFunction<void Function(ffi.Pointer<StatusOrSentences>)>();
+
   ffi.Pointer<StatusOrImageInference> imageInferenceOpen(
     ffi.Pointer<pkg_ffi.Utf8> model_path,
     ffi.Pointer<pkg_ffi.Utf8> task,
@@ -715,6 +730,36 @@ class OpenVINO {
   late final _sentenceTransformerClose = _sentenceTransformerClosePtr
       .asFunction<ffi.Pointer<Status> Function(CSentenceTransformer)>();
 
+  ffi.Pointer<StatusOrSentences> pdfExtractSentences(
+    ffi.Pointer<pkg_ffi.Utf8> pdf_path,
+  ) {
+    return _pdfExtractSentences(
+      pdf_path,
+    );
+  }
+
+  late final _pdfExtractSentencesPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrSentences> Function(
+              ffi.Pointer<pkg_ffi.Utf8>)>>('pdfExtractSentences');
+  late final _pdfExtractSentences = _pdfExtractSentencesPtr.asFunction<
+      ffi.Pointer<StatusOrSentences> Function(ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<StatusOrString> pdfExtractText(
+    ffi.Pointer<pkg_ffi.Utf8> pdf_path,
+  ) {
+    return _pdfExtractText(
+      pdf_path,
+    );
+  }
+
+  late final _pdfExtractTextPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrString> Function(
+              ffi.Pointer<pkg_ffi.Utf8>)>>('pdfExtractText');
+  late final _pdfExtractText = _pdfExtractTextPtr.asFunction<
+      ffi.Pointer<StatusOrString> Function(ffi.Pointer<pkg_ffi.Utf8>)>();
+
   ffi.Pointer<StatusOrDevices> getAvailableDevices() {
     return _getAvailableDevices();
   }
@@ -831,6 +876,10 @@ final class Device extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> id;
 
   external ffi.Pointer<pkg_ffi.Utf8> name;
+}
+
+final class Sentence extends ffi.Struct {
+  external ffi.Pointer<pkg_ffi.Utf8> sentence;
 }
 
 final class Status extends ffi.Struct {
@@ -974,6 +1023,18 @@ final class StatusOrDevices extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
   external ffi.Pointer<Device> value;
+
+  @ffi.Int()
+  external int size;
+}
+
+final class StatusOrSentences extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external ffi.Pointer<Sentence> value;
 
   @ffi.Int()
   external int size;

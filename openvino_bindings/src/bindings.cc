@@ -5,6 +5,7 @@
 #include <openvino/openvino.hpp>
 
 //#include "src/audio/speech_to_text.h"
+#include "src/pdf/sentence_extractor.h"
 #include "src/image/image_inference.h"
 #include "src/mediapipe/graph_runner.h"
 #include "src/mediapipe/serialization/serialization_calculators.h"
@@ -50,6 +51,14 @@ void freeStatusOrDevices(StatusOrDevices *status) {
 }
 
 void freeStatusOrEmbeddings(StatusOrEmbeddings *status) {
+    if (status->status == StatusEnum::OkStatus) {
+        delete [] status->value;
+        status->value = nullptr;
+    }
+    delete status;
+}
+
+void freeStatusOrSentences(StatusOrSentences *status) {
     if (status->status == StatusEnum::OkStatus) {
         delete [] status->value;
         status->value = nullptr;
@@ -387,6 +396,30 @@ StatusOrDevices* getAvailableDevices() {
     }
 
     return new StatusOrDevices{OkStatus, "", devices, (int)device_ids.size() + 1};
+}
+
+StatusOrSentences* pdfExtractSentences(const char* pdf_path) {
+    try {
+        auto output = sentence_extractor::extract_sentences_from_pdf(pdf_path);
+        Sentence* sentences = new Sentence[output.size()];
+        for (int i = 0; i < output.size(); i++) {
+            sentences[i] = {strdup(output[i].c_str())};
+        }
+        return new StatusOrSentences{OkStatus, "", sentences, (int)output.size()};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrSentences{except->status, except->message};
+    }
+}
+
+StatusOrString* pdfExtractText(const char* pdf_path) {
+    try {
+        auto output = sentence_extractor::extract_text_from_pdf(pdf_path);
+        return new StatusOrString{OkStatus, "", strdup(output.c_str())};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrString{except->status, except->message};
+    }
 }
 
 Status* handle_exceptions() {
