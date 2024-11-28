@@ -44,7 +44,7 @@ class _DocumentsListState extends State<DocumentsList> {
 
     const uuid = Uuid();
 
-    final lcDocuments = await PdfWindowLoader(path, 400).load();
+    final lcDocuments = await PdfLoader(path, 400).load();
     List<EmbeddingEntity> entities = [];
     for (final lcDocument in lcDocuments) {
       final embeddings = await transformer.generate(lcDocument.pageContent);
@@ -80,38 +80,41 @@ class _DocumentsListState extends State<DocumentsList> {
             ),
           ),
         ),
-        Builder(
-          builder: (context) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Button(
-                  onPressed: () {
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Builder(
+            builder: (context) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Button(
+                    onPressed: () {
 
-                  },
-                  child: const Text("add document"),
-                ),
-                DropArea(
-                  type: "a document",
-                  showChild: widget.group.documents.isNotEmpty,
-                  onUpload: (file) => addDocument(file),
-                  child: Column(
-                    children: [
-                      for (final document in widget.group.documents)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(document.source),
-                            Text("embeddings: ${document.sections.length}")
-                          ],
-                        )
-                    ],
-                  )
-                ),
-                Experiment(group: widget.group),
-              ],
-            );
-          }
+                    },
+                    child: const Text("add document"),
+                  ),
+                  DropArea(
+                    type: "a document",
+                    showChild: widget.group.documents.isNotEmpty,
+                    onUpload: (file) => addDocument(file),
+                    child: Column(
+                      children: [
+                        for (final document in widget.group.documents)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(document.source),
+                              Text("embeddings: ${document.sections.length}")
+                            ],
+                          )
+                      ],
+                    )
+                  ),
+                  Experiment(group: widget.group),
+                ],
+              );
+            }
+          ),
         ),
       ],
     );
@@ -130,7 +133,7 @@ class _ExperimentState extends State<Experiment> {
   VectorStore? vs;
   Future<Runnable>? chain;
 
-  Future<String>? response;
+  String? response;
 
   Future<Runnable> initMemoryStore() async {
     final platformContext = Context(style: Style.platform);
@@ -163,13 +166,14 @@ Answer the question based only on the following context without specifically nam
 
   void runChain(String text) async {
     final runnable = (await chain)!;
-    print("Setting response...");
     setState(() {
-      response = runnable.invoke(text).then((output) {
-          print(output);
-          return output.toString();
-      });
+        response = "";
     });
+    await for (final output in runnable.stream(text)) {
+      setState(() {
+          response = (response ?? "") + output.toString();
+      });
+    }
   }
 
   @override
@@ -191,6 +195,7 @@ Answer the question based only on the following context without specifically nam
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Padding(
                 padding: EdgeInsets.only(top: 20),
@@ -199,16 +204,10 @@ Answer the question based only on the following context without specifically nam
               TextBox(
                 onSubmitted: runChain,
               ),
-              FutureBuilder<String>(
-                future: response,
-                builder: (context, snapshot) {
-                  print(snapshot.connectionState);
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: Image.asset('images/intel-loading.gif', width: 100)
-                    );
-                  } else if (snapshot.hasData) {
-                    return SingleChildScrollView(child: SelectableText(snapshot.data ?? "no output"));
+              Builder(
+                builder: (context) {
+                  if (response != null) {
+                    return SingleChildScrollView(child: SelectableText(response!.isEmpty ? "..." : response!));
                   }
                   return const Text("Type a message to test RAG");
                 }

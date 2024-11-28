@@ -58,14 +58,6 @@ void freeStatusOrEmbeddings(StatusOrEmbeddings *status) {
     delete status;
 }
 
-void freeStatusOrSentences(StatusOrSentences *status) {
-    if (status->status == StatusEnum::OkStatus) {
-        delete [] status->value;
-        status->value = nullptr;
-    }
-    delete status;
-}
-
 StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json) {
     try {
         auto instance = new ImageInference(model_path, get_task_type(task), device);
@@ -396,20 +388,6 @@ StatusOrDevices* getAvailableDevices() {
     }
 
     return new StatusOrDevices{OkStatus, "", devices, (int)device_ids.size() + 1};
-}
-
-StatusOrSentences* pdfExtractSentences(const char* pdf_path) {
-    try {
-        auto output = sentence_extractor::extract_sentences_from_pdf(pdf_path);
-        Sentence* sentences = new Sentence[output.size()];
-        for (int i = 0; i < output.size(); i++) {
-            sentences[i] = {strdup(output[i].c_str())};
-        }
-        return new StatusOrSentences{OkStatus, "", sentences, (int)output.size()};
-    } catch (...) {
-        auto except = handle_exceptions();
-        return new StatusOrSentences{except->status, except->message};
-    }
 }
 
 StatusOrString* pdfExtractText(const char* pdf_path) {
