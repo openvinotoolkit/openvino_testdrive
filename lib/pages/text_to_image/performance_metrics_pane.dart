@@ -1,19 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:inference/inference/text/metric_widgets.dart';
-import 'package:inference/inference/textToImage/tti_metric_widgets.dart';
-import 'package:inference/providers/text_to_image_inference_provider.dart';
-import 'package:inference/theme.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/pages/text_to_image/providers/text_to_image_inference_provider.dart';
+import 'package:inference/pages/text_to_image/widgets/tti_metrics_grid.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class TTIPerformanceMetricsPage extends StatefulWidget {
-  const TTIPerformanceMetricsPage({super.key});
+class TTIPerformanceMetricsPane extends StatefulWidget {
+  const TTIPerformanceMetricsPane({super.key});
 
   @override
-  State<TTIPerformanceMetricsPage> createState() => _TTIPerformanceMetricsPageState();
+  State<TTIPerformanceMetricsPane> createState() => _TTIPerformanceMetricsPaneState();
 }
 
-class _TTIPerformanceMetricsPageState extends State<TTIPerformanceMetricsPage> {
+class _TTIPerformanceMetricsPaneState extends State<TTIPerformanceMetricsPane> {
 
   @override
   void initState() {
@@ -48,18 +46,17 @@ class _TTIPerformanceMetricsPageState extends State<TTIPerformanceMetricsPage> {
         final metrics = inference.metrics!;
 
         return Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.rectangle,
-            borderRadius: const BorderRadius.all(Radius.circular(8)),
-            color: intelGray,
+            borderRadius: BorderRadius.all(Radius.circular(8)),
           ),
           child: Padding(
             padding: const EdgeInsets.all(30.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                TTICirclePropRow(metrics: metrics),
+                TTIMetricsGrid(metrics: metrics),
               ],
             ),
           ),
