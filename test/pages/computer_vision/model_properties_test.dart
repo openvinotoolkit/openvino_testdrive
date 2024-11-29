@@ -22,8 +22,8 @@ Widget testWidget(ImageInferenceProvider provider) {
       ),
     ],
     child: FluentApp(
-      home: const Center(
-        child: ModelProperties()
+      home: Center(
+        child: ModelProperties(project: provider.project)
       ),
     ),
   );

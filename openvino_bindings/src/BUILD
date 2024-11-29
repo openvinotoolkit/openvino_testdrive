@@ -9,7 +9,9 @@ cc_library(
         "//src/utils:utils",
         "//src/image:image_inference",
         "//src/llm:llm_inference",
+        "//src/audio:speech_to_text",
         "//src/mediapipe:graph_runner",
+        "//src/tti:tti_inference",
     ],
 )
 
@@ -20,6 +22,7 @@ cc_library(
     deps = [
         ":bindings_deps",
         "//src/utils:metrics",
+        "//src/utils:tti_metrics",
     ],
     copts = ["-fPIC"],
     alwayslink=1,

@@ -9,7 +9,6 @@ import 'package:inference/config.dart';
 import 'package:inference/header.dart';
 import 'package:inference/importers/importer.dart';
 import 'package:inference/project.dart';
-import 'package:inference/projects/task_type_filter.dart';
 import 'package:inference/providers/project_filter_provider.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/searchbar.dart';

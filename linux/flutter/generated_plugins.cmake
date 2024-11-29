@@ -5,10 +5,15 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
   flutter_acrylic
+  irondash_engine_context
+  media_kit_libs_linux
+  media_kit_video
+  super_native_extensions
   system_theme
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  media_kit_native_event_loop
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

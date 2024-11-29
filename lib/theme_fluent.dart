@@ -85,6 +85,8 @@ class AppTheme extends ChangeNotifier {
 
 }
 
+const foreground3Color = Color(0xFF616161);
+
 class DarkLightColor {
   final Color light;
   final Color dark;

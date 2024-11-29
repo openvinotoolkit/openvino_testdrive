@@ -2,7 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/pages/computer_vision/batch_inference.dart';
 import 'package:inference/pages/computer_vision/live_inference.dart';
-import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/image_inference_provider.dart';
 import 'package:inference/providers/preference_provider.dart';

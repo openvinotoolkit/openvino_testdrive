@@ -15,17 +15,24 @@
 #include <stdbool.h>
 #include "src/utils/status.h"
 #include "src/utils/metrics.h"
+#include "utils/tti_metrics.h"
 
 typedef void* CImageInference;
 typedef void* CGraphRunner;
 typedef void* CSpeechToText;
 typedef void* CLLMInference;
+typedef void* CTTIInference;
 
 typedef struct {
     const char* id;
     const char* name;
 } Device;
 
+typedef struct {
+  float start_ts;
+  float end_ts;
+  const char* text;
+} TranscriptionChunk;
 
 typedef struct {
     enum StatusEnum status;
@@ -77,9 +84,31 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    CLLMInference value;
+} StatusOrTTIInference;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     Metrics metrics;
     const char* value;
 } StatusOrModelResponse;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
+    Metrics metrics;
+    TranscriptionChunk* value;
+    int size;
+    const char* text;
+} StatusOrWhisperModelResponse;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
+    TTIMetrics metrics;
+    const char* value;
+} StatusOrTTIModelResponse;
 
 typedef struct {
     enum StatusEnum status;
@@ -96,6 +125,8 @@ EXPORT void freeStatusOrString(StatusOrString *status);
 EXPORT void freeStatusOrImageInference(StatusOrImageInference *status);
 EXPORT void freeStatusOrLLMInference(StatusOrLLMInference *status);
 EXPORT void freeStatusOrSpeechToText(StatusOrSpeechToText *status);
+EXPORT void freeStatusOrModelResponse(StatusOrModelResponse *status);
+EXPORT void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *status);
 EXPORT void freeStatusOrDevices(StatusOrDevices *status);
 
 EXPORT StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json);
@@ -117,16 +148,21 @@ EXPORT Status* llmInferenceForceStop(CLLMInference instance);
 EXPORT StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance);
 EXPORT Status* llmInferenceClose(CLLMInference instance);
 
+EXPORT StatusOrTTIInference* ttiInferenceOpen(const char* model_path, const char* device);
+EXPORT StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height, int rounds);
+EXPORT StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance);
+EXPORT Status* ttiInferenceClose(CLLMInference instance);
+
 EXPORT StatusOrGraphRunner* graphRunnerOpen(const char* graph);
 EXPORT Status* graphRunnerQueueImage(CGraphRunner instance, const char* name, int timestamp, unsigned char* image_data, const size_t data_length);
 EXPORT Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* name, int timestamp, bool json, bool csv, bool overlay);
 EXPORT StatusOrString* graphRunnerGet(CGraphRunner instance);
 EXPORT Status* graphRunnerStop(CGraphRunner instance);
 
-//EXPORT StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device);
-//EXPORT Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path);
-//EXPORT StatusOrInt* speechToTextVideoDuration(CSpeechToText instance);
-//EXPORT StatusOrModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language);
+EXPORT StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device);
+EXPORT Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path);
+EXPORT StatusOrInt* speechToTextVideoDuration(CSpeechToText instance);
+EXPORT StatusOrWhisperModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language);
 
 EXPORT StatusOrDevices* getAvailableDevices();
 Status* handle_exceptions();

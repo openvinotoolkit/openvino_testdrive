@@ -92,6 +92,37 @@ class OpenVINO {
   late final _freeStatusOrSpeechToText = _freeStatusOrSpeechToTextPtr
       .asFunction<void Function(ffi.Pointer<StatusOrSpeechToText>)>();
 
+  void freeStatusOrModelResponse(
+    ffi.Pointer<StatusOrModelResponse> status,
+  ) {
+    return _freeStatusOrModelResponse(
+      status,
+    );
+  }
+
+  late final _freeStatusOrModelResponsePtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<StatusOrModelResponse>)>>(
+      'freeStatusOrModelResponse');
+  late final _freeStatusOrModelResponse = _freeStatusOrModelResponsePtr
+      .asFunction<void Function(ffi.Pointer<StatusOrModelResponse>)>();
+
+  void freeStatusOrWhisperModelResponse(
+    ffi.Pointer<StatusOrWhisperModelResponse> status,
+  ) {
+    return _freeStatusOrWhisperModelResponse(
+      status,
+    );
+  }
+
+  late final _freeStatusOrWhisperModelResponsePtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<StatusOrWhisperModelResponse>)>>(
+      'freeStatusOrWhisperModelResponse');
+  late final _freeStatusOrWhisperModelResponse =
+      _freeStatusOrWhisperModelResponsePtr.asFunction<
+          void Function(ffi.Pointer<StatusOrWhisperModelResponse>)>();
+
   void freeStatusOrDevices(
     ffi.Pointer<StatusOrDevices> status,
   ) {
@@ -465,6 +496,81 @@ class OpenVINO {
   late final _llmInferenceClose = _llmInferenceClosePtr
       .asFunction<ffi.Pointer<Status> Function(CLLMInference)>();
 
+  ffi.Pointer<StatusOrTTIInference> ttiInferenceOpen(
+    ffi.Pointer<pkg_ffi.Utf8> model_path,
+    ffi.Pointer<pkg_ffi.Utf8> device,
+  ) {
+    return _ttiInferenceOpen(
+      model_path,
+      device,
+    );
+  }
+
+  late final _ttiInferenceOpenPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrTTIInference> Function(ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('ttiInferenceOpen');
+  late final _ttiInferenceOpen = _ttiInferenceOpenPtr.asFunction<
+      ffi.Pointer<StatusOrTTIInference> Function(
+          ffi.Pointer<pkg_ffi.Utf8>, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<StatusOrTTIModelResponse> ttiInferencePrompt(
+    CTTIInference instance,
+    ffi.Pointer<pkg_ffi.Utf8> message,
+    int width,
+    int height,
+    int rounds,
+  ) {
+    return _ttiInferencePrompt(
+      instance,
+      message,
+      width,
+      height,
+      rounds,
+    );
+  }
+
+  late final _ttiInferencePromptPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrTTIModelResponse> Function(
+              CTTIInference,
+              ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Int,
+              ffi.Int,
+              ffi.Int)>>('ttiInferencePrompt');
+  late final _ttiInferencePrompt = _ttiInferencePromptPtr.asFunction<
+      ffi.Pointer<StatusOrTTIModelResponse> Function(
+          CTTIInference, ffi.Pointer<pkg_ffi.Utf8>, int, int, int)>();
+
+  ffi.Pointer<StatusOrBool> ttiInferenceHasModelIndex(
+    CTTIInference instance,
+  ) {
+    return _ttiInferenceHasModelIndex(
+      instance,
+    );
+  }
+
+  late final _ttiInferenceHasModelIndexPtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Pointer<StatusOrBool> Function(CTTIInference)>>(
+      'ttiInferenceHasModelIndex');
+  late final _ttiInferenceHasModelIndex = _ttiInferenceHasModelIndexPtr
+      .asFunction<ffi.Pointer<StatusOrBool> Function(CTTIInference)>();
+
+  ffi.Pointer<Status> ttiInferenceClose(
+    CLLMInference instance,
+  ) {
+    return _ttiInferenceClose(
+      instance,
+    );
+  }
+
+  late final _ttiInferenceClosePtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<Status> Function(CLLMInference)>>(
+          'ttiInferenceClose');
+  late final _ttiInferenceClose = _ttiInferenceClosePtr
+      .asFunction<ffi.Pointer<Status> Function(CLLMInference)>();
+
   ffi.Pointer<StatusOrGraphRunner> graphRunnerOpen(
     ffi.Pointer<pkg_ffi.Utf8> graph,
   ) {
@@ -569,6 +675,80 @@ class OpenVINO {
   late final _graphRunnerStop = _graphRunnerStopPtr
       .asFunction<ffi.Pointer<Status> Function(CGraphRunner)>();
 
+  ffi.Pointer<StatusOrSpeechToText> speechToTextOpen(
+    ffi.Pointer<pkg_ffi.Utf8> model_path,
+    ffi.Pointer<pkg_ffi.Utf8> device,
+  ) {
+    return _speechToTextOpen(
+      model_path,
+      device,
+    );
+  }
+
+  late final _speechToTextOpenPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrSpeechToText> Function(ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('speechToTextOpen');
+  late final _speechToTextOpen = _speechToTextOpenPtr.asFunction<
+      ffi.Pointer<StatusOrSpeechToText> Function(
+          ffi.Pointer<pkg_ffi.Utf8>, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<Status> speechToTextLoadVideo(
+    CSpeechToText instance,
+    ffi.Pointer<pkg_ffi.Utf8> video_path,
+  ) {
+    return _speechToTextLoadVideo(
+      instance,
+      video_path,
+    );
+  }
+
+  late final _speechToTextLoadVideoPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<Status> Function(CSpeechToText,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('speechToTextLoadVideo');
+  late final _speechToTextLoadVideo = _speechToTextLoadVideoPtr.asFunction<
+      ffi.Pointer<Status> Function(CSpeechToText, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<StatusOrInt> speechToTextVideoDuration(
+    CSpeechToText instance,
+  ) {
+    return _speechToTextVideoDuration(
+      instance,
+    );
+  }
+
+  late final _speechToTextVideoDurationPtr = _lookup<
+          ffi.NativeFunction<ffi.Pointer<StatusOrInt> Function(CSpeechToText)>>(
+      'speechToTextVideoDuration');
+  late final _speechToTextVideoDuration = _speechToTextVideoDurationPtr
+      .asFunction<ffi.Pointer<StatusOrInt> Function(CSpeechToText)>();
+
+  ffi.Pointer<StatusOrWhisperModelResponse> speechToTextTranscribe(
+    CSpeechToText instance,
+    int start,
+    int duration,
+    ffi.Pointer<pkg_ffi.Utf8> language,
+  ) {
+    return _speechToTextTranscribe(
+      instance,
+      start,
+      duration,
+      language,
+    );
+  }
+
+  late final _speechToTextTranscribePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrWhisperModelResponse> Function(
+              CSpeechToText,
+              ffi.Int,
+              ffi.Int,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('speechToTextTranscribe');
+  late final _speechToTextTranscribe = _speechToTextTranscribePtr.asFunction<
+      ffi.Pointer<StatusOrWhisperModelResponse> Function(
+          CSpeechToText, int, int, ffi.Pointer<pkg_ffi.Utf8>)>();
+
   ffi.Pointer<StatusOrDevices> getAvailableDevices() {
     return _getAvailableDevices();
   }
@@ -667,10 +847,34 @@ final class Metrics extends ffi.Struct {
   external int number_of_input_tokens;
 }
 
+final class TTIMetrics extends ffi.Struct {
+  @ffi.Float()
+  external double load_time;
+
+  @ffi.Float()
+  external double generate_time;
+}
+
+final class StringWithMetrics extends ffi.Struct {
+  external ffi.Pointer<pkg_ffi.Utf8> string;
+
+  external TTIMetrics metrics;
+}
+
 final class Device extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> id;
 
   external ffi.Pointer<pkg_ffi.Utf8> name;
+}
+
+final class TranscriptionChunk extends ffi.Struct {
+  @ffi.Float()
+  external double start_ts;
+
+  @ffi.Float()
+  external double end_ts;
+
+  external ffi.Pointer<pkg_ffi.Utf8> text;
 }
 
 final class Status extends ffi.Struct {
@@ -753,6 +957,15 @@ final class StatusOrLLMInference extends ffi.Struct {
 
 typedef CLLMInference = ffi.Pointer<ffi.Void>;
 
+final class StatusOrTTIInference extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external CLLMInference value;
+}
+
 final class StatusOrModelResponse extends ffi.Struct {
   @ffi.Int()
   external int status;
@@ -760,6 +973,33 @@ final class StatusOrModelResponse extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
   external Metrics metrics;
+
+  external ffi.Pointer<pkg_ffi.Utf8> value;
+}
+
+final class StatusOrWhisperModelResponse extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external Metrics metrics;
+
+  external ffi.Pointer<TranscriptionChunk> value;
+
+  @ffi.Int()
+  external int size;
+
+  external ffi.Pointer<pkg_ffi.Utf8> text;
+}
+
+final class StatusOrTTIModelResponse extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external TTIMetrics metrics;
 
   external ffi.Pointer<pkg_ffi.Utf8> value;
 }
@@ -788,3 +1028,4 @@ typedef LLMInferenceCallbackFunctionFunction = ffi.Void Function(
     ffi.Pointer<StatusOrString>);
 typedef DartLLMInferenceCallbackFunctionFunction = void Function(
     ffi.Pointer<StatusOrString>);
+typedef CTTIInference = ffi.Pointer<ffi.Void>;
