@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:inference/interop/generated_bindings.dart';
 import 'package:inference/interop/tti_inference.dart';
@@ -44,10 +43,10 @@ class TextToImageInferenceProvider extends ChangeNotifier {
 
   Uint8List? _imageBytes;
 
-  int _loadWidth = 512;
-  int _loadHeight = 512;
+  int _loadWidth = 256;
+  int _loadHeight = 256;
 
-  int _width = 512;
+  int _width = 256;
 
   int get width => _width;
 
@@ -56,7 +55,7 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int _height = 512;
+  int _height = 256;
 
   int get height => _height;
 
@@ -65,7 +64,7 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int _rounds = 20;
+  int _rounds = 12;
 
   int get rounds => _rounds;
 
@@ -87,14 +86,18 @@ class TextToImageInferenceProvider extends ChangeNotifier {
       print("instantiating project: ${project.name}");
       print(project.storagePath);
       print(device);
-      TTIInference.init(project.storagePath, device).then((instance) {
-        print("done loading");
-        _inference = instance;
-        loaded.complete();
-        notifyListeners();
-      });
     }
   }
+
+  Future<void> init() async {
+    await TTIInference.init(project!.storagePath, device!).then((instance) {
+      print("done loading");
+      _inference = instance;
+    });
+    loaded.complete();
+    notifyListeners();
+  }
+
 
   void preloadImageBytes() {
     rootBundle.load('images/intel-loading.gif').then((data) {

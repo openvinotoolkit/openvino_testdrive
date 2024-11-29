@@ -1,12 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:inference/inference/text/metric_widgets.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/openvino_bindings.dart';
+import 'package:inference/pages/text_to_image/widgets/metrics_card.dart';
 import 'package:intl/intl.dart';
 
-class TTICirclePropRow extends StatelessWidget {
+
+class TTIMetricsGrid extends StatelessWidget {
   final TTIMetrics metrics;
 
-  const TTICirclePropRow({super.key, required this.metrics});
+  const TTIMetricsGrid({super.key, required this.metrics});
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +17,14 @@ class TTICirclePropRow extends StatelessWidget {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.min, // Wrap content
       children: [
-        CircleProp(
+        MetricsCard(
           header: "Time to load model",
           value: nf.format(metrics.load_time),
           unit: "ms",
         ),
-        CircleProp(
+        MetricsCard(
           header: "Time to generate image",
           value: nf.format(metrics.generate_time),
           unit: "ms",
