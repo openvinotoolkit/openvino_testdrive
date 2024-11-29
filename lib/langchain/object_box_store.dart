@@ -5,30 +5,6 @@ import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/objectbox.g.dart';
 import 'package:langchain/langchain.dart';
 
-//class EmbeddingEntityVectorStore extends BaseObjectBoxVectorStore<EmbeddingEntity> {
-//  EmbeddingEntityVectorStore({
-//    required super.embeddings,
-//    required Store store,
-//  }) : super(
-//          box: store.box<EmbeddingEntity>(),
-//          createEntity: (
-//            String id,
-//            String content,
-//            String metadata,
-//            List<double> embedding,
-//          ) => EmbeddingEntity(id, content, metadata, embedding),
-//          createDocument: (EmbeddingEntity docDto) {
-//            return Document(
-//              pageContent: docDto.content,
-//              id: docDto.id,
-//              metadata: jsonDecode(docDto.metadata),
-//            );
-//          },
-//          getIdProperty: () => EmbeddingEntity_.id,
-//          getEmbeddingProperty: () => EmbeddingEntity_.embeddings,
-//        );
-//}
-
 class ObjectBoxStore  extends VectorStore {
   late Box<EmbeddingEntity> embeddingsBox;
   late KnowledgeGroup group;
@@ -66,14 +42,10 @@ class ObjectBoxStore  extends VectorStore {
     if (filterCondition != null && filterCondition is Condition<EmbeddingEntity>) {
       filter = filter.and(filterCondition);
     }
-
+    QueryBuilder<EmbeddingEntity> builder = embeddingsBox.query(filter);
     final documents = group.documents.map((p) => p.internalId).toList();
-    print(documents);
-    //filter = filter.and(EmbeddingEntity_.document.oneOf(documents));
-    //print(filter);
-    //print("applied filter");
-    final query = embeddingsBox.query(filter).build();
-    print(query);
+    builder.link(EmbeddingEntity_.document, KnowledgeDocument_.internalId.oneOf(documents));
+    final query = builder.build();
 
     Iterable<ObjectWithScore<EmbeddingEntity>> results = query.findWithScores();
 
@@ -86,5 +58,4 @@ class ObjectBoxStore  extends VectorStore {
         .map((r) => (Document(pageContent: r.object.content, metadata: jsonDecode(r.object.metadata)), r.score))
         .toList(growable: false);
   }
-
 }
