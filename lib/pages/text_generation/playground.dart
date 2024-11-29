@@ -26,13 +26,14 @@ class Playground extends StatefulWidget {
 class SubmitMessageIntent extends Intent {}
 
 class _PlaygroundState extends State<Playground> {
-  final textController = TextEditingController();
-  final scrollController = ScrollController();
+  final _textController = TextEditingController();
+  final _scrollController = ScrollController();
+  final _focusNode = FocusNode();
   bool attachedToBottom = true;
 
   void jumpToBottom({ offset = 0 }) {
-    if (scrollController.hasClients) {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent + offset);
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent + offset);
     }
   }
 
@@ -40,7 +41,7 @@ class _PlaygroundState extends State<Playground> {
     if (message.isEmpty) return;
     final provider = Provider.of<TextInferenceProvider>(context, listen: false);
     if (!provider.initialized || provider.response != null) return;
-    textController.text = '';
+    _textController.text = '';
     jumpToBottom(offset: 110); //move to bottom including both
     provider.message(message).catchError((e) async {
       // ignore: use_build_context_synchronously
@@ -59,17 +60,17 @@ class _PlaygroundState extends State<Playground> {
   @override
   void initState() {
     super.initState();
-    scrollController.addListener(() {
+    _scrollController.addListener(() {
       setState(() {
-        attachedToBottom = scrollController.position.pixels + 0.001 >= scrollController.position.maxScrollExtent;
+        attachedToBottom = _scrollController.position.pixels + 0.001 >= _scrollController.position.maxScrollExtent;
       });
     });
   }
 
   @override
   void dispose() {
-    textController.dispose();
-    scrollController.dispose();
+    _textController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -158,16 +159,20 @@ class _PlaygroundState extends State<Playground> {
                             alignment: Alignment.bottomCenter,
                             children: [
                               SingleChildScrollView(
-                                controller: scrollController,
-                                child: Padding(padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 20), child: Column(
-                                  children: provider.messages.map((message) { switch (message.speaker) {
-                                    case Speaker.user: return Padding(
-                                      padding: const EdgeInsets.only(left: 42),
-                                      child: UserMessage(message),
-                                    );
-                                    case Speaker.system: return Text('System: ${message.message}');
-                                    case Speaker.assistant: return AssistantMessage(message);
-                                  }}).toList(),
+                                controller: _scrollController,
+                                child: Padding(padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 20), child: SelectionArea(
+                                  child: SelectionArea(
+                                    child: Column(
+                                      children: provider.messages.map((message) { switch (message.speaker) {
+                                        case Speaker.user: return Padding(
+                                          padding: const EdgeInsets.only(left: 42),
+                                          child: UserMessage(message),
+                                        );
+                                        case Speaker.system: return Text('System: ${message.message}');
+                                        case Speaker.assistant: return AssistantMessage(message);
+                                      }}).toList(),
+                                    ),
+                                  ),
                                 ),),
                               ),
                               Positioned(
@@ -221,7 +226,7 @@ class _PlaygroundState extends State<Playground> {
                                         child: Actions(
                                           actions: <Type, Action<Intent>>{
                                             SubmitMessageIntent: CallbackAction<SubmitMessageIntent>(
-                                              onInvoke: (SubmitMessageIntent intent) => message(textController.text),
+                                              onInvoke: (SubmitMessageIntent intent) => message(_textController.text),
                                             ),
                                           },
                                           child: Column(
@@ -230,7 +235,7 @@ class _PlaygroundState extends State<Playground> {
                                               TextBox(
                                                 placeholder: "Type a message...",
                                                 keyboardType: TextInputType.multiline,
-                                                controller: textController,
+                                                controller: _textController,
                                                 maxLines: null,
                                                 expands: true,
                                                 onSubmitted: message,
@@ -258,7 +263,7 @@ class _PlaygroundState extends State<Playground> {
                                     )
                                     : Tooltip(
                                       message: "Send message",
-                                      child: Button(child: const Icon(FluentIcons.send, size: 18,), onPressed: () { message(textController.text); }),
+                                      child: Button(child: const Icon(FluentIcons.send, size: 18,), onPressed: () { message(_textController.text); }),
                                     )
                                   ),
                                 )

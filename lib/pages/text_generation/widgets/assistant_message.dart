@@ -57,21 +57,23 @@ class _AssistantMessageState extends State<AssistantMessage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4),
-                    child: Row(
-                      children: [
-                        Text(
-                          inferenceProvider.project!.name,
-                          style:  TextStyle(
-                            color: subtleTextColor.of(theme),
+                    child: SelectionContainer.disabled(
+                      child: Row(
+                        children: [
+                          Text(
+                            inferenceProvider.project!.name,
+                            style:  TextStyle(
+                              color: subtleTextColor.of(theme),
+                            ),
                           ),
-                        ),
-                        if (widget.message.time != null) Text(
-                          DateFormat(' | yyyy-MM-dd HH:mm:ss').format(widget.message.time!),
-                          style:  TextStyle(
-                            color: subtleTextColor.of(theme),
+                          if (widget.message.time != null) Text(
+                            DateFormat(' | yyyy-MM-dd HH:mm:ss').format(widget.message.time!),
+                            style:  TextStyle(
+                              color: subtleTextColor.of(theme),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   MouseRegion(
@@ -86,78 +88,80 @@ class _AssistantMessageState extends State<AssistantMessage> {
                             color: backgroundColor,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: Markdown(
-                            data: widget.message.message,
-                            selectable: true,
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(12),
-                            extensionSet: md.ExtensionSet(
-                              md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-                              [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: MarkdownBody(
+                              data: widget.message.message,
+                              extensionSet: md.ExtensionSet(
+                                md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+                                [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
+                              ),
                             ),
                           ),
                         ),
                         if (_hovering)
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
-                            child: Row(
-                              children: [
-                                if (widget.message.metrics != null) Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: Tooltip(
-                                    message: 'Time to first token',
-                                    child: Text(
-                                      'TTF: ${nf.format(widget.message.metrics!.ttft)}ms',
-                                      style:  TextStyle(
-                                        fontSize: 12,
-                                        color: subtleTextColor.of(theme),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                if (widget.message.metrics != null) Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: Tooltip(
-                                    message: 'Time per output token',
-                                    child: Text(
-                                      'TPOT: ${nf.format(widget.message.metrics!.tpot)}ms',
-                                      style:  TextStyle(
-                                        fontSize: 12,
-                                        color: subtleTextColor.of(theme),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                if (widget.message.metrics != null) Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: Tooltip(
-                                    message: 'Generate total duration',
-                                    child: Text(
-                                      'Generate: ${nf.format(widget.message.metrics!.generate_time/1000)}s',
-                                      style:  TextStyle(
-                                        fontSize: 12,
-                                        color: subtleTextColor.of(theme),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(FluentIcons.copy),
-                                  onPressed: () async{
-                                    await displayInfoBar(context, builder: (context, close) =>
-                                      InfoBar(
-                                        title: const Text('Copied to clipboard'),
-                                        severity: InfoBarSeverity.info,
-                                        action: IconButton(
-                                          icon: const Icon(FluentIcons.clear),
-                                          onPressed: close,
+                            child: SelectionContainer.disabled(
+                              child: Row(
+                                children: [
+                                  if (widget.message.metrics != null) Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Tooltip(
+                                      message: 'Time to first token',
+                                      child: Text(
+                                        'TTF: ${nf.format(widget.message.metrics!.ttft)}ms',
+                                        style:  TextStyle(
+                                          fontSize: 12,
+                                          color: subtleTextColor.of(theme),
                                         ),
                                       ),
-                                    );
-                                    Clipboard.setData(ClipboardData(text: widget.message.message));
-                                  },
-                                ),
-                              ],
+                                    ),
+                                  ),
+                                  if (widget.message.metrics != null) Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Tooltip(
+                                      message: 'Time per output token',
+                                      child: Text(
+                                        'TPOT: ${nf.format(widget.message.metrics!.tpot)}ms',
+                                        style:  TextStyle(
+                                          fontSize: 12,
+                                          color: subtleTextColor.of(theme),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  if (widget.message.metrics != null) Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Tooltip(
+                                      message: 'Generate total duration',
+                                      child: Text(
+                                        'Generate: ${nf.format(widget.message.metrics!.generate_time/1000)}s',
+                                        style:  TextStyle(
+                                          fontSize: 12,
+                                          color: subtleTextColor.of(theme),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(FluentIcons.copy),
+                                    onPressed: () async{
+                                      await displayInfoBar(context, builder: (context, close) =>
+                                        InfoBar(
+                                          title: const Text('Copied to clipboard'),
+                                          severity: InfoBarSeverity.info,
+                                          action: IconButton(
+                                            icon: const Icon(FluentIcons.clear),
+                                            onPressed: close,
+                                          ),
+                                        ),
+                                      );
+                                      Clipboard.setData(ClipboardData(text: widget.message.message));
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ) else const SizedBox(height: 34)
                       ],

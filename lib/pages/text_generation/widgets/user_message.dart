@@ -13,30 +13,27 @@ class UserMessage extends StatelessWidget {
     final theme = FluentTheme.of(context);
     return Align(
       alignment: Alignment.centerRight,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 1000),
-        child: Padding(padding: const EdgeInsets.only(bottom: 20), child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: cosmosBackground.of(theme),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Markdown(
+      child: Padding(padding: const EdgeInsets.only(bottom: 20), child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: cosmosBackground.of(theme),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: MarkdownBody(
                 data: message.message,
-                selectable: true,
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(12),
                 extensionSet: md.ExtensionSet(
                   md.ExtensionSet.gitHubFlavored.blockSyntaxes,
                   [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
                 ),
               ),
-            )
-          ],
-        ),),
-      ),
+            ),
+          )
+        ],
+      ),),
     );
   }
 }
