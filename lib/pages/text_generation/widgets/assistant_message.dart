@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:intl/intl.dart';
@@ -31,7 +32,7 @@ class _AssistantMessageState extends State<AssistantMessage> {
       Align(
         alignment: Alignment.centerLeft,
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 20),
+          padding: const EdgeInsets.only(bottom: 8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -56,11 +57,21 @@ class _AssistantMessageState extends State<AssistantMessage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4),
-                    child: Text(
-                      inferenceProvider.project!.name,
-                      style:  TextStyle(
-                        color: subtleTextColor.of(theme),
-                      ),
+                    child: Row(
+                      children: [
+                        Text(
+                          inferenceProvider.project!.name,
+                          style:  TextStyle(
+                            color: subtleTextColor.of(theme),
+                          ),
+                        ),
+                        if (widget.message.time != null) Text(
+                          DateFormat(' | yyyy-MM-dd HH:mm:ss').format(widget.message.time!),
+                          style:  TextStyle(
+                            color: subtleTextColor.of(theme),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   MouseRegion(
@@ -79,8 +90,11 @@ class _AssistantMessageState extends State<AssistantMessage> {
                             data: widget.message.message,
                             selectable: true,
                             shrinkWrap: true,
-                            padding: const EdgeInsets.all(8),
-                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.all(12),
+                            extensionSet: md.ExtensionSet(
+                              md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+                              [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
+                            ),
                           ),
                         ),
                         if (_hovering)
@@ -134,10 +148,10 @@ class _AssistantMessageState extends State<AssistantMessage> {
                                       InfoBar(
                                         title: const Text('Copied to clipboard'),
                                         severity: InfoBarSeverity.info,
-                                            action: IconButton(
-                                              icon: const Icon(FluentIcons.clear),
-                                              onPressed: close,
-                                            ),
+                                        action: IconButton(
+                                          icon: const Icon(FluentIcons.clear),
+                                          onPressed: close,
+                                        ),
                                       ),
                                     );
                                     Clipboard.setData(ClipboardData(text: widget.message.message));
@@ -153,7 +167,7 @@ class _AssistantMessageState extends State<AssistantMessage> {
               ),
             ],
           ),
-        )
+        ),
       ),
     );
   }

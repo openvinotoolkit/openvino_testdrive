@@ -1,3 +1,4 @@
+import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
@@ -41,8 +42,18 @@ class _PlaygroundState extends State<Playground> {
     if (!provider.initialized || provider.response != null) return;
     textController.text = '';
     jumpToBottom(offset: 110); //move to bottom including both
-    // TODO: add error handling
-    provider.message(message).catchError((e) { print(e); });
+    provider.message(message).catchError((e) async {
+      // ignore: use_build_context_synchronously
+      await displayInfoBar(context, builder: (context, close) => InfoBar(
+        title: const Text("An error occurred processing the message"),
+        content: Text(e.toString()),
+        severity: InfoBarSeverity.error,
+        action: IconButton(
+          icon: const Icon(FluentIcons.clear),
+          onPressed: close,
+        ),
+      ));
+    });
   }
 
   @override
@@ -150,7 +161,10 @@ class _PlaygroundState extends State<Playground> {
                                 controller: scrollController,
                                 child: Padding(padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 20), child: Column(
                                   children: provider.messages.map((message) { switch (message.speaker) {
-                                    case Speaker.user: return UserMessage(message);
+                                    case Speaker.user: return Padding(
+                                      padding: const EdgeInsets.only(left: 42),
+                                      child: UserMessage(message),
+                                    );
                                     case Speaker.system: return Text('System: ${message.message}');
                                     case Speaker.assistant: return AssistantMessage(message);
                                   }}).toList(),
@@ -183,52 +197,74 @@ class _PlaygroundState extends State<Playground> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 24),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: Column(
                           children: [
-                            Tooltip(
-                              message: "Create new thread",
-                              child: Button(child: const Icon(FluentIcons.rocket, size: 18,), onPressed: () {}),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
-                                child: Shortcuts(
-                                    shortcuts: <LogicalKeySet, Intent>{
-                                      LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.enter): SubmitMessageIntent(),
-                                      LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.enter): SubmitMessageIntent(),
-                                    },
-                                    child: Actions(
-                                      actions: <Type, Action<Intent>>{
-                                        SubmitMessageIntent: CallbackAction<SubmitMessageIntent>(
-                                          onInvoke: (SubmitMessageIntent intent) => message(textController.text),
-                                        ),
-                                      },
-                                      child: TextBox(
-                                        placeholder: "Type a message...",
-                                        keyboardType: TextInputType.text,
-                                        controller: textController,
-                                        maxLines: null,
-                                        expands: true,
-                                        onSubmitted: message,
-                                        autofocus: true,
-                                      ),
-                                    ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: Tooltip(
+                                    message: "Create new thread",
+                                    child: Button(child: const Icon(FluentIcons.rocket, size: 18,), onPressed: () { provider.reset(); }),
                                   ),
-                              ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                                    child: Shortcuts(
+                                        shortcuts: <LogicalKeySet, Intent>{
+                                          LogicalKeySet(LogicalKeyboardKey.meta, LogicalKeyboardKey.enter): SubmitMessageIntent(),
+                                          LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.enter): SubmitMessageIntent(),
+                                        },
+                                        child: Actions(
+                                          actions: <Type, Action<Intent>>{
+                                            SubmitMessageIntent: CallbackAction<SubmitMessageIntent>(
+                                              onInvoke: (SubmitMessageIntent intent) => message(textController.text),
+                                            ),
+                                          },
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              TextBox(
+                                                placeholder: "Type a message...",
+                                                keyboardType: TextInputType.multiline,
+                                                controller: textController,
+                                                maxLines: null,
+                                                expands: true,
+                                                onSubmitted: message,
+                                                autofocus: true,
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 6, left: 10),
+                                                child: Text(
+                                                  'Press ${Platform.isMacOS ? '⌘' : 'Ctrl'} + Enter to submit, Enter for newline',
+                                                  style: TextStyle(fontSize: 11, color: subtleTextColor.of(theme)),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: Builder(builder: (context) => provider.interimResponse != null
+                                    ? Tooltip(
+                                      message: "Stop",
+                                      child: Button(child: const Icon(FluentIcons.stop, size: 18,), onPressed: () { provider.forceStop(); }),
+                                    )
+                                    : Tooltip(
+                                      message: "Send message",
+                                      child: Button(child: const Icon(FluentIcons.send, size: 18,), onPressed: () { message(textController.text); }),
+                                    )
+                                  ),
+                                )
+                              ]
                             ),
-                            Builder(builder: (context) => provider.interimResponse != null
-                              ? Tooltip(
-                                message: "Stop",
-                                child: Button(child: const Icon(FluentIcons.stop, size: 18,), onPressed: () { provider.forceStop(); }),
-                              )
-                              : Tooltip(
-                                message: "Send message",
-                                child: Button(child: const Icon(FluentIcons.send, size: 18,), onPressed: () { message(textController.text); }),
-                              )
-                            )
-                          ]
+                          ],
                         ),
                       )
                     ],
