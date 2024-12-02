@@ -30,14 +30,13 @@ class _AssistantMessageState extends State<AssistantMessage> {
 
     return Consumer<TextInferenceProvider>(builder: (context, inferenceProvider, child) =>
       Align(
-        alignment: Alignment.centerLeft,
         child: Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(right: 10, bottom: 36),
+                padding: const EdgeInsets.only(right: 10, top: 20),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16.0),
                   child: Container(
