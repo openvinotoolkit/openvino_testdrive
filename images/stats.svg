@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg width="800px" height="800px" viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg">
-    <g fill-rule="evenodd" clip-rule="evenodd" stroke="none" stroke-width="1">
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M746.667 106.667V1493.33H1173.33V106.667H746.667ZM1056 224H864V1376H1056V224ZM106.667 533.333H533.333V1493.33H106.667V533.333ZM224 650.667H416V1376H224V650.667Z"/>
-        <path d="M1920 1706.67H0V1824H1920V1706.67Z"/>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M1386.67 746.667H1813.33V1493.33H1386.67V746.667ZM1504 864H1696V1376H1504V864Z"/>
-    </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16" height="17" fill="none" version="1.1" viewBox="0 0 16 17" xmlns="http://www.w3.org/2000/svg">
+ <path d="m1 7.5c0 3.4216 2.6438 6.2257 6 6.4811v1.0025c-3.909-0.2573-7-3.5095-7-7.4836 0-4.1421 3.3579-7.5 7.5-7.5 3.9741 0 7.2263 3.091 7.4836 7.0001-0.7334 0.0058-1.3728 0.4065-1.7161 0.9999h-4.7675c-0.8284 0-1.5-0.6716-1.5-1.5v-5.4811c-3.3562 0.25532-6 3.0595-6 6.4811zm12.981-0.5c-0.2428-3.1912-2.7899-5.7383-5.9811-5.9811v5.4811c0 0.2761 0.2239 0.5 0.5 0.5zm0.0189 2c0-0.5523 0.4477-1 1-1s1 0.4477 1 1v7c0 0.5523-0.4477 1-1 1s-1-0.4477-1-1zm-6 4c0-0.5523 0.4477-1 1-1s1 0.4477 1 1v3c0 0.5523-0.4477 1-1 1s-1-0.4477-1-1zm3-2c0-0.5523 0.4477-1 1-1s1 0.4477 1 1v5c0 0.5523-0.4477 1-1 1s-1-0.4477-1-1z" fill="#424242"/>
 </svg>
