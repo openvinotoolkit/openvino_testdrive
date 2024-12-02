@@ -38,14 +38,6 @@ class _GroupItemState extends State<GroupItem> {
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
 
-    if (widget.editable) {
-      return TextBox(
-        controller: controller,
-        onSubmitted: (value) {
-          widget.onRename?.call(value);
-        },
-      );
-    }
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -55,8 +47,9 @@ class _GroupItemState extends State<GroupItem> {
         widget.onMakeEditable?.call();
       },
       child: Container(
-        margin: const EdgeInsets.all(2),
-        padding: const EdgeInsets.only(left: 20),
+        padding: const EdgeInsets.all(4),
+        margin: const EdgeInsets.all(4),
+        height: 40,
         decoration: BoxDecoration(
           border: Border(
             left: BorderSide(
@@ -65,14 +58,30 @@ class _GroupItemState extends State<GroupItem> {
             ),
           )
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(widget.group.name),
-            IconButton(icon: const Icon(FluentIcons.delete), onPressed: () {
-                widget.onDelete?.call();
-            }),
-          ],
+        child: Builder(
+          builder: (context) {
+            if (widget.editable) {
+              return TextBox(
+                controller: controller,
+                onSubmitted: (value) {
+                  widget.onRename?.call(value);
+                },
+              );
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(left: 10, bottom: 5.5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(widget.group.name),
+                  IconButton(icon: const Icon(FluentIcons.delete), onPressed: () {
+                      widget.onDelete?.call();
+                  }),
+                ],
+              ),
+            );
+          }
         ),
       ),
     );

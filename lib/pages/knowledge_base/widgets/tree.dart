@@ -29,11 +29,11 @@ class _TreeState extends State<Tree> {
                 children: [
                   for (final group in data.groups)
                     GroupItem(
-                      isActive: data.activeGroup == group,
+                      isActive: data.activeGroup == group.internalId,
                       editable: data.isEditingId == group.internalId,
                       group: group,
                       onActivate: () {
-                        data.activeGroup = group;
+                        data.activeGroup = group.internalId;
                       },
                       onRename: (value) => data.renameGroup(group, value),
                       onMakeEditable: () {

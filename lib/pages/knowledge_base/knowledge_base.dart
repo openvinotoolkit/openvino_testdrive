@@ -68,10 +68,13 @@ class KnowledgeBase extends StatelessWidget {
           Expanded(
             child: Consumer<KnowledgeBaseProvider>(
               builder: (context, data, child) {
-                if (data.activeGroup == null) {
-                  return const Center(child: Text("Select a group from the list to the left"));
+                if (data.activeGroup != null) {
+                  final group = data.groupBox.get(data.activeGroup!);
+                  if (group != null) {
+                    return DocumentsList(group: group, key: Key(group.internalId.toString()));
+                  }
                 }
-                return DocumentsList(group: data.activeGroup!);
+                return const Center(child: Text("Select a group from the list to the left"));
               }
             ),
           ),

@@ -8,14 +8,15 @@ class KnowledgeBaseProvider extends ChangeNotifier {
 
   List<KnowledgeGroup> _groups = [];
   List<KnowledgeGroup> get groups => _groups;
+
   set groups(List<KnowledgeGroup> value) {
     _groups = value;
     notifyListeners();
   }
 
-  KnowledgeGroup? _activeGroup;
-  KnowledgeGroup? get activeGroup => _activeGroup;
-  set activeGroup(KnowledgeGroup? value) {
+  int? _activeGroup;
+  int? get activeGroup => _activeGroup;
+  set activeGroup(int? value) {
     _activeGroup = value;
     notifyListeners();
   }
@@ -47,16 +48,19 @@ class KnowledgeBaseProvider extends ChangeNotifier {
   void addGroup() {
     isEditingId = groupBox.put(KnowledgeGroup("New group"));
     groups = groupBox.getAll();
+    if (groups.length == 1) {
+      activeGroup = isEditingId;
+    }
   }
 
   void setActiveGroup(KnowledgeGroup group) {
-    activeGroup = group;
+    activeGroup = group.internalId;
   }
 
   KnowledgeBaseProvider({required this.groupBox}) {
     groupBox.getAllAsync().then((value) {
         groups = value;
-        activeGroup = groups.firstOrNull;
+        activeGroup = groups.firstOrNull?.internalId;
     });
   }
 }
