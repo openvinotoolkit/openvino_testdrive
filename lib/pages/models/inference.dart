@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/computer_vision/computer_vision.dart';
+import 'package:inference/pages/text_generation/text_generation.dart';
 import 'package:inference/pages/text_to_image/text_to_image_page.dart';
 import 'package:inference/pages/transcription/transcription.dart';
 import 'package:inference/project.dart';
@@ -14,7 +15,7 @@ class InferencePage extends StatelessWidget {
       case ProjectType.image:
         return ComputerVisionPage(project);
       case ProjectType.text:
-        return Container();
+        return TextGenerationPage(project);
       case ProjectType.speech:
         return TranscriptionPage(project);
       case ProjectType.textToImage:

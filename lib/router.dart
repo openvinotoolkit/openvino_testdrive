@@ -7,8 +7,6 @@ import 'package:inference/pages/home/home.dart';
 import 'package:inference/pages/import/import.dart';
 import 'package:inference/pages/models/models.dart';
 import 'package:inference/project.dart';
-import 'package:inference/providers/download_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:inference/pages/models/inference.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();

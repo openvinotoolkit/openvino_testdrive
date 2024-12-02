@@ -51,7 +51,7 @@ class Model {
     );
   }
 
-  Future<Project> convertToProject() async {
+  Future<PublicProject> convertToProject() async {
     final directory = await getApplicationSupportDirectory();
     final projectId = const Uuid().v4();
     final storagePath = platformContext.join(directory.path, projectId.toString());
