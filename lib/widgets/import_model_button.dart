@@ -52,7 +52,7 @@ class ImportModelButton extends StatelessWidget {
     return FilledDropDownButton(
       title: const Text('Import model'),
       items: [
-        MenuFlyoutItem(text: const Text('Hugging Face'), onPressed: () { GoRouter.of(context).push('/models/import'); }),
+        MenuFlyoutItem(text: const Text('Hugging Face'), onPressed: () { GoRouter.of(context).go('/models/import'); }),
         MenuFlyoutItem(text: const Text('Local disk'), onPressed: () { addProject(context); }),
       ]
     );

@@ -111,7 +111,7 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
                         child: const Text("Close"),
                         onPressed: () =>  GoRouter.of(context).canPop()
                           ? GoRouter.of(context).pop()
-                          : GoRouter.of(context).push('/models'),
+                          : GoRouter.of(context).go('/models'),
                       ),
                     ),
                   ]
