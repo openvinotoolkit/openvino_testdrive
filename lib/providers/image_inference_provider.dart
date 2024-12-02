@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:inference/image_graph_builder.dart';
+import 'package:inference/utils/image_graph_builder.dart';
 import 'package:inference/interop/graph_runner.dart';
 import 'package:inference/interop/image_inference.dart';
 import 'package:inference/interop/openvino_bindings.dart';

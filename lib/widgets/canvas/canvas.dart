@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui' as ui;
@@ -6,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:inference/annotation.dart';
-import 'package:inference/canvas/canvas_painter.dart';
+import 'package:inference/widgets/canvas/canvas_painter.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 import 'package:inference/project.dart' as project;
 
