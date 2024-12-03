@@ -73,11 +73,12 @@ jobs:
 
       # Step 9: Install vcpkg and ffmpeg
       - name: Install vcpkg and ffmpeg
+        shell: powershell
         run: |
-          git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+          if (!(Test-Path "C:\vcpkg")) { git clone https://github.com/microsoft/vcpkg.git C:\vcpkg }
           C:\vcpkg\bootstrap-vcpkg.bat
-          C:\vcpkg\vcpkg install ffmpeg
-        shell: cmd
+          cd openvino_bindings/third_party
+          C:\vcpkg\vcpkg install
 
       # Step 10: Download and Install OpenVINO Runtime
       - name: Download and Install OpenVINO Runtime 24.5.0

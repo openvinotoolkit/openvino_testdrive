@@ -13,7 +13,7 @@ import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/device_selector.dart';
 import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
-import 'package:inference/canvas/canvas.dart';
+import 'package:inference/widgets/canvas/canvas.dart';
 import 'package:provider/provider.dart';
 
 import 'dart:ui' as ui;
@@ -135,7 +135,7 @@ class _LiveInferenceState extends State<LiveInference> {
             ],
           ),
         ),
-        const ModelProperties(),
+        ModelProperties(project: widget.project),
       ],
     );
   }

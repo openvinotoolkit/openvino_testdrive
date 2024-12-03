@@ -1,10 +1,19 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/widgets/elevation.dart';
+import 'package:go_router/go_router.dart';
 
 class FeaturedCard extends StatelessWidget {
   final Model model;
   const FeaturedCard({required this.model, super.key});
+
+  void downloadModel(BuildContext context) {
+    model.convertToProject().then((project) {
+      if (context.mounted) {
+        GoRouter.of(context).go('/models/download', extra: project);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +81,7 @@ class FeaturedCard extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: Padding(
                         padding: const EdgeInsets.only(top: 2),
-                        child: IconButton(icon: const Icon(FluentIcons.pop_expand, size: 14), onPressed: () {}),
+                        child: IconButton(icon: const Icon(FluentIcons.pop_expand, size: 14), onPressed: () => downloadModel(context)),
                       ),
                       ),
                     ],

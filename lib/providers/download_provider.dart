@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:inference/deployment_processor.dart';
 import 'package:inference/project.dart';
@@ -22,11 +19,11 @@ class DownloadStats {
 }
 
 class DownloadProvider extends ChangeNotifier {
-  final Project? project;
   final Map<String, DownloadState> _downloads = {};
 
   CancelToken? _cancelToken;
-  DownloadProvider(this.project);
+  Function? onCancel;
+  DownloadProvider();
 
   Future<void> queue(Map<String, String> downloads, String? token) async{
     List<Future> promises = [];
@@ -39,7 +36,7 @@ class DownloadProvider extends ChangeNotifier {
       _downloads[url] = state;
       final destination = downloads[url];
       Map<String, String> headers = {};
-      if (token != null) {
+      if (token != null && token.isNotEmpty) {
         headers["Authorization"] = "Bearer $token";
       }
       final promise = dio.download(url, destination,
@@ -51,15 +48,16 @@ class DownloadProvider extends ChangeNotifier {
             state.total = total;
             notifyListeners();
           }
-      });
-      promise.catchError((e) {
+        },
+      ).catchError((e) {
         if (e is DioException && e.type == DioExceptionType.cancel) {
           print("Download cancelled: $url");
+          return Response(requestOptions: RequestOptions(path: url));
         } else {
           _cancelToken?.cancel();
+          throw e;
         }
-      });
-      promise.then((_) => state.done);
+      }).then((_) => state.done);
       promises.add(promise);
     }
 
@@ -92,7 +90,7 @@ class DownloadProvider extends ChangeNotifier {
 
   void cancel() {
     _cancelToken?.cancel();
-    deleteProjectData(project!);
+    onCancel?.call();
   }
 
   @override

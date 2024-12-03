@@ -30,6 +30,12 @@ typedef struct {
 } Device;
 
 typedef struct {
+  float start_ts;
+  float end_ts;
+  const char* text;
+} TranscriptionChunk;
+
+typedef struct {
     enum StatusEnum status;
     const char* message;
 } Status;
@@ -98,6 +104,15 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    Metrics metrics;
+    TranscriptionChunk* value;
+    int size;
+    const char* text;
+} StatusOrWhisperModelResponse;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     TTIMetrics metrics;
     const char* value;
 } StatusOrTTIModelResponse;
@@ -124,6 +139,8 @@ EXPORT void freeStatusOrString(StatusOrString *status);
 EXPORT void freeStatusOrImageInference(StatusOrImageInference *status);
 EXPORT void freeStatusOrLLMInference(StatusOrLLMInference *status);
 EXPORT void freeStatusOrSpeechToText(StatusOrSpeechToText *status);
+EXPORT void freeStatusOrModelResponse(StatusOrModelResponse *status);
+EXPORT void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *status);
 EXPORT void freeStatusOrDevices(StatusOrDevices *status);
 EXPORT void freeStatusOrEmbeddings(StatusOrEmbeddings *status);
 
@@ -162,6 +179,11 @@ EXPORT StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer inst
 EXPORT Status* sentenceTransformerClose(CSentenceTransformer instance);
 
 EXPORT StatusOrString* pdfExtractText(const char* pdf_path);
+
+EXPORT StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device);
+EXPORT Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path);
+EXPORT StatusOrInt* speechToTextVideoDuration(CSpeechToText instance);
+EXPORT StatusOrWhisperModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language);
 
 EXPORT StatusOrDevices* getAvailableDevices();
 Status* handle_exceptions();

@@ -7,6 +7,7 @@ import 'package:inference/theme_fluent.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/public_models.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 
 
@@ -14,7 +15,7 @@ const String title = 'OpenVINO TestDrive';
 
 void testConnection() async {
   final dio = Dio(BaseOptions(connectTimeout: Duration(seconds: 10)));
-  
+
   try {
     await dio.get(collections[0].path);
   } on DioException catch(ex) {
@@ -27,6 +28,7 @@ void testConnection() async {
 
 void main() async  {
   WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
   testConnection();
   await ObjectBox.create();
   runApp(const App());

@@ -124,8 +124,6 @@ new_local_repository(
     path = "./third_party/vcpkg_installed/x64-windows",
 )
 
-
-
 git_repository(
     name = "podofo_mac",
     build_file = "//third_party/podofo:podofo.BUILD",

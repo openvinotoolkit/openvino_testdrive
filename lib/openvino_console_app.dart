@@ -1,37 +1,13 @@
 import 'package:go_router/go_router.dart';
-import 'package:flutter/material.dart';
 import 'package:inference/deployment_processor.dart';
-import 'package:inference/import/import_page.dart';
-import 'package:inference/inference/inference_page.dart';
 import 'package:inference/interop/device.dart';
 import 'package:inference/interop/image_inference.dart';
-import 'package:inference/project.dart';
-import 'package:inference/projects/projects_page.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-
-final GoRouter _router = GoRouter(
-  routes: <RouteBase>[
-    GoRoute(
-      path: '/',
-      pageBuilder: (context, state) => const NoTransitionPage(child: ProjectsPage()),
-      routes: <RouteBase>[
-        GoRoute(
-          path: 'inference',
-          pageBuilder: (context, state) => NoTransitionPage(child: InferencePage(state.extra! as Project)),
-        ),
-        GoRoute(
-          path: 'import',
-          pageBuilder: (context, state) => const NoTransitionPage(child: ImportPage()),
-        ),
-      ],
-    ),
-  ],
-);
 
 
 class OpenVINOTestDriveApp extends StatefulWidget {
@@ -63,7 +39,6 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
     setupErrors();
 
     Device.getDevices().then((devices) {
-        devices.forEach((p) => print("${p.id}, ${p.name}"));
       PreferenceProvider.availableDevices = devices;
     });
 

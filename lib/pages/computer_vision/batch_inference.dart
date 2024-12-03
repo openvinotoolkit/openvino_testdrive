@@ -99,7 +99,7 @@ class BatchInference extends StatelessWidget {
                   ),
                 ),
               ),
-              const ModelProperties(),
+              ModelProperties(project: batchInference.imageInference.project),
             ],
           );
         }

@@ -1,9 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:inference/project.dart';
+import 'package:inference/public_model_info.dart';
 import 'package:inference/utils/get_public_thumbnail.dart';
 import 'package:inference/utils.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class Model {
   final String name;
@@ -44,6 +49,48 @@ class Model {
       description: json['description'],
       task: json['task'],
     );
+  }
+
+  Future<PublicProject> convertToProject() async {
+    final directory = await getApplicationSupportDirectory();
+    final projectId = const Uuid().v4();
+    final storagePath = platformContext.join(directory.path, projectId.toString());
+    await Directory(storagePath).create(recursive: true);
+    final projectType = parseProjectType(task);
+
+    final project = PublicProject(
+      projectId,
+      "OpenVINO/$id",
+      "1.0.0",
+      name,
+      DateTime.now().toIso8601String(),
+      projectType,
+      storagePath,
+      thumbnail,
+      PublicModelInfo(
+        id,
+        DateTime.now().toIso8601String(),
+        0,
+        0,
+        task,
+        const Collection("https://huggingface.co/api/collections/OpenVINO/llm-6687aaa2abca3bbcec71a9bd", "", "text"),
+      ),
+    );
+
+    project.tasks.add(
+      Task(
+        genUUID(),
+        task,
+        task,
+        [],
+        null,
+        [],
+        "",
+        "",
+      ),
+    );
+
+    return project;
   }
 }
 

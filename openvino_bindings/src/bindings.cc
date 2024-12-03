@@ -4,8 +4,8 @@
 #include <nlohmann/json.hpp>
 #include <openvino/openvino.hpp>
 
-//#include "src/audio/speech_to_text.h"
 #include "src/pdf/sentence_extractor.h"
+#include "src/audio/speech_to_text.h"
 #include "src/image/image_inference.h"
 #include "src/mediapipe/graph_runner.h"
 #include "src/mediapipe/serialization/serialization_calculators.h"
@@ -39,6 +39,19 @@ void freeStatusOrString(StatusOrString *status) {
 
 void freeStatusOrImageInference(StatusOrString *status) {
     //std::cout << "Freeing StatusOrImageInference" << std::endl;
+    delete status;
+}
+
+void freeStatusOrModelResponse(StatusOrModelResponse *status) {
+    //std::cout << "Freeing StatusOrImageInference" << std::endl;
+    delete status;
+}
+
+void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *status) {
+    if (status->status == StatusEnum::OkStatus) {
+        delete [] status->value;
+        status->value = NULL;        // Prevent dangling pointers
+    }
     delete status;
 }
 
@@ -351,8 +364,8 @@ StatusOrSentenceTransformer* sentenceTransformerOpen(const char* model_path, con
         auto except = handle_exceptions();
         return new StatusOrSentenceTransformer{except->status, except->message};
     }
-
 }
+
 StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, const char* prompt) {
     try {
         auto object = reinterpret_cast<SentenceTransformerPipeline*>(instance);
@@ -365,10 +378,60 @@ StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, c
     }
 
 }
+
 Status* sentenceTransformerClose(CSentenceTransformer instance) {
     auto inference = reinterpret_cast<SentenceTransformerPipeline*>(instance);
     delete inference;
     return new Status{OkStatus};
+}
+
+StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device) {
+    try {
+        auto instance = new SpeechToText(model_path, device);
+        return new StatusOrSpeechToText{OkStatus, "", instance};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrSpeechToText{except->status, except->message};
+    }
+}
+
+Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path) {
+    try {
+        auto object = reinterpret_cast<SpeechToText*>(instance);
+        object->load_video(video_path);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
+StatusOrInt* speechToTextVideoDuration(CSpeechToText instance) {
+    try {
+        auto object = reinterpret_cast<SpeechToText*>(instance);
+        object->video_duration();
+        // Deal with long in the future
+        return new StatusOrInt{OkStatus, "", (int)object->video_duration()};
+    } catch (...) {
+        return new StatusOrInt{OkStatus, ""};
+    }
+}
+
+StatusOrWhisperModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language) {
+    try {
+        auto object = reinterpret_cast<SpeechToText*>(instance);
+        auto transcription_result = object->transcribe(start, duration, language);
+        auto chunks = transcription_result.chunks.value();
+        std::string text = transcription_result;
+        TranscriptionChunk* result = new TranscriptionChunk[chunks.size()];
+        for (int i = 0; i < chunks.size(); i++) {
+            auto r = chunks[i];
+            result[i] = TranscriptionChunk{r.start_ts + start, r.end_ts + start, strdup(r.text.c_str())};
+        }
+        return new StatusOrWhisperModelResponse{OkStatus, "", convertToMetricsStruct(transcription_result.perf_metrics), result, (int)chunks.size(), strdup(text.c_str())};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrWhisperModelResponse{except->status, except->message};
+    }
 }
 
 //void report_rss() {
