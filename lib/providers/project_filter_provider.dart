@@ -1,5 +1,5 @@
+import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:inference/config.dart';
 import 'package:inference/project.dart';
 import 'package:inference/public_model_info.dart';
 
@@ -10,18 +10,20 @@ class Option {
   const Option(this.name, this.filter);
 
   static Map<String, List<Option>> get filterOptions {
-    var options = {"Image": [
+    var options = {
+      "Image": [
         const Option("Detection", "detection"),
         const Option("Classification", "classification"),
         const Option("Segmentation", "segmentation"),
         const Option("Anomaly detection","anomaly")
       ],
-    };
-    if (!Config.geti) {
-      options["Text"] = [
+      "Text": [
         const Option("Text generation", "text")
-      ];
-    }
+      ],
+      "Audio": [
+        const Option("Speech to text", "speech")
+      ]
+    };
 
     return options;
   }
@@ -29,6 +31,13 @@ class Option {
 
 
 class ProjectFilterProvider extends ChangeNotifier {
+  bool _order = false;
+  bool get order => _order;
+  set order(bool o) {
+    _order = o;
+    notifyListeners();
+  }
+
   Option? _option;
 
   Option? get option => _option;
@@ -68,7 +77,10 @@ class ProjectFilterProvider extends ChangeNotifier {
         return t.taskType.contains(option!.filter);
       }).isNotEmpty);
 
-    return filtered.toList();
+    final filteredList = filtered.toList();
+
+    filteredList.sort((a,b) => a.name.compareTo(b.name) * (order ? -1 : 1));
+    return filteredList;
   }
 
   List<PublicModelInfo> applyFilterOnPublicModelInfo(List<PublicModelInfo> projects) {

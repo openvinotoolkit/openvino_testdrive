@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inference/providers/project_filter_provider.dart';
 import 'package:inference/theme.dart';
-import 'package:provider/provider.dart';
 
 class GetiSearchBar extends StatefulWidget {
   final Function(String) onChange;
@@ -51,7 +49,7 @@ class _GetiSearchBarState extends State<GetiSearchBar> {
             controller: controller,
             textAlign: TextAlign.start,
             style: const TextStyle(
-              color: textColor,
+              color: Colors.white,
               fontSize: 12,
             ),
             decoration: InputDecoration(

@@ -117,7 +117,7 @@ ProjectType parseProjectType(String name) {
   if (name == "image") {
     return ProjectType.image;
   }
-  if (name == "text"){
+  if (name == "text" || name == "text-generation"){
     return ProjectType.text;
   }
   if (name == "textToImage"){
@@ -127,7 +127,7 @@ ProjectType parseProjectType(String name) {
     return ProjectType.speech;
   }
 
-  throw UnimplementedError();
+  throw UnimplementedError(name);
 }
 
 String projectTypeToString(ProjectType type) {
@@ -156,6 +156,16 @@ class Project {
   bool isPublic;
   bool hasSample = false;
 
+  int? size;
+
+  String get architecture {
+    if (tasks.length > 1) {
+      return "Task Chain";
+    }
+    return tasks.first.architecture;
+  }
+
+
   List<Label> labels() {
     return tasks.map((t) => t.labels).expand((i) => i).where((label) => !label.isEmpty).toList();
   }
@@ -165,7 +175,10 @@ class Project {
   }
 
   String taskName() {
-    return tasks.map((task) => task.name).join('->');
+    if (tasks.length > 1) {
+      return "Task Chain";
+    }
+    return tasks.first.name;
   }
 
   List<Label> get labelDefinitions {
@@ -174,7 +187,12 @@ class Project {
 
   bool get isDownloaded => true;
 
-  Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic);
+  Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic) {
+    final dir = Directory(storagePath);
+    if (dir.existsSync()) {
+      size = dir.listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
+    }
+  }
 
   Object toMap() {
     return {
@@ -261,7 +279,6 @@ class GetiProject extends Project {
 
   @override
   bool operator ==(rhs) {
-    print("operator: ");
     if (rhs is! Project){
       return false;
     }

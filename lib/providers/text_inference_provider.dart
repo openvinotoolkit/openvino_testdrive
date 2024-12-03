@@ -33,7 +33,8 @@ class Message {
   final Speaker speaker;
   final String message;
   final Metrics? metrics;
-  const Message(this.speaker, this.message, this.metrics);
+  final DateTime? time;
+  const Message(this.speaker, this.message, this.metrics, this.time);
 }
 
 class TextInferenceProvider extends ChangeNotifier {
@@ -137,7 +138,7 @@ class TextInferenceProvider extends ChangeNotifier {
     if (_response == null) {
       return null;
     }
-    return Message(Speaker.assistant, response!, null);
+    return Message(Speaker.assistant, response!, null, null);
   }
 
   List<Message> get messages {
@@ -149,12 +150,12 @@ class TextInferenceProvider extends ChangeNotifier {
 
   Future<void> message(String message) async {
     _response = "...";
-    _messages.add(Message(Speaker.user, message, null));
+    _messages.add(Message(Speaker.user, message, null, DateTime.now()));
     notifyListeners();
     final response = await _inference!.prompt(message, temperature, topP);
 
     if (_messages.isNotEmpty) {
-      _messages.add(Message(Speaker.assistant, response.content, response.metrics));
+      _messages.add(Message(Speaker.assistant, response.content, response.metrics, DateTime.now()));
     }
     _response = null;
     n = 0;
@@ -173,7 +174,14 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   void forceStop() {
-    _inference?.forceStop(); //TODO
+    _inference?.forceStop();
+    if (_response != '...') {
+      _messages.add(Message(Speaker.assistant, _response!, null, DateTime.now()));
+    }
+    _response = null;
+    if (hasListeners) {
+      notifyListeners();
+    }
   }
 
   void reset() {

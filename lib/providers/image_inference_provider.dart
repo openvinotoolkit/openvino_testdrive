@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:inference/image_graph_builder.dart';
+import 'package:inference/utils/image_graph_builder.dart';
 import 'package:inference/interop/graph_runner.dart';
 import 'package:inference/interop/image_inference.dart';
 import 'package:inference/interop/openvino_bindings.dart';
@@ -40,6 +40,10 @@ class ImageInferenceProvider extends ChangeNotifier {
     _inference = await GraphRunner.init(graph);
     loaded.complete();
     notifyListeners();
+  }
+
+  bool sameProps(Project project, String device) {
+    return this.project == project && this.device == device;
   }
 
   Future<ImageInferenceResult> infer(Uint8List file, SerializationOutput output) async {
