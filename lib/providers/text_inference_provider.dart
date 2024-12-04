@@ -3,7 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:inference/interop/generated_bindings.dart';
 import 'package:inference/interop/llm_inference.dart';
+import 'package:inference/langchain/object_box/embedding_entity.dart';
+import 'package:inference/langchain/object_box_store.dart';
+import 'package:inference/langchain/openvino_embeddings.dart';
+import 'package:inference/langchain/openvino_llm.dart';
 import 'package:inference/project.dart';
+import 'package:langchain/langchain.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 enum Speaker { system, assistant, user }
 
@@ -37,6 +44,43 @@ class Message {
   const Message(this.speaker, this.message, this.metrics, this.time);
 }
 
+Future<Runnable> buildChain(LLMInference inference, KnowledgeGroup? group) async {
+  final platformContext = Context(style: Style.platform);
+  final directory = await getApplicationSupportDirectory();
+  const device = "CPU";
+  final embeddingsModelPath = platformContext.join(directory.path, "test", "all-MiniLM-L6-v2", "fp16");
+  final embeddingsModel = await OpenVINOEmbeddings.init(embeddingsModelPath, device);
+
+  if (group != null) {
+    final vs = ObjectBoxStore(embeddings:  embeddingsModel, group: group);
+    final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: false));
+
+
+    final promptTemplate = ChatPromptTemplate.fromTemplate('''
+<|system|>
+Answer the question based only on the following context without specifically naming that it's from that context:
+{context}
+
+<|user|>
+{question}
+<|assistant|>
+  ''');
+    final retriever = vs.asRetriever();
+
+    return Runnable.fromMap<String>({
+      'context': retriever | Runnable.mapInput((docs) => docs.map((d) => d.pageContent).join('\n')),
+      'question': Runnable.passthrough(),
+    }) | promptTemplate | model | const StringOutputParser();
+  } else {
+    final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: true));
+    final promptTemplate = ChatPromptTemplate.fromTemplate("{question}");
+
+    return Runnable.fromMap<String>({
+      'question': Runnable.passthrough(),
+    }) | promptTemplate | model | const StringOutputParser();
+  }
+}
+
 class TextInferenceProvider extends ChangeNotifier {
 
   Completer<void> loaded = Completer<void>();
@@ -47,6 +91,15 @@ class TextInferenceProvider extends ChangeNotifier {
   Project? get project => _project;
   String? get device => _device;
   Metrics? get metrics => _messages.lastOrNull?.metrics;
+
+  Future<Runnable>? chain;
+
+  KnowledgeGroup? _knowledgeGroup;
+  KnowledgeGroup? get knowledgeGroup => _knowledgeGroup;
+  set knowledgeGroup(KnowledgeGroup? group) {
+    _knowledgeGroup = group;
+    notifyListeners();
+  }
 
   double _temperature = 1;
   double get temperature => _temperature;
@@ -73,8 +126,8 @@ class TextInferenceProvider extends ChangeNotifier {
 
   Future<void> loadModel() async {
     if (project != null && device != null) {
-      _inference = await LLMInference.init(project!.storagePath, device!)
-        ..setListener(onMessage);
+      _inference = await LLMInference.init(project!.storagePath, device!);
+      chain = buildChain(_inference!, knowledgeGroup);
       loaded.complete();
       notifyListeners();
     }
@@ -149,13 +202,24 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   Future<void> message(String message) async {
+
     _response = "...";
     _messages.add(Message(Speaker.user, message, null, DateTime.now()));
     notifyListeners();
-    final response = await _inference!.prompt(message, true, temperature, topP);
+    chain = buildChain(_inference!, knowledgeGroup);
+    final runnable = (await chain)!;
+    //final response = await _inference!.prompt(message, true, temperature, topP);
+
+    String modelOutput = "";
+    await for (final output in runnable.stream(message)) {
+      final token = output.toString();
+      modelOutput += token;
+      onMessage(token);
+    }
+    print("end...");
 
     if (_messages.isNotEmpty) {
-      _messages.add(Message(Speaker.assistant, response.content, response.metrics, DateTime.now()));
+      _messages.add(Message(Speaker.assistant, modelOutput, null, DateTime.now()));
     }
     _response = null;
     n = 0;

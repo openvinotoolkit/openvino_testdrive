@@ -6,6 +6,7 @@ import 'package:inference/interop/sentence_transformer.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/objectbox.g.dart';
+import 'package:inference/pages/knowledge_base/widgets/experiment.dart';
 import 'package:inference/pages/knowledge_base/widgets/import_dialog.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/theme_fluent.dart';
