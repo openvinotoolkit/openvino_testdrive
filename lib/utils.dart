@@ -3,8 +3,11 @@ import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:inference/config.dart';
+import 'package:inference/deployment_processor.dart';
+import 'package:inference/project.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -53,6 +56,15 @@ ${stack.toString()}
       File(errorPath).writeAsStringSync(contents, mode: FileMode.append);
       return true;
     };
+}
+
+Future<void> downloadProject(Project project) async {
+  final file = await FilePicker.platform.saveFile(
+    dialogTitle: "Please select an output location:",
+  );
+  if (file != null) {
+    await copyProjectData(project, file);
+  }
 }
 
 extension FileFormatter on num {
