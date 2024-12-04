@@ -36,9 +36,14 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
           !textInferenceProvider.sameProps(widget.project, preferences.device);
         if (init) {
           final textInferenceProvider = TextInferenceProvider(widget.project, preferences.device);
-          textInferenceProvider.loadModel().catchError((e) {
-            // TODO: Error handling
-            print(e);
+          textInferenceProvider.loadModel().catchError((e) async {
+            // ignore: use_build_context_synchronously
+            await displayInfoBar(context, builder: (context, close) => InfoBar(
+              title: const Text('Error loading model'),
+              content: Text(e.toString()),
+              severity: InfoBarSeverity.error,
+              action: IconButton(icon: const Icon(FluentIcons.clear), onPressed: close),
+            ));
           });
           return textInferenceProvider;
         }

@@ -11,6 +11,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   screen_brightness_windows
   super_native_extensions
   system_theme
+  url_launcher_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
