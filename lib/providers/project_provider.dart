@@ -25,9 +25,7 @@ class ProjectProvider extends ChangeNotifier {
 
     void addProjects(List<Project> projects) {
         for (final project in projects) {
-            if (_projects.firstWhereOrNull((p) => p.id == project.id) == null) {
-                _projects.add(project);
-            }
+            _projects.add(project);
         }
         notifyListeners();
     }

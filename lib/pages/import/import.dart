@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:go_router/go_router.dart';
 import 'package:inference/pages/import/huggingface.dart';
+import 'package:inference/pages/import/widgets/import_geti_model_dialog.dart';
 
 class ImportPage extends StatefulWidget {
   const ImportPage({super.key});
@@ -35,7 +37,6 @@ class _ImportPageState extends State<ImportPage> {
               ),
             ],
           ),
-          //customPane: CustomNavigationPane(),
           selected: selected,
           onChanged: (i) => setState(() {selected = i;}),
           displayMode: PaneDisplayMode.top,
@@ -45,10 +46,20 @@ class _ImportPageState extends State<ImportPage> {
               title: const Text("Huggingface"),
               body: const  Huggingface(),
             ),
-            PaneItem(
+            PaneItemAction(
               icon: const Icon(FluentIcons.project_collection),
               title: const Text("Local disk"),
-              body: Container(),
+              onTap: () => showImportGetiModelDialog(context,
+                callback: (projects) {
+                  if (projects != null && projects.isNotEmpty) {
+                    if (projects.length == 1) {
+                      GoRouter.of(context).go("/models/inference", extra: projects.first);
+                    } else {
+                      GoRouter.of(context).pop();
+                    }
+                  }
+                }
+              ),
             ),
           ],
         )

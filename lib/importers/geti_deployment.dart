@@ -57,14 +57,13 @@ class GetiDeploymentProcessor extends Importer {
               platformContext.join(project!.storagePath, 'thumbnail.jpg')))
         .execute();
 
-    final taskFutures = project!.tasks
-        .map((task) => processTask(task));
+    for (final task in project!.tasks) {
+      await processTask(task);
+    }
     const encoder = JsonEncoder.withIndent("  ");
     File(platformContext.join(project!.storagePath, "project.json"))
         .writeAsString(encoder.convert(project!.toMap()));
-    Future.wait(taskFutures).then((_) {
-      project!.loaded.complete();
-    });
+    project!.loaded.complete();
   }
 
   @override
