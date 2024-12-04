@@ -5,6 +5,7 @@ import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
 import 'package:inference/pages/transcription/performance_metrics.dart';
 import 'package:inference/pages/transcription/playground.dart';
+import 'package:inference/utils.dart';
 import 'package:provider/provider.dart';
 
 class TranscriptionPage extends StatefulWidget {
@@ -97,6 +98,13 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: FilledButton(
+                      child: const Text("Download"),
+                      onPressed: () => downloadProject(widget.project),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(4),
                     child: OutlinedButton(

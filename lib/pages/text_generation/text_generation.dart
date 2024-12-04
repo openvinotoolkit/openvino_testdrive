@@ -5,6 +5,7 @@ import 'package:inference/pages/text_generation/playground.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/text_inference_provider.dart';
+import 'package:inference/utils.dart';
 import 'package:provider/provider.dart';
 
 class TextGenerationPage extends StatefulWidget {
@@ -104,6 +105,13 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: FilledButton(
+                        child: const Text("Download"),
+                        onPressed: () => downloadProject(widget.project),
+                      ),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(4),
                       child: OutlinedButton(
