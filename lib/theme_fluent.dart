@@ -110,6 +110,10 @@ const cosmosBackground = DarkLightColor(Color(0xFFEFEAFF), Color(0xFF463d66));
 const userMessageColor = DarkLightColor(Color(0xFFe0d6fd), Color(0xFF463D66));
 const modelMessageColor = DarkLightColor(Color(0xFFF5F5F5), Color(0xFF343434));
 
+final AccentColor electricCoral = AccentColor.swatch(const {
+  'normal': Color(0xFFFE5A80),
+});
+
 final AccentColor electricCosmos = AccentColor.swatch(const {
   'normal': Color(0xFF7000FF),
 });

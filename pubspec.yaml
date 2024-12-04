@@ -62,6 +62,7 @@ dependencies:
   media_kit_video: ^1.2.5 # For video rendering.
   media_kit_libs_video: ^1.0.5 # Native video dependencies.
   super_clipboard: ^0.8.24
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:

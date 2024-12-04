@@ -6,6 +6,7 @@ import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/utils.dart';
+import 'package:inference/widgets/feedback_button.dart';
 import 'package:provider/provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -124,26 +125,35 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationView(
-        appBar: NavigationAppBar(
-          leading: Container(),
-          height: 48,
+    return Stack(
+      children: [
+        NavigationView(
+          appBar: NavigationAppBar(
+            leading: Container(),
+            height: 48,
+          ),
+          paneBodyBuilder: (item, child) {
+            final name =
+                item?.key is ValueKey ? (item!.key as ValueKey).value : null;
+            return FocusTraversalGroup(
+              key: ValueKey('body$name'),
+              child: widget.child,
+            );
+          },
+          pane: NavigationPane(
+            selected: _calculateSelectedIndex(context),
+            toggleable: false,
+            displayMode: PaneDisplayMode.compact,
+            items: originalNavigationItems,
+            footerItems: footerNavigationItems,
+          ),
         ),
-        paneBodyBuilder: (item, child) {
-          final name =
-              item?.key is ValueKey ? (item!.key as ValueKey).value : null;
-          return FocusTraversalGroup(
-            key: ValueKey('body$name'),
-            child: widget.child,
-          );
-        },
-        pane: NavigationPane(
-          selected: _calculateSelectedIndex(context),
-          toggleable: false,
-          displayMode: PaneDisplayMode.compact,
-          items: originalNavigationItems,
-          footerItems: footerNavigationItems,
-        ),
-      );
+        const Positioned(
+          right: 24,
+          bottom: 24,
+          child: FeedbackButton()
+        )
+      ],
+    );
   }
 }
