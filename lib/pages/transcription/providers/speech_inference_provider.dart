@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/interop/speech_to_text.dart';
 import 'package:inference/pages/transcription/utils/metrics.dart';

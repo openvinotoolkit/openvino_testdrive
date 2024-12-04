@@ -2,8 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/public_model_info.dart';
 import 'package:inference/utils/get_public_thumbnail.dart';
 import 'package:path/path.dart';

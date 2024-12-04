@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:archive/archive_io.dart';
-import 'package:flutter/material.dart';
 import 'package:inference/importers/importer.dart';
 import 'package:inference/project.dart';
 import 'package:path_provider/path_provider.dart';
@@ -34,11 +34,11 @@ class ProjectZipImporter extends Importer{
       okay.complete(true);
       return okay.future;
     }
-    showDialog(context: context, builder: (BuildContext context) => AlertDialog(
+    showDialog(context: context, builder: (BuildContext context) => ContentDialog(
         title: const Text('Selected zipfile is too big'),
         content: const Text('The size is greater than 1 GB. Please extract the zip content before importing.'),
         actions: <Widget>[
-          TextButton(
+          Button(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Cancel'),
           ),
