@@ -26,7 +26,7 @@ class Playground extends StatefulWidget {
 }
 
 class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
-  final player = Player();
+  late final player = Player();
   late final controller = VideoController(player);
   int subtitleIndex = 0;
   StreamSubscription<Duration>? listener;
