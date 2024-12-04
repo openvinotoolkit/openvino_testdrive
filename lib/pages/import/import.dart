@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/pages/import/huggingface.dart';
 import 'package:inference/pages/import/providers/import_provider.dart';
@@ -48,7 +49,7 @@ class _ImportPageState extends State<ImportPage> {
                 displayMode: PaneDisplayMode.top,
                 items: [
                   PaneItem(
-                    icon: const Icon(FluentIcons.processing),
+                    icon: SvgPicture.asset('images/huggingface_logo-noborder.svg', width: 15,),
                     title: const Text("Huggingface"),
                     body: const  Huggingface(),
                   ),
