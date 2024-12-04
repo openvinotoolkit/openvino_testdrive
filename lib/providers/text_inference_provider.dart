@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/generated_bindings.dart';
 import 'package:inference/interop/llm_inference.dart';
 import 'package:inference/project.dart';

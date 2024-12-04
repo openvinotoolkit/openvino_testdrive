@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/importers/geti_deployment.dart';
 import 'package:inference/importers/project_zip.dart';
 
