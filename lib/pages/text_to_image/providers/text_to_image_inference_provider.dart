@@ -96,10 +96,8 @@ class TextToImageInferenceProvider extends ChangeNotifier {
       _inference = instance;
     });
     loaded.complete();
-    try {
+    if (hasListeners) {
       notifyListeners();
-    } on FlutterError catch (e){
-      print("Ignoring `${e.message}`, as the listeneres might already been gone");
     }
   }
 
@@ -211,20 +209,22 @@ class TextToImageInferenceProvider extends ChangeNotifier {
 
   Future<void> _closeInferenceInIsolate(dynamic inference) async {
     final receivePort = ReceivePort();
-    await Isolate.spawn(_closeInIsolate, [receivePort.sendPort, inference]);
-    await receivePort.first; // Wait for isolate completion
-  }
 
-  static void _closeInIsolate(List<dynamic> args) {
-    final SendPort sendPort = args[0];
-    final dynamic inference = args[1];
-    try {
-      inference?.close(); // Perform the blocking operation
-    } catch (e) {
-      print("Error closing inference: $e");
-    } finally {
-      sendPort.send(null); // Notify main thread of completion
-    }
+    // Spawn an isolate and pass the SendPort and inference
+    await Isolate.spawn((List<dynamic> args) {
+      final SendPort sendPort = args[0];
+      final dynamic inference = args[1];
+      try {
+        inference?.close(); // Perform the blocking operation
+      } catch (e) {
+        print("Error closing inference: $e");
+      } finally {
+        sendPort.send(null); // Notify that the operation is complete
+      }
+    }, [receivePort.sendPort, inference]);
+
+    // Wait for the isolate to complete
+    await receivePort.first;
   }
 
   Future<void> _waitForLoadCompletion() async {
@@ -235,19 +235,18 @@ class TextToImageInferenceProvider extends ChangeNotifier {
   }
 
   @override
-  void dispose() {
-    _waitForLoadCompletion().then((_) {}); // Wait for loading to complete
+  void dispose() async {
+    // Wait for model to finish loading
+    await _waitForLoadCompletion();
 
     if (_inference != null) {
       print("Closing inference");
-
-      _closeInferenceInIsolate(_inference!).then((_) {
-        print("Closing inference done");
-        super.dispose();
-      });
+      await _closeInferenceInIsolate(_inference!);
+      print("Closing inference done");
     } else {
       close();
-      super.dispose();
     }
+
+    super.dispose(); // Always call super.dispose()
   }
 }
