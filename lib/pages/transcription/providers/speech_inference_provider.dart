@@ -37,7 +37,17 @@ class SpeechInferenceProvider  extends ChangeNotifier {
   String get language => _language;
   set language(String val) {
     _language = val;
+    resetTranscription();
     notifyListeners();
+  }
+
+  Future<void> resetTranscription() async {
+    if (videoLoaded){
+      await stop();
+      transcription?.reset();
+      activeTranscriptionProcess = startTranscribing();
+      notifyListeners();
+    }
   }
 
   SpeechToText? _inference;
@@ -111,10 +121,14 @@ class SpeechInferenceProvider  extends ChangeNotifier {
     return _project == project && _device == device;
   }
 
-  @override
-  void dispose() async {
+  Future<void> stop() async {
     forceStop = true;
     await activeTranscriptionProcess;
+  }
+
+  @override
+  void dispose() async {
+    await stop();
     super.dispose();
   }
 
