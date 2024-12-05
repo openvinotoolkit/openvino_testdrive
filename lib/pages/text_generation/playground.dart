@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:inference/pages/models/widgets/grid_container.dart';
+import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/pages/text_generation/widgets/assistant_message.dart';
 import 'package:inference/pages/text_generation/widgets/model_properties.dart';
 import 'package:inference/pages/text_generation/widgets/user_message.dart';
@@ -28,7 +28,6 @@ class SubmitMessageIntent extends Intent {}
 class _PlaygroundState extends State<Playground> {
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
-  final _focusNode = FocusNode();
   bool attachedToBottom = true;
 
   void jumpToBottom({ offset = 0 }) {

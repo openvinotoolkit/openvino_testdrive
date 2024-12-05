@@ -2,7 +2,7 @@
 import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/pages/computer_vision/providers/batch_inference_provider.dart';
 import 'package:inference/pages/computer_vision/widgets/folder_selector.dart';
-import 'package:inference/pages/computer_vision/widgets/horizontal_rule.dart';
+import 'package:inference/widgets/horizontal_rule.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/pages/computer_vision/widgets/output_selector.dart';
 import 'package:inference/pages/computer_vision/widgets/device_selector.dart';
