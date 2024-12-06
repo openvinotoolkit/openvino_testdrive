@@ -8,9 +8,10 @@
 
 StringWithMetrics TTIInference::prompt(std::string message, int width, int height, int rounds)
 {
+    std::lock_guard<std::mutex> guard(pipe_mutex);
     const auto t1 = std::chrono::steady_clock::now();
 
-    const ov::Tensor tensor = pipe.generate(message,
+    const ov::Tensor tensor = ov_pipe.generate(message,
                                             ov::genai::width(width),
                                             ov::genai::height(height),
                                             ov::genai::num_inference_steps(rounds),
@@ -35,6 +36,11 @@ StringWithMetrics TTIInference::prompt(std::string message, int width, int heigh
 
     // Reshape the uint8_t data into a 512x512 3-channel OpenCV Mat
     const cv::Mat image(static_cast<int>(height_), static_cast<int>(width_), CV_8UC3, tensor_data);
+    if (flip_bgr)
+    {
+        cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
+    }
+
     const auto imgDataString = geti::base64_encode_mat(image);
 
     // Make Metrics
@@ -52,6 +58,13 @@ StringWithMetrics TTIInference::prompt(std::string message, int width, int heigh
     // Return
     auto res = StringWithMetrics{strdup(imgDataString.c_str()), metrics};
     return res;
+}
+
+void TTIInference::stop()
+{
+    // This lock comes free after generation is complete
+    // During generation, it's not safe to dispose class as OV may still write to memory
+    std::lock_guard<std::mutex> guard(pipe_mutex);
 }
 
 
