@@ -1,6 +1,7 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:inference/pages/text_generation/performance_metrics.dart';
 import 'package:inference/pages/text_generation/playground.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
@@ -94,6 +95,11 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
                       title: const Text("Playground"),
                       body: Playground(project: widget.project),
                     ),
+                    PaneItem(
+                    icon: const Icon(FluentIcons.line_chart),
+                    title: const Text("Performance metrics"),
+                    body: PerformanceMetrics(project: widget.project),
+                  ),
                   ],
                 )
               ),
