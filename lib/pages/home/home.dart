@@ -1,8 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:inference/pages/home/widgets/featured_card.dart';
 import 'package:inference/pages/models/widgets/model_card.dart';
 import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/project.dart';
 import 'package:inference/widgets/fixed_grid.dart';
 import 'package:inference/widgets/import_model_button.dart';
 import 'package:inference/providers/project_provider.dart';
@@ -18,12 +20,42 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late Future<List<Model>> popularModelsFuture;
   bool orderAscend = false;
+  Map<String, Project> projectModelMap = {}; // Map to hold modelId and a corresponding project
 
   @override
   void initState() {
     super.initState();
     final importer = ManifestImporter('assets/manifest.json');
     popularModelsFuture = importer.loadManifest().then((_) => importer.getPopularModels());
+  }
+
+  void updateProjectModelMap(List<Project> projects) {
+    // Store model.id -> project. If duplicate projects with a model exists, only one is kept in this map
+    projectModelMap = {
+      for (var project in projects) project.modelId: project
+    };
+  }
+
+  Project? getProjectWithModel(Model model) {
+    // Retrieve a project given the modelId
+    return projectModelMap[model.id] ?? projectModelMap["OpenVINO/" + model.id];
+  }
+
+  bool projectExistsWithModel(Model model){
+    return getProjectWithModel(model) != null;
+  }
+
+  void downloadFeaturedModel(Model model){
+    model.convertToProject().then((project) {
+      GoRouter.of(context).go('/models/download', extra: project);
+    });
+
+  }
+  void openFeaturedModel(Model model){
+    var project = getProjectWithModel(model);
+    if (project != null){
+      GoRouter.of(context).go("/models/inference", extra: project);
+    }
   }
 
   @override
@@ -77,19 +109,33 @@ class _HomePageState extends State<HomePage> {
                   return const Text('No popular models available');
                 } else {
                   final popularModels = snapshot.data!;
-                  return HorizontalScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 4),
-                      child: Row(
-                        children: popularModels.map((model) => Padding(
-                          padding: EdgeInsets.only(
-                          right: popularModels.indexOf(model) == popularModels.length - 1 ? 0 : 32,
+                  return Consumer<ProjectProvider>(
+                      builder: (context, projectProvider, child) {
+                        // Update the map whenever the projects are updated
+                        updateProjectModelMap(projectProvider.projects);
+                        return HorizontalScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 4),
+                            child: Row(
+                              children: popularModels.map((model) =>
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                      right: popularModels.indexOf(model) ==
+                                          popularModels.length - 1 ? 0 : 32,
+                                    ),
+                                    child: FeaturedCard(
+                                        model: model,
+                                        onDownload: downloadFeaturedModel,
+                                        onOpen: openFeaturedModel,
+                                        downloaded: projectExistsWithModel(
+                                            model)
+                                    ),
+                                  )).toList(),
+                            ),
                           ),
-                          child: FeaturedCard(model: model),
-                      )).toList(),
-                      ),
-                    ),
-                  );
+                        );
+                      });
                 }
               },
             ),
