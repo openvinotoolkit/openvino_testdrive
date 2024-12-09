@@ -1,10 +1,7 @@
 #ifndef TTI_INFERENCE_H_
 #define TTI_INFERENCE_H_
 
-#include <optional>
-#include <cmath>
 #include <mutex>
-#include <chrono> // Include for time measurement
 
 #include "src/utils/tti_metrics.h"
 #include "openvino/genai/image_generation/text2image_pipeline.hpp"
@@ -14,10 +11,7 @@ class TTIInference
     long load_time = 9999;
     bool flip_bgr = false;
     ov::genai::Text2ImagePipeline ov_pipe;
-    ov::genai::ChatHistory history;
-    std::function<bool(std::string)> streamer;
     std::mutex pipe_mutex;
-    pid_t child_pid = -1; // Tracks the child process ID
 
 public:
     TTIInference(std::string model_path, std::string device):
