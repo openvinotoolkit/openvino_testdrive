@@ -1,18 +1,24 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/widgets/elevation.dart';
-import 'package:go_router/go_router.dart';
 
 class FeaturedCard extends StatelessWidget {
   final Model model;
-  const FeaturedCard({required this.model, super.key});
+  final void Function(Model) onDownload;
+  final void Function(Model) onOpen;
+  final bool downloaded;
 
-  void downloadModel(BuildContext context) {
-    model.convertToProject().then((project) {
-      if (context.mounted) {
-        GoRouter.of(context).go('/models/download', extra: project);
-      }
-    });
+  const FeaturedCard(
+      {required this.model,
+      required this.onDownload,
+      required this.onOpen,
+      required this.downloaded,
+      super.key});
+
+  void modelClick(BuildContext context) {
+    if (!context.mounted) return;
+
+    !downloaded ? onDownload(model) : onOpen(model);
   }
 
   @override
@@ -28,66 +34,98 @@ class FeaturedCard extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(4)),
         ),
         child: SizedBox(
-          width: 220,
+          width: 248,
           height: 248,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+          child: GestureDetector(
+            // Make the entire MouseRegion clickable
+            onTap: () => modelClick(context),
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                    width: 80,
-                    height: 80,
-                    child: model.thumbnail,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: 80,
+                          height: 80,
+                          child: model.thumbnail,
+                        ),
+                        IntrinsicWidth(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8)),
+                              color: Color(0x11000000),
+                            ),
+                            constraints: const BoxConstraints(
+                              maxWidth:
+                                  130, // Set a maximum width for the text to wrap
+                            ),
+                            child: Text(
+                              model.kind.toUpperCase().replaceAll(" ", "\n"),
+                              // I don't like this, but when automatically wrapping applies line break, the padding is not correct.
+                              softWrap: true,
+                              textAlign: TextAlign.end,
+                              // Adjust alignment as needed
+                              style: const TextStyle(
+                                fontSize: 12,
+                              ),
+                              maxLines:
+                                  null, // Allow unlimited lines for wrapping
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      color: Color(0x11000000),
-                    ),
-                    child: Text(model.kind.toUpperCase(),
-                      style: const TextStyle(
-                      fontSize: 12,
-                      )
-                    ),
+                    Expanded(
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4, vertical: 12),
+                                  child: Text(model.name,
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 4),
+                                  child: Text(model.description,
+                                      style: const TextStyle(fontSize: 12)),
+                                ),
+                              ],
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 2, left: 10),
+                                child: Icon(
+                                    downloaded
+                                        ? FluentIcons.check_mark
+                                        : FluentIcons.pop_expand,
+                                    size: 14),
+                              ),
+                            )
+                          ]),
                     ),
                   ],
                 ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
-                            child: Text(model.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: Text(model.description, style: const TextStyle(fontSize: 12)),
-                          ),
-                        ],
-                      ),
-                      Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 2),
-                        child: IconButton(icon: const Icon(FluentIcons.pop_expand, size: 14), onPressed: () => downloadModel(context)),
-                      ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
