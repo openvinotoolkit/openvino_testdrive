@@ -21,7 +21,7 @@ dependencies:
 
 essential: false
 
-icon: images/openvino_eye.png
+icon: images/logo_250.png
 
 keywords:
   - OpenVINO
