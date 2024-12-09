@@ -25,9 +25,7 @@ ov::genai::WhisperDecodedResults SpeechToText::transcribe(int start, int duratio
     }
     config.return_timestamps = true;
     config.max_new_tokens = 100;
-    if (!language.empty()){
-        config.language = language;
-    }
+    config.language = language;
     return pipe.generate(data, config);
 }
 
