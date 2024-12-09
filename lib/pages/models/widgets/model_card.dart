@@ -2,9 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/pages/models/widgets/model_property.dart';
 import 'package:inference/project.dart';
+import 'package:inference/providers/project_provider.dart';
 import 'package:inference/utils.dart';
 import 'package:inference/widgets/elevation.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ModelCard extends StatefulWidget {
   final Project project;
@@ -16,8 +18,14 @@ class ModelCard extends StatefulWidget {
 
 class _ModelCardState extends State<ModelCard>{
   bool isHovered = false;
+  final itemsController = FlyoutController();
 
-    @override
+
+  void deleteModel() {
+    Provider.of<ProjectProvider>(context, listen: false).removeProject(widget.project);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
 
@@ -72,12 +80,39 @@ class _ModelCardState extends State<ModelCard>{
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.project.name,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          )
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(widget.project.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              )
+                            ),
+                            FlyoutTarget(
+                              controller: itemsController,
+                              child: IconButton(
+                                icon: const Icon(FluentIcons.more, size: 8,),
+                                onPressed: () {
+                                  itemsController.showFlyout(
+                                    builder: (context) {
+                                      return StatefulBuilder(builder: (context, setState) {
+                                        return MenuFlyout(
+                                          items: [
+                                            MenuFlyoutItem(
+                                              text: const Text('Delete'),
+                                              onPressed: deleteModel,
+                                            ),
+                                          ]
+                                        );
+                                      });
+                                    }
+                                  );
+                                }
+                              ),
+                            )
+                          ],
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10),
