@@ -37,7 +37,7 @@ class Model {
    if (task == 'text-generation'){
      return 'llm';
    } else if (task == 'speech'){
-     return 'transcription';
+     return 'speech to text';
    } else if (task == 'text-to-image'){
      return 'image generation';
    }

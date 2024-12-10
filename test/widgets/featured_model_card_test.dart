@@ -40,7 +40,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(model.name), findsOneWidget);
-    expect(find.text("TRANSCRIPTION"), findsOneWidget);
+    expect(find.text("SPEECH TO TEXT"), findsOneWidget);
     expect(find.text(model.description), findsOneWidget);
   });
 
