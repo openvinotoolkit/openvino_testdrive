@@ -41,8 +41,8 @@ class ModelList extends StatelessWidget {
                       child: Consumer<ProjectProvider>(builder: (context, projectProvider, child) {
                         final filtered = filter.applyFilter(projectProvider.projects);
                         return FixedGrid(
-                          tileWidth: 240,
-                          spacing: 24,
+                          tileWidth: 268,
+                          spacing: 36,
                           itemCount: filtered.length,
                           itemBuilder: (context, index) {
                             return ModelCard(project: filtered[index]);
