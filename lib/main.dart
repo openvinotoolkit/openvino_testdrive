@@ -6,7 +6,6 @@ import 'package:inference/theme_fluent.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/public_models.dart';
-import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 
 
@@ -26,7 +25,6 @@ void testConnection() async {
 }
 
 void main() {
-  MediaKit.ensureInitialized();
   testConnection();
   runApp(const App());
 }

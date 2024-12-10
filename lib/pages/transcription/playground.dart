@@ -5,6 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/pages/transcription/widgets/subtitles.dart';
+import 'package:av_media_player/widget.dart';
 import 'package:inference/pages/transcription/widgets/transcription.dart';
 import 'package:inference/pages/transcription/utils/message.dart';
 import 'package:inference/project.dart';
@@ -13,8 +14,6 @@ import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
 import 'package:inference/widgets/device_selector.dart';
-import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:provider/provider.dart';
 
 class Playground extends StatefulWidget {
@@ -26,8 +25,6 @@ class Playground extends StatefulWidget {
 }
 
 class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
-  late final player = Player();
-  late final controller = VideoController(player);
   int subtitleIndex = 0;
   StreamSubscription<Duration>? listener;
 
@@ -53,9 +50,9 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
 
   void initializeVideoAndListeners(String source) async {
     await listener?.cancel();
-    player.open(Media(source));
-    player.setVolume(0); // TODO: Disable this for release. This is for our sanity
-    listener = player.stream.position.listen(positionListener);
+    //await player.open(Media(source));
+    //await player.setVolume(0); // TODO: Disable this for release. This is for our sanity
+    //listener = player.stream.position.listen(positionListener);
   }
 
   void uploadFile(String file) async {
@@ -75,7 +72,6 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
 
   @override
   void dispose() {
-    player.dispose();
     super.dispose();
   }
 
@@ -137,7 +133,19 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                                       child: Stack(
                                         alignment: Alignment.bottomCenter,
                                         children: [
-                                          Video(controller: controller),
+                                          Center(
+                                            child: AvMediaView(
+                                              initSource:
+                                                  inference.videoPath,
+                                              initLooping: true,
+                                              initAutoPlay: true,
+                                              onCreated: (player) {
+                                                player.loading.addListener(
+                                                  () => print("loaded")
+                                                );
+                                              }
+                                            ),
+                                          ),
                                           Subtitles(
                                             transcription: inference.transcription?.data,
                                             subtitleIndex: subtitleIndex,
@@ -156,7 +164,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                                             return Container();
                                           }
                                           return Transcription(
-                                            onSeek: player.seek,
+                                            onSeek: (_) {},
                                             transcription: inference.transcription!,
                                             messages: Message.parse(inference.transcription!.data, transcriptionPeriod),
                                           );
