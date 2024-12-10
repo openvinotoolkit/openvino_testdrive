@@ -60,7 +60,7 @@ class _ModelCardState extends State<ModelCard>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AspectRatio(
-                  aspectRatio: 5/4,
+                  aspectRatio: 11/8,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     child: Container(
@@ -114,32 +114,29 @@ class _ModelCardState extends State<ModelCard>{
                             )
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ModelProperty(name: "Task", value: widget.project.taskName()),
-                              ModelProperty(name: "Architecture", value: widget.project.architecture),
-                              Row(
-                                children: [
-                                  ModelProperty(name: "Size", value: widget.project.size?.readableFileSize() ?? ""),
-                                  Builder(
-                                    builder: (context) {
-                                      if (widget.project is GetiProject && widget.project.tasks.first.performance != null) {
-                                        Locale locale = Localizations.localeOf(context);
-                                        final formatter = NumberFormat.percentPattern(locale.languageCode);
-                                        return ModelProperty(
-                                          name: "Accuracy",
-                                          value: formatter.format(widget.project.tasks.first.performance!.score));
-                                      }
-                                      return Container();
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ModelProperty(name: "Task", value: widget.project.taskName()),
+                            ModelProperty(name: "Architecture", value: widget.project.architecture),
+                            Row(
+                              children: [
+                                ModelProperty(name: "Size", value: widget.project.size?.readableFileSize() ?? ""),
+                                Builder(
+                                  builder: (context) {
+                                    if (widget.project is GetiProject && widget.project.tasks.first.performance != null) {
+                                      Locale locale = Localizations.localeOf(context);
+                                      final formatter = NumberFormat.percentPattern(locale.languageCode);
+                                      return ModelProperty(
+                                        name: "Accuracy",
+                                        value: formatter.format(widget.project.tasks.first.performance!.score));
                                     }
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                    return Container();
+                                  }
+                                ),
+                              ],
+                            ),
+                          ],
                         )
                       ],
                     ),
