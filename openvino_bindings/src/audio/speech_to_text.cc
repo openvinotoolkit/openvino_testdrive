@@ -9,6 +9,7 @@ void SpeechToText::load_video(std::string video_path) {
 }
 
 ov::genai::WhisperDecodedResults SpeechToText::transcribe(int start, int duration, std::string language) {
+    auto config = pipe.get_generation_config();
     auto video_duration = audio_grabber->get_duration();
     if (start > video_duration) {
         throw api_error(SpeechToTextChunkOutOfBounds);
