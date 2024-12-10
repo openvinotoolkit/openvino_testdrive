@@ -34,7 +34,7 @@ class FeaturedCard extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(4)),
         ),
         child: SizedBox(
-          width: 248,
+          width: 220,
           height: 248,
           child: GestureDetector(
             // Make the entire MouseRegion clickable
@@ -116,8 +116,8 @@ class FeaturedCard extends StatelessWidget {
                                     const EdgeInsets.only(top: 2, left: 10),
                                 child: Icon(
                                     downloaded
-                                        ? FluentIcons.check_mark
-                                        : FluentIcons.pop_expand,
+                                        ? FluentIcons.pop_expand
+                                        : FluentIcons.cloud_download,
                                     size: 14),
                               ),
                             )
