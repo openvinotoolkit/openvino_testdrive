@@ -70,6 +70,11 @@ class DynamicRangeLoading<I> {
     data[activeSection.index] = value;
     activeSection.index += 1;
   }
+
+  void reset() {
+    data = {};
+    sections = [Section(0, size)];
+  }
 }
 
 class Section {
