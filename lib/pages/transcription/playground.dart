@@ -45,7 +45,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
     int index = (position.inSeconds / transcriptionPeriod).floor();
     if (index != subtitleIndex) {
       final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
-      inference.skipTo(index);
+      inference.playerLocation = position.inSeconds;
       setState(() {
           subtitleIndex = index;
       });
@@ -54,8 +54,8 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
 
   void initializeVideoAndListeners(String source) async {
     await listener?.cancel();
-    player.open(Media(source));
-    player.setVolume(0); // TODO: Disable this for release. This is for our sanity
+    await player.open(Media(source));
+    await player.setVolume(0); // TODO: Disable this for release. This is for our sanity
     listener = player.stream.position.listen(positionListener);
   }
 

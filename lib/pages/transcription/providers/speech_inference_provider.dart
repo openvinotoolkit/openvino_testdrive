@@ -32,6 +32,8 @@ class SpeechInferenceProvider  extends ChangeNotifier {
     return transcription?.complete ?? false;
   }
 
+  int playerLocation = 0;
+
   String _language = "";
 
   String get language => _language;
@@ -45,6 +47,7 @@ class SpeechInferenceProvider  extends ChangeNotifier {
     if (videoLoaded){
       await stop();
       transcription?.reset();
+      transcription?.skipTo(playerLocation);
       activeTranscriptionProcess = startTranscribing();
       notifyListeners();
     }
@@ -72,6 +75,7 @@ class SpeechInferenceProvider  extends ChangeNotifier {
   Future<void> loadVideo(String path) async {
     await loaded.future;
     forceStop = true;
+    playerLocation = 0;
     await activeTranscriptionProcess;
     _videoPath = path;
     final duration = await _inference!.loadVideo(path);
