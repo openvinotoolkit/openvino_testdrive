@@ -23,9 +23,13 @@ ov::genai::WhisperDecodedResults SpeechToText::transcribe(int start, int duratio
     if (data.empty()) {
         throw api_error(SpeechToTextChunkHasNoData);
     }
+    if (language.empty()) {
+        config.language.reset();
+    } else {
+        config.language = language;
+    }
     config.return_timestamps = true;
     config.max_new_tokens = 100;
-    config.language = language;
     return pipe.generate(data, config);
 }
 
