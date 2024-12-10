@@ -61,6 +61,7 @@ dependencies:
   super_clipboard: ^0.8.24
   url_launcher: ^6.3.1
   av_media_player: ^1.1.4
+  universal_video_controls: ^1.0.24
 
 dev_dependencies:
   flutter_test:
@@ -166,7 +167,7 @@ msix_config:
   display_name: OpenVINO Test Drive
   publisher_display_name: Intel
   identity_name: intel.openvino.testdrive
-  msix_version: 24.5.0.0
+  msix_version: 24.5.0.1
   trim_logo: false
   capabilities: "internetClient"
   logo_path: "images/logo_250.png"
@@ -178,5 +179,5 @@ msix_config:
       show_prompt: true
       force_update_from_any_version: false
   sign_msix: false
-  build_windows: false
+  build_windows: true
   publisher: "CN=Intel Corporation, O=Intel Corporation, S=California, C=US"

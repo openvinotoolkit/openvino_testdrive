@@ -7,9 +7,13 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
   flutter_acrylic
   irondash_engine_context
+  screen_brightness_windows
+  screen_retriever_windows
   super_native_extensions
   system_theme
+  universal_video_controls
   url_launcher_windows
+  window_manager
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

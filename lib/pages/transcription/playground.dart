@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:av_media_player/player.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/pages/models/widgets/grid_container.dart';
+import 'package:inference/pages/transcription/utils/av_player.dart';
 import 'package:inference/pages/transcription/widgets/subtitles.dart';
 import 'package:av_media_player/widget.dart';
 import 'package:inference/pages/transcription/widgets/transcription.dart';
@@ -15,6 +17,7 @@ import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
 import 'package:inference/widgets/device_selector.dart';
 import 'package:provider/provider.dart';
+import 'package:universal_video_controls/universal_video_controls.dart';
 
 class Playground extends StatefulWidget {
   final Project project;
@@ -27,6 +30,7 @@ class Playground extends StatefulWidget {
 class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
   int subtitleIndex = 0;
   StreamSubscription<Duration>? listener;
+  late AVPlayer player;
 
 
   void showUploadMenu() async {
@@ -48,22 +52,41 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
     }
   }
 
-  void initializeVideoAndListeners(String source) async {
-    await listener?.cancel();
+  void initializeVideoAndListeners(String source) {
+
+    player.setSource(source);
+    //await listener?.cancel();
+    //player = AvMediaPlayer(
+      //initSource: widget.initSource,
+      //initAutoPlay: widget.initAutoPlay,
+      //initLooping: widget.initLooping,
+      //initVolume: widget.initVolume,
+      //initSpeed: widget.initSpeed,
+      //initPosition: widget.initPosition,
+      //initShowSubtitle: widget.initShowSubtitle,
+      //initPreferredSubtitleLanguage: widget.initPreferredSubtitleLanguage,
+      //initPreferredAudioLanguage: widget.initPreferredAudioLanguage,
+      //initMaxBitRate: widget.initMaxBitRate,
+      //initMaxResolution: widget.initMaxResolution,
+    //);
+
+    //player.
+
     //await player.open(Media(source));
     //await player.setVolume(0); // TODO: Disable this for release. This is for our sanity
     //listener = player.stream.position.listen(positionListener);
   }
 
   void uploadFile(String file) async {
-    final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
-    await inference.loadVideo(file);
+    //final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
+    //await inference.loadVideo(file);
     initializeVideoAndListeners(file);
   }
 
   @override
   void initState() {
     super.initState();
+    player = AVPlayer(AvMediaPlayer());
     final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
     if (inference.videoPath != null) {
       initializeVideoAndListeners(inference.videoPath!);
@@ -116,7 +139,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                       builder: (context) {
                         return DropArea(
                           type: "video",
-                          showChild: inference.videoPath != null,
+                          showChild: true, //inference.videoPath != null,
                           onUpload: (String file) { uploadFile(file); },
                           extensions: const [],
                           child: Builder(
@@ -133,19 +156,22 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                                       child: Stack(
                                         alignment: Alignment.bottomCenter,
                                         children: [
-                                          Center(
-                                            child: AvMediaView(
-                                              initSource:
-                                                  inference.videoPath,
-                                              initLooping: true,
-                                              initAutoPlay: true,
-                                              onCreated: (player) {
-                                                player.loading.addListener(
-                                                  () => print("loaded")
-                                                );
-                                              }
-                                            ),
+                                          VideoControls(
+                                            player: player,
                                           ),
+                                          //Center(
+                                          //  child: AvMediaView(
+                                          //    initPlayer: ,
+                                          //    initSource: inference.videoPath,
+                                          //    initLooping: true,
+                                          //    initAutoPlay: true,
+                                          //    onCreated: (player) {
+                                          //      player.loading.addListener(
+                                          //        () => print("loaded")
+                                          //      );
+                                          //    }
+                                          //  ),
+                                          //),
                                           Subtitles(
                                             transcription: inference.transcription?.data,
                                             subtitleIndex: subtitleIndex,
