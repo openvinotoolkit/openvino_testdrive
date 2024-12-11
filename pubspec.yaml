@@ -171,7 +171,7 @@ msix_config:
   msix_version: 24.5.0.0
   trim_logo: false
   capabilities: "internetClient"
-  logo_path: "images/openvino_eye.png"
+  logo_path: "images/logo_250.png"
   app_installer: #<-- app installer configuration
       publish_folder_path: c:\data\publish
       hours_between_update_checks: 0

@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<List<Model>> popularModelsFuture;
+  bool orderAscend = false;
 
   @override
   void initState() {
@@ -100,11 +101,14 @@ class _HomePageState extends State<HomePage> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1228),
               child: Consumer<ProjectProvider>(builder: (context, value, child) {
+                final projects = value.projects.toList();
+                projects.sort((a,b) => a.name.compareTo(b.name) * (orderAscend ? -1 : 1));
+
                 return FixedGrid(
                   tileWidth: 268,
                   centered: true,
                   spacing: 36,
-                  itemCount: value.projects.length,
+                  itemCount: projects.length,
                   header: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Row(
@@ -118,8 +122,11 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Row(
                           children: [
-                            IconButton(icon: const Icon(FluentIcons.filter), onPressed: () {}),
-                            IconButton(icon: const Icon(FluentIcons.sort_down), onPressed: () {}),
+                            IconButton(icon: const Icon(FluentIcons.sort_down), onPressed: () {
+                                setState(() {
+                                    orderAscend = !orderAscend;
+                                });
+                            }),
                             ConstrainedBox(
                               constraints: const BoxConstraints(minHeight: 24),
                               child: const Divider(direction: Axis.vertical,style: DividerThemeData(
@@ -133,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   itemBuilder: (context, index) {
-                    return ModelCard(project: value.projects.elementAt(index));
+                    return ModelCard(project: projects.elementAt(index));
                   }
                 );
               }),

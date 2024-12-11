@@ -1,16 +1,16 @@
 #!/bin/bash
-export OPENCV_VERSION=4.3.0
+export OPENCV_VERSION=4.10.0
 
 echo "Installing OpenCV from source"
 rm -rf /tmp/build_opencv
 mkdir /tmp/build_opencv
 cd /tmp/build_opencv
-git clone https://github.com/opencv/opencv_contrib.git
+#git clone https://github.com/opencv/opencv_contrib.git
 git clone https://github.com/opencv/opencv.git
 mkdir opencv/release
-cd opencv_contrib
-git checkout tags/$OPENCV_VERSION
-cd ../opencv
+#cd opencv_contrib
+#git checkout tags/$OPENCV_VERSION
+cd opencv
 git checkout tags/$OPENCV_VERSION
 cd release
 cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local \
@@ -18,7 +18,7 @@ cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local \
       -DBUILD_TESTS=OFF \
       -DBUILD_PERF_TESTS=OFF \
       -DBUILD_opencv_ts=OFF \
-      -DOPENCV_EXTRA_MODULES_PATH=/tmp/build_opencv/opencv_contrib/modules \
+#      -DOPENCV_EXTRA_MODULES_PATH=/tmp/build_opencv/opencv_contrib/modules \
       -DBUILD_opencv_aruco=OFF \
       -DBUILD_opencv_bgsegm=OFF \
       -DBUILD_opencv_bioinspired=OFF \
