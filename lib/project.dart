@@ -119,7 +119,7 @@ ProjectType parseProjectType(String name) {
   if (name == "text" || name == "text-generation"){
     return ProjectType.text;
   }
-  if (name == "textToImage"){
+  if (name == "textToImage" || name == "text-to-image"){
     return ProjectType.textToImage;
   }
   if (name == "speech") {
