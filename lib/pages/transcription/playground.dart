@@ -41,8 +41,9 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
     }
   }
 
-  void positionListener(Duration position) {
-    int index = (position.inSeconds / transcriptionPeriod).floor();
+  void positionListener() {
+    final position = player.position.value / 1000;
+    int index = (position / transcriptionPeriod).floor();
     if (index != subtitleIndex) {
       final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
       inference.skipTo(index);
@@ -52,50 +53,27 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
     }
   }
 
-  void initializeVideoAndListeners(String source) {
-
+  void initializeVideoAndListeners(String source) async {
     player.open(source);
-    //player.setSource(source);
-    //await listener?.cancel();
-    //player = AvMediaPlayer(
-      //initSource: widget.initSource,
-      //initAutoPlay: widget.initAutoPlay,
-      //initLooping: widget.initLooping,
-      //initVolume: widget.initVolume,
-      //initSpeed: widget.initSpeed,
-      //initPosition: widget.initPosition,
-      //initShowSubtitle: widget.initShowSubtitle,
-      //initPreferredSubtitleLanguage: widget.initPreferredSubtitleLanguage,
-      //initPreferredAudioLanguage: widget.initPreferredAudioLanguage,
-      //initMaxBitRate: widget.initMaxBitRate,
-      //initMaxResolution: widget.initMaxResolution,
-    //);
-
-    //player.
-
-    //await player.open(Media(source));
-    //await player.setVolume(0); // TODO: Disable this for release. This is for our sanity
-    //listener = player.stream.position.listen(positionListener);
   }
 
   void uploadFile(String file) async {
-    //final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
-    //await inference.loadVideo(file);
+    final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
+    await inference.loadVideo(file);
     initializeVideoAndListeners(file);
   }
 
   @override
   void initState() {
     super.initState();
-    player = AvMediaPlayer();
     final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
-    if (inference.videoPath != null) {
-      initializeVideoAndListeners(inference.videoPath!);
-    }
+    player = AvMediaPlayer(initAutoPlay: true, initSource: inference.videoPath);
+    player.position.addListener(positionListener);
   }
 
   @override
   void dispose() {
+    player.dispose();
     super.dispose();
   }
 
@@ -140,7 +118,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                       builder: (context) {
                         return DropArea(
                           type: "video",
-                          showChild: true, //inference.videoPath != null,
+                          showChild: inference.videoPath != null,
                           onUpload: (String file) { uploadFile(file); },
                           extensions: const [],
                           child: Builder(
@@ -178,7 +156,9 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                                             return Container();
                                           }
                                           return Transcription(
-                                            onSeek: (_) {},
+                                            onSeek: (position) {
+                                              player.seekTo(position.inMilliseconds);
+                                            },
                                             transcription: inference.transcription!,
                                             messages: Message.parse(inference.transcription!.data, transcriptionPeriod),
                                           );

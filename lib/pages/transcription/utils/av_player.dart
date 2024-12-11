@@ -12,33 +12,26 @@ class AVPlayer extends AbstractPlayer {
 
   void _initialize() {
     state = state.copyWith(
-        playing: isPlaying,
+        playing: true,
         completed: isCompleted,
         position: Duration(milliseconds: player.position.value),
         duration: duration(),
-        buffering: true, // video starts as buffering
+        buffering: isBuffering, // video starts as buffering
         width: player.videoSize.value.width.toInt(),
         height: player.videoSize.value.height.toInt(),
         volume: player.volume.value,
         subtitle: [],
       );
-      player.position.addListener(_listener);
+
+    player.position.addListener(_positionListener);
+    player.volume.addListener(_volumeListener);
+    player.videoSize.addListener(_sizeListener);
+    player.bufferRange.addListener(_bufferListener);
+    player.mediaInfo.addListener(_mediaInfoListener);
+    player.playbackState.addListener(_playbackStateListener);
   }
 
-  void _listener() {
-    bool isBuffering = false;
-    state = state.copyWith(
-        playing: isPlaying,
-        completed: isCompleted,
-        position: position(),
-        duration: duration(),
-        buffering: isBuffering,
-        width: player.videoSize.value.width.toInt(),
-        height: player.videoSize.value.height.toInt(),
-        volume: player.volume.value,
-        subtitle: [],
-    );
-
+  void _playbackStateListener() {
     if (!playingController.isClosed) {
       playingController.add(isPlaying);
     }
@@ -46,19 +39,22 @@ class AVPlayer extends AbstractPlayer {
     if (!completedController.isClosed) {
       completedController.add(isCompleted);
     }
+  }
 
-    if (!bufferingController.isClosed) {
-      bufferingController.add(isBuffering);
+  void _mediaInfoListener() {
+    final dur = duration();
+    if (!durationController.isClosed && dur != null) {
+      durationController.add(dur);
     }
+  }
 
-    if (!positionController.isClosed) {
-      positionController.add(position());
+  void _volumeListener() {
+    if (!volumeController.isClosed) {
+      volumeController.add(player.volume.value * 100);
     }
+  }
 
-    if (!durationController.isClosed) {
-      durationController.add(duration()!);
-    }
-
+  void _sizeListener() {
     if (!widthController.isClosed) {
       widthController.add(player.videoSize.value.width.toInt());
     }
@@ -66,23 +62,36 @@ class AVPlayer extends AbstractPlayer {
     if (!heightController.isClosed) {
       heightController.add(player.videoSize.value.height.toInt());
     }
+  }
 
-    if (!volumeController.isClosed) {
-      volumeController.add(player.volume.value);
+  void _bufferListener() {
+    if (!bufferingController.isClosed) {
+      bufferingController.add(isBuffering);
     }
 
-    //if (!subtitleController.isClosed) {
-    //  subtitleController.add([]);
-    //}
-    //if (!bufferController.isClosed) {
-    //  if (controller.value.buffered.lastOrNull?.end != null) {
-    //    bufferController.add(controller.value.buffered.lastOrNull!.end);
-    //  }
-    //}
+  }
+
+  void _positionListener() {
+    final pos = position();
+    state = state.copyWith(
+        playing: isPlaying,
+        completed: isCompleted,
+        position: pos,
+        duration: duration(),
+        buffering: isBuffering,
+        width: player.videoSize.value.width.toInt(),
+        height: player.videoSize.value.height.toInt(),
+        volume: player.volume.value,
+    );
+
+    if (!positionController.isClosed && !isBuffering) {
+      positionController.add(pos);
+    }
   }
 
   bool get isPlaying => player.playbackState.value == PlaybackState.playing;
   bool get isCompleted => player.playbackState.value == PlaybackState.closed;
+  bool get isBuffering => player.loading.value;
 
   Duration? duration() {
     if (player.mediaInfo.value != null) {
@@ -121,8 +130,6 @@ class AVPlayer extends AbstractPlayer {
 
   @override
   Future<void> seek(Duration duration) async {
-    // TODO: implement seek
-    print(duration.inMilliseconds);
     player.seekTo(duration.inMilliseconds);
   }
 
@@ -139,22 +146,13 @@ class AVPlayer extends AbstractPlayer {
 
   @override
   Future<void> setVolume(double volume) async {
-    player.setVolume(volume);
+    player.setVolume(volume / 100);
   }
 
   @override
   Widget videoWidget() {
-    // TODO: implement videoWidget
     return AvMediaView(
       initPlayer: player,
-      //initLooping: false,
-      //initAutoPlay: true,
-      onCreated: (player) {
-        player.loading.addListener(
-          () => print("loaded")
-        );
-      }
     );
   }
-
 }
