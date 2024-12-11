@@ -30,7 +30,7 @@ class Playground extends StatefulWidget {
 class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
   int subtitleIndex = 0;
   StreamSubscription<Duration>? listener;
-  late AVPlayer player;
+  late AvMediaPlayer player;
 
 
   void showUploadMenu() async {
@@ -54,7 +54,8 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
 
   void initializeVideoAndListeners(String source) {
 
-    player.setSource(source);
+    player.open(source);
+    //player.setSource(source);
     //await listener?.cancel();
     //player = AvMediaPlayer(
       //initSource: widget.initSource,
@@ -86,7 +87,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
   @override
   void initState() {
     super.initState();
-    player = AVPlayer(AvMediaPlayer());
+    player = AvMediaPlayer();
     final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
     if (inference.videoPath != null) {
       initializeVideoAndListeners(inference.videoPath!);
@@ -157,21 +158,8 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                                         alignment: Alignment.bottomCenter,
                                         children: [
                                           VideoControls(
-                                            player: player,
+                                            player: AVPlayer(player),
                                           ),
-                                          //Center(
-                                          //  child: AvMediaView(
-                                          //    initPlayer: ,
-                                          //    initSource: inference.videoPath,
-                                          //    initLooping: true,
-                                          //    initAutoPlay: true,
-                                          //    onCreated: (player) {
-                                          //      player.loading.addListener(
-                                          //        () => print("loaded")
-                                          //      );
-                                          //    }
-                                          //  ),
-                                          //),
                                           Subtitles(
                                             transcription: inference.transcription?.data,
                                             subtitleIndex: subtitleIndex,
