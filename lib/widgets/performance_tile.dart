@@ -5,6 +5,7 @@ class PerformanceTile extends StatelessWidget {
   final String value;
   final String unit;
   final bool tall;
+  final Decoration? decoration;
 
   const PerformanceTile({
       super.key,
@@ -12,6 +13,7 @@ class PerformanceTile extends StatelessWidget {
       required this.value,
       required this.unit,
       this.tall = false,
+      this.decoration,
   });
 
   @override
@@ -25,38 +27,41 @@ class PerformanceTile extends StatelessWidget {
         shape: RoundedRectangleBorder (
           borderRadius: BorderRadius.circular(4),
         ),
-        child: SizedBox(
-          width: 268,
-          height: tall ? 200 : 124,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: theme.inactiveColor,
+        child: Container(
+          decoration: decoration,
+          child: SizedBox(
+            width: 268,
+            height: tall ? 200 : 124,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 14,
                     ),
-                    children: [
-                      TextSpan(text: value,
-                        style: const TextStyle(
-                          fontSize: 30,
-                        )
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      style: TextStyle(
+                        color: theme.inactiveColor,
                       ),
-                      TextSpan(text: " $unit"),
-                    ]
-                  )
-                ),
-              ],
+                      children: [
+                        TextSpan(text: value,
+                          style: const TextStyle(
+                            fontSize: 30,
+                          )
+                        ),
+                        TextSpan(text: " $unit"),
+                      ]
+                    )
+                  ),
+                ],
+              )
             )
-          )
+          ),
         ),
       ),
     );

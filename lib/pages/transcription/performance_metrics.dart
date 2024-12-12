@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/horizontal_rule.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/widgets/grid_container.dart';
@@ -44,18 +45,30 @@ class PerformanceMetrics extends StatelessWidget {
                                 value: nf.format(metrics.ttft),
                                 unit: "ms",
                                 tall: true,
+                                decoration: BoxDecoration(
+                                  gradient: performanceMetricsGradient1,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
                               PerformanceTile(
                                 title: "Time per output token (TPOT)",
                                 value: nf.format(metrics.tpot),
                                 unit: "ms",
                                 tall: true,
+                                decoration: BoxDecoration(
+                                  gradient: performanceMetricsGradient1,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
                               PerformanceTile(
                                 title: "Generate total duration",
                                 value: nf.format(metrics.generateTime),
                                 unit: "ms",
                                 tall: true,
+                                decoration: BoxDecoration(
+                                  gradient: performanceMetricsGradient1,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
                             ],
                           ),
@@ -70,16 +83,28 @@ class PerformanceMetrics extends StatelessWidget {
                                 title: "Load time",
                                 value: nf.format(metrics.loadTime),
                                 unit: "ms",
+                                decoration: BoxDecoration(
+                                  gradient: performanceMetricsGradient2,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
                               PerformanceTile(
                                 title: "Detokenization duration",
                                 value: nf.format(metrics.detokenizationTime),
                                 unit: "ms",
+                                decoration: BoxDecoration(
+                                  gradient: performanceMetricsGradient2,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
                               PerformanceTile(
                                 title: "Throughput",
                                 value: nf.format(metrics.throughput),
                                 unit: "tokens/sec",
+                                decoration: BoxDecoration(
+                                  gradient: performanceMetricsGradient2,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
                             ],
                           ),
