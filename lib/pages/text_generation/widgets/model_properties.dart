@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/widgets.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/providers/text_inference_provider.dart';
+import 'package:inference/widgets/horizontal_rule.dart';
 import 'package:inference/widgets/model_propery.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -50,12 +50,15 @@ class ModelProperties extends StatelessWidget {
                       description: "Top P controls the diversity of the output by limiting the selection to a subset of the most probable tokens.",
                       value: nf.format(inference.topP),
                     ),
-                    if (inference.project!.isPublic) HyperlinkButton(
-                      child: const Row(children: [
-                        Text("View on Hugging Face"),
-                        SizedBox(width: 4),
-                        Icon(FluentIcons.pop_expand),
-                      ],), onPressed: () { launchUrl(Uri.parse('https://huggingface.co/${inference.project!.modelId}')); }
+                    if (inference.project!.isPublic) Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const HorizontalRule(),
+                        const Text('External links', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        HyperlinkButton(
+                          child: const Text("Model on Hugging Face"), onPressed: () { launchUrl(Uri.parse('https://huggingface.co/${inference.project!.modelId}')); }
+                        ),
+                      ],
                     ),
                   ]
                 )

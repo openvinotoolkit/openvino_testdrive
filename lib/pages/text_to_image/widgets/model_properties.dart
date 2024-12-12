@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/text_to_image/providers/text_to_image_inference_provider.dart';
-import 'package:inference/theme_fluent.dart';
 import 'package:inference/utils.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/widgets/model_propery.dart';
