@@ -10,9 +10,8 @@ class SpeechToText {
 private:
     std::unique_ptr<AudioGrabber> audio_grabber;
     ov::genai::WhisperPipeline pipe;
-    ov::genai::WhisperGenerationConfig config;
 public:
-    SpeechToText(std::string model_path, std::string device): pipe(model_path, device), config(model_path + "/generation_config.json") {}
+    SpeechToText(std::string model_path, std::string device): pipe(model_path, device) {}
     void load_video(std::string video_path);
     int64_t video_duration();
     ov::genai::WhisperDecodedResults transcribe(int start, int duration, std::string language);
