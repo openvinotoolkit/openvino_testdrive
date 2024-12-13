@@ -6,7 +6,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/image_inference.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
-import 'package:inference/pages/models/widgets/grid_container.dart';
+import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/image_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';

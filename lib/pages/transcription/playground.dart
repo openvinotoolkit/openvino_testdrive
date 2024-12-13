@@ -4,14 +4,15 @@ import 'package:av_media_player/player.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
-import 'package:inference/pages/models/widgets/grid_container.dart';
 import 'package:inference/pages/transcription/utils/av_player.dart';
+import 'package:inference/widgets/grid_container.dart';
+import 'package:inference/pages/transcription/widgets/language_selector.dart';
 import 'package:inference/pages/transcription/widgets/subtitles.dart';
 import 'package:av_media_player/widget.dart';
 import 'package:inference/pages/transcription/widgets/transcription.dart';
 import 'package:inference/pages/transcription/utils/message.dart';
-import 'package:inference/project.dart';
 import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
+import 'package:inference/project.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
@@ -41,9 +42,13 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
     }
   }
 
-  void positionListener() {
+  int get sectionIndex {
     final position = player.position.value / 1000;
-    int index = (position / transcriptionPeriod).floor();
+    return (position / transcriptionPeriod).floor();
+  }
+
+  void positionListener() {
+    final index = sectionIndex;
     if (index != subtitleIndex) {
       final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
       inference.skipTo(index);
@@ -106,6 +111,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                           ),
                         ),
                         const DeviceSelector(),
+                        const LanguageSelector(),
                       ],
                     ),
                   ),

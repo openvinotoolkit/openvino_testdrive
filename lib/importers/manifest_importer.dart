@@ -33,7 +33,16 @@ class Model {
     return getThumbnail(id);
   }
 
-  String get kind => task == 'text-generation' ? 'llm' : 'other';
+  String get kind {
+   if (task == 'text-generation'){
+     return 'llm';
+   } else if (task == 'speech'){
+     return 'speech to text';
+   } else if (task == 'text-to-image'){
+     return 'image generation';
+   }
+   return 'other';
+  }
 
   String get readableFileSize {
     return fileSize.toDouble().readableFileSize();
