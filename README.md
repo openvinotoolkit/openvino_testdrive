@@ -3,7 +3,7 @@
 # OpenVINO™ Test Drive
 
 [![codecov](https://codecov.io/gh/openvinotoolkit/openvino_testdrive/graph/badge.svg?token=DH98FAPH65)](https://codecov.io/gh/openvinotoolkit/openvino_testdrive)
-[![openvino](https://img.shields.io/badge/openvino-2024.4-blue)]()
+[![openvino](https://img.shields.io/badge/openvino-2024.4+-blue)]()
 
 </div>
 
@@ -17,7 +17,7 @@ Get started with OpenVINO™ Test Drive, an application that allows you to run g
 With use of OpenVINO™ Test Drive you can:
 + **Chat with LLMs** and evaluating model performance on your computer or edge device
 + **Experiment with different text prompts** to generate images using Stable Diffusion and Stable DiffusionXL models (coming soon)
-+ **Transcribe speech from video** using Whisper models, including generation of timestamps (coming soon)
++ **Transcribe speech from video** using Whisper models, including generation of timestamps
 + **Run and visualize results of models** trained by Intel® Geti™ using single image inference or batch inference mode
 
 ## Installation
@@ -52,24 +52,45 @@ Upon starting the application, you can import a model using either Hugging Face 
 
 ### Text generation and LLM performance evaluation
 
-1. Find a model on Hugging Face and import it
+1. Choose a model from predefined set of popular models or pick one from Hugging Face using `Import model` -> `Hugging Face` and import it.
 <p align="left">
   <img src="./docs/llm_import.gif" width="500">
 </p>
 
-2. Chat with LLMs via `Playground` tab.
+2. Pick imported LLM from `My models` section and chat with it using `Playground` tab.
 <p align="left">
   <img src="./docs/llm_model_chat.gif" width="500">
 </p>
 
-3. Use `Performance metrics` tab to get model performance metrics on your computer or edge device
+3. Use `Performance metrics` tab to get LLM performance metrics on your computer or edge device
 <p align="left">
   <img src="./docs/metrics.gif" width="500">
 </p>
 
+You can export LLM via `Export model` button.
+
+### Transcribe speech from video
+
+1. Choose a speech-to-text LLM from predefined set of popular models or pick one from Hugging Face using `Import model` -> `Hugging Face` and import it.
+<p align="left">
+  <img src="./docs/st_import.gif" width="500">
+</p>
+
+2. Pick imported speech-to-text LLM from `My models` section and upload video for transcription.
+<p align="left">
+  <img src="./docs/todo.gif" width="500">
+</p>
+
+3. Use `Performance metrics` tab to get LLM performance metrics on your computer or edge device
+<p align="left">
+  <img src="./docs/todo.gif" width="500">
+</p>
+
+You can export LLM via `Export model` button.
+
 ### Images inference with models trained by Intel® Geti™
 
-1. Download deployment code for the model in OpenVINO format trained by Intel® Geti™. 
+1. Download code deployment for the model in OpenVINO format trained by Intel® Geti™. 
 
 <p align="left">
   <img src="./docs/geti_download.gif" width="500">
@@ -90,11 +111,13 @@ Upon starting the application, you can import a model using either Hugging Face 
   <img src="./docs/geti_cv.gif" width="500">
 </p>
 
-4. For batch inference, use `Batch inference` tab and provide paths to folder with input images in a `Source folder` and specify `Destination folder` for output batch inference results. Click on `Start` to start batch inference.
+4. For batch inference, use `Batch inference` tab, provide paths to folder with input images in a `Source folder` and specify `Destination folder` for output batch inference results. Click on `Start` to start batch inference.
 
 <p align="left">
   <img src="./docs/geti_batch.gif" width="500">
 </p>
+
+You can share your ideas, thoughts and feedback using <img src="./docs/feedback.gif" width="20">.
 
 ## Build
 
