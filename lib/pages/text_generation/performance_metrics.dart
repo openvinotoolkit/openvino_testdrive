@@ -1,10 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/horizontal_rule.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/text_inference_provider.dart';
-import 'package:inference/widgets/performance_tile.dart';
+import 'package:inference/widgets/metrics_card.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -32,77 +31,50 @@ class PerformanceMetrics extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 80),
                   child: Center(
                     child: SizedBox(
-                      width: 887,
+                      width: 924,
                       child: Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              PerformanceTile(
-                                title: "Time to first token (TTFT)",
+                              MetricsCard(
+                                header:  "Time to first token (TTFT)",
                                 value: nf.format(metrics.ttft),
                                 unit: "ms",
-                                tall: true,
-                                decoration: BoxDecoration(
-                                  gradient: performanceMetricsGradient1,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
                               ),
-                              PerformanceTile(
-                                title: "Time per output token (TPOT)",
+                              MetricsCard(
+                                header: "Time per output token (TPOT)",
                                 value: nf.format(metrics.tpot),
                                 unit: "ms",
-                                tall: true,
-                                decoration: BoxDecoration(
-                                  gradient: performanceMetricsGradient1,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
                               ),
-                              PerformanceTile(
-                                title: "Generate total duration",
+                              MetricsCard(
+                                header: "Generate total duration",
                                 value: nf.format(metrics.generate_time),
                                 unit: "ms",
-                                tall: true,
-                                decoration: BoxDecoration(
-                                  gradient: performanceMetricsGradient1,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
                               ),
                             ],
                           ),
                           const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
                             child: HorizontalRule(),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              PerformanceTile(
-                                title: "Load time",
+                              MetricsCard(
+                                header: "Load time",
                                 value: nf.format(metrics.load_time),
                                 unit: "ms",
-                                decoration: BoxDecoration(
-                                  gradient: performanceMetricsGradient2,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
                               ),
-                              PerformanceTile(
-                                title: "Detokenization duration",
+                              MetricsCard(
+                                header: "Detokenization duration",
                                 value: nf.format(metrics.detokenization_time),
                                 unit: "ms",
-                                decoration: BoxDecoration(
-                                  gradient: performanceMetricsGradient2,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
                               ),
-                              PerformanceTile(
-                                title: "Throughput",
+                              MetricsCard(
+                                header: "Throughput",
                                 value: nf.format(metrics.throughput),
                                 unit: "tokens/sec",
-                                decoration: BoxDecoration(
-                                  gradient: performanceMetricsGradient2,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
                               ),
                             ],
                           ),

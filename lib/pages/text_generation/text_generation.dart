@@ -1,5 +1,6 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/pages/text_generation/performance_metrics.dart';
 import 'package:inference/pages/text_generation/playground.dart';
@@ -28,6 +29,7 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
             backgroundColor: theme.scaffoldBackgroundColor,
         ))
     );
+    final textColor = theme.typography.body?.color ?? Colors.black;
 
     return ChangeNotifierProxyProvider<PreferenceProvider, TextInferenceProvider>(
       create: (_) {
@@ -96,7 +98,10 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
                       body: Playground(project: widget.project),
                     ),
                     PaneItem(
-                    icon: const Icon(FluentIcons.line_chart),
+                    icon: SvgPicture.asset("images/stats.svg",
+                      colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
+                      width: 15,
+                    ),
                     title: const Text("Performance metrics"),
                     body: PerformanceMetrics(project: widget.project),
                   ),
