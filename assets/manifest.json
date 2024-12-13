@@ -47,6 +47,17 @@
   ],
   "all_models": [
     {
+      "name": "LCM Dreamshaper v7 fp16",
+      "id": "LCM_Dreamshaper_v7-fp16-ov",
+      "fileSize": 4275284513,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 0,
+      "description": "Generate images with Dreamshaper V7",
+      "task": "text-to-image",
+      "author": "OpenVINO",
+      "collection": ""
+    },
+    {
       "name": "Whisper Tiny",
       "id": "whisper-tiny-int4-ov",
       "fileSize": 68582454,
