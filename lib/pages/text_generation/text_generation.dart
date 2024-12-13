@@ -114,7 +114,7 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
                     Padding(
                       padding: const EdgeInsets.all(4),
                       child: FilledButton(
-                        child: const Text("Download"),
+                        child: const Text("Export model"),
                         onPressed: () => downloadProject(widget.project),
                       ),
                     ),
