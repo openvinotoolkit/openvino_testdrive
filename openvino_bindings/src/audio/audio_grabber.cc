@@ -7,14 +7,12 @@ AudioGrabber::AudioGrabber(std::string filename): filename(filename) {
     if (avformat_open_input(&formatContext, filename.c_str(), nullptr, nullptr) != 0) {
         throw std::runtime_error("Failed to open video file!");
     }
-    std::cout << "Opened " << filename << std::endl;
 
     if (avformat_find_stream_info(formatContext, nullptr) < 0) {
         avformat_close_input(&formatContext);
         throw std::runtime_error("Failed to find stream info!");
     }
 
-    std::cout << "found stream info "<<std::endl;
 
     AVCodec *codec = nullptr;
     for (unsigned int i = 0; i < formatContext->nb_streams; i++) {
@@ -31,7 +29,6 @@ AudioGrabber::AudioGrabber(std::string filename): filename(filename) {
         throw std::runtime_error("Audio stream not found!");
     }
 
-    std::cout << "Found audio stream" << std::endl;
 
     codecContext = avcodec_alloc_context3(codec);
     avcodec_parameters_to_context(codecContext, formatContext->streams[audioStreamIndex]->codecpar);
@@ -49,7 +46,6 @@ AudioGrabber::AudioGrabber(std::string filename): filename(filename) {
     if (swr_init(swrContext) < 0) {
         throw std::runtime_error("Failed to initialize resampler!");
     }
-    std::cout << "Done init" << std::endl;
 }
 
 AudioGrabber::~AudioGrabber() {
@@ -64,7 +60,7 @@ std::vector<float> AudioGrabber::grab_chunk(uint64_t start_time, uint64_t durati
     std::vector<float> resampledAudio;  // For storing resampled audio data as float
     // Seek to the starting time (start_time in seconds)
     int64_t startPts = av_rescale_q(start_time * AV_TIME_BASE, AV_TIME_BASE_Q, formatContext->streams[audioStreamIndex]->time_base);
-    av_seek_frame(formatContext, audioStreamIndex, startPts, AVSEEK_FLAG_ANY);
+    av_seek_frame(formatContext, audioStreamIndex, startPts, AVSEEK_FLAG_BACKWARD);
 
     int audioDurationPts = av_rescale_q(duration * AV_TIME_BASE, AV_TIME_BASE_Q, formatContext->streams[audioStreamIndex]->time_base);
     int decoded = 0;

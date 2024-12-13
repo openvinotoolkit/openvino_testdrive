@@ -4,11 +4,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/widgets/grid_container.dart';
+import 'package:inference/pages/transcription/widgets/language_selector.dart';
 import 'package:inference/pages/transcription/widgets/subtitles.dart';
 import 'package:inference/pages/transcription/widgets/transcription.dart';
 import 'package:inference/pages/transcription/utils/message.dart';
-import 'package:inference/project.dart';
 import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
+import 'package:inference/project.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
@@ -44,7 +45,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
     int index = (position.inSeconds / transcriptionPeriod).floor();
     if (index != subtitleIndex) {
       final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
-      inference.skipTo(index);
+      inference.playerLocation = position.inSeconds;
       setState(() {
           subtitleIndex = index;
       });
@@ -53,8 +54,8 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
 
   void initializeVideoAndListeners(String source) async {
     await listener?.cancel();
-    player.open(Media(source));
-    player.setVolume(0); // TODO: Disable this for release. This is for our sanity
+    await player.open(Media(source));
+    await player.setVolume(0); // TODO: Disable this for release. This is for our sanity
     listener = player.stream.position.listen(positionListener);
   }
 
@@ -108,6 +109,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                           ),
                         ),
                         const DeviceSelector(),
+                        const LanguageSelector(),
                       ],
                     ),
                   ),
