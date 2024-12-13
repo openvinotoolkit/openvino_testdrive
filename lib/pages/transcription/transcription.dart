@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
@@ -28,6 +29,8 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
             backgroundColor: theme.scaffoldBackgroundColor,
         ))
     );
+    final textColor = theme.typography.body?.color ?? Colors.black;
+
     return ChangeNotifierProxyProvider<PreferenceProvider, SpeechInferenceProvider>(
       lazy: false,
       create: (_) {
@@ -78,12 +81,15 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
                 displayMode: PaneDisplayMode.top,
                 items: [
                   PaneItem(
-                    icon: const Icon(FluentIcons.processing),
+                    icon: const Icon(FluentIcons.game),
                     title: const Text("Playground"),
                     body: Playground(project: widget.project),
                   ),
                   PaneItem(
-                    icon: const Icon(FluentIcons.line_chart),
+                    icon: SvgPicture.asset("images/stats.svg",
+                      colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
+                      width: 15,
+                    ),
                     title: const Text("Performance metrics"),
                     body: PerformanceMetrics(project: widget.project),
                   ),
