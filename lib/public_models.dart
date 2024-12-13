@@ -33,11 +33,10 @@ Future<void> getAdditionalModelInfo(PublicProject project) async {
   final configJsonURL = huggingFaceModelFileUrl(project.modelId, "config.json");
   print(configJsonURL);
   final info = (await http.get(Uri.parse(configJsonURL)));
-  if (info.statusCode != 200){
-    return;
+  if (info.statusCode == 200){
+    final config = jsonDecode(info.body);
+    project.tasks[0].architecture = config["architectures"][0];
   }
-  final config = jsonDecode(info.body);
-  project.tasks[0].architecture = config["architectures"][0];
   writeProjectJson(project);
 }
 
