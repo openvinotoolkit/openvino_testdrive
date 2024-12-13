@@ -1,10 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/horizontal_rule.dart';
-import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/widgets/grid_container.dart';
-import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
 import 'package:inference/project.dart';
+import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/widgets/performance_tile.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -15,21 +14,20 @@ class PerformanceMetrics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    final nf = NumberFormat.decimalPatternDigits(
+        locale: locale.languageCode, decimalDigits: 0);
+
     return Row(
       children: [
         Expanded(
           child: GridContainer(
-            child: Consumer<SpeechInferenceProvider>(
+            child: Consumer<TextInferenceProvider>(
               builder: (context, inference, child) {
                 final metrics = inference.metrics;
                 if (metrics == null) {
                   return Container();
                 }
-
-                Locale locale = Localizations.localeOf(context);
-                final nf = NumberFormat.decimalPatternDigits(
-                    locale: locale.languageCode, decimalDigits: 0);
-
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 80),
                   child: Center(
@@ -62,7 +60,7 @@ class PerformanceMetrics extends StatelessWidget {
                               ),
                               PerformanceTile(
                                 title: "Generate total duration",
-                                value: nf.format(metrics.generateTime),
+                                value: nf.format(metrics.generate_time),
                                 unit: "ms",
                                 tall: true,
                                 decoration: BoxDecoration(
@@ -81,7 +79,7 @@ class PerformanceMetrics extends StatelessWidget {
                             children: [
                               PerformanceTile(
                                 title: "Load time",
-                                value: nf.format(metrics.loadTime),
+                                value: nf.format(metrics.load_time),
                                 unit: "ms",
                                 decoration: BoxDecoration(
                                   gradient: performanceMetricsGradient2,
@@ -90,7 +88,7 @@ class PerformanceMetrics extends StatelessWidget {
                               ),
                               PerformanceTile(
                                 title: "Detokenization duration",
-                                value: nf.format(metrics.detokenizationTime),
+                                value: nf.format(metrics.detokenization_time),
                                 unit: "ms",
                                 decoration: BoxDecoration(
                                   gradient: performanceMetricsGradient2,
@@ -117,7 +115,6 @@ class PerformanceMetrics extends StatelessWidget {
             ),
           ),
         ),
-        ModelProperties(project: project),
       ],
     );
   }
