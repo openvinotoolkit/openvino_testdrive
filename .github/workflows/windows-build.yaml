@@ -126,8 +126,9 @@ jobs:
       # Install Visual Studio Build Tools (only needed on windows-latest or runners without VS2022)
       - name: Install Visual Studio Build Tools
         run: |
-          choco install visualstudio2022buildtools -y
-          choco install visualstudio2022-workload-vctools -y
+          choco install windows-sdk-11-version-21h2-all -y
+          #choco install visualstudio2022buildtools -y
+          #choco install visualstudio2022-workload-vctools -y
         shell: cmd
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
