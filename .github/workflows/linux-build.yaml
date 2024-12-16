@@ -9,6 +9,7 @@ jobs:
     permissions:
       contents: write
 
+    if: false
     steps:
       # Step 1: Checkout the repository
       - name: Checkout repository
@@ -44,6 +45,8 @@ jobs:
     permissions:
       contents: write
 
+    if: false
+
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -76,6 +79,7 @@ jobs:
     name: Package combined Linux release
     runs-on: ubuntu-22.04
     needs: [ build-linux-bindings, build-linux-ui ]  # Waits for both jobs to succeed
+    if: false
     steps:
       # Step 1: Check out the repository
       - name: Checkout repository

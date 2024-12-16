@@ -7,6 +7,8 @@ jobs:
     name: Build Windows bindings
     runs-on: windows-2019-16-core
 
+    if: false
+
     steps:
       # Step 1: Checkout the repository
       - name: Checkout repository
@@ -122,6 +124,8 @@ jobs:
     permissions:
       contents: write
 
+    if: false
+
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -189,10 +193,10 @@ jobs:
           ls -la ./bindings
           ls -la ./flutter
           rm -rf ./flutter/fake.dll
-          
+
           tar -xvf ./bindings/windows_bindings.tar -C ./bindings
           rm ./bindings/windows_bindings.tar
-          
+
           ls -la ./bindings
 
           mv ./bindings/* ./flutter/
