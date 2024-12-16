@@ -9,6 +9,7 @@ import 'package:inference/utils.dart';
 import 'package:inference/widgets/feedback_button.dart';
 import 'package:provider/provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:window_manager/window_manager.dart';
 
 
 class OpenVINOTestDriveApp extends StatefulWidget {
@@ -29,7 +30,6 @@ class OpenVINOTestDriveApp extends StatefulWidget {
 class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
   @override
   void initState() {
-    //NOTE: Do we need to add listeneres to windowManager here?
     super.initState();
 
     //setLoggingOutput();
@@ -131,6 +131,36 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
           appBar: NavigationAppBar(
             leading: Container(),
             height: 48,
+            actions: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTapDown: (_) => windowManager.startDragging(),
+                    child: SizedBox(
+                      height: 48,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50.0),
+                                child: Image.asset('images/logo_50.png', width: 20, height: 20)
+                              ),
+                            ),
+                            const Text("OpenVINO™ Test Drive"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const WindowButtons()
+              ]
+            )
           ),
           paneBodyBuilder: (item, child) {
             final name =
@@ -154,6 +184,24 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
           child: FeedbackButton()
         )
       ],
+    );
+  }
+}
+
+class WindowButtons extends StatelessWidget {
+  const WindowButtons({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final FluentThemeData theme = FluentTheme.of(context);
+
+    return SizedBox(
+      width: 138,
+      height: 50,
+      child: WindowCaption(
+        brightness: theme.brightness,
+        backgroundColor: Colors.transparent,
+      ),
     );
   }
 }

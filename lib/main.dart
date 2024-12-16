@@ -7,12 +7,13 @@ import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/public_models.dart';
 import 'package:provider/provider.dart';
+import 'package:window_manager/window_manager.dart';
 
 
 const String title = 'OpenVINO TestDrive';
 
 void testConnection() async {
-  final dio = Dio(BaseOptions(connectTimeout: Duration(seconds: 10)));
+  final dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 10)));
 
   try {
     await dio.get(collections[0].path);
@@ -24,8 +25,23 @@ void testConnection() async {
   }
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   testConnection();
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = WindowOptions(
+    size: const Size(1400, 1024),
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.hidden,
+    windowButtonVisibility: false,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
   runApp(const App());
 }
 
