@@ -145,7 +145,7 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
-                          padding: EdgeInsets.only(left: Platform.isMacOS ? 60 : 0),
+                          padding: EdgeInsets.only(left: Platform.isMacOS ? 60 : 5),
                           child: Row(
                             children: [
                               Padding(
