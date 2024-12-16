@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/config.dart';
@@ -36,7 +38,7 @@ void main() async {
     backgroundColor: Colors.transparent,
     skipTaskbar: false,
     titleBarStyle: TitleBarStyle.hidden,
-    windowButtonVisibility: false,
+    windowButtonVisibility: Platform.isMacOS,
   );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();

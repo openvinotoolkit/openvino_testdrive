@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:go_router/go_router.dart';
 import 'package:inference/deployment_processor.dart';
 import 'package:inference/interop/device.dart';
@@ -142,23 +144,26 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
                       height: 48,
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50.0),
-                                child: Image.asset('images/logo_50.png', width: 20, height: 20)
+                        child: Padding(
+                          padding: EdgeInsets.only(left: Platform.isMacOS ? 60 : 0),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50.0),
+                                  child: Image.asset('images/logo_50.png', width: 20, height: 20)
+                                ),
                               ),
-                            ),
-                            const Text("OpenVINO™ Test Drive"),
-                          ],
+                              const Text("OpenVINO™ Test Drive"),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                const WindowButtons()
+                (Platform.isMacOS ? Container() : const WindowButtons()),
               ]
             )
           ),
