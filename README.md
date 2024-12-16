@@ -16,7 +16,7 @@ Get started with OpenVINO™ Test Drive, an application that allows you to run g
 
 With use of OpenVINO™ Test Drive you can:
 + **Chat with LLMs** and evaluating model performance on your computer or edge device
-+ **Experiment with different text prompts** to generate images using Stable Diffusion and Stable DiffusionXL models (coming soon)
++ **Experiment with different text prompts** to generate images using Stable Diffusion and Stable DiffusionXL models
 + **Transcribe speech from video** using Whisper models, including generation of timestamps
 + **Run and visualize results of models** trained by Intel® Geti™ using single image inference or batch inference mode
 
@@ -57,7 +57,7 @@ Upon starting the application, you can import a model using either Hugging Face 
   <img src="./docs/llm_import.gif" width="500">
 </p>
 
-2. Pick imported LLM from `My models` section and chat with it using `Playground` tab.
+2. Pick imported LLM from `My models` section and chat with it using `Playground` tab. You can export LLM via `Export model` button.
 <p align="left">
   <img src="./docs/llm_model_chat.gif" width="500">
 </p>
@@ -67,7 +67,6 @@ Upon starting the application, you can import a model using either Hugging Face 
   <img src="./docs/metrics.gif" width="500">
 </p>
 
-You can export LLM via `Export model` button.
 
 ### Transcribe speech from video
 
@@ -76,15 +75,25 @@ You can export LLM via `Export model` button.
   <img src="./docs/st_import.gif" width="500">
 </p>
 
-2. Pick imported speech-to-text LLM from `My models` section and upload video for transcription.
+2. Pick imported speech-to-text LLM from `My models` section and upload video for transcription. It is also possible to search words in transcript or download it.
+
 <p align="left">
-  <img src="./docs/todo.gif" width="500">
+  <img src="./docs/video.gif" width="500">
 </p>
 
-3. Use `Performance metrics` tab to get LLM performance metrics on your computer or edge device
+3. Use `Performance metrics` tab to get LLM performance metrics on your computer or edge device.
+
+### Image generation
+
+1. Choose an image generation LLM from predefined set of popular models or pick one from Hugging Face using `Import model` -> `Hugging Face` and import it.
+
+2. Pick imported LLM from `My models` section and chat with it to generate image. It is also possible to download generated image.
+
 <p align="left">
-  <img src="./docs/todo.gif" width="500">
+  <img src="./docs/ig.gif" width="500">
 </p>
+
+3. Use `Performance metrics` tab to get LLM performance metrics on your computer or edge device.
 
 You can export LLM via `Export model` button.
 
@@ -116,8 +125,6 @@ You can export LLM via `Export model` button.
 <p align="left">
   <img src="./docs/geti_batch.gif" width="500">
 </p>
-
-You can share your ideas, thoughts and feedback using <img src="./docs/feedback.gif" width="20">.
 
 ## Build
 
