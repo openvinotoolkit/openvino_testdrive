@@ -1,0 +1,51 @@
+name: Build UI
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        description: 'The operating system to build for'
+        type: string
+
+jobs:
+  build-ui:
+    name: Build UI
+    runs-on: ${{ github.event.inputs.os }}
+    permissions:
+      contents: write
+
+    steps:
+      - name: Determine comon OS vars
+        run: |
+          if [[ "${{ startsWith(github.event.inputs.os, 'ubuntu') }}" == "true" ]]; then
+            echo "OS_NAME=linux" >> $GITHUB_ENV
+            echo "RELEASE_PATH=build/linux/x64/release/bundle" >> $GITHUB_ENV
+          elif [[ "${{ startsWith(github.event.inputs.os, 'windows') }}" == "true" ]]; then
+            echo "OS_NAME=windows" >> $GITHUB_ENV
+            echo "RELEASE_PATH=build/windows/x64/runner/Release" >> $GITHUB_ENV
+          elif [[ "${{ startsWith(github.event.inputs.os, 'macos') }}" == "true" ]]; then
+            echo "OS_NAME=macos" >> $GITHUB_ENV
+            echo "RELEASE_PATH=build/macos/Build/Products/Release" >> $GITHUB_ENV
+          fi
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version-file: pubspec.yaml
+      - name: Install linux dependencies
+        if: ${{ env.OS_NAME == 'linux' }}
+        run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev
+      - name: Install project dependencies
+        run: flutter pub get
+      - name: Generate intermediates
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Enable build
+        run: flutter config --enable-${{ env.OS_NAME }}-desktop
+      - name: Build artifacts
+        run: flutter build ${{ env.OS_NAME }} --release
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "OpenVINO-TestDrive-no-bindings-${{ env.OS_NAME }}.zip"
+          path: ${{ env.RELEASE_PATH }}
