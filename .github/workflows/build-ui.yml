@@ -17,6 +17,7 @@ jobs:
 
     steps:
       - name: Determine comon OS vars
+        shell: bash
         run: |
           if [[ "${{ startsWith(inputs.os, 'ubuntu') }}" == "true" ]]; then
             echo "OS_NAME=linux" >> $GITHUB_ENV
