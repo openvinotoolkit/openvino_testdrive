@@ -11,20 +11,20 @@ on:
 jobs:
   build-ui:
     name: Build UI
-    runs-on: ${{ github.event.inputs.os }}
+    runs-on: ${{ inputs.os }}
     permissions:
       contents: write
 
     steps:
       - name: Determine comon OS vars
         run: |
-          if [[ "${{ startsWith(github.event.inputs.os, 'ubuntu') }}" == "true" ]]; then
+          if [[ "${{ startsWith(inputs.os, 'ubuntu') }}" == "true" ]]; then
             echo "OS_NAME=linux" >> $GITHUB_ENV
             echo "RELEASE_PATH=build/linux/x64/release/bundle" >> $GITHUB_ENV
-          elif [[ "${{ startsWith(github.event.inputs.os, 'windows') }}" == "true" ]]; then
+          elif [[ "${{ startsWith(inputs.os, 'windows') }}" == "true" ]]; then
             echo "OS_NAME=windows" >> $GITHUB_ENV
             echo "RELEASE_PATH=build/windows/x64/runner/Release" >> $GITHUB_ENV
-          elif [[ "${{ startsWith(github.event.inputs.os, 'macos') }}" == "true" ]]; then
+          elif [[ "${{ startsWith(inputs.os, 'macos') }}" == "true" ]]; then
             echo "OS_NAME=macos" >> $GITHUB_ENV
             echo "RELEASE_PATH=build/macos/Build/Products/Release" >> $GITHUB_ENV
           fi
