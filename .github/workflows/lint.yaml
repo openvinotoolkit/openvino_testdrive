@@ -13,11 +13,10 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     permissions:
+      pull-requests: write
       contents: write
 
     steps:
       - uses: actions/checkout@v4
       - name: Check License Header
         uses: apache/skywalking-eyes/header@main
-        with:
-            token: ${{ github.token }}
