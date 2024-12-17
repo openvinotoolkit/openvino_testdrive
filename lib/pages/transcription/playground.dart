@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:async';
@@ -58,7 +59,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
   void initializeVideoAndListeners(String source) async {
     await listener?.cancel();
     await player.open(Media(source));
-    await player.setVolume(0); // TODO: Disable this for release. This is for our sanity
+    await player.setVolume(0); // TODO(RHeckerIntel): Disable this for release. This is for our sanity
     listener = player.stream.position.listen(positionListener);
   }
 
@@ -101,10 +102,10 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                       children: [
                         NoOutlineButton(
                           onPressed: showUploadMenu,
-                          child: Row(
+                          child: const Row(
                             children: [
-                              const Text("Choose video"),
-                              const Padding(
+                              Text("Choose video"),
+                              Padding(
                                 padding: EdgeInsets.only(left: 8),
                                 child: Icon(FluentIcons.chevron_down, size: 12),
                               ),

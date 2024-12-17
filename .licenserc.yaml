@@ -2,10 +2,13 @@ header:
   license:
     spdx-id: Apache-2.0
     copyright-owner: Intel Corporation
+    copyright-year: 2024
     content: |
+      Copyright (c) [year] [owner]
+
       SPDX-License-Identifier: Apache-2.0
-    pattern: |
-      SPDX-License-Identifier: Apache-2.0
+    # pattern: |
+      # SPDX-License-Identifier: Apache-2.0
   paths:
     - integration_test/**
     - lib/**
@@ -16,11 +19,8 @@ header:
     - "**/BUILD"
     - "**/*.bzl"
     - "**/*.proto"
+    - lib/interop/generated_bindings.dart
   comment: on-failure
-  content: |
-    SPDX-License-Identifier: Apache-2.0
-  pattern: |
-    SPDX-License-Identifier: Apache-2.0
   language:
     Dart:
       extensions:

@@ -18,5 +18,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Check License Header
         uses: apache/skywalking-eyes/header@main
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: pubspec.yaml
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos

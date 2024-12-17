@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:async';
@@ -66,15 +67,15 @@ class ImageInferenceProvider extends ChangeNotifier {
   }
 
   void openCamera(int id) {
-    // TODO: Implemnet for graph runner
+    // TODO(RHeckerIntel): Implemnet for graph runner
   }
 
   void closeCamera() {
-    // TODO: Implemnet for graph runner
+    // TODO(RHeckerIntel): Implemnet for graph runner
   }
 
   void setListener(Function(ImageInferenceResult) fn) {
-    // TODO: Implemnet for graph runner
+    // TODO(RHeckerIntel): Implemnet for graph runner
   }
 
 

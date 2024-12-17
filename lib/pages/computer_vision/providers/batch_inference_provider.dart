@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:convert';
@@ -30,7 +31,7 @@ class Progress {
     return current.toDouble() / total;
   }
 }
-enum BatchInferenceState { Ready, Running, Done }
+enum BatchInferenceState { ready, running, done }
 
 class BatchInferenceProvider extends ChangeNotifier {
   ImageInferenceProvider imageInference;
@@ -74,11 +75,11 @@ class BatchInferenceProvider extends ChangeNotifier {
 
   BatchInferenceState get state {
     if (progress == null ) {
-      return BatchInferenceState.Ready;
+      return BatchInferenceState.ready;
     } else if (progress!.current < progress!.total) {
-      return BatchInferenceState.Running;
+      return BatchInferenceState.running;
     } else {
-      return BatchInferenceState.Done;
+      return BatchInferenceState.done;
     }
   }
 

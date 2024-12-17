@@ -1,6 +1,9 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
+
+// ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:ffi';
 import 'dart:isolate';

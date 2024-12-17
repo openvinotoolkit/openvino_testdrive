@@ -1,11 +1,11 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:convert';
 
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:html/dom.dart';
 import 'package:collection/collection.dart';
 
 class Collection {

@@ -1,10 +1,11 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/pages/transcription/utils/message.dart';
 import 'package:inference/theme_fluent.dart';
-import '../utils/message.dart';
 
 String formatDuration(int totalSeconds) {
   final duration = Duration(seconds: totalSeconds);

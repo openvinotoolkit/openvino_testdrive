@@ -1,9 +1,9 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:collection/collection.dart';
 import 'package:inference/deployment_processor.dart';
-import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/project.dart';
 import 'package:path/path.dart';
 
@@ -199,7 +199,7 @@ class ImageGraphBuilder {
 
         node {
         calculator : "OpenVINOInferenceAdapterCalculator"
-        output_side_packet : "INFERENCE_ADAPTER:adapter_${index}"
+        output_side_packet : "INFERENCE_ADAPTER:adapter_$index"
         node_options: {
           [type.googleapis.com/mediapipe.OpenVINOInferenceAdapterCalculatorOptions] {
               model_path: "${platformContext.join(project.storagePath, task.modelPaths[0]).replaceAll("\\", "/")}"

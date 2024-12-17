@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 
@@ -44,13 +45,14 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
         if (init) {
           final textInferenceProvider = TextInferenceProvider(widget.project, preferences.device);
           textInferenceProvider.loadModel().catchError((e) async {
-            // ignore: use_build_context_synchronously
-            await displayInfoBar(context, builder: (context, close) => InfoBar(
-              title: const Text('Error loading model'),
-              content: Text(e.toString()),
-              severity: InfoBarSeverity.error,
-              action: IconButton(icon: const Icon(FluentIcons.clear), onPressed: close),
-            ));
+            if (context.mounted) {
+              await displayInfoBar(context, builder: (context, close) => InfoBar(
+                title: const Text('Error loading model'),
+                content: Text(e.toString()),
+                severity: InfoBarSeverity.error,
+                action: IconButton(icon: const Icon(FluentIcons.clear), onPressed: close),
+              ));
+            }
           });
           return textInferenceProvider;
         }

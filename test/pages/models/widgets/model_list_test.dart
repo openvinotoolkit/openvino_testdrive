@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -27,8 +28,8 @@ Widget renderWidget(ProjectProvider provider, ProjectFilterProvider filterProvid
         value: filterProvider,
       ),
     ],
-    child: FluentApp(
-      home: const ScaffoldPage(
+    child: const FluentApp(
+      home: ScaffoldPage(
         content: ModelList()
       )
     ),

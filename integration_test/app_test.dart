@@ -1,8 +1,7 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:inference/main.dart';
 import 'package:integration_test/integration_test.dart';
 
 void main() {

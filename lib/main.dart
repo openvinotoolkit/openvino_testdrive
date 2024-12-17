@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:dio/dio.dart';
@@ -16,7 +17,7 @@ import 'package:provider/provider.dart';
 const String title = 'OpenVINO TestDrive';
 
 void testConnection() async {
-  final dio = Dio(BaseOptions(connectTimeout: Duration(seconds: 10)));
+  final dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 10)));
 
   try {
     await dio.get(collections[0].path);

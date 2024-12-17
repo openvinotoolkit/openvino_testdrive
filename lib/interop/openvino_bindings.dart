@@ -1,9 +1,9 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:ffi' as ffi;
 import 'dart:io';
-import 'package:ffi/ffi.dart' as pkg_ffi;
 import 'package:flutter/foundation.dart';
 import 'package:inference/interop/generated_bindings.dart';
 import 'package:path/path.dart';
