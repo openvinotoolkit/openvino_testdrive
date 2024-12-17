@@ -20,7 +20,7 @@ version: 1.0.2+1
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
-  flutter: 3.24.5
+  flutter: 3.27.1
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -38,7 +38,6 @@ dependencies:
   cupertino_icons: ^1.0.6
   ffi: ^2.1.2
   file_picker: ^8.0.2
-  provider: ^6.1.2
   mime: ^1.0.5
   image: ^4.1.7
   path: ^1.9.0
@@ -60,7 +59,7 @@ dependencies:
   markdown: ^7.2.2
   super_clipboard: ^0.8.24
   url_launcher: ^6.3.1
-  av_media_player: ^1.1.4
+  av_media_player: ^1.2.0
   universal_video_controls: ^1.0.24
 
 dev_dependencies:
