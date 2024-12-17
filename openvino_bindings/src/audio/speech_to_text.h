@@ -1,3 +1,8 @@
+/**
+ * Copyright 2024 Intel Corporation.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef SPEECH_TO_TEXT_H_
 #define SPEECH_TO_TEXT_H_
 

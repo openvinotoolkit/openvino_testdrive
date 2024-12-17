@@ -1,3 +1,8 @@
+/**
+ * Copyright 2024 Intel Corporation.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifdef _WIN32
     #ifdef COMPILING_DLL
         #define EXPORT extern "C" __declspec(dllexport)

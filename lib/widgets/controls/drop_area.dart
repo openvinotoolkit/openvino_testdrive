@@ -1,3 +1,6 @@
+// Copyright 2024 Intel Corporation.
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';

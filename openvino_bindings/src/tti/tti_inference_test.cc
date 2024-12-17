@@ -1,3 +1,6 @@
+// Copyright 2024 Intel Corporation.
+// SPDX-License-Identifier: Apache-2.0
+
 #include "gtest/gtest.h"
 #include "tti_inference.h"
 

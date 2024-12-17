@@ -1,3 +1,6 @@
+// Copyright 2024 Intel Corporation.
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:convert';
 
 import 'package:fluent_ui/fluent_ui.dart';

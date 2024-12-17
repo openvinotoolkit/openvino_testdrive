@@ -1,3 +1,8 @@
+/**
+ * Copyright 2024 Intel Corporation.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef SEGMENTATION_CALCULATOR_H
 #define SEGMENTATION_CALCULATOR_H
 

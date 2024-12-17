@@ -1,3 +1,6 @@
+// Copyright 2024 Intel Corporation.
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:io';
 
 import 'package:desktop_drop/desktop_drop.dart';
