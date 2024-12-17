@@ -1,3 +1,8 @@
+/**
+ * Copyright 2024 Intel Corporation.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef EMPTYLABEL_CALCULATOR_H_
 #define EMPTYLABEL_CALCULATOR_H_
 

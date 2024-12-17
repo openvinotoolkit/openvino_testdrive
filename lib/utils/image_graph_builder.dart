@@ -1,3 +1,6 @@
+// Copyright 2024 Intel Corporation.
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:collection/collection.dart';
 import 'package:inference/deployment_processor.dart';
 import 'package:inference/interop/openvino_bindings.dart';

@@ -1,3 +1,6 @@
+// Copyright 2024 Intel Corporation.
+// SPDX-License-Identifier: Apache-2.0
+
 #include "graph_runner.h"
 #include "mediapipe/framework/port/parse_text_proto.h"
 #include "src/utils/errors.h"

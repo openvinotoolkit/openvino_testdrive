@@ -1,3 +1,6 @@
+// Copyright 2024 Intel Corporation.
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:inference/deployment_processor.dart';

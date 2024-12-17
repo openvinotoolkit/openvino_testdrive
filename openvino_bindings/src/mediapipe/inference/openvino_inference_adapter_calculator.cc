@@ -1,3 +1,6 @@
+// Copyright 2024 Intel Corporation.
+// SPDX-License-Identifier: Apache-2.0
+
 #include "openvino_inference_adapter_calculator.h"
 
 #include <adapters/openvino_adapter.h>

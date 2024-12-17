@@ -1,3 +1,6 @@
+// Copyright 2024 Intel Corporation.
+// SPDX-License-Identifier: Apache-2.0
+
 void moveToFront<I>(List<I> list, I item) {
   list.remove(item);
   list.insert(0, item);
