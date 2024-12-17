@@ -2,12 +2,11 @@
 
 # OpenVINO™ Test Drive
 
-[![codecov](https://codecov.io/gh/openvinotoolkit/openvino_testdrive/graph/badge.svg?token=DH98FAPH65)](https://codecov.io/gh/openvinotoolkit/openvino_testdrive)
-[![openvino](https://img.shields.io/badge/openvino-2024.4+-blue)]()
+[![openvino](https://img.shields.io/badge/openvino-2024.6-blue)]()
 
 </div>
 
-Get started with OpenVINO™ Test Drive, an application that allows you to run generative AI and vision models trained by [Intel® Geti™](https://docs.geti.intel.com/) directly on your computer using [OpenVINO™ Runtime](https://github.com/openvinotoolkit/openvino).
+Get started with OpenVINO™ Test Drive, an application that allows you to run generative AI and vision models trained by [Intel® Geti™](https://docs.geti.intel.com/) directly on your computer or edge device using [OpenVINO™ Runtime](https://github.com/openvinotoolkit/openvino).
 
 
 <p align="center">
@@ -15,7 +14,7 @@ Get started with OpenVINO™ Test Drive, an application that allows you to run g
 </p>
 
 With use of OpenVINO™ Test Drive you can:
-+ **Chat with LLMs** and evaluating model performance on your computer
++ **Chat with LLMs** and evaluating model performance on your computer or edge device
 + **Experiment with different text prompts** to generate images using Stable Diffusion and Stable DiffusionXL models
 + **Transcribe speech from video** using Whisper models, including generation of timestamps
 + **Run and visualize results of models** trained by Intel® Geti™ using single image inference or batch inference mode
