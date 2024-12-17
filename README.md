@@ -70,7 +70,7 @@ Upon starting the application, you can import a model using either Hugging Face 
 
 ### Transcribe speech from video
 
-1. Choose a speech-to-text LLM from predefined set of popular models or pick one from Hugging Face using `Import model` -> `Hugging Face` and import it.
+1. Try Whisper for video transcription.
 <p align="left">
   <img src="./docs/st_import.gif" width="500">
 </p>
