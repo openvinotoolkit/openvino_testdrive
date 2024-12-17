@@ -1,0 +1,32 @@
+header:
+  license:
+    spdx-id: Apache-2.0
+    copyright-owner: Intel Corporation
+    content: |
+      SPDX-License-Identifier: Apache-2.0
+    pattern: |
+      SPDX-License-Identifier: Apache-2.0
+  paths:
+    - integration_test/**
+    - lib/**
+    - openvino_bindings/src/**
+    - scripts/**
+    - test/**
+  paths-ignore:
+    - "**/BUILD"
+    - "**/*.bzl"
+    - "**/*.proto"
+  comment: on-failure
+  content: |
+    SPDX-License-Identifier: Apache-2.0
+  pattern: |
+    SPDX-License-Identifier: Apache-2.0
+  language:
+    Dart:
+      extensions:
+        - ".dart"
+      comment_style_id: DoubleSlash
+
+dependency:
+  files:
+    - pubspec.yaml
