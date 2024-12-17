@@ -7,22 +7,22 @@
 
 </div>
 
-Get started with OpenVINO™ Test Drive, an application that allows you to run generative AI and vision models trained by [Intel® Geti™](https://docs.geti.intel.com/) directly on your computer or edge device using [OpenVINO™ Runtime](https://github.com/openvinotoolkit/openvino).
+Get started with OpenVINO™ Test Drive, an application that allows you to run generative AI and vision models trained by [Intel® Geti™](https://docs.geti.intel.com/) directly on your computer using [OpenVINO™ Runtime](https://github.com/openvinotoolkit/openvino).
 
 
 <p align="center">
-  <img src="./docs/readme.gif" width="600" alt="sample">
+  <img src="./docs/llm_model_chat.gif" width="600" alt="sample">
 </p>
 
 With use of OpenVINO™ Test Drive you can:
-+ **Chat with LLMs** and evaluating model performance on your computer or edge device
++ **Chat with LLMs** and evaluating model performance on your computer
 + **Experiment with different text prompts** to generate images using Stable Diffusion and Stable DiffusionXL models
 + **Transcribe speech from video** using Whisper models, including generation of timestamps
 + **Run and visualize results of models** trained by Intel® Geti™ using single image inference or batch inference mode
 
 ## Installation
 
-Download the latest release from the [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/packages/).
+Download the latest release from the [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/).
 
 > [!NOTE]
 > To verify downloaded file integrity, you can generate a SHA-256 of the downloaded file and compare it to the SHA-256 from corresponding `.sha256` file published in Releases repository. 
@@ -30,7 +30,7 @@ Download the latest release from the [Releases repository](https://storage.openv
 <details>
 <summary>Installation on Windows</summary>
 
-1. Downloading the zip archive [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/packages/) `Windows` folder .
+1. Downloading the zip archive [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/) `Windows` folder .
 
 <p align="left">
   <img src="./docs/win_inst.gif" width="500">
@@ -62,7 +62,7 @@ Upon starting the application, you can import a model using either Hugging Face 
   <img src="./docs/llm_model_chat.gif" width="500">
 </p>
 
-3. Use `Performance metrics` tab to get LLM performance metrics on your computer or edge device
+3. Use `Performance metrics` tab to get LLM performance metrics on your computer.
 <p align="left">
   <img src="./docs/metrics.gif" width="500">
 </p>
@@ -81,7 +81,7 @@ Upon starting the application, you can import a model using either Hugging Face 
   <img src="./docs/video.gif" width="500">
 </p>
 
-3. Use `Performance metrics` tab to get LLM performance metrics on your computer or edge device.
+3. Use `Performance metrics` tab to get LLM performance metrics on your computer.
 
 ### Image generation
 
@@ -93,7 +93,7 @@ Upon starting the application, you can import a model using either Hugging Face 
   <img src="./docs/ig.gif" width="500">
 </p>
 
-3. Use `Performance metrics` tab to get LLM performance metrics on your computer or edge device.
+3. Use `Performance metrics` tab to get LLM performance metrics on your computer.
 
 You can export LLM via `Export model` button.
 
