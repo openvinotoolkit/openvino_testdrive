@@ -1,5 +1,5 @@
 // Copyright 2024 Intel Corporation.
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: MIT
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
