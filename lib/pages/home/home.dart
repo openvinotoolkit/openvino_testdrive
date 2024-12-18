@@ -50,14 +50,14 @@ class _HomePageState extends State<HomePage> {
 
   void downloadFeaturedModel(Model model){
     model.convertToProject().then((project) {
-      GoRouter.of(context).go('/models/download', extra: project);
+      GoRouter.of(context).push('/models/download', extra: project);
     });
 
   }
   void openFeaturedModel(Model model){
     var project = getProjectWithModel(model);
     if (project != null){
-      GoRouter.of(context).go("/models/inference", extra: project);
+      GoRouter.of(context).push("/models/inference", extra: project);
     }
   }
 

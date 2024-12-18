@@ -11,6 +11,7 @@ import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/utils.dart';
+import 'package:inference/widgets/controls/close_model_button.dart';
 import 'package:provider/provider.dart';
 
 class TextGenerationPage extends StatefulWidget {
@@ -126,21 +127,7 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
                         onPressed: () => downloadProject(widget.project),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: OutlinedButton(
-                        style: ButtonStyle(
-                          shape:WidgetStatePropertyAll(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                            side:  const BorderSide(color: Color(0XFF545454)),
-                          )),
-                        ),
-                        child: const Text("Close"),
-                        onPressed: () =>  GoRouter.of(context).canPop()
-                          ? GoRouter.of(context).pop()
-                          : GoRouter.of(context).go('/models'),
-                      ),
-                    ),
+                    const CloseModelButton(),
                   ]
                 ),
               ),

@@ -35,9 +35,9 @@ class _ModelCardState extends State<ModelCard>{
     return GestureDetector(
       onTap: () {
         if (widget.project.isDownloaded) {
-          GoRouter.of(context).go("/models/inference", extra: widget.project);
+          GoRouter.of(context).push("/models/inference", extra: widget.project);
         } else {
-          GoRouter.of(context).go("/models/download", extra: widget.project);
+          GoRouter.of(context).push("/models/download", extra: widget.project);
         }
       },
       child: MouseRegion(
