@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  av_media_player
   desktop_drop
   flutter_acrylic
   irondash_engine_context
@@ -13,6 +12,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   system_theme
   universal_video_controls
   url_launcher_windows
+  video_player_win
   window_manager
 )
 

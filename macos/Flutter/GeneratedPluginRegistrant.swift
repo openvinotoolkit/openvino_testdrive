@@ -5,7 +5,6 @@
 import FlutterMacOS
 import Foundation
 
-import av_media_player
 import desktop_drop
 import device_info_plus
 import irondash_engine_context
@@ -22,7 +21,6 @@ import wakelock_plus
 import window_manager
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  AvMediaPlayerPlugin.register(with: registry.registrar(forPlugin: "AvMediaPlayerPlugin"))
   DesktopDropPlugin.register(with: registry.registrar(forPlugin: "DesktopDropPlugin"))
   DeviceInfoPlusMacosPlugin.register(with: registry.registrar(forPlugin: "DeviceInfoPlusMacosPlugin"))
   IrondashEngineContextPlugin.register(with: registry.registrar(forPlugin: "IrondashEngineContextPlugin"))

@@ -6,7 +6,6 @@
 
 #include "generated_plugin_registrant.h"
 
-#include <av_media_player/av_media_player_plugin.h>
 #include <desktop_drop/desktop_drop_plugin.h>
 #include <flutter_acrylic/flutter_acrylic_plugin.h>
 #include <irondash_engine_context/irondash_engine_context_plugin.h>
@@ -18,9 +17,6 @@
 #include <window_manager/window_manager_plugin.h>
 
 void fl_register_plugins(FlPluginRegistry* registry) {
-  g_autoptr(FlPluginRegistrar) av_media_player_registrar =
-      fl_plugin_registry_get_registrar_for_plugin(registry, "AvMediaPlayerPlugin");
-  av_media_player_plugin_register_with_registrar(av_media_player_registrar);
   g_autoptr(FlPluginRegistrar) desktop_drop_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "DesktopDropPlugin");
   desktop_drop_plugin_register_with_registrar(desktop_drop_registrar);

@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  av_media_player
   desktop_drop
   flutter_acrylic
   irondash_engine_context

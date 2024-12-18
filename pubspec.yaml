@@ -60,8 +60,8 @@ dependencies:
   markdown: ^7.2.2
   super_clipboard: ^0.8.24
   url_launcher: ^6.3.1
-  av_media_player: ^1.1.4
   universal_video_controls: ^1.0.24
+  video_player_win: ^3.1.1
 
 dev_dependencies:
   flutter_test:
