@@ -3,17 +3,17 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:universal_video_controls/universal_players/abstract.dart';
-import 'package:video_player_win/video_player_win.dart';
+import 'package:video_player/video_player.dart';
 
 class MediaPlayerController extends AbstractPlayer {
   Function(Duration)? onPosition;
-  WinVideoPlayerController? controller;
+  VideoPlayerController? controller;
 
   MediaPlayerController({this.onPosition});
 
   void setSource(String file) {
     controller?.dispose();
-    controller = WinVideoPlayerController.file(File(file));
+    controller = VideoPlayerController.file(File(file));
     controller!.initialize().then((_) {
       _initialize();
     });
@@ -36,7 +36,7 @@ class MediaPlayerController extends AbstractPlayer {
     controller!.play();
   }
 
-  WinVideoPlayerValue get player => controller!.value;
+  VideoPlayerValue get player => controller!.value;
 
   void playbackListener() {
     if (!playingController.isClosed) {
@@ -122,7 +122,7 @@ class MediaPlayerController extends AbstractPlayer {
     if (controller == null) {
       return Container();
     } else {
-      return WinVideoPlayer(controller!);
+      return VideoPlayer(controller!);
     }
   }
 }
