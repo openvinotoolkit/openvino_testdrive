@@ -4,7 +4,6 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:inference/pages/text_to_image/live_inference_pane.dart';
 import 'package:inference/pages/text_to_image/providers/text_to_image_inference_provider.dart';
 import 'package:inference/pages/text_to_image/performance_metrics_pane.dart';

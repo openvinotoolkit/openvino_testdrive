@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:go_router/go_router.dart';
 import 'package:inference/pages/computer_vision/batch_inference.dart';
 import 'package:inference/pages/computer_vision/live_inference.dart';
 import 'package:inference/project.dart';

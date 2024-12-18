@@ -5,7 +5,6 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:inference/pages/text_generation/performance_metrics.dart';
 import 'package:inference/pages/text_generation/playground.dart';
 import 'package:inference/project.dart';

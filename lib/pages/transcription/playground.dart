@@ -2,7 +2,6 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
