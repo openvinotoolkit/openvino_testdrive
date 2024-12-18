@@ -71,14 +71,27 @@ jobs:
           start /wait opencv.exe -suppresslaunch  -y -gm2 -o"C:\"
         shell: cmd
 
+      - name: Cache vcpkg installed
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./openvino_bindings/vcpkg_installed
+          key: vcpkg-${{ runner.os }}-${{ hashFiles('openvino_bindings/third_party/vcpkg.json') }}
+          restore-keys: |
+            vcpkg-${{ runner.os }}-
+
       # Step 9: Install vcpkg and ffmpeg
       - name: Install vcpkg and ffmpeg
         shell: powershell
         run: |
-          if (!(Test-Path "C:\vcpkg")) { git clone https://github.com/microsoft/vcpkg.git C:\vcpkg }
-          C:\vcpkg\bootstrap-vcpkg.bat
-          cd openvino_bindings/third_party
-          C:\vcpkg\vcpkg install --triplet=x64-windows-release
+          if (!(Test-Path "C:\vcpkg")) {
+            git clone https://github.com/microsoft/vcpkg.git C:\vcpkg
+            C:\vcpkg\bootstrap-vcpkg.bat
+          }
+          if (!(Test-Path "./vcpkg_installed")) {
+            cd openvino_bindings/third_party
+            C:\vcpkg\vcpkg install --triplet=x64-windows-release
+          }
 
       # Step 10: Download and Install OpenVINO Runtime
       - name: Download and Install OpenVINO Runtime 24.5.0
