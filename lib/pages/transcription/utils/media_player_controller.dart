@@ -1,13 +1,20 @@
 
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:universal_video_controls/universal_players/abstract.dart';
 import 'package:video_player_win/video_player_win.dart';
 
 class MediaPlayerController extends AbstractPlayer {
-  final WinVideoPlayerController controller;
-//
-  MediaPlayerController(this.controller) {
-    controller.initialize().then((_) {
+  Function(Duration)? onPosition;
+  WinVideoPlayerController? controller;
+
+  MediaPlayerController({this.onPosition});
+
+  void setSource(String file) {
+    controller?.dispose();
+    controller = WinVideoPlayerController.file(File(file));
+    controller!.initialize().then((_) {
       _initialize();
     });
   }
@@ -25,11 +32,11 @@ class MediaPlayerController extends AbstractPlayer {
         subtitle: [],
       );
 
-    controller.addListener(playbackListener);
-    controller.play();
+    controller!.addListener(playbackListener);
+    controller!.play();
   }
 
-  WinVideoPlayerValue get player => controller.value;
+  WinVideoPlayerValue get player => controller!.value;
 
   void playbackListener() {
     if (!playingController.isClosed) {
@@ -66,30 +73,32 @@ class MediaPlayerController extends AbstractPlayer {
     if (!positionController.isClosed && !player.isBuffering) {
       positionController.add(player.position);
     }
+
+    onPosition?.call(player.position);
   }
 
   @override
   Future<void> pause() async {
-    controller.pause();
+    controller?.pause();
   }
 
   @override
   Future<void> play() async {
-    controller.play();
+    controller?.play();
   }
 
   @override
   Future<void> playOrPause() async {
     if (player.isPlaying) {
-      controller.pause();
+      controller?.pause();
     } else {
-      controller.play();
+      controller?.play();
     }
   }
 
   @override
   Future<void> seek(Duration duration) async {
-    controller.seekTo(duration);
+    controller?.seekTo(duration);
   }
 
   @override
@@ -105,11 +114,15 @@ class MediaPlayerController extends AbstractPlayer {
 
   @override
   Future<void> setVolume(double volume) async {
-    controller.setVolume(volume / 100);
+    controller?.setVolume(volume / 100);
   }
 
   @override
   Widget videoWidget() {
-    return WinVideoPlayer(controller);
+    if (controller == null) {
+      return Container();
+    } else {
+      return WinVideoPlayer(controller!);
+    }
   }
 }

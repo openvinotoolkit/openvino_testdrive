@@ -4,8 +4,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
-//import 'package:inference/pages/transcription/utils/av_player.dart';
-import 'package:inference/pages/transcription/widgets/video_player.dart';
+import 'package:inference/pages/transcription/utils/media_player_controller.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/pages/transcription/widgets/language_selector.dart';
 import 'package:inference/pages/transcription/widgets/subtitles.dart';
@@ -18,6 +17,7 @@ import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
 import 'package:inference/widgets/device_selector.dart';
 import 'package:provider/provider.dart';
+import 'package:universal_video_controls/universal_video_controls.dart';
 
 class Playground extends StatefulWidget {
   final Project project;
@@ -28,6 +28,8 @@ class Playground extends StatefulWidget {
 }
 
 class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
+  late MediaPlayerController player;
+  int subtitleIndex = 0;
 
   void showUploadMenu() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.video);
@@ -37,33 +39,42 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
     }
   }
 
-  //int get sectionIndex {
-  //  final position = player.position.value / 1000;
-  //  return (position / transcriptionPeriod).floor();
-  //}
-
-  //void initializeVideoAndListeners(String source) async {
-  //  player.open(source);
-  //}
+  void onPositionUpdate(Duration position) {
+    final seconds = position.inSeconds;
+    final index = (seconds / transcriptionPeriod).floor();
+    if (index != subtitleIndex) {
+      final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
+      inference.skipTo(index);
+      setState(() {
+          subtitleIndex = index;
+      });
+    }
+  }
 
   void uploadFile(String file) async {
     final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
     await inference.loadVideo(file);
-    //initializeVideoAndListeners(file);
+    player.setSource(file);
   }
 
   @override
   void initState() {
     super.initState();
-    //final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
-    //player = AvMediaPlayer(initAutoPlay: true, initSource: inference.videoPath);
-    //player.position.addListener(positionListener);
+    player = MediaPlayerController(onPosition: onPositionUpdate);
+
+    final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
+    if (inference.videoPath != null) {
+      player.setSource(inference.videoPath!);
+    }
   }
 
   @override
   void dispose() {
-    //player.dispose();
     super.dispose();
+    //Awkward dispose since override doesnt work as expected
+    player.dispose().then((_) {
+        player.controller?.dispose();
+    });
   }
 
   @override
@@ -122,8 +133,17 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                                   Expanded(
                                     child: GridContainer(
                                       color: backgroundColor.of(theme),
-                                      child: VideoPlayerWrapper(
-                                        filePath: inference.videoPath!
+                                      child: Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                          VideoControls(
+                                            player: player,
+                                          ),
+                                          Subtitles(
+                                            transcription: inference.transcription?.data,
+                                            subtitleIndex: subtitleIndex,
+                                          ),
+                                        ]
                                       ),
                                     ),
                                   ),
@@ -138,8 +158,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                                           }
                                           return Transcription(
                                             onSeek: (position) {
-                                              throw UnimplementedError();
-                                              //player.seekTo(position.inMilliseconds);
+                                              player.seek(position);
                                             },
                                             transcription: inference.transcription!,
                                             messages: Message.parse(inference.transcription!.data, transcriptionPeriod),
