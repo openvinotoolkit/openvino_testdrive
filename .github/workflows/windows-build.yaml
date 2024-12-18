@@ -90,7 +90,7 @@ jobs:
           }
           if (!(Test-Path "./vcpkg_installed")) {
             cd openvino_bindings/third_party
-            C:\vcpkg\vcpkg install --triplet=x64-windows-release
+            C:\vcpkg\vcpkg install
           }
 
       # Step 10: Download and Install OpenVINO Runtime
