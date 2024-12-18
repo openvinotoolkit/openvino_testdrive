@@ -34,18 +34,29 @@
       "collection": "speech-to-text-672321d5c070537a178a8aeb"
     },
     {
-      "name": "Open_llama_3b_v2",
-      "id": "open_llama_3b_v2-int8-ov",
-      "fileSize": 3689232204,
-      "optimizationPrecision": "int8",
-      "contextWindow": 2048,
-      "description": "Chat with Open_llama_3b_v2",
-      "task": "text-generation",
+      "name": "LCM Dreamshaper v7 fp16",
+      "id": "LCM_Dreamshaper_v7-fp16-ov",
+      "fileSize": 4275284513,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 0,
+      "description": "Generate images with Dreamshaper V7",
+      "task": "text-to-image",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     }
   ],
   "all_models": [
+    {
+      "name": "LCM Dreamshaper v7 fp16",
+      "id": "LCM_Dreamshaper_v7-fp16-ov",
+      "fileSize": 4275284513,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 0,
+      "description": "Generate images with Dreamshaper V7",
+      "task": "textToImage",
+      "author": "OpenVINO",
+      "collection": ""
+    },
     {
       "name": "Whisper Tiny",
       "id": "whisper-tiny-int4-ov",

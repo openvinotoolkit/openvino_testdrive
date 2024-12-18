@@ -106,7 +106,7 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
                   Padding(
                     padding: const EdgeInsets.all(4),
                     child: FilledButton(
-                      child: const Text("Download"),
+                      child: const Text("Export model"),
                       onPressed: () => downloadProject(widget.project),
                     ),
                   ),

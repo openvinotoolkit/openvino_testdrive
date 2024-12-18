@@ -78,6 +78,7 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
       projectProvider.completeLoading(widget.project);
       router.go("/models/inference", extra: widget.project);
     } catch(e) {
+      print(e);
       if (mounted) {
         await showDialog(context: context, builder: (BuildContext context) => ContentDialog(
           title: Text('An error occurred trying to download ${widget.project.name}'),

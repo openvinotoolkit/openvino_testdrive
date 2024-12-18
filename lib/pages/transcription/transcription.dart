@@ -110,7 +110,7 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
                   Padding(
                     padding: const EdgeInsets.all(4),
                     child: FilledButton(
-                      child: const Text("Download"),
+                      child: const Text("Export model"),
                       onPressed: () => downloadProject(widget.project),
                     ),
                   ),
