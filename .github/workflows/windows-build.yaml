@@ -123,13 +123,6 @@ jobs:
       contents: write
 
     steps:
-      # Install Visual Studio Build Tools (only needed on windows-latest or runners without VS2022)
-      - name: Display Installed SDKs
-        run: dir "C:\Program Files (x86)\Windows Kits\10\Include"
-      - name: Check SDK Headers
-        run: dir "C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um\dispatcherqueue.h"
-      - name: Display Installed SDKs again
-        run: dir "C:\Program Files (x86)\Windows Kits\10\Include"
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
