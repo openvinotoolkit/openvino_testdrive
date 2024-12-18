@@ -31,7 +31,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  provider: ^6.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -59,7 +59,10 @@ dependencies:
   markdown: ^7.2.2
   super_clipboard: ^0.8.24
   url_launcher: ^6.3.1
-  av_media_player: ^1.2.0
+  av_media_player:
+    git:
+      url: https://github.com/ArendJanKramer/av_media_player.git
+      ref: windows
   universal_video_controls: ^1.0.24
 
 dev_dependencies:
