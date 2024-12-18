@@ -168,7 +168,7 @@ msix_config:
   display_name: OpenVINO Test Drive
   publisher_display_name: Intel
   identity_name: intel.openvino.testdrive
-  msix_version: 24.5.0.1
+  msix_version: 24.5.0.2
   trim_logo: false
   capabilities: "internetClient"
   logo_path: "images/logo_250.png"
