@@ -17,7 +17,6 @@ class VideoPlayerWrapper extends StatefulWidget {
 
 class _VideoPlayerWrapperState extends State<VideoPlayerWrapper> {
   int subtitleIndex = 0;
-  late WinVideoPlayerController controller;
 
   void positionListener(Duration position) async {
     final seconds = position.inSeconds;
