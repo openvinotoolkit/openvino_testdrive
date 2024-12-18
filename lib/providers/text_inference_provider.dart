@@ -188,7 +188,6 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   void reset() {
-    //_inference?.close();
     _inference?.forceStop();
     _inference?.clearHistory();
     _messages.clear();
