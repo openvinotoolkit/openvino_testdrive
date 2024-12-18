@@ -62,7 +62,7 @@ class ImportModelButton extends StatelessWidget {
           showImportGetiModelDialog(context,
             callback: (projects) {
               if (projects != null && projects.length == 1) {
-                GoRouter.of(context).go("/models/inference", extra: projects.first);
+                GoRouter.of(context).pushReplacement("/models/inference", extra: projects.first);
               }
             }
           );

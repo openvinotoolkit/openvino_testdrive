@@ -21,8 +21,11 @@ class Option {
         const Option("Segmentation", "segmentation"),
         const Option("Anomaly detection","anomaly")
       ],
-      "Text": [
-        const Option("Text generation", "text")
+      "Text Generation": [
+        const Option("Text generation", "text"),
+      ],
+      "Image Generation": [
+        const Option("Text to Image", "text-to-image")
       ],
       "Audio": [
         const Option("Speech to text", "speech")

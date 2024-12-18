@@ -65,6 +65,7 @@ dependencies:
   universal_video_controls: ^1.0.24
   video_player_win: ^3.1.1
   video_player: ^2.9.2
+  window_manager: ^0.4.3
 
 dev_dependencies:
   flutter_test:
@@ -170,8 +171,9 @@ msix_config:
   display_name: OpenVINO Test Drive
   publisher_display_name: Intel
   identity_name: intel.openvino.testdrive
-  msix_version: 24.5.0.1
+  msix_version: 24.6.0.0
   trim_logo: false
+  output_name: OpenVINO Test Drive 24.6.0.0
   capabilities: "internetClient"
   logo_path: "images/logo_250.png"
   app_installer: #<-- app installer configuration

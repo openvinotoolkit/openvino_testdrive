@@ -11,6 +11,7 @@ import 'package:inference/pages/transcription/providers/speech_inference_provide
 import 'package:inference/pages/transcription/performance_metrics.dart';
 import 'package:inference/pages/transcription/playground.dart';
 import 'package:inference/utils.dart';
+import 'package:inference/widgets/controls/close_model_button.dart';
 import 'package:provider/provider.dart';
 
 class TranscriptionPage extends StatefulWidget {
@@ -111,23 +112,11 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
                   Padding(
                     padding: const EdgeInsets.all(4),
                     child: FilledButton(
-                      child: const Text("Download"),
+                      child: const Text("Export model"),
                       onPressed: () => downloadProject(widget.project),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: OutlinedButton(
-                      style: ButtonStyle(
-                        shape:WidgetStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                          side:  const BorderSide(color: Color(0XFF545454)),
-                        )),
-                      ),
-                      child: const Text("Close"),
-                      onPressed: () =>  GoRouter.of(context).go("/models"),
-                    ),
-                  ),
+                  const CloseModelButton(),
                 ]
               ),
             ),
