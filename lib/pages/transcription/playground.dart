@@ -30,6 +30,7 @@ class Playground extends StatefulWidget {
 class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
   late MediaPlayerController player;
   int subtitleIndex = 0;
+  bool showVideo = !Platform.isLinux;
 
   void showUploadMenu() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.video);
@@ -54,7 +55,9 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
   void uploadFile(String file) async {
     final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
     await inference.loadVideo(file);
-    player.setSource(file);
+    if (showVideo) {
+      player.setSource(file);
+    }
   }
 
   @override
@@ -62,9 +65,11 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
     super.initState();
     player = MediaPlayerController(onPosition: onPositionUpdate);
 
-    final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
-    if (inference.videoPath != null) {
-      player.setSource(inference.videoPath!);
+    if (showVideo) {
+      final inference = Provider.of<SpeechInferenceProvider>(context, listen: false);
+      if (inference.videoPath != null) {
+        player.setSource(inference.videoPath!);
+      }
     }
   }
 
@@ -127,6 +132,23 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                               if (!inference.loaded.isCompleted) {
                                 return Center(child: Image.asset('images/intel-loading.gif', width: 100));
                               }
+                              if (!showVideo) {
+                                return GridContainer(
+                                  color: backgroundColor.of(theme),
+                                  child: Builder(
+                                    builder: (context) {
+                                      if (inference.transcription == null) {
+                                        return Container();
+                                      }
+                                      return Transcription(
+                                        onSeek: player.seek,
+                                        transcription: inference.transcription!,
+                                        messages: Message.parse(inference.transcription!.data, transcriptionPeriod),
+                                      );
+                                    }
+                                  ),
+                                );
+                              }
                               return Row(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
@@ -157,9 +179,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                                             return Container();
                                           }
                                           return Transcription(
-                                            onSeek: (position) {
-                                              player.seek(position);
-                                            },
+                                            onSeek: player.seek,
                                             transcription: inference.transcription!,
                                             messages: Message.parse(inference.transcription!.data, transcriptionPeriod),
                                           );
