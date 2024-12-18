@@ -53,7 +53,7 @@
       "optimizationPrecision": "fp16",
       "contextWindow": 0,
       "description": "Generate images with Dreamshaper V7",
-      "task": "textToImage",
+      "task": "text-to-image",
       "author": "OpenVINO",
       "collection": ""
     },

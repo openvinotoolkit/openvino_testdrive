@@ -24,7 +24,7 @@ class Option {
         const Option("Text generation", "text"),
       ],
       "Image Generation": [
-        const Option("Text to Image", "textToImage")
+        const Option("Text to Image", "text-to-image")
       ],
       "Audio": [
         const Option("Speech to text", "speech")
