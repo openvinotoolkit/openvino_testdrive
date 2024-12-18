@@ -7,8 +7,6 @@ header:
       Copyright (c) [year] [owner]
 
       SPDX-License-Identifier: Apache-2.0
-    # pattern: |
-      # SPDX-License-Identifier: Apache-2.0
   paths:
     - integration_test/**
     - lib/**
