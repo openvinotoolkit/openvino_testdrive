@@ -76,8 +76,9 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
       projectProvider.addProject(widget.project);
       await getAdditionalModelInfo(widget.project);
       projectProvider.completeLoading(widget.project);
-      router.go("/models/inference", extra: widget.project);
+      router.pushReplacement("/models/inference", extra: widget.project);
     } catch(e) {
+      print(e);
       if (mounted) {
         await showDialog(context: context, builder: (BuildContext context) => ContentDialog(
           title: Text('An error occurred trying to download ${widget.project.name}'),
@@ -92,6 +93,28 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
           ],
         ));
       }
+    }
+  }
+
+  Future<void> onClose() async {
+    final result = await showDialog<bool>(context: context, builder: (BuildContext context) => ContentDialog(
+        title: const Text("Download in progress"),
+        content: const Text("Press 'continue' to keep downloading the model"),
+        actions: <Widget>[
+          FilledButton(
+            onPressed: () => context.pop(false),
+            child: const Text('Continue'),
+          ),
+          Button(
+            onPressed: () => context.pop(true),
+            child: const Text('Cancel download'),
+          ),
+        ]
+      )
+    );
+
+    if (result == true && context.mounted) {
+      GoRouter.of(context).pop();
     }
   }
 
@@ -140,9 +163,10 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
                 ),
               ],
             ),
-            Button(child: const Text("Close"), onPressed: () {
-              GoRouter.of(context).canPop() ? GoRouter.of(context).pop() : GoRouter.of(context).go('/home');
-            }),
+            Button(
+              onPressed: onClose,
+              child: const Text("Close")
+            ),
           ],
         ),
       ),
