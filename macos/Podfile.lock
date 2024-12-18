@@ -8,12 +8,6 @@ PODS:
     - FlutterMacOS
   - macos_window_utils (1.0.0):
     - FlutterMacOS
-  - media_kit_libs_macos_video (1.0.4):
-    - FlutterMacOS
-  - media_kit_native_event_loop (1.0.0):
-    - FlutterMacOS
-  - media_kit_video (0.0.1):
-    - FlutterMacOS
   - package_info_plus (0.0.1):
     - FlutterMacOS
   - path_provider_foundation (0.0.1):
@@ -21,13 +15,22 @@ PODS:
     - FlutterMacOS
   - screen_brightness_macos (0.1.0):
     - FlutterMacOS
+  - screen_retriever_macos (0.0.1):
+    - FlutterMacOS
   - super_native_extensions (0.0.1):
     - FlutterMacOS
   - system_theme (0.0.1):
     - FlutterMacOS
+  - universal_video_controls (0.0.1):
+    - FlutterMacOS
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
+  - video_player_avfoundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - wakelock_plus (0.0.1):
+    - FlutterMacOS
+  - window_manager (0.2.0):
     - FlutterMacOS
 
 DEPENDENCIES:
@@ -36,16 +39,17 @@ DEPENDENCIES:
   - FlutterMacOS (from `Flutter/ephemeral`)
   - irondash_engine_context (from `Flutter/ephemeral/.symlinks/plugins/irondash_engine_context/macos`)
   - macos_window_utils (from `Flutter/ephemeral/.symlinks/plugins/macos_window_utils/macos`)
-  - media_kit_libs_macos_video (from `Flutter/ephemeral/.symlinks/plugins/media_kit_libs_macos_video/macos`)
-  - media_kit_native_event_loop (from `Flutter/ephemeral/.symlinks/plugins/media_kit_native_event_loop/macos`)
-  - media_kit_video (from `Flutter/ephemeral/.symlinks/plugins/media_kit_video/macos`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - screen_brightness_macos (from `Flutter/ephemeral/.symlinks/plugins/screen_brightness_macos/macos`)
+  - screen_retriever_macos (from `Flutter/ephemeral/.symlinks/plugins/screen_retriever_macos/macos`)
   - super_native_extensions (from `Flutter/ephemeral/.symlinks/plugins/super_native_extensions/macos`)
   - system_theme (from `Flutter/ephemeral/.symlinks/plugins/system_theme/macos`)
+  - universal_video_controls (from `Flutter/ephemeral/.symlinks/plugins/universal_video_controls/macos`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
+  - video_player_avfoundation (from `Flutter/ephemeral/.symlinks/plugins/video_player_avfoundation/darwin`)
   - wakelock_plus (from `Flutter/ephemeral/.symlinks/plugins/wakelock_plus/macos`)
+  - window_manager (from `Flutter/ephemeral/.symlinks/plugins/window_manager/macos`)
 
 EXTERNAL SOURCES:
   desktop_drop:
@@ -58,26 +62,28 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/irondash_engine_context/macos
   macos_window_utils:
     :path: Flutter/ephemeral/.symlinks/plugins/macos_window_utils/macos
-  media_kit_libs_macos_video:
-    :path: Flutter/ephemeral/.symlinks/plugins/media_kit_libs_macos_video/macos
-  media_kit_native_event_loop:
-    :path: Flutter/ephemeral/.symlinks/plugins/media_kit_native_event_loop/macos
-  media_kit_video:
-    :path: Flutter/ephemeral/.symlinks/plugins/media_kit_video/macos
   package_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
   path_provider_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
   screen_brightness_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/screen_brightness_macos/macos
+  screen_retriever_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/screen_retriever_macos/macos
   super_native_extensions:
     :path: Flutter/ephemeral/.symlinks/plugins/super_native_extensions/macos
   system_theme:
     :path: Flutter/ephemeral/.symlinks/plugins/system_theme/macos
+  universal_video_controls:
+    :path: Flutter/ephemeral/.symlinks/plugins/universal_video_controls/macos
   url_launcher_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
+  video_player_avfoundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/video_player_avfoundation/darwin
   wakelock_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/wakelock_plus/macos
+  window_manager:
+    :path: Flutter/ephemeral/.symlinks/plugins/window_manager/macos
 
 SPEC CHECKSUMS:
   desktop_drop: 69eeff437544aa619c8db7f4481b3a65f7696898
@@ -85,17 +91,18 @@ SPEC CHECKSUMS:
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   irondash_engine_context: da62996ee25616d2f01bbeb85dc115d813359478
   macos_window_utils: 933f91f64805e2eb91a5bd057cf97cd097276663
-  media_kit_libs_macos_video: b3e2bbec2eef97c285f2b1baa7963c67c753fb82
-  media_kit_native_event_loop: 81fd5b45192b72f8b5b69eaf5b540f45777eb8d5
-  media_kit_video: c75b07f14d59706c775778e4dd47dd027de8d1e5
-  package_info_plus: d2f71247aab4b6521434f887276093acc70d214c
+  package_info_plus: 12f1c5c2cfe8727ca46cbd0b26677728972d9a5b
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   screen_brightness_macos: 2d6d3af2165592d9a55ffcd95b7550970e41ebda
+  screen_retriever_macos: 776e0fa5d42c6163d2bf772d22478df4b302b161
   super_native_extensions: 85efee3a7495b46b04befcfc86ed12069264ebf3
   system_theme: c7b9f6659a5caa26c9bc2284da096781e9a6fcbc
+  universal_video_controls: 6e055af943bd4e3cba227253ac516f790e8923f2
   url_launcher_macos: c82c93949963e55b228a30115bd219499a6fe404
+  video_player_avfoundation: 7c6c11d8470e1675df7397027218274b6d2360b3
   wakelock_plus: 4783562c9a43d209c458cb9b30692134af456269
+  window_manager: 3a1844359a6295ab1e47659b1a777e36773cd6e8
 
-PODFILE CHECKSUM: 16208599a12443d53889ba2270a4985981cfb204
+PODFILE CHECKSUM: b5ff078e9cf81bae88fdc8e0ce3668e57b68e9b6
 
 COCOAPODS: 1.16.2
