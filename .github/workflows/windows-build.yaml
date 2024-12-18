@@ -78,7 +78,7 @@ jobs:
           if (!(Test-Path "C:\vcpkg")) { git clone https://github.com/microsoft/vcpkg.git C:\vcpkg }
           C:\vcpkg\bootstrap-vcpkg.bat
           cd openvino_bindings/third_party
-          C:\vcpkg\vcpkg install
+          C:\vcpkg\vcpkg install --triplet=x64-windows-release
 
       # Step 10: Download and Install OpenVINO Runtime
       - name: Download and Install OpenVINO Runtime 24.5.0
