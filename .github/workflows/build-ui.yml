@@ -19,34 +19,32 @@ jobs:
       - name: Determine comon OS vars
         shell: bash
         run: |
-          if [[ "${{ startsWith(inputs.os, 'ubuntu') }}" == "true" ]]; then
-            echo "OS_NAME=linux" >> $GITHUB_ENV
+          if [[ "${{ runner.os }}" == "Linux" ]]; then
             echo "RELEASE_PATH=build/linux/x64/release/bundle" >> $GITHUB_ENV
-          elif [[ "${{ startsWith(inputs.os, 'windows') }}" == "true" ]]; then
-            echo "OS_NAME=windows" >> $GITHUB_ENV
+          elif [[ "${{ runner.os }}" == "Windows" ]]; then
             echo "RELEASE_PATH=build/windows/x64/runner/Release" >> $GITHUB_ENV
-          elif [[ "${{ startsWith(inputs.os, 'macos') }}" == "true" ]]; then
-            echo "OS_NAME=macos" >> $GITHUB_ENV
+          elif [[ "${{ runner.os }}" == "macOS" ]]; then
             echo "RELEASE_PATH=build/macos/Build/Products/Release" >> $GITHUB_ENV
           fi
       - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@v2.18.0
         with:
           channel: 'stable'
           flutter-version-file: pubspec.yaml
+          cache: true
       - name: Install linux dependencies
-        if: ${{ env.OS_NAME == 'linux' }}
+        if: ${{ runner.os == 'Linux' }}
         run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev
       - name: Install project dependencies
         run: flutter pub get
       - name: Generate intermediates
         run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Enable build
-        run: flutter config --enable-${{ env.OS_NAME }}-desktop
+        run: flutter config --enable-${{ lower(runner.os) }}-desktop
       - name: Build artifacts
-        run: flutter build ${{ env.OS_NAME }} --release
+        run: flutter build ${{ lower(runner.os) }} --release
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: "OpenVINO-TestDrive-no-bindings-${{ env.OS_NAME }}.zip"
+          name: "OpenVINO-TestDrive-no-bindings-${{ lower(runner.os) }}.zip"
           path: ${{ env.RELEASE_PATH }}
