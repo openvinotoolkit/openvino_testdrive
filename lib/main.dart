@@ -13,7 +13,6 @@ import 'package:inference/public_models.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
-
 const String title = 'OpenVINO TestDrive';
 
 void testConnection() async {
