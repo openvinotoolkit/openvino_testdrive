@@ -143,6 +143,7 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTapDown: (_) => windowManager.startDragging(),
+                    onDoubleTap: () => windowManager.maximize(),
                     child: SizedBox(
                       height: 48,
                       child: Align(
