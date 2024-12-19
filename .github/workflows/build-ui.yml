@@ -40,11 +40,11 @@ jobs:
       - name: Generate intermediates
         run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Enable build
-        run: flutter config --enable-${{ lower(runner.os) }}-desktop
+        run: flutter config --enable-${"${{runner.os}}"@L}-desktop
       - name: Build artifacts
-        run: flutter build ${{ lower(runner.os) }} --release
+        run: flutter build ${"${{runner.os}}"@L} --release
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: "OpenVINO-TestDrive-no-bindings-${{ lower(runner.os) }}.zip"
+          name: "OpenVINO-TestDrive-no-bindings-${{runner.os}}.zip"
           path: ${{ env.RELEASE_PATH }}
