@@ -26,6 +26,7 @@ jobs:
           elif [[ "${{ runner.os }}" == "macOS" ]]; then
             echo "RELEASE_PATH=build/macos/Build/Products/Release" >> $GITHUB_ENV
           fi
+          echo "OS_NAME=`echo "${{runner.os}}" | tr '[:upper:]' '[:lower:]`" >> $GITHUB_ENV
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2.18.0
         with:
@@ -40,11 +41,9 @@ jobs:
       - name: Generate intermediates
         run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Enable build
-        shell: bash
-        run: flutter config --enable-`echo "${{runner.os}}" | tr '[:upper:]' '[:lower:]'`-desktop
+        run: flutter config --enable-${env.OS_NAME}-desktop
       - name: Build artifacts
-        shell: bash
-        run: flutter build `echo "${{runner.os}}" | tr '[:upper:]' '[:lower:]'` --release
+        run: flutter build ${env.OS_NAME} --release
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
