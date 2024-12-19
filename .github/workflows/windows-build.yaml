@@ -75,7 +75,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ./openvino_bindings/vcpkg_installed
+            ./openvino_bindings/third_party/vcpkg_installed
           key: vcpkg-${{ runner.os }}-${{ hashFiles('openvino_bindings/third_party/vcpkg.json') }}
           restore-keys: |
             vcpkg-${{ runner.os }}-
