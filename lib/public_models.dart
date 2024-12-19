@@ -34,12 +34,7 @@ void writeProjectJson(PublicProject project) {
 
 Future<void> getAdditionalModelInfo(PublicProject project) async {
   final configJsonURL = huggingFaceModelFileUrl(project.modelId, "config.json");
-  final response = await http.get(
-      Uri.parse(configJsonURL),
-      headers: {
-        "Authorization":"Bearer ${project.modelInfo!.collection.token}",
-      }
-  );
+  final response = await http.get(Uri.parse(configJsonURL));
   if (response.statusCode == 200) {
     final config = jsonDecode(response.body);
     project.tasks[0].architecture = config["architectures"][0];
