@@ -8,6 +8,7 @@ import 'package:inference/pages/import/widgets/badge.dart';
 import 'package:inference/pages/import/widgets/model_card.dart';
 import 'package:inference/widgets/controls/dropdown_multiple_select.dart';
 import 'package:inference/widgets/controls/search_bar.dart';
+import 'package:inference/widgets/empty_model_widget.dart';
 import 'package:inference/widgets/fixed_grid.dart';
 import 'package:provider/provider.dart';
 
@@ -122,6 +123,7 @@ class _HuggingfaceState extends State<Huggingface> {
                           tileWidth: 226,
                           spacing: 24,
                           itemCount: allModels.length,
+                          emptyWidget: EmptyModelListWidget(searchQuery: searchValue),
                           itemBuilder: (context, index) => ModelCard(
                             model: allModels[index],
                             checked: importProvider.selectedModel == allModels[index],
