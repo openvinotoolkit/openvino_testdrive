@@ -3,21 +3,41 @@
 
 import 'dart:convert';
 
-import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'package:html/dom.dart';
 import 'package:collection/collection.dart';
 
 class Collection {
   final String path;
-  final String author;
+  final String collectionAuthor;
+  final String modelAuthor;
   final String fallbackTask;
   final String Function(String) descriptionFormat;
-  const Collection(this.path, this.author, this.fallbackTask, this.descriptionFormat);
+
+  const Collection(this.path, this.collectionAuthor, this.modelAuthor,
+      this.fallbackTask, this.descriptionFormat);
 }
 
-Future<List<Map<String, dynamic>>> getCollectionConfig(Collection collection) async {
-  final url = "https://huggingface.co/api/collections/${collection.author}/${collection.path}";
+class HuggingFaceFileEntry {
+  final String type;
+  final String path;
+  final int size;
+
+  HuggingFaceFileEntry(
+      {required this.type, required this.path, required this.size});
+
+  factory HuggingFaceFileEntry.fromJson(Map<String, dynamic> json) {
+    return HuggingFaceFileEntry(
+      type: json['type'],
+      path: json['path'],
+      size: json['size'] ?? 0,
+    );
+  }
+}
+
+Future<List<Map<String, dynamic>>> getCollectionConfig(
+    Collection collection) async {
+  final url =
+      "https://huggingface.co/api/collections/${collection.collectionAuthor}/${collection.path}";
   final request = await http.get(Uri.parse(url));
   return List<Map<String, dynamic>>.from(jsonDecode(request.body)["items"]);
 }
@@ -72,8 +92,8 @@ class ModelInfo {
     final id = getIdFromHuggingFaceId(collectionConfig["id"]);
     final name = getNameFromId(id);
 
-    final config = await getConfigFromRepo(id, collection.author);
-    final fileSize = await getModelSizeCrawler(id, collection.author);
+    final config = await getConfigFromRepo(id, collection.modelAuthor);
+    final fileSize = await getModelSizeCrawler(id, collection.modelAuthor);
     final description = collection.descriptionFormat(name);
 
     int contextWindow = config["max_position_embeddings"]
@@ -89,50 +109,54 @@ class ModelInfo {
       contextWindow: contextWindow,
       description: description,
       task: collectionConfig["pipeline_tag"] ?? collection.fallbackTask,
-      author: collection.author,
+      author: collection.modelAuthor,
       collection: collection.path,
     );
   }
 
-  static Future<int> getModelSizeCrawler(String id, String author) async {
-    final url = "https://huggingface.co/$author/$id/tree/main";
-    final pattern = RegExp("(.*) (.*)");
-
-    final output = await http.get(Uri.parse(url));
-    var document = parse(output.body);
-    final files = document.querySelectorAll('a[title="Download file"]');
-
-    int total = 0;
-    for (final v in files) {
-      final text = v.nodes.first.text?.trim();
-      if (text == null) {
-        continue;
-      }
-      //print(text);
-      final match = pattern.firstMatch(text);
-      if (match == null){
-        continue;
-      }
-
-      final val = double.parse(match.group(1)!);
-      total += (val * switch(match.group(2)!) {
-        "Bytes" => 1,
-        "kB" => 1024,
-        "MB" => 1024 * 1024,
-        "GB" => 1024 * 1024 * 1024,
-        _ => 0
-      }).toInt();
+  static Future<Map<String, int>> getFileSizesRecursively(
+      String id, String author, String path) async {
+    String url = "https://huggingface.co/api/models/$author/$id/tree/main";
+    if (path.isNotEmpty) {
+      url += path;
     }
-    return total;
+
+    Map<String, int> map = {};
+
+    final response = await http.get(Uri.parse(url));
+    final List<HuggingFaceFileEntry> document = (jsonDecode(response.body) as List<dynamic>)
+        .map((e) => HuggingFaceFileEntry.fromJson(e))
+        .toList();
+
+    for (final entry in document) {
+      if (entry.type == "directory") {
+        final p = entry.path;
+        final entries = await getFileSizesRecursively(id, author, "$path/$p");
+        map.addAll(entries);
+      } else if (entry.type == "file"){
+        map[entry.path] = entry.size;
+      }
+    }
+
+    return map;
   }
 
-  static Future<Map<String, dynamic>> getConfigFromRepo(String id, String author) async {
+  static Future<int> getModelSizeCrawler(String id, String author) async {
+    final fileSizesMap = await getFileSizesRecursively(id, author, "");
+    return fileSizesMap.values.reduce((sum, element) => sum + element);
+  }
+
+  static Future<Map<String, dynamic>> getConfigFromRepo(
+      String id, String author) async {
     final url = "https://huggingface.co/$author/$id/raw/main/config.json";
-    final result = (await http.get(Uri.parse(url))).body;
-    final config = jsonDecode(result);
-    return config;
+    final response = await http.get(Uri.parse(url));
+    final result = response.body;
+    if (response.statusCode == 200) {
+      final config = jsonDecode(result);
+      return config;
+    }
+    return {};
   }
-
 
   static String? getOptimizationFromId(String id) {
     final optimizationPattern = RegExp("(fp|int)(\\d*)");
@@ -153,7 +177,7 @@ class ModelInfo {
   }
 
   static String getNameFromId(String id) {
-    final pattern =RegExp("((fp|int)(\\d*)|ov)");
+    final pattern = RegExp("((fp|int)(\\d*)|ov)");
     final sections = id.split("-");
     List<String> parts = [];
     for (final section in sections) {
@@ -174,10 +198,12 @@ void generate() async {
     "Phi-3-mini-4k-instruct-int4-ov",
     "whisper-base-fp16-ov",
     "open_llama_3b_v2-int8-ov",
+    "LCM_Dreamshaper_v7-int8-ov",
   ];
   final List<Collection> collections = [
-    Collection("speech-to-text-672321d5c070537a178a8aeb", "OpenVINO", "speech", (String name) => "Transcribe video with $name"),
-    Collection("llm-6687aaa2abca3bbcec71a9bd", "OpenVINO", "text-generation", (String name) => "Chat with $name"),
+    Collection("speech-to-text-672321d5c070537a178a8aeb", "OpenVINO", "OpenVINO", "speech", (String name) => "Transcribe video with $name"),
+    Collection("llm-6687aaa2abca3bbcec71a9bd", "OpenVINO", "OpenVINO", "text-generation", (String name) => "Chat with $name"),
+    Collection("image-generation-6763eab8ac097237330c78c5", "arendjan", "OpenVINO", "text-to-image", (String name) => "Generate images with $name"),
   ];
   List<ModelInfo> models = [];
   for (final collection in collections) {

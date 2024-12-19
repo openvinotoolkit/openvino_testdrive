@@ -39,7 +39,7 @@ StringWithMetrics TTIInference::prompt(std::string message, int width, int heigh
 
     // Reshape the uint8_t data into a 512x512 3-channel OpenCV Mat
     const cv::Mat image(static_cast<int>(height_), static_cast<int>(width_), CV_8UC3, tensor_data);
-    if (flip_bgr)
+    if (!flip_bgr)
     {
         cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
     }
