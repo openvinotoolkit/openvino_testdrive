@@ -16,9 +16,9 @@ RUN curl -fSsL -O https://github.com/bazelbuild/bazel/releases/download/$BAZEL_V
     rm -f /bazel/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
 
 RUN cd /tmp && mkdir -p /opt/intel && \
-    curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/pre-release/2024.6.0.0rc3/openvino_genai_ubuntu22_2024.6.0.0rc3_x86_64.tar.gz \
+    curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2024.6.0.0/openvino_genai_ubuntu22_2024.6.0.0_x86_64.tar.gz \
     --output openvino.tgz && tar -xf openvino.tgz && \
-    mv openvino_genai_ubuntu22_2024.6.0.0rc3_x86_64 /opt/intel/openvino && rm /tmp/openvino.tgz
+    mv openvino_genai_ubuntu22_2024.6.0.0_x86_64 /opt/intel/openvino && rm /tmp/openvino.tgz
 
 RUN cd /opt/intel/openvino && ./install_dependencies/install_openvino_dependencies.sh -y
 
