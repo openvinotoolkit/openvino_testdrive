@@ -76,7 +76,7 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
       projectProvider.addProject(widget.project);
       await getAdditionalModelInfo(widget.project);
       projectProvider.completeLoading(widget.project);
-      router.pushReplacement("/models/inference", extra: widget.project);
+      router.go("/models/inference", extra: widget.project);
     } catch(e) {
       print(e);
       if (mounted) {
