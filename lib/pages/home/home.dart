@@ -8,6 +8,7 @@ import 'package:inference/pages/home/widgets/featured_card.dart';
 import 'package:inference/pages/models/widgets/model_card.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/project.dart';
+import 'package:inference/widgets/empty_model_widget.dart';
 import 'package:inference/widgets/fixed_grid.dart';
 import 'package:inference/widgets/import_model_button.dart';
 import 'package:inference/providers/project_provider.dart';
@@ -188,6 +189,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
+                  emptyWidget: const EmptyModelListWidget(),
                   itemBuilder: (context, index) {
                     return ModelCard(project: projects.elementAt(index));
                   }
