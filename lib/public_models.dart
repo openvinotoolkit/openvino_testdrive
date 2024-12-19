@@ -34,10 +34,12 @@ void writeProjectJson(PublicProject project) {
 
 Future<void> getAdditionalModelInfo(PublicProject project) async {
   final configJsonURL = huggingFaceModelFileUrl(project.modelId, "config.json");
-  final info = (await http.get(Uri.parse(configJsonURL)));
-  if (info.statusCode == 200){
-    final config = jsonDecode(info.body);
+  final response = await http.get(Uri.parse(configJsonURL));
+  if (response.statusCode == 200) {
+    final config = jsonDecode(response.body);
     project.tasks[0].architecture = config["architectures"][0];
+  }else{
+    project.tasks[0].architecture = "unknown"; // Not all models have config.json
   }
   writeProjectJson(project);
 }
