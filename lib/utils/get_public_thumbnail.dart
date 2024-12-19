@@ -11,7 +11,7 @@ Image getThumbnail(String id) {
   }
 
   if (name.contains('mistral') || name.contains('mixstral')) {
-    return Image.asset('images/model_thumbnails/mistral.jpg');
+    return Image.asset('images/model_thumbnails/mistral.png');
   }
 
   if (name.contains('phi')) {
