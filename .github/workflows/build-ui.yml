@@ -41,9 +41,9 @@ jobs:
       - name: Generate intermediates
         run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Enable build
-        run: flutter config --enable-${env.OS_NAME}-desktop
+        run: flutter config --enable-${OS_NAME}-desktop
       - name: Build artifacts
-        run: flutter build ${env.OS_NAME} --release
+        run: flutter build ${OS_NAME} --release
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
