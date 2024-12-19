@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:io';
@@ -79,10 +80,10 @@ class _LiveInferenceState extends State<LiveInference> {
                           buttonBuilder: (context, callback) {
                             return NoOutlineButton(
                               onPressed: callback,
-                              child: Row(
+                              child: const Row(
                                 children: [
-                                  const Text("Choose image file"),
-                                  const Padding(
+                                  Text("Choose image file"),
+                                  Padding(
                                     padding: EdgeInsets.only(left: 8),
                                     child: Icon(FluentIcons.chevron_down, size: 12),
                                   ),

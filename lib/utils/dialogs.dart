@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:go_router/go_router.dart';

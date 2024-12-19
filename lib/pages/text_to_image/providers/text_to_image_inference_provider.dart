@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:async';
@@ -197,7 +198,7 @@ class TextToImageInferenceProvider extends ChangeNotifier {
   }
 
   void forceStop() {
-    // Todo
+    // TODO(ArendJanKramer): Implement forceStop
   }
 
   void reset() {

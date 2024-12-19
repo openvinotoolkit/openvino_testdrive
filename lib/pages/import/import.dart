@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -38,11 +39,11 @@ class _ImportPageState extends State<ImportPage> {
             child: NavigationView(
               pane: NavigationPane(
                 size: const NavigationPaneSize(topHeight: 64),
-                header: Row(
+                header: const Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: const Text("Import model",
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text("Import model",
                         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),

@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage> {
 
   Project? getProjectWithModel(Model model) {
     // Retrieve a project given the modelId
-    return projectModelMap[model.id] ?? projectModelMap["OpenVINO/" + model.id];
+    return projectModelMap[model.id] ?? projectModelMap["OpenVINO/${model.id}"];
   }
 
   bool projectExistsWithModel(Model model){
@@ -51,7 +52,9 @@ class _HomePageState extends State<HomePage> {
 
   void downloadFeaturedModel(Model model){
     model.convertToProject().then((project) {
-      GoRouter.of(context).push('/models/download', extra: project);
+      if (mounted) {
+        GoRouter.of(context).push('/models/download', extra: project);
+      }
     });
 
   }

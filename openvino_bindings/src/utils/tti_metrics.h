@@ -1,11 +1,8 @@
-/**
- * Copyright 2024 Intel Corporation.
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
  * SPDX-License-Identifier: Apache-2.0
  */
-
-//
-// Created by akramer on 24-10-24.
-//
 
 #ifndef TTI_METRICS_H
 #define TTI_METRICS_H

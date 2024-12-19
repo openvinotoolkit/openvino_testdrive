@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:io';
@@ -46,16 +47,17 @@ class _PlaygroundState extends State<Playground> {
     _textController.text = '';
     jumpToBottom(offset: 110); //move to bottom including both
     provider.message(message).catchError((e) async {
-      // ignore: use_build_context_synchronously
-      await displayInfoBar(context, builder: (context, close) => InfoBar(
-        title: const Text("An error occurred processing the message"),
-        content: Text(e.toString()),
-        severity: InfoBarSeverity.error,
-        action: IconButton(
-          icon: const Icon(FluentIcons.clear),
-          onPressed: close,
-        ),
-      ));
+      if (mounted) {
+        await displayInfoBar(context, builder: (context, close) => InfoBar(
+          title: const Text("An error occurred processing the message"),
+          content: Text(e.toString()),
+          severity: InfoBarSeverity.error,
+          action: IconButton(
+            icon: const Icon(FluentIcons.clear),
+            onPressed: close,
+          ),
+        ));
+      }
     });
   }
 

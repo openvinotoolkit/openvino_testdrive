@@ -1,8 +1,8 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -10,7 +10,6 @@ import 'package:inference/public_model_info.dart';
 import 'package:inference/utils/get_public_thumbnail.dart';
 import 'package:path/path.dart';
 import 'package:collection/collection.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
@@ -280,20 +279,21 @@ class GetiProject extends Project {
   }
 
   @override
-  bool operator ==(rhs) {
-    if (rhs is! Project){
+  bool operator ==(other) {
+    if (other is! Project){
       return false;
     }
 
-    if (rhs.id != id) {
+    if (other.id != id) {
       return false;
     }
 
     return const ListEquality().equals(
-      rhs.tasks.map((m) => m.id).toList(),
+      other.tasks.map((m) => m.id).toList(),
       tasks.map((m) => m.id).toList()
     );
   }
+  @override
   bool verify() {
     final platformContext = Context(style: Style.platform);
     final checks = [
@@ -314,6 +314,8 @@ class GetiProject extends Project {
 }
 
 class PublicProject extends Project {
+  @override
+  // ignore: overridden_fields
   Completer<void> loaded = Completer<void>();
   Image thumbnail;
   PublicModelInfo? modelInfo;

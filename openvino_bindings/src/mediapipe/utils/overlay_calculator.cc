@@ -1,5 +1,9 @@
-// Copyright 2024 Intel Corporation.
-// SPDX-License-Identifier: Apache-2.0
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 
 #include "overlay_calculator.h"
 #include "src/mediapipe/utils/overlay_calculator.pb.h"

@@ -60,6 +60,8 @@ dependencies:
   markdown: ^7.2.2
   super_clipboard: ^0.8.24
   url_launcher: ^6.3.1
+  vector_math: ^2.1.4
+  archive: ^3.6.1
   universal_video_controls: ^1.0.24
   video_player_win: ^3.1.1
   video_player: ^2.9.2

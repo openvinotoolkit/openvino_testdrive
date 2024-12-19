@@ -1,5 +1,8 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
+
+// ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
 import 'dart:ffi';
@@ -136,7 +139,7 @@ class ImageInference {
     int instanceAddress = instance.ref.value.address;
     void wrapCallback(Pointer<StatusOrString> ptr) {
       if (StatusEnum.fromValue(ptr.ref.status) != StatusEnum.OkStatus) {
-        // TODO instead of throw, call an onError callback.
+        // TODO(RHeckerIntel): instead of throw, call an onError callback.
         throw "ImageInference infer error: ${ptr.ref.status} ${ptr.ref.message.toDartString()}";
       }
       callback(ImageInferenceResult.fromJson(jsonDecode(ptr.ref.value.toDartString())));

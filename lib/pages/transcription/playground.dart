@@ -1,7 +1,7 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -103,10 +103,10 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                       children: [
                         NoOutlineButton(
                           onPressed: showUploadMenu,
-                          child: Row(
+                          child: const Row(
                             children: [
-                              const Text("Choose video"),
-                              const Padding(
+                              Text("Choose video"),
+                              Padding(
                                 padding: EdgeInsets.only(left: 8),
                                 child: Icon(FluentIcons.chevron_down, size: 12),
                               ),

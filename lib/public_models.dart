@@ -1,12 +1,11 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:http/http.dart' as http;
 import 'package:inference/project.dart';
 import 'package:inference/public_model_info.dart';

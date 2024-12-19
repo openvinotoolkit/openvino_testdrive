@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:math';
@@ -56,17 +57,19 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
     try {
       files = await listDownloadFiles(widget.project);
     } catch (e) {
-      await showDialog(context: context, builder: (BuildContext context) => ContentDialog(
-        title: const Text('Model was not found'),
-        actions: [
-          Button(
-            onPressed: () {
-              router.canPop() ? router.pop() : router.go('/home');
-            },
-            child: const Text('Close'),
-          ),
-        ],
-      ));
+      if (mounted){
+        await showDialog(context: context, builder: (BuildContext context) => ContentDialog(
+          title: const Text('Model was not found'),
+          actions: [
+            Button(
+              onPressed: () {
+                router.canPop() ? router.pop() : router.go('/home');
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        ));
+      }
       return;
     }
 

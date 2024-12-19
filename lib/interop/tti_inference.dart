@@ -1,4 +1,5 @@
-// Copyright 2024 Intel Corporation.
+// Copyright (c) 2024 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:ffi';
@@ -7,7 +8,7 @@ import 'dart:isolate';
 import 'package:ffi/ffi.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 
-final tti_ov = getBindings();
+final ttiOV = getBindings();
 
 class TTIInference {
   final Pointer<StatusOrTTIInference> instance;
@@ -21,7 +22,7 @@ class TTIInference {
     final result = await Isolate.run(() {
       final modelPathPtr = modelPath.toNativeUtf8();
       final devicePtr = device.toNativeUtf8();
-      final status = tti_ov.ttiInferenceOpen(modelPathPtr, devicePtr);
+      final status = ttiOV.ttiInferenceOpen(modelPathPtr, devicePtr);
       calloc.free(modelPathPtr);
       calloc.free(devicePtr);
 
@@ -41,7 +42,7 @@ class TTIInference {
     int instanceAddress = instance.ref.value.address;
     final result = await Isolate.run(() {
       final messagePtr = message.toNativeUtf8();
-      final status = tti_ov.ttiInferencePrompt(
+      final status = ttiOV.ttiInferencePrompt(
           Pointer<Void>.fromAddress(instanceAddress),
           messagePtr,
           width,
@@ -60,7 +61,7 @@ class TTIInference {
   }
 
   bool hasModelIndex() {
-    final status = tti_ov.ttiInferenceHasModelIndex(instance.ref.value);
+    final status = ttiOV.ttiInferenceHasModelIndex(instance.ref.value);
 
     if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
       throw "TTI Chat template error: ${status.ref.status} ${status.ref.message.toDartString()}";
@@ -70,11 +71,11 @@ class TTIInference {
   }
 
   void close() {
-    final status = tti_ov.ttiInferenceClose(instance.ref.value);
+    final status = ttiOV.ttiInferenceClose(instance.ref.value);
 
     if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
       throw "Close error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
-    tti_ov.freeStatus(status);
+    ttiOV.freeStatus(status);
   }
 }
