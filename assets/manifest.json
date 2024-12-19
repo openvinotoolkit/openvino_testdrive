@@ -1,17 +1,6 @@
 {
   "popular_models": [
     {
-      "name": "Mistral 7b Instruct V0.1",
-      "id": "mistral-7b-instruct-v0.1-int8-ov",
-      "fileSize": 7287479393,
-      "optimizationPrecision": "int8",
-      "contextWindow": 32768,
-      "description": "Chat with Mistral 7b Instruct V0.1",
-      "task": "text-generation",
-      "author": "OpenVINO",
-      "collection": "llm-6687aaa2abca3bbcec71a9bd"
-    },
-    {
       "name": "Phi 3 Mini 4k Instruct",
       "id": "Phi-3-mini-4k-instruct-int4-ov",
       "fileSize": 2159924401,
