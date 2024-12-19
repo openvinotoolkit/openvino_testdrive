@@ -10,6 +10,7 @@ jobs:
     permissions:
       contents: write
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-22.04, windows-latest, macos-latest]
     uses: ./.github/workflows/build-ui.yml
