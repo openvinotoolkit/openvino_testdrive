@@ -1,8 +1,10 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
-import 'package:ffi/ffi.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:image/image.dart';
 import 'package:archive/archive_io.dart';
 import 'package:inference/importers/importer.dart';

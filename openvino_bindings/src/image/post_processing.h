@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef POST_PROCESSING_H_
 #define POST_PROCESSING_H_
 

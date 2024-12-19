@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -43,16 +47,17 @@ class _PlaygroundState extends State<Playground> {
     _textController.text = '';
     jumpToBottom(offset: 110); //move to bottom including both
     provider.message(message).catchError((e) async {
-      // ignore: use_build_context_synchronously
-      await displayInfoBar(context, builder: (context, close) => InfoBar(
-        title: const Text("An error occurred processing the message"),
-        content: Text(e.toString()),
-        severity: InfoBarSeverity.error,
-        action: IconButton(
-          icon: const Icon(FluentIcons.clear),
-          onPressed: close,
-        ),
-      ));
+      if (mounted) {
+        await displayInfoBar(context, builder: (context, close) => InfoBar(
+          title: const Text("An error occurred processing the message"),
+          content: Text(e.toString()),
+          severity: InfoBarSeverity.error,
+          action: IconButton(
+            icon: const Icon(FluentIcons.clear),
+            onPressed: close,
+          ),
+        ));
+      }
     });
   }
 
@@ -219,7 +224,10 @@ class _PlaygroundState extends State<Playground> {
                                   padding: const EdgeInsets.only(bottom: 20),
                                   child: Tooltip(
                                     message: "Create new thread",
-                                    child: Button(child: const Icon(FluentIcons.rocket, size: 18,), onPressed: () { provider.reset(); }),
+                                    child: Button(
+                                      onPressed: provider.interimResponse == null ? () => provider.reset() : null,
+                                      child: const Icon(FluentIcons.rocket, size: 18),
+                                    ),
                                   ),
                                 ),
                                 Expanded(
@@ -263,16 +271,16 @@ class _PlaygroundState extends State<Playground> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 20),
-                                  child: Builder(builder: (context) => provider.interimResponse != null
-                                    ? Tooltip(
-                                      message: "Stop",
-                                      child: Button(child: const Icon(FluentIcons.stop, size: 18,), onPressed: () { provider.forceStop(); }),
-                                    )
-                                    : Tooltip(
+                                  child: Builder(builder: (context) {
+                                    final isRunning = provider.interimResponse != null;
+                                    return Tooltip(
                                       message: "Send message",
-                                      child: Button(child: const Icon(FluentIcons.send, size: 18,), onPressed: () { message(_textController.text); }),
-                                    )
-                                  ),
+                                      child: Button(
+                                        onPressed: isRunning ?  null : () => message(_textController.text),
+                                        child: const Icon(FluentIcons.send, size: 18),
+                                      ),
+                                    );
+                                  }),
                                 )
                               ]
                             ),

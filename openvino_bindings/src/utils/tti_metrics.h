@@ -1,6 +1,8 @@
-//
-// Created by akramer on 24-10-24.
-//
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 #ifndef TTI_METRICS_H
 #define TTI_METRICS_H

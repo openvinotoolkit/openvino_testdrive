@@ -1,7 +1,10 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/text_to_image/providers/text_to_image_inference_provider.dart';
 import 'package:inference/pages/text_to_image/widgets/tti_metrics_grid.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class TTIPerformanceMetricsPane extends StatefulWidget {
@@ -38,10 +41,6 @@ class _TTIPerformanceMetricsPaneState extends State<TTIPerformanceMetricsPane> {
             )
           );
         }
-
-        Locale locale = Localizations.localeOf(context);
-        final nf = NumberFormat.decimalPatternDigits(
-            locale: locale.languageCode, decimalDigits: 0);
 
         final metrics = inference.metrics!;
 

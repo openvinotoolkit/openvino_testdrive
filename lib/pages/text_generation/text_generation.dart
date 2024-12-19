@@ -1,13 +1,17 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:inference/pages/text_generation/performance_metrics.dart';
 import 'package:inference/pages/text_generation/playground.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/utils.dart';
+import 'package:inference/widgets/controls/close_model_button.dart';
 import 'package:provider/provider.dart';
 
 class TextGenerationPage extends StatefulWidget {
@@ -41,13 +45,14 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
         if (init) {
           final textInferenceProvider = TextInferenceProvider(widget.project, preferences.device);
           textInferenceProvider.loadModel().catchError((e) async {
-            // ignore: use_build_context_synchronously
-            await displayInfoBar(context, builder: (context, close) => InfoBar(
-              title: const Text('Error loading model'),
-              content: Text(e.toString()),
-              severity: InfoBarSeverity.error,
-              action: IconButton(icon: const Icon(FluentIcons.clear), onPressed: close),
-            ));
+            if (context.mounted) {
+              await displayInfoBar(context, builder: (context, close) => InfoBar(
+                title: const Text('Error loading model'),
+                content: Text(e.toString()),
+                severity: InfoBarSeverity.error,
+                action: IconButton(icon: const Icon(FluentIcons.clear), onPressed: close),
+              ));
+            }
           });
           return textInferenceProvider;
         }
@@ -119,25 +124,11 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
                     Padding(
                       padding: const EdgeInsets.all(4),
                       child: FilledButton(
-                        child: const Text("Download"),
+                        child: const Text("Export model"),
                         onPressed: () => downloadProject(widget.project),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: OutlinedButton(
-                        style: ButtonStyle(
-                          shape:WidgetStatePropertyAll(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4.0),
-                            side:  const BorderSide(color: Color(0XFF545454)),
-                          )),
-                        ),
-                        child: const Text("Close"),
-                        onPressed: () =>  GoRouter.of(context).canPop()
-                          ? GoRouter.of(context).pop()
-                          : GoRouter.of(context).go('/models'),
-                      ),
-                    ),
+                    const CloseModelButton(),
                   ]
                 ),
               ),

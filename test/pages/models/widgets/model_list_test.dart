@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inference/pages/models/widgets/model_card.dart';
@@ -24,8 +28,8 @@ Widget renderWidget(ProjectProvider provider, ProjectFilterProvider filterProvid
         value: filterProvider,
       ),
     ],
-    child: FluentApp(
-      home: const ScaffoldPage(
+    child: const FluentApp(
+      home: ScaffoldPage(
         content: ModelList()
       )
     ),

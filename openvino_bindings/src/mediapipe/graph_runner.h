@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef GRAPH_RUNNER_H_
 #define GRAPH_RUNNER_H_
 

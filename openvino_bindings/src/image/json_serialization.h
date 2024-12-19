@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef JSON_SERIALIZATION_H_
 #define JSON_SERIALIZATION_H_
 

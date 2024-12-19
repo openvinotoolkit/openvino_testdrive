@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:io';
 import 'dart:math';
 
@@ -21,7 +25,7 @@ Dio dioClient() {
         client.findProxy = (uri) {
           return 'DIRECT';
         };
-        client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+        //client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
         return client;
       }
     );

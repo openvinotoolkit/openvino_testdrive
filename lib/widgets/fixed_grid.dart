@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 class FixedGrid extends StatelessWidget {
@@ -6,12 +10,14 @@ class FixedGrid extends StatelessWidget {
   final int itemCount;
   final bool centered;
   final Widget? header;
+  final Widget? emptyWidget;
   final NullableIndexedWidgetBuilder itemBuilder;
 
   const FixedGrid({
       required this.tileWidth,
       required this.itemBuilder,
       this.header,
+      this.emptyWidget,
       this.centered = false,
       this.spacing = 0,
       this.itemCount = 0,
@@ -31,7 +37,8 @@ class FixedGrid extends StatelessWidget {
             child: Column(
               children: [
                 if (header != null) header!,
-                GridView.builder(
+                if (itemCount == 0 && emptyWidget != null) emptyWidget!,
+                if (itemCount > 0) GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: columns,
                     crossAxisSpacing: spacing,

@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/pages/models/widgets/model_property.dart';
@@ -32,9 +36,9 @@ class _ModelCardState extends State<ModelCard>{
     return GestureDetector(
       onTap: () {
         if (widget.project.isDownloaded) {
-          GoRouter.of(context).go("/models/inference", extra: widget.project);
+          GoRouter.of(context).push("/models/inference", extra: widget.project);
         } else {
-          GoRouter.of(context).go("/models/download", extra: widget.project);
+          GoRouter.of(context).push("/models/download", extra: widget.project);
         }
       },
       child: MouseRegion(

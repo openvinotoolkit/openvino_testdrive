@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -51,13 +55,13 @@ class _ImportGetiModelDialogState extends State<ImportGetiModelDialog> {
       await importer.setupFiles();
       projects.add(project);
       await project.loaded.future;
-      if (context.mounted) {
+      if (mounted) {
         final projectsProvider = Provider.of<ProjectProvider>(context, listen: false);
         projectsProvider.addProject(project);
       }
     }
 
-    if (context.mounted) {
+    if (mounted) {
       Navigator.pop(context, projects);
     }
   }

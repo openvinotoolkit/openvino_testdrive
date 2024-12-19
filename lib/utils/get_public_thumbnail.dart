@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 
 Image getThumbnail(String id) {
@@ -8,7 +12,7 @@ Image getThumbnail(String id) {
   }
 
   if (name.contains('mistral') || name.contains('mixstral')) {
-    return Image.asset('images/model_thumbnails/mistral.jpg');
+    return Image.asset('images/model_thumbnails/mistral.png');
   }
 
   if (name.contains('phi')) {

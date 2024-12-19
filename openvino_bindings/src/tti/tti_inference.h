@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef TTI_INFERENCE_H_
 #define TTI_INFERENCE_H_
 

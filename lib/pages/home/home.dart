@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +9,7 @@ import 'package:inference/pages/home/widgets/featured_card.dart';
 import 'package:inference/pages/models/widgets/model_card.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/project.dart';
+import 'package:inference/widgets/empty_model_widget.dart';
 import 'package:inference/widgets/fixed_grid.dart';
 import 'package:inference/widgets/import_model_button.dart';
 import 'package:inference/providers/project_provider.dart';
@@ -38,7 +43,7 @@ class _HomePageState extends State<HomePage> {
 
   Project? getProjectWithModel(Model model) {
     // Retrieve a project given the modelId
-    return projectModelMap[model.id] ?? projectModelMap["OpenVINO/" + model.id];
+    return projectModelMap[model.id] ?? projectModelMap["OpenVINO/${model.id}"];
   }
 
   bool projectExistsWithModel(Model model){
@@ -47,14 +52,16 @@ class _HomePageState extends State<HomePage> {
 
   void downloadFeaturedModel(Model model){
     model.convertToProject().then((project) {
-      GoRouter.of(context).go('/models/download', extra: project);
+      if (mounted) {
+        GoRouter.of(context).push('/models/download', extra: project);
+      }
     });
 
   }
   void openFeaturedModel(Model model){
     var project = getProjectWithModel(model);
     if (project != null){
-      GoRouter.of(context).go("/models/inference", extra: project);
+      GoRouter.of(context).push("/models/inference", extra: project);
     }
   }
 
@@ -185,6 +192,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
+                  emptyWidget: const EmptyModelListWidget(),
                   itemBuilder: (context, index) {
                     return ModelCard(project: projects.elementAt(index));
                   }

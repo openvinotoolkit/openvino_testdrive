@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
@@ -58,7 +62,7 @@ class ImportModelButton extends StatelessWidget {
           showImportGetiModelDialog(context,
             callback: (projects) {
               if (projects != null && projects.length == 1) {
-                GoRouter.of(context).go("/models/inference", extra: projects.first);
+                GoRouter.of(context).pushReplacement("/models/inference", extra: projects.first);
               }
             }
           );

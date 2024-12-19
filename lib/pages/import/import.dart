@@ -1,9 +1,14 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/pages/import/huggingface.dart';
 import 'package:inference/pages/import/providers/import_provider.dart';
 import 'package:inference/pages/import/widgets/import_geti_model_dialog.dart';
+import 'package:inference/widgets/controls/close_model_button.dart';
 import 'package:provider/provider.dart';
 
 class ImportPage extends StatefulWidget {
@@ -34,11 +39,11 @@ class _ImportPageState extends State<ImportPage> {
             child: NavigationView(
               pane: NavigationPane(
                 size: const NavigationPaneSize(topHeight: 64),
-                header: Row(
+                header: const Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: const Text("Import model",
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text("Import model",
                         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -60,7 +65,7 @@ class _ImportPageState extends State<ImportPage> {
                       callback: (projects) {
                         if (projects != null && projects.isNotEmpty) {
                           if (projects.length == 1) {
-                            GoRouter.of(context).go("/models/inference", extra: projects.first);
+                            GoRouter.of(context).pushReplacement("/models/inference", extra: projects.first);
                           } else {
                             GoRouter.of(context).pop();
                           }
@@ -97,19 +102,7 @@ class _ImportPageState extends State<ImportPage> {
                       ),
                     );
                   }),
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: OutlinedButton(
-                      style: ButtonStyle(
-                        shape:WidgetStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                          side:  const BorderSide(color: Color(0XFF545454)),
-                        )),
-                      ),
-                      child: const Text("Close"),
-                      onPressed: () =>  GoRouter.of(context).go("/models"),
-                    ),
-                  ),
+                  const CloseModelButton(),
                 ]
               ),
             ),

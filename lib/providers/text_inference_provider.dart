@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -185,7 +189,6 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   void reset() {
-    //_inference?.close();
     _inference?.forceStop();
     _inference?.clearHistory();
     _messages.clear();

@@ -1,7 +1,9 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:inference/deployment_processor.dart';
-import 'package:inference/project.dart';
 import 'package:inference/utils.dart';
 
 class DownloadState {

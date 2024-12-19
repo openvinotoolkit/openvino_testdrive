@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef ROTATED_DETECTION_CALCULATOR_H_
 #define ROTATED_DETECTION_CALCULATOR_H_
 

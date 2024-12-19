@@ -1,11 +1,11 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inference/importers/manifest_importer.dart';
-import 'package:inference/interop/device.dart';
 import 'package:inference/pages/home/widgets/featured_card.dart';
-import 'package:inference/providers/preference_provider.dart';
-import 'package:inference/widgets/device_selector.dart';
-import 'package:provider/provider.dart';
 
 
 Widget renderWidget(Model model) {
