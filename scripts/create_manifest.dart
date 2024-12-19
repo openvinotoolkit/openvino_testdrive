@@ -58,12 +58,12 @@ class ModelInfo {
   final int fileSize;
   final String optimizationPrecision;
   final int contextWindow;
-  final String description;
+  String description = "";
   final String task;
   final String author;
   final String collection;
 
-  const ModelInfo({
+  ModelInfo({
       required this.name,
       required this.id,
       required this.fileSize,
@@ -179,7 +179,7 @@ class ModelInfo {
 
   static String getNameFromId(String id) {
     final pattern = RegExp("((fp|int)(\\d*)|ov)");
-    final sections = id.split("-");
+    final sections = id.split(RegExp("[-_]"));
     List<String> parts = [];
     for (final section in sections) {
       final match = pattern.firstMatch(section);
@@ -194,12 +194,13 @@ class ModelInfo {
 
 void generate() async {
 
-  final popular = [
-    "Phi-3-mini-4k-instruct-int4-ov",
-    "whisper-base-fp16-ov",
-    "open_llama_3b_v2-int8-ov",
-    "LCM_Dreamshaper_v7-int8-ov",
-  ];
+  final popular = {
+    "Phi-3-mini-4k-instruct-int4-ov": "Unlock AI Power: Experience the Phi 3 Mini Model on Your PC",
+    "whisper-base-fp16-ov": "We make it easy to connect with people: Use Whisper to transcribe videos",
+    "open_llama_3b_v2-int8-ov": "Unlock the Power of AI on Your PC: Start Chatting with the Mistral 7b Instruct",
+    "LCM_Dreamshaper_v7-int8-ov": "Generate images with Dreamshaper V7",
+  };
+
   final List<Collection> collections = [
     Collection("speech-to-text-672321d5c070537a178a8aeb", "OpenVINO", "OpenVINO", "speech", (String name) => "Transcribe video with $name"),
     Collection("llm-6687aaa2abca3bbcec71a9bd", "OpenVINO", "OpenVINO", "text-generation", (String name) => "Chat with $name"),
@@ -215,10 +216,16 @@ void generate() async {
 
   Map<String, dynamic> result = {};
 
-  final popularModels = popular.map((id) => models.firstWhereOrNull((r) => r.id == id)).whereType<ModelInfo>();
+  var popularModels = popular.keys.map((id) => models.firstWhereOrNull((r) => r.id == id)).whereType<ModelInfo>();
+  for (var model in popularModels){
+    model.description = popular[model.id] ?? model.description;
+  }
 
   result['popular_models'] = popularModels.map((m) => m.toMap()).toList();
-  result['all_models'] = models.map((m) => m.toMap()).toList();
+  result['all_models'] = models
+      .where((m) => !m.id.toLowerCase().contains('distil-whisper'))
+      .map((m) => m.toMap())
+      .toList();
 
   const encoder = JsonEncoder.withIndent("  ");
   print(encoder.convert(result));

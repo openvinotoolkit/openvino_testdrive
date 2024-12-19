@@ -6,7 +6,7 @@
       "fileSize": 2159924401,
       "optimizationPrecision": "int4",
       "contextWindow": 4096,
-      "description": "Chat with Phi 3 Mini 4k Instruct",
+      "description": "Unlock AI Power: Experience the Phi 3 Mini Model on Your PC",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
@@ -17,29 +17,29 @@
       "fileSize": 251616604,
       "optimizationPrecision": "fp16",
       "contextWindow": 0,
-      "description": "Transcribe video with Whisper Base",
+      "description": "We make it easy to connect with people: Use Whisper to transcribe videos",
       "task": "speech",
       "author": "OpenVINO",
       "collection": "speech-to-text-672321d5c070537a178a8aeb"
     },
     {
-      "name": "Open_llama_3b_v2",
+      "name": "Open Llama 3b V2",
       "id": "open_llama_3b_v2-int8-ov",
       "fileSize": 3435816420,
       "optimizationPrecision": "int8",
       "contextWindow": 2048,
-      "description": "Chat with Open_llama_3b_v2",
+      "description": "Unlock the Power of AI on Your PC: Start Chatting with the Mistral 7b Instruct",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
-      "name": "LCM_Dreamshaper_v7",
+      "name": "LCM Dreamshaper V7",
       "id": "LCM_Dreamshaper_v7-int8-ov",
       "fileSize": 1076861241,
       "optimizationPrecision": "int8",
       "contextWindow": 0,
-      "description": "Generate images with LCM_Dreamshaper_v7",
+      "description": "Generate images with Dreamshaper V7",
       "task": "text-to-image",
       "author": "OpenVINO",
       "collection": "image-generation-6763eab8ac097237330c78c5"
@@ -53,17 +53,6 @@
       "optimizationPrecision": "int4",
       "contextWindow": 0,
       "description": "Transcribe video with Whisper Large V3",
-      "task": "speech",
-      "author": "OpenVINO",
-      "collection": "speech-to-text-672321d5c070537a178a8aeb"
-    },
-    {
-      "name": "Distil Whisper Medium",
-      "id": "distil-whisper-medium-fp16-ov",
-      "fileSize": 1537831278,
-      "optimizationPrecision": "fp16",
-      "contextWindow": 0,
-      "description": "Transcribe video with Distil Whisper Medium",
       "task": "speech",
       "author": "OpenVINO",
       "collection": "speech-to-text-672321d5c070537a178a8aeb"
@@ -86,61 +75,6 @@
       "optimizationPrecision": "fp16",
       "contextWindow": 0,
       "description": "Transcribe video with Openai Whisper Large V3",
-      "task": "speech",
-      "author": "OpenVINO",
-      "collection": "speech-to-text-672321d5c070537a178a8aeb"
-    },
-    {
-      "name": "Distil Whisper Medium",
-      "id": "distil-whisper-medium-int4-ov",
-      "fileSize": 445434905,
-      "optimizationPrecision": "int4",
-      "contextWindow": 0,
-      "description": "Transcribe video with Distil Whisper Medium",
-      "task": "speech",
-      "author": "OpenVINO",
-      "collection": "speech-to-text-672321d5c070537a178a8aeb"
-    },
-    {
-      "name": "Distil Whisper Medium",
-      "id": "distil-whisper-medium-int8-ov",
-      "fileSize": 783197668,
-      "optimizationPrecision": "int8",
-      "contextWindow": 0,
-      "description": "Transcribe video with Distil Whisper Medium",
-      "task": "speech",
-      "author": "OpenVINO",
-      "collection": "speech-to-text-672321d5c070537a178a8aeb"
-    },
-    {
-      "name": "Distil Whisper Tiny",
-      "id": "distil-whisper-tiny-int4-ov",
-      "fileSize": 40456334,
-      "optimizationPrecision": "int4",
-      "contextWindow": 0,
-      "description": "Transcribe video with Distil Whisper Tiny",
-      "task": "speech",
-      "author": "OpenVINO",
-      "collection": "speech-to-text-672321d5c070537a178a8aeb"
-    },
-    {
-      "name": "Distil Whisper Tiny",
-      "id": "distil-whisper-tiny-int8-ov",
-      "fileSize": 48142359,
-      "optimizationPrecision": "int8",
-      "contextWindow": 0,
-      "description": "Transcribe video with Distil Whisper Tiny",
-      "task": "speech",
-      "author": "OpenVINO",
-      "collection": "speech-to-text-672321d5c070537a178a8aeb"
-    },
-    {
-      "name": "Distil Whisper Tiny",
-      "id": "distil-whisper-tiny-fp16-ov",
-      "fileSize": 83657080,
-      "optimizationPrecision": "fp16",
-      "contextWindow": 0,
-      "description": "Transcribe video with Distil Whisper Tiny",
       "task": "speech",
       "author": "OpenVINO",
       "collection": "speech-to-text-672321d5c070537a178a8aeb"
@@ -250,7 +184,7 @@
       "fileSize": 251616604,
       "optimizationPrecision": "fp16",
       "contextWindow": 0,
-      "description": "Transcribe video with Whisper Base",
+      "description": "We make it easy to connect with people: Use Whisper to transcribe videos.",
       "task": "speech",
       "author": "OpenVINO",
       "collection": "speech-to-text-672321d5c070537a178a8aeb"
@@ -454,23 +388,23 @@
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
-      "name": "Codegen2 3_7B_P",
+      "name": "Codegen2 3 7B P",
       "id": "codegen2-3_7B_P-int4-ov",
       "fileSize": 2094205534,
       "optimizationPrecision": "int4",
       "contextWindow": 2048,
-      "description": "Chat with Codegen2 3_7B_P",
+      "description": "Chat with Codegen2 3 7B P",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
-      "name": "Codegen2 3_7B_P",
+      "name": "Codegen2 3 7B P",
       "id": "codegen2-3_7B_P-fp16-ov",
       "fileSize": 7294599890,
       "optimizationPrecision": "fp16",
       "contextWindow": 2048,
-      "description": "Chat with Codegen2 3_7B_P",
+      "description": "Chat with Codegen2 3 7B P",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
@@ -487,12 +421,12 @@
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
-      "name": "Codegen2 3_7B_P",
+      "name": "Codegen2 3 7B P",
       "id": "codegen2-3_7B_P-int8-ov",
       "fileSize": 3656198983,
       "optimizationPrecision": "int8",
       "contextWindow": 2048,
-      "description": "Chat with Codegen2 3_7B_P",
+      "description": "Chat with Codegen2 3 7B P",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
@@ -619,56 +553,56 @@
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
-      "name": "Open_llama_7b_v2",
+      "name": "Open Llama 7b V2",
       "id": "open_llama_7b_v2-int8-ov",
       "fileSize": 6750127085,
       "optimizationPrecision": "int8",
       "contextWindow": 2048,
-      "description": "Chat with Open_llama_7b_v2",
+      "description": "Chat with Open Llama 7b V2",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
-      "name": "Open_llama_7b_v2",
+      "name": "Open Llama 7b V2",
       "id": "open_llama_7b_v2-int4-ov",
       "fileSize": 4264424323,
       "optimizationPrecision": "int4",
       "contextWindow": 2048,
-      "description": "Chat with Open_llama_7b_v2",
+      "description": "Chat with Open Llama 7b V2",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
-      "name": "Open_llama_7b_v2",
+      "name": "Open Llama 7b V2",
       "id": "open_llama_7b_v2-fp16-ov",
       "fileSize": 13483190429,
       "optimizationPrecision": "fp16",
       "contextWindow": 2048,
-      "description": "Chat with Open_llama_7b_v2",
+      "description": "Chat with Open Llama 7b V2",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
-      "name": "Open_llama_3b_v2",
+      "name": "Open Llama 3b V2",
       "id": "open_llama_3b_v2-int8-ov",
       "fileSize": 3435816420,
       "optimizationPrecision": "int8",
       "contextWindow": 2048,
-      "description": "Chat with Open_llama_3b_v2",
+      "description": "Unlock the Power of AI on Your PC: Start Chatting with the Mistral 7b Instruct",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
-      "name": "Open_llama_3b_v2",
+      "name": "Open Llama 3b V2",
       "id": "open_llama_3b_v2-fp16-ov",
       "fileSize": 6858765103,
       "optimizationPrecision": "fp16",
       "contextWindow": 2048,
-      "description": "Chat with Open_llama_3b_v2",
+      "description": "Chat with Open Llama 3b V2",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
@@ -1306,7 +1240,7 @@
       "fileSize": 2159924401,
       "optimizationPrecision": "int4",
       "contextWindow": 4096,
-      "description": "Chat with Phi 3 Mini 4k Instruct",
+      "description": "Unlock AI Power: Experience the Phi 3 Mini Model on Your PC",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
@@ -1334,12 +1268,12 @@
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
-      "name": "Open_llama_3b_v2",
+      "name": "Open Llama 3b V2",
       "id": "open_llama_3b_v2-int4-ov",
       "fileSize": 1826873619,
       "optimizationPrecision": "int4",
       "contextWindow": 2048,
-      "description": "Chat with Open_llama_3b_v2",
+      "description": "Chat with Open Llama 3b V2",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
@@ -1697,12 +1631,12 @@
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
-      "name": "LCM_Dreamshaper_v7",
+      "name": "LCM Dreamshaper V7",
       "id": "LCM_Dreamshaper_v7-int8-ov",
       "fileSize": 1076861241,
       "optimizationPrecision": "int8",
       "contextWindow": 0,
-      "description": "Generate images with LCM_Dreamshaper_v7",
+      "description": "Generate images with Dreamshaper V7",
       "task": "text-to-image",
       "author": "OpenVINO",
       "collection": "image-generation-6763eab8ac097237330c78c5"
