@@ -128,6 +128,16 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
     return index;
   }
 
+  void toggleMaximize() {
+   windowManager.isMaximized().then((isMaximized) {
+      if (isMaximized) {
+        windowManager.unmaximize();
+      } else {
+        windowManager.maximize();
+      }
+   });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -143,7 +153,7 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
                   child: GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTapDown: (_) => windowManager.startDragging(),
-                    onDoubleTap: () => windowManager.maximize(),
+                    onDoubleTap: toggleMaximize,
                     child: SizedBox(
                       height: 48,
                       child: Align(
