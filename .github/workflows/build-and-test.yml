@@ -12,12 +12,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, windows-latest, macos-latest]
+        os: [macos-latest]
     uses: ./.github/workflows/build-ui.yml
     with:
       os: ${{ matrix.os }}
 
   build-linux-bindings:
+    if: false
     name: Build Linux Bindings
     runs-on: ubuntu-22.04-16-cores
     permissions:
@@ -42,6 +43,7 @@ jobs:
           if-no-files-found: error
 
   build-windows-bindings:
+    if: false
     permissions:
       contents: write
     uses: ./.github/workflows/build-windows-bindings.yml
