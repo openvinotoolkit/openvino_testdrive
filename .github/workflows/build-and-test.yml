@@ -16,3 +16,32 @@ jobs:
     uses: ./.github/workflows/build-ui.yml
     with:
       os: ${{ matrix.os }}
+
+  build-linux-bindings:
+    name: Build Linux Bindings
+    runs-on: ubuntu-22.04-16-cores
+    permissions:
+        contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image
+        run: |
+          cd openvino_bindings
+          docker build -f Dockerfile.ubuntu -t linux-bindings-ubuntu .
+          docker create --name bindings_container linux-bindings-ubuntu
+          docker cp bindings_container:/bindings-out/linux_bindings.tgz ./linux_bindings.tgz
+      - name: Upload bindings to artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "linux_bindings.tgz"
+          path: openvino_bindings/linux_bindings.tgz
+          if-no-files-found: error
+
+  build-windows-bindings:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/build-windows-bindings.yml

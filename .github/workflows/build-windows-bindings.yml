@@ -1,0 +1,120 @@
+name: Build Windows Bindings
+
+on:
+  workflow_call:
+
+jobs:
+  build-windows-bindings:
+    name: Build Windows Bindings
+    runs-on: windows-2019-16-core
+    permissions:
+      contents: write
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Install Visual Studio Build Tools (only needed on windows-latest or runners without VS2019)
+    #  - name: Install Visual Studio Build Tools
+    #    run: |
+    #      choco install visualstudio2019buildtools -y
+    #      choco install visualstudio2019-workload-vctools -y
+    #    shell: cmd
+
+      # Step 3: Install Python 3.13
+      - name: Install Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13.0'
+
+      - name: Add Python to PATH
+        run: |
+          setx PATH "%PATH%;C:\hostedtoolcache\windows\Python\3.13.0\x64"
+        shell: cmd
+
+      # Step 4: Add Python to PATH
+      - name: Install numpy
+        run: |
+          C:/hostedtoolcache/windows/Python/3.13.0/x64/python.exe -m pip install numpy
+        shell: cmd
+
+      # Step 5: Install MSYS2
+      - name: Install MSYS2
+        run: |
+          choco install msys2 -y
+          setx PATH "%PATH%;C:\tools\msys64\usr\bin"
+        shell: cmd
+
+      - name: Initialize MSYS2
+        run: |
+          C:/tools/msys64/msys2_shell.cmd -defterm -no-start -c "pacman -Syuu --noconfirm"
+          C:/tools/msys64/msys2_shell.cmd -defterm -no-start -c "pacman -Sy --noconfirm"
+        shell: cmd
+
+      # Step 6: Install Bazelisk
+      - name: Install Bazelisk
+        run: |
+          choco install bazelisk -y
+        shell: cmd
+
+      # Step 7: Set up Bazel environment variables
+      - name: Set up Bazel environment variables
+        env:
+          BAZEL_VC: C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC
+          BAZEL_VS: C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools
+          BAZEL_VC_FULL_VERSION: 14.29.30133
+          BAZEL_SH: C:\msys64\usr\bin\bash.exe
+        run: echo "Bazel environment variables set."
+
+      # Step 8: Download and Install OpenCV
+      - name: Download OpenCV
+        run: |
+          curl -L -o opencv.exe https://github.com/opencv/opencv/releases/download/4.9.0/opencv-4.9.0-windows.exe
+          start /wait opencv.exe -suppresslaunch  -y -gm2 -o"C:\"
+        shell: cmd
+
+      # Step 9: Install vcpkg and ffmpeg
+      - name: Install vcpkg and ffmpeg
+        shell: powershell
+        run: |
+          if (!(Test-Path "C:\vcpkg")) { git clone https://github.com/microsoft/vcpkg.git C:\vcpkg }
+          C:\vcpkg\bootstrap-vcpkg.bat
+          cd openvino_bindings/third_party
+          C:\vcpkg\vcpkg install
+
+      # Step 10: Download and Install OpenVINO Runtime
+      - name: Download and Install OpenVINO Runtime 24.6.0
+        shell: powershell
+        run: |
+          Invoke-WebRequest -Uri https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2024.6/windows/openvino_genai_windows_2024.6.0.0_x86_64.zip -OutFile openvino_runtime.zip
+          Expand-Archive -Path openvino_runtime.zip -DestinationPath C:/Intel/
+          Rename-Item -Path "C:/Intel/openvino_genai_windows_2024.6.0.0_x86_64" -NewName "openvino_2024.6.0"
+          dir C:/Intel/openvino_2024.6.0/
+
+      # Step 11: Install Mediapipe Requirements
+      - name: Install Mediapipe Requirements
+        run: |
+          C:/tools/msys64/msys2_shell.cmd -defterm -no-start -c "pacman -Sy --noconfirm git patch unzip"
+        shell: bash
+
+      # Step 12: Build with Bazel
+      - name: Build Windows Bindings with Bazel
+        env:
+          PYTHON_BIN_PATH: "C:/hostedtoolcache/windows/Python/3.13.0/x64/python.exe"
+        run: |
+          cd openvino_bindings
+          bazel build -c opt :windows_bindings --action_env PYTHON_BIN_PATH="C:/hostedtoolcache/windows/Python/3.13.0/x64/python.exe"
+        shell: bash
+
+      # Step 13: Verify the DLLs
+      - name: Verify DLLs in Bazel Output
+        run: |
+          dir openvino_bindings/bazel-out/x64_windows-opt/bin/windows_bindings.tar
+
+      # Step 14: Upload release artifact
+      - name: Upload Release Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows_bindings.tar
+          path: openvino_bindings/bazel-out/x64_windows-opt/bin/windows_bindings.tar
