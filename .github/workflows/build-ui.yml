@@ -16,6 +16,7 @@ jobs:
       contents: write
 
     steps:
+      - uses: actions/checkout@v4
       - name: Determine comon OS vars
         shell: bash
         run: |
@@ -29,7 +30,6 @@ jobs:
             echo "RELEASE_PATH=build/macos/Build/Products/Release" >> $GITHUB_ENV
           fi
           echo "OS_NAME=`echo '${{runner.os}}' | tr '[:upper:]' '[:lower:]'`" >> $GITHUB_ENV
-      - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2.18.0
         with:
           channel: 'stable'
