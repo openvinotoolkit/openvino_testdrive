@@ -57,7 +57,8 @@ class DownloadProvider extends ChangeNotifier {
           return Response(requestOptions: RequestOptions(path: url));
         } else {
           _cancelToken?.cancel();
-          throw e;
+            final errorMessage = e is DioException ? e.message : 'An unknown error occurred';
+            throw Exception('Download failed for $url: $errorMessage');
         }
       }).then((_) => state.done);
       promises.add(promise);
