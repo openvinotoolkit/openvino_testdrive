@@ -26,7 +26,6 @@ jobs:
             echo "RELEASE_PATH=build/windows/x64/runner/Release" >> $GITHUB_ENV
           elif [[ "${{ runner.os }}" == "macOS" ]]; then
             mkdir bindings
-            ls -la /Users/runner/work/openvino_testdrive/openvino_testdrive/
             echo "RELEASE_PATH=build/macos/Build/Products/Release" >> $GITHUB_ENV
           fi
           echo "OS_NAME=`echo '${{runner.os}}' | tr '[:upper:]' '[:lower:]'`" >> $GITHUB_ENV
