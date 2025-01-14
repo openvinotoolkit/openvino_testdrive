@@ -3,8 +3,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:inference/utils.dart';
+import 'package:flutter_system_proxy/flutter_system_proxy.dart';
 
 class DownloadState {
   int received = 0;
@@ -29,10 +32,23 @@ class DownloadProvider extends ChangeNotifier {
 
   Future<void> queue(Map<String, String> downloads, String? token) async{
     List<Future> promises = [];
-
-    final dio = dioClient();
+    
+    // final dio = dioClient();
     _cancelToken = CancelToken();
     for (final url in downloads.keys) {
+      final dio = Dio();
+      var proxy = await FlutterSystemProxy.findProxyFromEnvironment(url);
+      dio.httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+        final client = HttpClient();
+        client.findProxy = (uri) {
+          return proxy;
+        };
+        return client;
+      }
+      );
+
+
       print("downloading: $url");
       final state = DownloadState();
       _downloads[url] = state;

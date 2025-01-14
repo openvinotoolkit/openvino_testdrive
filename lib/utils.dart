@@ -18,11 +18,13 @@ import 'package:path_provider/path_provider.dart';
 
 Dio dioClient() {
   final dio = Dio();
-  if (true) {
+  if (Config.proxyDirect) {
     dio.httpClientAdapter = IOHttpClientAdapter(
       createHttpClient: () {
         final client = HttpClient();
-        client.findProxy = HttpClient.findProxyFromEnvironment;
+        client.findProxy = (uri) {
+          return 'DIRECT';
+        };
         //client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
         return client;
       }
