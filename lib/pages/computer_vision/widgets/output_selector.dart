@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/computer_vision/providers/batch_inference_provider.dart';
 import 'package:provider/provider.dart';
@@ -22,10 +26,10 @@ class _OutputSelectorState extends State<OutputSelector> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16),
               child: Text("Outputs",
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),

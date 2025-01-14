@@ -1,7 +1,10 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:collection/collection.dart';
 
 class DeviceSelector extends StatefulWidget {
   const DeviceSelector({super.key});
@@ -25,10 +28,10 @@ class _DeviceSelectorState extends State<DeviceSelector> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16),
               child: Text("Device",
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),

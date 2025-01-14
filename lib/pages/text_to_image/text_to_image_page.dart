@@ -1,11 +1,16 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:inference/pages/text_to_image/live_inference_pane.dart';
 import 'package:inference/pages/text_to_image/providers/text_to_image_inference_provider.dart';
 import 'package:inference/pages/text_to_image/performance_metrics_pane.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
+import 'package:inference/utils.dart';
+import 'package:inference/widgets/controls/close_model_button.dart';
 import 'package:provider/provider.dart';
 
 class TextToImagePage extends StatefulWidget {
@@ -109,33 +114,14 @@ class _TextToImagePageState extends State<TextToImagePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  //Padding(
-                  //  padding: const EdgeInsets.all(4),
-                  //  child: FilledButton(
-                  //    child: const Text("Download"),
-                  //    onPressed: () => print("close")
-                  //  ),
-                  //),
-                  //Padding(
-                  // padding: const EdgeInsets.all(4),
-                  // child: OutlinedButton(
-                  //   child: const Text("Fine-tune"),
-                  //    onPressed: () => print("close")
-                  //  ),
-                  //),
                   Padding(
                     padding: const EdgeInsets.all(4),
-                    child: OutlinedButton(
-                      style: ButtonStyle(
-                        shape:WidgetStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                          side:  const BorderSide(color: Color(0XFF545454)),
-                        )),
-                      ),
-                      child: const Text("Close"),
-                      onPressed: () =>  GoRouter.of(context).go("/models"),
+                    child: FilledButton(
+                      child: const Text("Export model"),
+                      onPressed: () => downloadProject(widget.project),
                     ),
                   ),
+                  const CloseModelButton(),
                 ]
               ),
             ),

@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:io';
 
 import 'package:desktop_drop/desktop_drop.dart';
@@ -78,15 +82,15 @@ class _FolderSelectorState extends State<FolderSelector> {
                 padding: const EdgeInsets.only(left: 8),
                 child: Button(
                   onPressed: showUploadMenu,
-                  child: Padding(
-                    padding: const EdgeInsets.all(2),
+                  child: const Padding(
+                    padding: EdgeInsets.all(2),
                     child: Row(
                       children: [
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(right: 8),
                           child: Icon(FluentIcons.fabric_folder),
                         ),
-                        const Text("Select"),
+                        Text("Select"),
                       ]
                     ),
                   )

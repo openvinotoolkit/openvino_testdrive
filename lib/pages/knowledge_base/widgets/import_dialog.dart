@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/pages/computer_vision/widgets/horizontal_rule.dart';
+import 'package:inference/widgets/horizontal_rule.dart';
 import 'package:inference/pages/knowledge_base/utils/loader_selector.dart';
 import 'package:langchain/langchain.dart';
 import 'package:path/path.dart';

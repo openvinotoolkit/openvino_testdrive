@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+
 #include "detection_segmentation_combiner_calculator.h"
 
 #include "src/image/data_structures.h"

@@ -1,10 +1,16 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
 import 'package:inference/pages/transcription/performance_metrics.dart';
 import 'package:inference/pages/transcription/playground.dart';
+import 'package:inference/utils.dart';
+import 'package:inference/widgets/controls/close_model_button.dart';
 import 'package:provider/provider.dart';
 
 class TranscriptionPage extends StatefulWidget {
@@ -27,6 +33,8 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
             backgroundColor: theme.scaffoldBackgroundColor,
         ))
     );
+    final textColor = theme.typography.body?.color ?? Colors.black;
+
     return ChangeNotifierProxyProvider<PreferenceProvider, SpeechInferenceProvider>(
       lazy: false,
       create: (_) {
@@ -77,12 +85,15 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
                 displayMode: PaneDisplayMode.top,
                 items: [
                   PaneItem(
-                    icon: const Icon(FluentIcons.processing),
+                    icon: const Icon(FluentIcons.game),
                     title: const Text("Playground"),
                     body: Playground(project: widget.project),
                   ),
                   PaneItem(
-                    icon: const Icon(FluentIcons.line_chart),
+                    icon: SvgPicture.asset("images/stats.svg",
+                      colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
+                      width: 15,
+                    ),
                     title: const Text("Performance metrics"),
                     body: PerformanceMetrics(project: widget.project),
                   ),
@@ -99,17 +110,12 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(4),
-                    child: OutlinedButton(
-                      style: ButtonStyle(
-                        shape:WidgetStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                          side:  const BorderSide(color: Color(0XFF545454)),
-                        )),
-                      ),
-                      child: const Text("Close"),
-                      onPressed: () =>  GoRouter.of(context).go("/models"),
+                    child: FilledButton(
+                      child: const Text("Export model"),
+                      onPressed: () => downloadProject(widget.project),
                     ),
                   ),
+                  const CloseModelButton(),
                 ]
               ),
             ),

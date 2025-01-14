@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/pages/models/widgets/model_property.dart';
@@ -23,13 +27,15 @@ class ModelCard extends StatelessWidget {
       child: Elevation(
         backgroundColor: theme.cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        elevation: checked ? 16 : 4,
         child: AnimatedContainer(
           curve: theme.animationCurve,
           duration: theme.mediumAnimationDuration,
           decoration: BoxDecoration(
-            color: checked ? theme.inactiveBackgroundColor.withOpacity(0.5) : theme.cardColor,
             borderRadius: const BorderRadius.all(Radius.circular(4)),
+            border: Border.all(
+                color: checked ? theme.accentColor.withOpacity(0.5) : theme.cardColor,
+                width: 1.0
+            )
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

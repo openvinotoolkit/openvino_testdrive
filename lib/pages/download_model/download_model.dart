@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -53,17 +57,19 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
     try {
       files = await listDownloadFiles(widget.project);
     } catch (e) {
-      await showDialog(context: context, builder: (BuildContext context) => ContentDialog(
-        title: const Text('Model was not found'),
-        actions: [
-          Button(
-            onPressed: () {
-              router.canPop() ? router.pop() : router.go('/home');
-            },
-            child: const Text('Close'),
-          ),
-        ],
-      ));
+      if (mounted){
+        await showDialog(context: context, builder: (BuildContext context) => ContentDialog(
+          title: const Text('Model was not found'),
+          actions: [
+            Button(
+              onPressed: () {
+                router.canPop() ? router.pop() : router.go('/home');
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        ));
+      }
       return;
     }
 
@@ -75,6 +81,7 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
       projectProvider.completeLoading(widget.project);
       router.go("/models/inference", extra: widget.project);
     } catch(e) {
+      print(e);
       if (mounted) {
         await showDialog(context: context, builder: (BuildContext context) => ContentDialog(
           title: Text('An error occurred trying to download ${widget.project.name}'),
@@ -89,6 +96,28 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
           ],
         ));
       }
+    }
+  }
+
+  Future<void> onClose() async {
+    final result = await showDialog<bool>(context: context, builder: (BuildContext context) => ContentDialog(
+        title: const Text("Download in progress"),
+        content: const Text("Press 'continue' to keep downloading the model"),
+        actions: <Widget>[
+          FilledButton(
+            onPressed: () => context.pop(false),
+            child: const Text('Continue'),
+          ),
+          Button(
+            onPressed: () => context.pop(true),
+            child: const Text('Cancel download'),
+          ),
+        ]
+      )
+    );
+
+    if (result == true && context.mounted) {
+      GoRouter.of(context).pop();
     }
   }
 
@@ -137,9 +166,10 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
                 ),
               ],
             ),
-            Button(child: const Text("Close"), onPressed: () {
-              GoRouter.of(context).canPop() ? GoRouter.of(context).pop() : GoRouter.of(context).go('/home');
-            }),
+            Button(
+              onPressed: onClose,
+              child: const Text("Close")
+            ),
           ],
         ),
       ),

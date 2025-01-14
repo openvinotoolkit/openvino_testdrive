@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 void moveToFront<I>(List<I> list, I item) {
   list.remove(item);
   list.insert(0, item);
@@ -69,6 +73,11 @@ class DynamicRangeLoading<I> {
   void setData(I value) {
     data[activeSection.index] = value;
     activeSection.index += 1;
+  }
+
+  void reset() {
+    data = {};
+    sections = [Section(0, size)];
   }
 }
 

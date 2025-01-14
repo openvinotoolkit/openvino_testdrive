@@ -1,9 +1,15 @@
-import 'package:flutter/widgets.dart';
-import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
-import 'package:inference/pages/models/widgets/grid_container.dart';
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/providers/text_inference_provider.dart';
+import 'package:inference/widgets/horizontal_rule.dart';
+import 'package:inference/widgets/model_propery.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ModelProperties extends StatelessWidget {
   const ModelProperties({super.key});
@@ -40,11 +46,23 @@ class ModelProperties extends StatelessWidget {
                     ),
                     ModelProperty(
                       title: "Temperature",
+                      description: "Temperature controls the randomness of the output. Higher values mean more random outputs.",
                       value: nf.format(inference.temperature),
                     ),
                     ModelProperty(
                       title: "Top P",
+                      description: "Top P controls the diversity of the output by limiting the selection to a subset of the most probable tokens.",
                       value: nf.format(inference.topP),
+                    ),
+                    if (inference.project!.isPublic) Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const HorizontalRule(),
+                        const Text('External links', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                        HyperlinkButton(
+                          child: const Text("Model on Hugging Face"), onPressed: () { launchUrl(Uri.parse('https://huggingface.co/${inference.project!.modelId}')); }
+                        ),
+                      ],
                     ),
                   ]
                 )

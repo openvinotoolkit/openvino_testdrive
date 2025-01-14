@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef DETECTION_CLASSIFICATION_RESULT_CALCULATOR_H_
 #define DETECTION_CLASSIFICATION_RESULT_CALCULATOR_H_
 

@@ -1,5 +1,9 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/pages/models/widgets/grid_container.dart';
+import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/pages/models/widgets/model_filter.dart';
 import 'package:inference/pages/models/widgets/model_list.dart';
 import 'package:inference/providers/project_filter_provider.dart';

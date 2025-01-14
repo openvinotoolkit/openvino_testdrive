@@ -1,6 +1,10 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/interop/speech_to_text.dart';
 import 'package:inference/pages/transcription/utils/metrics.dart';
@@ -32,12 +36,25 @@ class SpeechInferenceProvider  extends ChangeNotifier {
     return transcription?.complete ?? false;
   }
 
+  int playerLocation = 0;
+
   String _language = "";
 
   String get language => _language;
   set language(String val) {
     _language = val;
+    resetTranscription();
     notifyListeners();
+  }
+
+  Future<void> resetTranscription() async {
+    if (videoLoaded){
+      await stop();
+      transcription?.reset();
+      transcription?.skipTo(playerLocation);
+      activeTranscriptionProcess = startTranscribing();
+      notifyListeners();
+    }
   }
 
   SpeechToText? _inference;
@@ -62,6 +79,7 @@ class SpeechInferenceProvider  extends ChangeNotifier {
   Future<void> loadVideo(String path) async {
     await loaded.future;
     forceStop = true;
+    playerLocation = 0;
     await activeTranscriptionProcess;
     _videoPath = path;
     final duration = await _inference!.loadVideo(path);
@@ -111,10 +129,14 @@ class SpeechInferenceProvider  extends ChangeNotifier {
     return _project == project && _device == device;
   }
 
-  @override
-  void dispose() async {
+  Future<void> stop() async {
     forceStop = true;
     await activeTranscriptionProcess;
+  }
+
+  @override
+  void dispose() async {
+    await stop();
     super.dispose();
   }
 

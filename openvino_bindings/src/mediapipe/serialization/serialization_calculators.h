@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef SERIALIZATION_CALCULATOR_H_
 #define SERIALIZATION_CALCULATOR_H_
 

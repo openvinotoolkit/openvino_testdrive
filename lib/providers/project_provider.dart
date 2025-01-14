@@ -1,5 +1,9 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/deployment_processor.dart';
 import 'package:inference/project.dart';
 
@@ -25,9 +29,7 @@ class ProjectProvider extends ChangeNotifier {
 
     void addProjects(List<Project> projects) {
         for (final project in projects) {
-            if (_projects.firstWhereOrNull((p) => p.id == project.id) == null) {
-                _projects.add(project);
-            }
+            _projects.add(project);
         }
         notifyListeners();
     }

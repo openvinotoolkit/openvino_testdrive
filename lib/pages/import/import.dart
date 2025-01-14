@@ -1,11 +1,15 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inference/pages/import/widgets/badge.dart';
-import 'package:inference/pages/import/widgets/model_card.dart';
-import 'package:inference/widgets/controls/search_bar.dart';
-import 'package:inference/widgets/controls/dropdown_multiple_select.dart';
-import 'package:inference/importers/manifest_importer.dart';
-import 'package:inference/widgets/fixed_grid.dart';
+import 'package:inference/pages/import/huggingface.dart';
+import 'package:inference/pages/import/providers/import_provider.dart';
+import 'package:inference/pages/import/widgets/import_geti_model_dialog.dart';
+import 'package:inference/widgets/controls/close_model_button.dart';
+import 'package:provider/provider.dart';
 
 class ImportPage extends StatefulWidget {
   const ImportPage({super.key});
@@ -15,169 +19,97 @@ class ImportPage extends StatefulWidget {
 }
 
 class _ImportPageState extends State<ImportPage> {
-  List<String> selectedOptimizations = [];
-  String? searchValue;
-  late Future<List<Model>> allModelsFuture;
-  late Model? selectedModel;
-
-  @override
-  void initState() {
-    super.initState();
-    final importer = ManifestImporter('assets/manifest.json');
-    allModelsFuture = importer.loadManifest().then((_) => importer.getAllModels());
-    selectedModel = null;
-  }
-
-  List<Model> filterModels(List<Model> models) {
-    var filteredModels = models;
-    if (searchValue != null && searchValue!.isNotEmpty) {
-      filteredModels = filteredModels.where((model) => model.name.toLowerCase().contains(searchValue!.toLowerCase())).toList();
-    }
-    if (selectedOptimizations.isNotEmpty) {
-      filteredModels = filteredModels.where((model) => selectedOptimizations.contains(model.optimizationPrecision)).toList();
-    }
-    return filteredModels;
-  }
+  int selected = 0;
 
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    final router = GoRouter.of(context);
-    return ScaffoldPage.scrollable(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8.0),
-      header: Container(
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-                    color: theme.resources.controlStrokeColorDefault,
-                    width: 1.0
-                )
-            )
-          ),
-        padding: const EdgeInsets.symmetric(horizontal: 12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Row(children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 18),
-                child: Text('Import model',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],),
-            Row(
-              children: [
-                FilledButton(onPressed: selectedModel == null ? (null) : () {
-                  selectedModel?.convertToProject().then((project) {
-                    router.go('/models/download', extra: project);
-                  });
+    final updatedTheme = theme.copyWith(
+        navigationPaneTheme: theme.navigationPaneTheme.merge(NavigationPaneThemeData(
+            backgroundColor: theme.scaffoldBackgroundColor,
+        ))
+    );
 
-                 }, child: const Text('Import selected model'),),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Button(child: const Text('Close'), onPressed: () { router.pop(); }),
-                )
-              ],
-             )
-          ],
-        ),
-      ),
-      children:
-        [
-          Center(
-            child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 1228),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 280),
-                        child: Semantics(
-                          label: 'Find a model',
-                          child: SearchBar(onChange: (value) { setState(() {
-                            searchValue = value;
-                          }); }, placeholder: 'Find a model',),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 184),
-                          child: DropdownMultipleSelect(
-                            items: const ['int4', 'int8', 'fp16'],
-                            selectedItems: selectedOptimizations,
-                            onChanged: (value) {
-                              if (!value.contains(selectedModel?.optimizationPrecision)) {
-                                selectedModel = null;
-                              }
-                              setState(() {
-                                selectedOptimizations = value;
-                              });
-                            },
-                            placeholder: 'Select optimizations',
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 2),
-                    child: SizedBox(
-                      height: 28,
-                      width: double.infinity,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Wrap(
-                          spacing: 8,
-                          children: selectedOptimizations.map((opt) {
-                            return Badge(text: opt, onDelete: () {
-                              if (opt == selectedModel?.optimizationPrecision && selectedOptimizations.length > 1) {
-                                selectedModel = null;
-                              }
-                              setState(() {
-                                selectedOptimizations.remove(opt);
-                              });
-                            });
-                          }).toList(),
-                        ),
+    return ChangeNotifierProvider<ImportProvider>(
+      create: (_) => ImportProvider(),
+      child: Stack(
+        children: [
+          FluentTheme(
+            data: updatedTheme,
+            child: NavigationView(
+              pane: NavigationPane(
+                size: const NavigationPaneSize(topHeight: 64),
+                header: const Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text("Import model",
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
+                  ],
+                ),
+                selected: selected,
+                onChanged: (i) => setState(() {selected = i;}),
+                displayMode: PaneDisplayMode.top,
+                items: [
+                  PaneItem(
+                    icon: SvgPicture.asset('images/huggingface_logo-noborder.svg', width: 15,),
+                    title: const Text("Huggingface"),
+                    body: const  Huggingface(),
                   ),
-                  FutureBuilder<List<Model>>(
-                    future: allModelsFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const ProgressRing();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return const Text('No models available');
-                      } else {
-                        var allModels = filterModels(snapshot.data!);
-                        return FixedGrid(
-                          tileWidth: 226,
-                          spacing: 24,
-                          centered: true,
-                          itemCount: allModels.length,
-                          itemBuilder: (context, index) => ModelCard(
-                            model: allModels[index],
-                            checked: selectedModel == allModels[index],
-                            onChecked: (value) {
-                              setState(() {
-                                selectedModel = value ? allModels[index] : null;
-                              });
-                            },
-                          ),
-                        );
+                  PaneItemAction(
+                    icon: const Icon(FluentIcons.project_collection),
+                    title: const Text("Local disk"),
+                    onTap: () => showImportGetiModelDialog(context,
+                      callback: (projects) {
+                        if (projects != null && projects.isNotEmpty) {
+                          if (projects.length == 1) {
+                            GoRouter.of(context).pushReplacement("/models/inference", extra: projects.first);
+                          } else {
+                            GoRouter.of(context).pop();
+                          }
+                        }
                       }
-                    },
+                    ),
                   ),
                 ],
+              )
+            ),
+          ),
+          SizedBox(
+            height: 64,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Consumer<ImportProvider>(builder: (context, importProvider, child) {
+                    return Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: FilledButton(
+                        onPressed: (importProvider.selectedModel == null
+                          ? null
+                          : () {
+                            importProvider.selectedModel?.convertToProject().then((project) {
+                              if (context.mounted){
+                                GoRouter.of(context).push('/models/download', extra: project);
+                              }
+                            });
+                          }
+                        ),
+                        child: const Text("Import selected model"),
+                      ),
+                    );
+                  }),
+                  const CloseModelButton(),
+                ]
               ),
             ),
           )
-        ]
+
+        ],
+      ),
     );
   }
 }

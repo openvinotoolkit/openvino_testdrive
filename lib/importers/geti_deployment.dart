@@ -1,8 +1,10 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
-import 'package:ffi/ffi.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:image/image.dart';
 import 'package:archive/archive_io.dart';
 import 'package:inference/importers/importer.dart';
@@ -57,14 +59,13 @@ class GetiDeploymentProcessor extends Importer {
               platformContext.join(project!.storagePath, 'thumbnail.jpg')))
         .execute();
 
-    final taskFutures = project!.tasks
-        .map((task) => processTask(task));
+    for (final task in project!.tasks) {
+      await processTask(task);
+    }
     const encoder = JsonEncoder.withIndent("  ");
     File(platformContext.join(project!.storagePath, "project.json"))
         .writeAsString(encoder.convert(project!.toMap()));
-    Future.wait(taskFutures).then((_) {
-      project!.loaded.complete();
-    });
+    project!.loaded.complete();
   }
 
   @override

@@ -1,5 +1,10 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:async';
 import 'dart:convert';
+import 'dart:isolate';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:fluent_ui/fluent_ui.dart';
@@ -95,7 +100,9 @@ class TextToImageInferenceProvider extends ChangeNotifier {
       _inference = instance;
     });
     loaded.complete();
-    notifyListeners();
+    if (hasListeners) {
+      notifyListeners();
+    }
   }
 
 
@@ -191,7 +198,7 @@ class TextToImageInferenceProvider extends ChangeNotifier {
   }
 
   void forceStop() {
-    // Todo
+    // TODO(ArendJanKramer): Implement forceStop
   }
 
   void reset() {
@@ -203,14 +210,47 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  Future<void> _closeInferenceInIsolate(dynamic inference) async {
+    final receivePort = ReceivePort();
+
+    // Spawn an isolate and pass the SendPort and inference
+    await Isolate.spawn((List<dynamic> args) {
+      final SendPort sendPort = args[0];
+      final dynamic inference = args[1];
+      try {
+        inference?.close(); // Perform the blocking operation
+      } catch (e) {
+        print("Error closing inference: $e");
+      } finally {
+        sendPort.send(null); // Notify that the operation is complete
+      }
+    }, [receivePort.sendPort, inference]);
+
+    // Wait for the isolate to complete
+    await receivePort.first;
+  }
+
+  Future<void> _waitForLoadCompletion() async {
+    if (!loaded.isCompleted) {
+      print("Still loading model, await disposal");
+      await loaded.future;
+    }
+  }
+
   @override
-  void dispose() {
+  void dispose() async {
+    // Wait for model to finish loading
+    await _waitForLoadCompletion();
+
     if (_inference != null) {
-      _inference?.close();
-      super.dispose();
+      print("Closing inference");
+      await _closeInferenceInIsolate(_inference!);
+      print("Closing inference done");
     } else {
       close();
-      super.dispose();
     }
+
+    super.dispose(); // Always call super.dispose()
   }
 }

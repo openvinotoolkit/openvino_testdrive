@@ -1,10 +1,14 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:ffi';
 import 'dart:isolate';
 
 import 'package:ffi/ffi.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 
-final device_ov = getBindings();
+final deviceOV = getBindings();
 
 class Device {
   final String id;
@@ -13,7 +17,7 @@ class Device {
 
   static Future<List<Device>> getDevices() async {
     final result = await Isolate.run(() {
-      final status = device_ov.getAvailableDevices();
+      final status = deviceOV.getAvailableDevices();
 
       if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
         throw "GetAvailableDevices error: ${status.ref.status} ${status.ref.message.toDartString()}";
@@ -26,12 +30,14 @@ class Device {
           status.ref.value[i].name.toDartString()
         ));
       }
-      device_ov.freeStatusOrDevices(status);
+      deviceOV.freeStatusOrDevices(status);
 
       return devices;
     });
 
-    result.forEach((b) => print("${b.id}, ${b.name}"));
+    for (var b in result) {
+      print("${b.id}, ${b.name}");
+    }
 
     return result;
   }

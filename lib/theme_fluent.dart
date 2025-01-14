@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
@@ -110,6 +114,10 @@ const cosmosBackground = DarkLightColor(Color(0xFFEFEAFF), Color(0xFF463d66));
 const userMessageColor = DarkLightColor(Color(0xFFe0d6fd), Color(0xFF463D66));
 const modelMessageColor = DarkLightColor(Color(0xFFF5F5F5), Color(0xFF343434));
 
+final AccentColor electricCoral = AccentColor.swatch(const {
+  'normal': Color(0xFFFE5A80),
+});
+
 final AccentColor electricCosmos = AccentColor.swatch(const {
   'normal': Color(0xFF7000FF),
 });
@@ -124,3 +132,22 @@ final AccentColor darkCosmos = AccentColor.swatch(const {
   'normal': Color(0xFF38007F),
 });
 
+const LinearGradient performanceMetricsGradient1= LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [
+    Color(0x0D5400C0),
+    Color(0x0D057AFF),
+    Color(0x0D16CFB1),
+  ],
+);
+
+const LinearGradient performanceMetricsGradient2 = LinearGradient(
+  begin: Alignment.topRight,
+  end: Alignment.bottomLeft,
+  colors: [
+    Color(0x0D020E37),
+    Color(0x0D0054AE),
+    Color(0x0D00D2AF),
+  ],
+);

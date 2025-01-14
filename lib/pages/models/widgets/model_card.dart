@@ -1,10 +1,16 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/pages/models/widgets/model_property.dart';
 import 'package:inference/project.dart';
+import 'package:inference/providers/project_provider.dart';
 import 'package:inference/utils.dart';
 import 'package:inference/widgets/elevation.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class ModelCard extends StatefulWidget {
   final Project project;
@@ -16,17 +22,23 @@ class ModelCard extends StatefulWidget {
 
 class _ModelCardState extends State<ModelCard>{
   bool isHovered = false;
+  final itemsController = FlyoutController();
 
-    @override
+
+  void deleteModel() {
+    Provider.of<ProjectProvider>(context, listen: false).removeProject(widget.project);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
 
     return GestureDetector(
       onTap: () {
         if (widget.project.isDownloaded) {
-          GoRouter.of(context).go("/models/inference", extra: widget.project);
+          GoRouter.of(context).push("/models/inference", extra: widget.project);
         } else {
-          GoRouter.of(context).go("/models/download", extra: widget.project);
+          GoRouter.of(context).push("/models/download", extra: widget.project);
         }
       },
       child: MouseRegion(
@@ -52,7 +64,7 @@ class _ModelCardState extends State<ModelCard>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AspectRatio(
-                  aspectRatio: 5/4,
+                  aspectRatio: 11/8,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.only(topLeft: Radius.circular(4), topRight: Radius.circular(4)),
                     child: Container(
@@ -72,39 +84,63 @@ class _ModelCardState extends State<ModelCard>{
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.project.name,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          )
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ModelProperty(name: "Task", value: widget.project.taskName()),
-                              ModelProperty(name: "Architecture", value: widget.project.architecture),
-                              Row(
-                                children: [
-                                  ModelProperty(name: "Size", value: widget.project.size?.readableFileSize() ?? ""),
-                                  Builder(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(widget.project.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                              )
+                            ),
+                            FlyoutTarget(
+                              controller: itemsController,
+                              child: IconButton(
+                                icon: const Icon(FluentIcons.more, size: 8,),
+                                onPressed: () {
+                                  itemsController.showFlyout(
                                     builder: (context) {
-                                      if (widget.project is GetiProject && widget.project.tasks.first.performance != null) {
-                                        Locale locale = Localizations.localeOf(context);
-                                        final formatter = NumberFormat.percentPattern(locale.languageCode);
-                                        return ModelProperty(
-                                          name: "Accuracy",
-                                          value: formatter.format(widget.project.tasks.first.performance!.score));
-                                      }
-                                      return Container();
+                                      return StatefulBuilder(builder: (context, setState) {
+                                        return MenuFlyout(
+                                          items: [
+                                            MenuFlyoutItem(
+                                              text: const Text('Delete'),
+                                              onPressed: deleteModel,
+                                            ),
+                                          ]
+                                        );
+                                      });
                                     }
-                                  ),
-                                ],
+                                  );
+                                }
                               ),
-                            ],
-                          ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ModelProperty(name: "Task", value: widget.project.taskName()),
+                            ModelProperty(name: "Architecture", value: widget.project.architecture),
+                            Row(
+                              children: [
+                                ModelProperty(name: "Size", value: widget.project.size?.readableFileSize() ?? ""),
+                                Builder(
+                                  builder: (context) {
+                                    if (widget.project is GetiProject && widget.project.tasks.first.performance != null) {
+                                      Locale locale = Localizations.localeOf(context);
+                                      final formatter = NumberFormat.percentPattern(locale.languageCode);
+                                      return ModelProperty(
+                                        name: "Accuracy",
+                                        value: formatter.format(widget.project.tasks.first.performance!.score));
+                                    }
+                                    return Container();
+                                  }
+                                ),
+                              ],
+                            ),
+                          ],
                         )
                       ],
                     ),

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+
 #include <adapters/openvino_adapter.h>
 #include <models/detection_model.h>
 #include <models/classification_model.h>

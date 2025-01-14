@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -6,7 +10,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/image_inference.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
-import 'package:inference/pages/models/widgets/grid_container.dart';
+import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/image_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
@@ -76,10 +80,10 @@ class _LiveInferenceState extends State<LiveInference> {
                           buttonBuilder: (context, callback) {
                             return NoOutlineButton(
                               onPressed: callback,
-                              child: Row(
+                              child: const Row(
                                 children: [
-                                  const Text("Choose image file"),
-                                  const Padding(
+                                  Text("Choose image file"),
+                                  Padding(
                                     padding: EdgeInsets.only(left: 8),
                                     child: Icon(FluentIcons.chevron_down, size: 12),
                                   ),

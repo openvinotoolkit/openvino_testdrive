@@ -1,8 +1,12 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/annotation.dart';
 import 'package:inference/color.dart';
 import 'package:inference/project.dart' as project;
@@ -20,9 +24,10 @@ class CanvasPainter extends CustomPainter {
   final ui.Image image;
   final List<Annotation>? annotations;
   final List<project.Label> labelDefinitions;
+  final Map<String, project.Label> labelById;
   final double scale;
 
-  CanvasPainter(this.image, this.annotations, this.labelDefinitions, this.scale);
+  CanvasPainter(this.image, this.annotations, this.labelDefinitions, this.scale): labelById = { for (var v in labelDefinitions) v.id : v };
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -120,6 +125,7 @@ class CanvasPainter extends CustomPainter {
   }
 
   Size drawLabel(Canvas canvas, Size size, Label label, Offset position) {
+    final labelName = labelById[label.id]?.name ?? "Unknown object";
     final color = getColorByLabelID(label.id, labelDefinitions);
     Paint paint = Paint()
       ..color = color;
@@ -129,7 +135,7 @@ class CanvasPainter extends CustomPainter {
       fontSize: 14 / scale,
     );
     final textSpan = TextSpan(
-      text: "${label.name} ${(label.probability * 100).toStringAsFixed(1)}%",
+      text: "$labelName ${(label.probability * 100).toStringAsFixed(1)}%",
       style: textStyle,
     );
     final textPainter = TextPainter(

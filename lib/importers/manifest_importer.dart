@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -33,7 +37,16 @@ class Model {
     return getThumbnail(id);
   }
 
-  String get kind => task == 'text-generation' ? 'llm' : 'other';
+  String get kind {
+   if (task == 'text-generation'){
+     return 'llm';
+   } else if (task == 'speech'){
+     return 'speech to text';
+   } else if (task == 'text-to-image'){
+     return 'image generation';
+   }
+   return 'other';
+  }
 
   String get readableFileSize {
     return fileSize.toDouble().readableFileSize();

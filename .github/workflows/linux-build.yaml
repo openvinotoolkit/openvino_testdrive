@@ -132,10 +132,10 @@ jobs:
           path: ./flutter/
 
       # Step 6: Update release
-      - name: Linux Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          files: ${{ env.SANITIZED_FILENAME }}
+      # - name: Linux Release
+      #   uses: softprops/action-gh-release@v1
+      #   if: startsWith(github.ref, 'refs/tags/')
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     files: ${{ env.SANITIZED_FILENAME }}

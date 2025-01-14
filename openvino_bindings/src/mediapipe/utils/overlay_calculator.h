@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef OVERLAY_CALCULATOR_H
 #define OVERLAY_CALCULATOR_H
 

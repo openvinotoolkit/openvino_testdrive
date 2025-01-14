@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+
 #include "bindings.h"
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -295,7 +302,7 @@ StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance) {
 
 Status* ttiInferenceClose(CTTIInference instance) {
     auto inference = reinterpret_cast<TTIInference*>(instance);
-    //inference->stop();
+    inference->stop();
     delete inference;
     return new Status{OkStatus};
 }

@@ -61,7 +61,7 @@ cmake(
     ],
     cache_entries = {
         "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
-        "OpenVINO_DIR": "C:/Intel/openvino_2024.5.0/runtime/cmake",
+        "OpenVINO_DIR": "C:/Intel/openvino_2024.6.0/runtime/cmake",
         "OpenCV_DIR": "C:/opencv/build",
     },
     lib_source = ":all_srcs",

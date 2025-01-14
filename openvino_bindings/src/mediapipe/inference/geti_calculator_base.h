@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef GETI_CALCULATOR_BASE_H
 #define GETI_CALCULATOR_BASE_H
 

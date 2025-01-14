@@ -1,10 +1,15 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:go_router/go_router.dart';
 import 'package:inference/pages/computer_vision/batch_inference.dart';
 import 'package:inference/pages/computer_vision/live_inference.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/image_inference_provider.dart';
 import 'package:inference/providers/preference_provider.dart';
+import 'package:inference/utils.dart';
+import 'package:inference/widgets/controls/close_model_button.dart';
 import 'package:provider/provider.dart';
 
 class ComputerVisionPage extends StatefulWidget {
@@ -16,7 +21,6 @@ class ComputerVisionPage extends StatefulWidget {
 }
 
 class _ComputerVisionPageState extends State<ComputerVisionPage> {
-
 
   int selected = 0;
   @override
@@ -98,13 +102,13 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  //Padding(
-                  //  padding: const EdgeInsets.all(4),
-                  //  child: FilledButton(
-                  //    child: const Text("Download"),
-                  //    onPressed: () => print("close")
-                  //  ),
-                  //),
+                  Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: FilledButton(
+                      child: const Text("Export model"),
+                      onPressed: () => downloadProject(widget.project),
+                    ),
+                  ),
                   //Padding(
                   // padding: const EdgeInsets.all(4),
                   // child: OutlinedButton(
@@ -112,19 +116,7 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
                   //    onPressed: () => print("close")
                   //  ),
                   //),
-                  Padding(
-                    padding: const EdgeInsets.all(4),
-                    child: OutlinedButton(
-                      style: ButtonStyle(
-                        shape:WidgetStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                          side:  const BorderSide(color: Color(0XFF545454)),
-                        )),
-                      ),
-                      child: const Text("Close"),
-                      onPressed: () =>  GoRouter.of(context).go("/models"),
-                    ),
-                  ),
+                  const CloseModelButton(),
                 ]
               ),
             ),

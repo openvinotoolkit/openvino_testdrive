@@ -1,6 +1,10 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/generated_bindings.dart';
 import 'package:inference/interop/llm_inference.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
@@ -249,7 +253,6 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   void reset() {
-    //_inference?.close();
     _inference?.forceStop();
     _inference?.clearHistory();
     _messages.clear();

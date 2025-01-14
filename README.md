@@ -2,8 +2,7 @@
 
 # OpenVINO™ Test Drive
 
-[![codecov](https://codecov.io/gh/openvinotoolkit/openvino_testdrive/graph/badge.svg?token=DH98FAPH65)](https://codecov.io/gh/openvinotoolkit/openvino_testdrive)
-[![openvino](https://img.shields.io/badge/openvino-2024.4-blue)]()
+[![openvino](https://img.shields.io/badge/openvino-2024.6-blue)]()
 
 </div>
 
@@ -11,18 +10,18 @@ Get started with OpenVINO™ Test Drive, an application that allows you to run g
 
 
 <p align="center">
-  <img src="./docs/readme.gif" width="600" alt="sample">
+  <img src="./docs/llm_model_chat.gif" width="600" alt="sample">
 </p>
 
 With use of OpenVINO™ Test Drive you can:
 + **Chat with LLMs** and evaluating model performance on your computer or edge device
-+ **Experiment with different text prompts** to generate images using Stable Diffusion and Stable DiffusionXL models (coming soon)
-+ **Transcribe speech from video** using Whisper models, including generation of timestamps (coming soon)
++ **Experiment with different text prompts** to generate images using Stable Diffusion and Stable DiffusionXL models
++ **Transcribe speech from video** using Whisper models, including generation of timestamps
 + **Run and visualize results of models** trained by Intel® Geti™ using single image inference or batch inference mode
 
 ## Installation
 
-Download the latest release from the [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/packages/).
+Download the latest release from the [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/).
 
 > [!NOTE]
 > To verify downloaded file integrity, you can generate a SHA-256 of the downloaded file and compare it to the SHA-256 from corresponding `.sha256` file published in Releases repository. 
@@ -30,7 +29,7 @@ Download the latest release from the [Releases repository](https://storage.openv
 <details>
 <summary>Installation on Windows</summary>
 
-1. Downloading the zip archive [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/packages/) `Windows` folder .
+1. Downloading the zip archive [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/) `Windows` folder .
 
 <p align="left">
   <img src="./docs/win_inst.gif" width="500">
@@ -52,24 +51,54 @@ Upon starting the application, you can import a model using either Hugging Face 
 
 ### Text generation and LLM performance evaluation
 
-1. Find a model on Hugging Face and import it
+1. Choose a model from predefined set of popular models or pick one from Hugging Face using `Import model` -> `Hugging Face` and import it.
 <p align="left">
   <img src="./docs/llm_import.gif" width="500">
 </p>
 
-2. Chat with LLMs via `Playground` tab.
+2. Pick imported LLM from `My models` section and chat with it using `Playground` tab. You can export LLM via `Export model` button.
 <p align="left">
   <img src="./docs/llm_model_chat.gif" width="500">
 </p>
 
-3. Use `Performance metrics` tab to get model performance metrics on your computer or edge device
+3. Use `Performance metrics` tab to get LLM performance metrics on your computer.
 <p align="left">
   <img src="./docs/metrics.gif" width="500">
 </p>
 
+
+### Transcribe speech from video
+
+1. Try Whisper for video transcription.
+<p align="left">
+  <img src="./docs/st_import.gif" width="500">
+</p>
+
+2. Pick imported speech-to-text LLM from `My models` section and upload video for transcription. It is also possible to search words in transcript or download it.
+
+<p align="left">
+  <img src="./docs/video.gif" width="500">
+</p>
+
+3. Use `Performance metrics` tab to get LLM performance metrics on your computer.
+
+### Image generation
+
+1. Choose an image generation LLM from predefined set of popular models or pick one from Hugging Face using `Import model` -> `Hugging Face` and import it.
+
+2. Pick imported LLM from `My models` section and chat with it to generate image. It is also possible to download generated image.
+
+<p align="left">
+  <img src="./docs/ig.gif" width="500">
+</p>
+
+3. Use `Performance metrics` tab to get LLM performance metrics on your computer.
+
+You can export LLM via `Export model` button.
+
 ### Images inference with models trained by Intel® Geti™
 
-1. Download deployment code for the model in OpenVINO format trained by Intel® Geti™. 
+1. Download code deployment for the model in OpenVINO format trained by Intel® Geti™. 
 
 <p align="left">
   <img src="./docs/geti_download.gif" width="500">
@@ -90,7 +119,7 @@ Upon starting the application, you can import a model using either Hugging Face 
   <img src="./docs/geti_cv.gif" width="500">
 </p>
 
-4. For batch inference, use `Batch inference` tab and provide paths to folder with input images in a `Source folder` and specify `Destination folder` for output batch inference results. Click on `Start` to start batch inference.
+4. For batch inference, use `Batch inference` tab, provide paths to folder with input images in a `Source folder` and specify `Destination folder` for output batch inference results. Click on `Start` to start batch inference.
 
 <p align="left">
   <img src="./docs/geti_batch.gif" width="500">
@@ -120,3 +149,5 @@ For those who would like to contribute to the OpenVINO™ Test Drive, please che
 
 OpenVINO™ Test Drive repository is licensed under [Apache License Version 2.0](LICENSE).
 By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.
+
+FFmpeg is an open source project licensed under LGPL and GPL. See https://www.ffmpeg.org/legal.html. You are solely responsible for determining if your use of FFmpeg requires any additional licenses. Intel is not responsible for obtaining any such licenses, nor liable for any licensing fees due, in connection with your use of FFmpeg.

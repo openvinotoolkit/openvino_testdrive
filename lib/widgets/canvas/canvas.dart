@@ -1,9 +1,13 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/annotation.dart';
 import 'package:inference/widgets/canvas/canvas_painter.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;

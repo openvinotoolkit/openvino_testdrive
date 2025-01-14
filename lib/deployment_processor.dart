@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -58,3 +62,17 @@ Future<void> deleteProjectData(Project project) async {
   }
 }
 
+Future<void> copyProjectData(Project project, String to) async {
+  final from = project.storagePath;
+  await Directory(to).create(recursive: true);
+  await for (final file in Directory(from).list(recursive: true)) {
+    final copyTo = platformContext.join(to, platformContext.relative(file.path, from: from));
+    if (file is Directory) {
+      await Directory(copyTo).create(recursive: true);
+    } else if (file is File) {
+      await File(file.path).copy(copyTo);
+    } else if (file is Link) {
+      await Link(copyTo).create(await file.target(), recursive: true);
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/knowledge_base/providers/knowledge_base_provider.dart';
 import 'package:inference/pages/knowledge_base/widgets/group_item.dart';
-import 'package:inference/pages/models/widgets/grid_container.dart';
+import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:provider/provider.dart';
 

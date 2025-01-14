@@ -1,5 +1,10 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/pages/models/widgets/grid_container.dart';
+import 'package:inference/widgets/empty_model_widget.dart';
+import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/pages/models/widgets/model_card.dart';
 import 'package:inference/pages/models/widgets/searchbar.dart';
 import 'package:inference/providers/project_filter_provider.dart';
@@ -9,7 +14,6 @@ import 'package:provider/provider.dart';
 
 class ModelList extends StatelessWidget {
   const ModelList({super.key});
-  final String? filter = null;
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +45,10 @@ class ModelList extends StatelessWidget {
                       child: Consumer<ProjectProvider>(builder: (context, projectProvider, child) {
                         final filtered = filter.applyFilter(projectProvider.projects);
                         return FixedGrid(
-                          tileWidth: 240,
-                          spacing: 24,
+                          tileWidth: 268,
+                          spacing: 36,
                           itemCount: filtered.length,
+                          emptyWidget: EmptyModelListWidget(searchQuery: filter.name),
                           itemBuilder: (context, index) {
                             return ModelCard(project: filtered[index]);
                           },

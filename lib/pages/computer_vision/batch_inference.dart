@@ -1,8 +1,12 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
  import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/pages/computer_vision/providers/batch_inference_provider.dart';
 import 'package:inference/pages/computer_vision/widgets/folder_selector.dart';
-import 'package:inference/pages/computer_vision/widgets/horizontal_rule.dart';
+import 'package:inference/widgets/horizontal_rule.dart';
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/pages/computer_vision/widgets/output_selector.dart';
 import 'package:inference/pages/computer_vision/widgets/device_selector.dart';
@@ -61,7 +65,7 @@ class BatchInference extends StatelessWidget {
                             children: [
                               FilledButton(
                                 onPressed: () {
-                                  if (batchInference.state == BatchInferenceState.Running) {
+                                  if (batchInference.state == BatchInferenceState.running) {
                                     batchInference.stop();
                                   } else {
                                     batchInference.start();
@@ -71,9 +75,9 @@ class BatchInference extends StatelessWidget {
                                 child: Builder(
                                   builder: (context) {
                                     String text = switch(batchInference.state) {
-                                      BatchInferenceState.Ready => "Start batch inference",
-                                      BatchInferenceState.Running => "Stop",
-                                      BatchInferenceState.Done => "Start batch inference",
+                                      BatchInferenceState.ready => "Start batch inference",
+                                      BatchInferenceState.running => "Stop",
+                                      BatchInferenceState.done => "Start batch inference",
                                     };
                                     return Text(text);
                                   }

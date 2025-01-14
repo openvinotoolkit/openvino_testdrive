@@ -8,7 +8,7 @@ import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/objectbox.g.dart';
 import 'package:inference/pages/knowledge_base/widgets/experiment.dart';
 import 'package:inference/pages/knowledge_base/widgets/import_dialog.dart';
-import 'package:inference/pages/models/widgets/grid_container.dart';
+import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:langchain/langchain.dart';

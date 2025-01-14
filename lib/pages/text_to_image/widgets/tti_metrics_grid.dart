@@ -1,6 +1,10 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/openvino_bindings.dart';
-import 'package:inference/pages/text_to_image/widgets/metrics_card.dart';
+import 'package:inference/widgets/metrics_card.dart';
 import 'package:intl/intl.dart';
 
 
