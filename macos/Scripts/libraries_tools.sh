@@ -76,10 +76,12 @@ Bundle (){
 
 Sign (){
     # Sign the libraries
-    if [[ -n "${EXPANDED_CODE_SIGN_IDENTITY:-}" ]]; then
-        for lib in "${BUNDLE_FRAMEWORK_LIBS_TO_SIGN[@]}"; do
-            codesign --force --verbose --sign "${EXPANDED_CODE_SIGN_IDENTITY}" -- "${BUNDLE_FRAMEWORK_LIBS_TARGET_DIR}/${lib}"
-        done
+    if [[ -z ${FLUTTER_NOT_SIGN_LIBS} ]]; then
+        if [[ -n "${EXPANDED_CODE_SIGN_IDENTITY:-}" ]]; then
+            for lib in "${BUNDLE_FRAMEWORK_LIBS_TO_SIGN[@]}"; do
+                codesign --force --verbose --sign "${EXPANDED_CODE_SIGN_IDENTITY}" -- "${BUNDLE_FRAMEWORK_LIBS_TARGET_DIR}/${lib}"
+            done
+        fi
     fi
 }
 

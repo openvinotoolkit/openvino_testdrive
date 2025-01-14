@@ -47,6 +47,7 @@ jobs:
         run: flutter build ${{env.OS_NAME}} --release
         env:
           FLUTTER_NOT_BUNDLE_LIBRARIES: true
+          FLUTTER_NOT_SIGN_LIBS: true
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
