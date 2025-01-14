@@ -64,26 +64,6 @@ BUNDLE_FRAMEWORK_LIBS_TO_SIGN=(
     "libopencv_imgcodecs.410.dylib"
     "libcore_tokenizers.dylib"
 )
-FIX_LIBRARIES_LINK_SOURCES=(
-    "libmacos_bindings.dylib"
-    "libopencv_videoio.410.dylib"
-    "libopencv_videoio.410.dylib"
-)
-FIX_LIBRARIES_LINK_TARGETS=(
-    "libavutil.58.dylib"
-    "libavformat.60.dylib"
-    "libavcodec.60.dylib"
-    "libavdevice.60.dylib"
-    "libswresample.4.dylib"
-)
-
-function join_by {
-  local d=${1-} f=${2-}
-  if shift 2; then
-    printf %s "$f" "${@/#/$d}"
-  fi
-}
-
 
 Bundle (){
     # Copy the libraries to the app bundle
@@ -91,32 +71,6 @@ Bundle (){
         for lib in "${BUNDLE_FRAMEWORK_LIBS[@]}"; do
             rsync -av "${BUNDLE_FRAMEWORK_LIBS_SOURCE_DIR}/${lib}" "${BUNDLE_FRAMEWORK_LIBS_TARGET_DIR}"
         done
-    fi
-}
-
-Link (){
-    echo '' > debug.log
-    if [ -z "${FIX_LIBRARIES_LINKS}" ]; then
-        # for lib in "${BUNDLE_FRAMEWORK_LIBS[@]}"; do
-        #     local dependencies=$(otool -L "${BUNDLE_FRAMEWORK_LIBS_TARGET_DIR}/$lib" | awk '{print $1}' | grep -v : | grep -v '^$' | grep -v '^@rpath' | grep -v '^@loader_path' | grep -v '^@executable_path')
-        #     local changed=false
-        #     for dep in $dependencies; do
-        #         local basename=$(basename "$dep")
-        #         for fix in "${FIX_LIBRARIES_LINK_TARGETS[@]}"; do
-        #             if [[ "$basename" == "$fix" ]]; then
-        #                 echo "Fixing $dep link for $lib" >> debug.log
-        #                 install_name_tool -change "$dep" "@rpath/$basename" "${BUNDLE_FRAMEWORK_LIBS_TARGET_DIR}/$lib"
-        #                 changed=true
-        #             fi
-        #         done
-        #     done
-        #     if [[ "$changed" == true ]]; then
-        #         codesign --force --verbose --sign "-" -- "${BUNDLE_FRAMEWORK_LIBS_TARGET_DIR}/$lib"
-        #     fi
-        # done
-        # ${TOOLCHAIN_DIR}/usr/bin/clang -dynamiclib -o "${TARGET_BUILD_DIR}/${PRODUCT_NAME}.app/Contents/MacOS/OpenVINO Test Drive.$(echo $CONFIGURATION | awk '{print tolower($0)}').dylib" -L"${BUNDLE_FRAMEWORK_LIBS_TARGET_DIR}" -l$(join_by " -l" "${BUNDLE_FRAMEWORK_LIBS[@]}")
-        # install_name_tool "${TARGET_BUILD_DIR}/${PRODUCT_NAME}.app/Contents/MacOS/OpenVINO Test Drive.$(echo $CONFIGURATION | awk '{print tolower($0)}').dylib" -add_rpath "@rpa
-        echo "Fixing libraries links"
     fi
 }
 
@@ -135,8 +89,6 @@ else
     case $1 in
         "bundle")
             Bundle ;;
-        "link")
-            Link ;;
         "sign")
             Sign ;;
         *)

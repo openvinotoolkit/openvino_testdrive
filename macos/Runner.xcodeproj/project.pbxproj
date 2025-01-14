@@ -301,7 +301,6 @@
 				33CC10EA2044A3C60003C045 /* Frameworks */,
 				33CC10EB2044A3C60003C045 /* Resources */,
 				37774C5D2D2EEF8A00118F12 /* Bundle Libraries */,
-				37774C5E2D2F532900118F12 /* Custom Link With Libraries */,
 				37774C5F2D2F542600118F12 /* Sign Libraries */,
 				3399D490228B24CF009A79C7 /* Run Script */,
 				9B80A0F0DE430B7EAD998043 /* [CP] Embed Pods Frameworks */,
@@ -467,25 +466,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PROJECT_DIR}\"/Scripts/libraries_tools.sh bundle\n";
 		};
-		37774C5E2D2F532900118F12 /* Custom Link With Libraries */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Custom Link With Libraries";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}\"/Scripts/libraries_tools.sh link\n";
-		};
 		37774C5F2D2F542600118F12 /* Sign Libraries */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -503,7 +483,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}\"/Scripts/libraries_tools.sh link\n";
+			shellScript = "\"${PROJECT_DIR}\"/Scripts/libraries_tools.sh sign\n";
 		};
 		543C0C5B7DCBDB2F3CBC7E75 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
