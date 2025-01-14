@@ -81,7 +81,7 @@ class _DropAreaState extends State<DropArea> {
 
               return Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                spacing: 10,
+                // spacing: 10,
                 children: [
                   // Top text
                   Text(
