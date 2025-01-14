@@ -571,6 +571,128 @@ class OpenVINO {
   late final _ttiInferenceClose = _ttiInferenceClosePtr
       .asFunction<ffi.Pointer<Status> Function(CLLMInference)>();
 
+  ffi.Pointer<StatusOrVLMInference> vlmInferenceOpen(
+    ffi.Pointer<pkg_ffi.Utf8> model_path,
+    ffi.Pointer<pkg_ffi.Utf8> device,
+  ) {
+    return _vlmInferenceOpen(
+      model_path,
+      device,
+    );
+  }
+
+  late final _vlmInferenceOpenPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrVLMInference> Function(ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('vlmInferenceOpen');
+  late final _vlmInferenceOpen = _vlmInferenceOpenPtr.asFunction<
+      ffi.Pointer<StatusOrVLMInference> Function(
+          ffi.Pointer<pkg_ffi.Utf8>, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<Status> vlmInferenceSetListener(
+    CVLMInference instance,
+    VLMInferenceCallbackFunction callback,
+  ) {
+    return _vlmInferenceSetListener(
+      instance,
+      callback,
+    );
+  }
+
+  late final _vlmInferenceSetListenerPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<Status> Function(CVLMInference,
+              VLMInferenceCallbackFunction)>>('vlmInferenceSetListener');
+  late final _vlmInferenceSetListener = _vlmInferenceSetListenerPtr.asFunction<
+      ffi.Pointer<Status> Function(
+          CVLMInference, VLMInferenceCallbackFunction)>();
+
+  ffi.Pointer<StatusOrVLMModelResponse> vlmInferencePrompt(
+    CVLMInference instance,
+    ffi.Pointer<pkg_ffi.Utf8> message,
+    int max_new_tokens,
+  ) {
+    return _vlmInferencePrompt(
+      instance,
+      message,
+      max_new_tokens,
+    );
+  }
+
+  late final _vlmInferencePromptPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrVLMModelResponse> Function(CVLMInference,
+              ffi.Pointer<pkg_ffi.Utf8>, ffi.Int)>>('vlmInferencePrompt');
+  late final _vlmInferencePrompt = _vlmInferencePromptPtr.asFunction<
+      ffi.Pointer<StatusOrVLMModelResponse> Function(
+          CVLMInference, ffi.Pointer<pkg_ffi.Utf8>, int)>();
+
+  ffi.Pointer<Status> vlmInferenceSetImagePaths(
+    CVLMInference instance,
+    ffi.Pointer<ffi.Pointer<pkg_ffi.Utf8>> paths,
+    int length,
+  ) {
+    return _vlmInferenceSetImagePaths(
+      instance,
+      paths,
+      length,
+    );
+  }
+
+  late final _vlmInferenceSetImagePathsPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<Status> Function(
+              CVLMInference,
+              ffi.Pointer<ffi.Pointer<pkg_ffi.Utf8>>,
+              ffi.Int)>>('vlmInferenceSetImagePaths');
+  late final _vlmInferenceSetImagePaths =
+      _vlmInferenceSetImagePathsPtr.asFunction<
+          ffi.Pointer<Status> Function(
+              CVLMInference, ffi.Pointer<ffi.Pointer<pkg_ffi.Utf8>>, int)>();
+
+  ffi.Pointer<StatusOrBool> vlmInferenceHasModelIndex(
+    CVLMInference instance,
+  ) {
+    return _vlmInferenceHasModelIndex(
+      instance,
+    );
+  }
+
+  late final _vlmInferenceHasModelIndexPtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Pointer<StatusOrBool> Function(CVLMInference)>>(
+      'vlmInferenceHasModelIndex');
+  late final _vlmInferenceHasModelIndex = _vlmInferenceHasModelIndexPtr
+      .asFunction<ffi.Pointer<StatusOrBool> Function(CVLMInference)>();
+
+  ffi.Pointer<Status> vlmInferenceStop(
+    CVLMInference instance,
+  ) {
+    return _vlmInferenceStop(
+      instance,
+    );
+  }
+
+  late final _vlmInferenceStopPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<Status> Function(CVLMInference)>>(
+          'vlmInferenceStop');
+  late final _vlmInferenceStop = _vlmInferenceStopPtr
+      .asFunction<ffi.Pointer<Status> Function(CVLMInference)>();
+
+  ffi.Pointer<Status> vlmInferenceClose(
+    CVLMInference instance,
+  ) {
+    return _vlmInferenceClose(
+      instance,
+    );
+  }
+
+  late final _vlmInferenceClosePtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<Status> Function(CVLMInference)>>(
+          'vlmInferenceClose');
+  late final _vlmInferenceClose = _vlmInferenceClosePtr
+      .asFunction<ffi.Pointer<Status> Function(CVLMInference)>();
+
   ffi.Pointer<StatusOrGraphRunner> graphRunnerOpen(
     ffi.Pointer<pkg_ffi.Utf8> graph,
   ) {
@@ -861,6 +983,20 @@ final class StringWithMetrics extends ffi.Struct {
   external TTIMetrics metrics;
 }
 
+final class VLMMetrics extends ffi.Struct {
+  @ffi.Float()
+  external double load_time;
+
+  @ffi.Float()
+  external double generate_time;
+}
+
+final class VLMStringWithMetrics extends ffi.Struct {
+  external ffi.Pointer<pkg_ffi.Utf8> string;
+
+  external VLMMetrics metrics;
+}
+
 final class Device extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> id;
 
@@ -966,6 +1102,15 @@ final class StatusOrTTIInference extends ffi.Struct {
   external CLLMInference value;
 }
 
+final class StatusOrVLMInference extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external CLLMInference value;
+}
+
 final class StatusOrModelResponse extends ffi.Struct {
   @ffi.Int()
   external int status;
@@ -1004,6 +1149,17 @@ final class StatusOrTTIModelResponse extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> value;
 }
 
+final class StatusOrVLMModelResponse extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external VLMMetrics metrics;
+
+  external ffi.Pointer<pkg_ffi.Utf8> value;
+}
+
 final class StatusOrDevices extends ffi.Struct {
   @ffi.Int()
   external int status;
@@ -1029,3 +1185,10 @@ typedef LLMInferenceCallbackFunctionFunction = ffi.Void Function(
 typedef DartLLMInferenceCallbackFunctionFunction = void Function(
     ffi.Pointer<StatusOrString>);
 typedef CTTIInference = ffi.Pointer<ffi.Void>;
+typedef CVLMInference = ffi.Pointer<ffi.Void>;
+typedef VLMInferenceCallbackFunction
+    = ffi.Pointer<ffi.NativeFunction<VLMInferenceCallbackFunctionFunction>>;
+typedef VLMInferenceCallbackFunctionFunction = ffi.Void Function(
+    ffi.Pointer<StatusOrString>);
+typedef DartVLMInferenceCallbackFunctionFunction = void Function(
+    ffi.Pointer<StatusOrString>);
