@@ -3,8 +3,9 @@ import 'package:inference/pages/text_generation/utils/user_file.dart';
 import 'package:inference/widgets/elevation.dart';
 
 class UserFileWidget extends StatelessWidget {
+  final Function? onDelete;
   final UserFile file;
-  const UserFileWidget({super.key, required this.file});
+  const UserFileWidget({super.key, required this.file, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class UserFileWidget extends StatelessWidget {
               child: icon(theme.activeColor)
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 10.0),
+              padding: const EdgeInsets.only(left: 10.0, right: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -42,6 +43,10 @@ class UserFileWidget extends StatelessWidget {
                 ],
               ),
             ),
+            IconButton(
+              icon: const Icon(FluentIcons.clear, size: 8),
+              onPressed: () => onDelete?.call(),
+            )
           ],
         ),
       )

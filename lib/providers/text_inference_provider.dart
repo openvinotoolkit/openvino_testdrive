@@ -102,6 +102,9 @@ class TextInferenceProvider extends ChangeNotifier {
 
   void removeUserFile(UserFile file ) {
     _userFiles.remove(file);
+    final ids = file.documents.map((p) => p.id).whereType<String>().toList();
+    print("removing $ids");
+    store?.delete(ids: ids);
     notifyListeners();
   }
 

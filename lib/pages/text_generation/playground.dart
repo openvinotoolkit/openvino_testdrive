@@ -93,7 +93,7 @@ class _PlaygroundState extends State<Playground> {
 
   Future<void> selectDocument(TextInferenceProvider provider) async {
     print("select document");
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any, allowMultiple: true);
     if (result != null) {
       for (final file in result.files) {
         final path = file.path!;
@@ -238,11 +238,20 @@ class _PlaygroundState extends State<Playground> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 24),
-                        child: Row(
-                          children: [
-                            for (final file in provider.userFiles)
-                              UserFileWidget(file: file)
-                          ]
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              for (final file in provider.userFiles)
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4.0),
+                                  child: UserFileWidget(
+                                    file: file,
+                                    onDelete: () => provider.removeUserFile(file),
+                                  ),
+                                )
+                            ]
+                          ),
                         )
                       ),
                       Padding(

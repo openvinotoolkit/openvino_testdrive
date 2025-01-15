@@ -6,6 +6,7 @@ class UserFile {
   final String kind;
   List<Document> documents = [];
   String? error;
+  bool loading = true;
 
   UserFile({required this.path, required this.kind});
 
