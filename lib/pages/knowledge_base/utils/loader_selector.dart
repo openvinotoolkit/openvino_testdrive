@@ -36,3 +36,17 @@ BaseDocumentLoader loaderFromName(String name, String path) {
   }
 
 }
+
+BaseDocumentLoader? loaderFromPath(String path) {
+  final ext = extension(path);
+  switch (ext) {
+    case ".pdf":
+      return PdfLoader(path, windowSize);
+    case ".html":
+      return HTMLLoader(path, windowSize);
+    case ".txt":
+      return TextLoader(path, windowSize);
+    default:
+      return null;
+  }
+}

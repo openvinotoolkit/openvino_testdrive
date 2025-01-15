@@ -11,6 +11,7 @@ import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box_store.dart';
 import 'package:inference/langchain/openvino_embeddings.dart';
 import 'package:inference/langchain/openvino_llm.dart';
+import 'package:inference/pages/text_generation/utils/user_file.dart';
 import 'package:inference/project.dart';
 import 'package:langchain/langchain.dart';
 import 'package:path/path.dart';
@@ -48,19 +49,13 @@ class Message {
   const Message(this.speaker, this.message, this.metrics, this.time);
 }
 
-Future<Runnable> buildChain(LLMInference inference, KnowledgeGroup? group) async {
-  final platformContext = Context(style: Style.platform);
-  final directory = await getApplicationSupportDirectory();
-  const device = "CPU";
-  final embeddingsModelPath = platformContext.join(directory.path, "test", "all-MiniLM-L6-v2", "fp16");
-  final embeddingsModel = await OpenVINOEmbeddings.init(embeddingsModelPath, device);
-
-  if (group != null) {
-    final vs = ObjectBoxStore(embeddings:  embeddingsModel, group: group);
-    final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: false));
+Future<Runnable> buildChain(LLMInference inference, Embeddings embeddingsModel, KnowledgeGroup? group, MemoryVectorStore store) async {
+  //Knowledge base
+  final vs = group == null ? store : ObjectBoxStore(embeddings:  embeddingsModel, group: group);
+  final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: false));
 
 
-    final promptTemplate = ChatPromptTemplate.fromTemplate('''
+  final promptTemplate = ChatPromptTemplate.fromTemplate('''
 <|system|>
 Answer the question based only on the following context without specifically naming that it's from that context:
 {context}
@@ -68,21 +63,20 @@ Answer the question based only on the following context without specifically nam
 <|user|>
 {question}
 <|assistant|>
-  ''');
-    final retriever = vs.asRetriever();
+''');
+  final retriever = vs.asRetriever();
 
-    return Runnable.fromMap<String>({
-      'context': retriever | Runnable.mapInput((docs) => docs.map((d) => d.pageContent).join('\n')),
-      'question': Runnable.passthrough(),
-    }) | promptTemplate | model | const StringOutputParser();
-  } else {
-    final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: true));
-    final promptTemplate = ChatPromptTemplate.fromTemplate("{question}");
+  return Runnable.fromMap<String>({
+    'context': retriever | Runnable.mapInput((docs) => docs.map((d) => d.pageContent).join('\n')),
+    'question': Runnable.passthrough(),
+  }) | promptTemplate | model | const StringOutputParser();
 
-    return Runnable.fromMap<String>({
-      'question': Runnable.passthrough(),
-    }) | promptTemplate | model | const StringOutputParser();
-  }
+  //final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: true));
+  //final promptTemplate = ChatPromptTemplate.fromTemplate("{question}");
+
+  //return Runnable.fromMap<String>({
+  //  'question': Runnable.passthrough(),
+  //}) | promptTemplate | model | const StringOutputParser();
 }
 
 class TextInferenceProvider extends ChangeNotifier {
@@ -97,6 +91,24 @@ class TextInferenceProvider extends ChangeNotifier {
   Metrics? get metrics => _messages.lastOrNull?.metrics;
 
   Future<Runnable>? chain;
+
+  final List<UserFile> _userFiles = [];
+
+  Future<void> addUserFile(UserFile file ) async {
+    _userFiles.add(file);
+    await store!.addDocuments(documents: file.documents);
+    notifyListeners();
+  }
+
+  void removeUserFile(UserFile file ) {
+    _userFiles.remove(file);
+    notifyListeners();
+  }
+
+  List<UserFile> get userFiles => _userFiles;
+
+  Embeddings? embeddingsModel;
+  MemoryVectorStore? store;
 
   KnowledgeGroup? _knowledgeGroup;
   KnowledgeGroup? get knowledgeGroup => _knowledgeGroup;
@@ -131,7 +143,14 @@ class TextInferenceProvider extends ChangeNotifier {
   Future<void> loadModel() async {
     if (project != null && device != null) {
       _inference = await LLMInference.init(project!.storagePath, device!);
-      chain = buildChain(_inference!, knowledgeGroup);
+
+      final platformContext = Context(style: Style.platform);
+      final directory = await getApplicationSupportDirectory();
+      final embeddingsModelPath = platformContext.join(directory.path, "test", "all-MiniLM-L6-v2", "fp16");
+      embeddingsModel = await OpenVINOEmbeddings.init(embeddingsModelPath, "CPU");
+      store = MemoryVectorStore(embeddings: embeddingsModel!);
+
+      //chain = buildChain(_inference!, knowledgeGroup);
       loaded.complete();
       notifyListeners();
     }
@@ -210,8 +229,7 @@ class TextInferenceProvider extends ChangeNotifier {
     _response = "...";
     _messages.add(Message(Speaker.user, message, null, DateTime.now()));
     notifyListeners();
-    chain = buildChain(_inference!, knowledgeGroup);
-    final runnable = (await chain)!;
+    final runnable = await buildChain(_inference!, embeddingsModel!, knowledgeGroup, store!);
     //final response = await _inference!.prompt(message, true, temperature, topP);
 
     String modelOutput = "";

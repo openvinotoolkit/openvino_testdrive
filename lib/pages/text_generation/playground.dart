@@ -4,8 +4,12 @@
 
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:inference/pages/knowledge_base/utils/loader_selector.dart';
+import 'package:inference/pages/text_generation/utils/user_file.dart';
+import 'package:inference/pages/text_generation/widgets/user_file_widget.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/pages/text_generation/widgets/assistant_message.dart';
 import 'package:inference/pages/text_generation/widgets/model_properties.dart';
@@ -84,6 +88,24 @@ class _PlaygroundState extends State<Playground> {
     super.didChangeDependencies();
     if (attachedToBottom) {
       jumpToBottom();
+    }
+  }
+
+  Future<void> selectDocument(TextInferenceProvider provider) async {
+    print("select document");
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any);
+    if (result != null) {
+      for (final file in result.files) {
+        final path = file.path!;
+        UserFile userFile = UserFile.fromPath(path);
+        final loader = loaderFromPath(path);
+        if (loader == null) {
+          userFile.error = "File type '${userFile.kind}' is not supported.";
+        } else {
+          userFile.documents = await loader.load();
+        }
+        provider.addUserFile(userFile);
+      }
     }
   }
 
@@ -216,6 +238,15 @@ class _PlaygroundState extends State<Playground> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 24),
+                        child: Row(
+                          children: [
+                            for (final file in provider.userFiles)
+                              UserFileWidget(file: file)
+                          ]
+                        )
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 24),
                         child: Column(
                           children: [
                             Row(
@@ -229,6 +260,16 @@ class _PlaygroundState extends State<Playground> {
                                     child: Button(
                                       onPressed: provider.interimResponse == null ? () => provider.reset() : null,
                                       child: const Icon(FluentIcons.rocket, size: 18),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8, bottom: 20),
+                                  child: Tooltip(
+                                    message: "Add document",
+                                    child: Button(
+                                      onPressed: provider.interimResponse == null ? () => selectDocument(provider) : null,
+                                      child: const Icon(FluentIcons.attach, size: 18),
                                     ),
                                   ),
                                 ),
