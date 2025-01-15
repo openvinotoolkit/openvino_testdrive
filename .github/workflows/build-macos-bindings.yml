@@ -1,0 +1,37 @@
+name: Build MacOS Bindings
+
+on:
+  workflow_call:
+
+jobs:
+  build-macos-bindings:
+    name: Build MacOS Bindings
+    runs-on: macos-latest
+    permissions:
+      contents: write
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install bazelisk
+        run: |
+          brew install bazelisk
+
+      - name: Install OpenVINO
+        run: |
+          curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2024.6/macos/openvino_genai_macos_12_6_2024.6.0.0_arm64.tar.gz \
+          -o /tmp/openvino.tar.gz
+          tar -xvf /tmp/openvino.tar.gz -C /opt/intel
+          rm /tmp/openvino.tar.gz
+          ls /opt/intel/openvino
+
+      - name: Install OpenCV
+        run: |
+          . openvino_bindings/scripts/install_opencv.sh
+
+      - name: Install ffmpeg
+        run: |
+          . openvino_bindings/scripts/install_ffmpeg.sh
+
