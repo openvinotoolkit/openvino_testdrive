@@ -96,7 +96,9 @@ class TextInferenceProvider extends ChangeNotifier {
 
   Future<void> addUserFile(UserFile file ) async {
     _userFiles.add(file);
+    notifyListeners();
     await store!.addDocuments(documents: file.documents);
+    file.loading = false;
     notifyListeners();
   }
 

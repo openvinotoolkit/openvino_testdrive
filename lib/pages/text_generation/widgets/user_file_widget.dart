@@ -29,7 +29,12 @@ class UserFileWidget extends StatelessWidget {
                 //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               padding: const EdgeInsets.all(8.0),
-              child: icon(theme.activeColor)
+              child: file.loading
+                ? ProgressRing(
+                  activeColor: theme.activeColor,
+                  backgroundColor: theme.accentColor,
+                )
+                : icon(theme.activeColor)
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10),
