@@ -7,6 +7,7 @@ on:
 
 jobs:
   build-ui:
+    if: false
     permissions:
       contents: write
     strategy:

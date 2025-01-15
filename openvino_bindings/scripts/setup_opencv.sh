@@ -13,12 +13,12 @@ mkdir opencv/release
 cd opencv
 git checkout tags/$OPENCV_VERSION
 cd release
+# -DOPENCV_EXTRA_MODULES_PATH=/tmp/build_opencv/opencv_contrib/modules \
 cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local \
       -DBUILD_LIST=core,improc,imgcodecs,calib3d,features2d,highgui,imgproc,video,videoio,optflow \
       -DBUILD_TESTS=OFF \
       -DBUILD_PERF_TESTS=OFF \
       -DBUILD_opencv_ts=OFF \
-#      -DOPENCV_EXTRA_MODULES_PATH=/tmp/build_opencv/opencv_contrib/modules \
       -DBUILD_opencv_aruco=OFF \
       -DBUILD_opencv_bgsegm=OFF \
       -DBUILD_opencv_bioinspired=OFF \
@@ -57,7 +57,9 @@ make install
 rm -rf /tmp/build_opencv
 echo "OpenCV has been built. You can find the header files and libraries in /usr/local/include/opencv2/ and /usr/local/lib"
 
-# https://github.com/cggos/dip_cvqt/issues/1#issuecomment-284103343
-touch /etc/ld.so.conf.d/mp_opencv.conf
-bash -c  "echo /usr/local/lib >> /etc/ld.so.conf.d/mp_opencv.conf"
-ldconfig -v
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+      # https://github.com/cggos/dip_cvqt/issues/1#issuecomment-284103343
+      touch /etc/ld.so.conf.d/mp_opencv.conf
+      bash -c  "echo /usr/local/lib >> /etc/ld.so.conf.d/mp_opencv.conf"
+      ldconfig -v
+fi

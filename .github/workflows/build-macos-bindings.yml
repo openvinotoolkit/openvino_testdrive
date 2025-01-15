@@ -15,23 +15,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install bazelisk
-        run: |
-          brew install bazelisk
-
       - name: Install OpenVINO
         run: |
           curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2024.6/macos/openvino_genai_macos_12_6_2024.6.0.0_arm64.tar.gz \
           -o /tmp/openvino.tar.gz
-          tar -xvf /tmp/openvino.tar.gz -C /opt/intel
+          sudo mkdir /opt/intel
+          sudo tar -xvf /tmp/openvino.tar.gz -C /opt/intel
+          sudo mv /opt/intel/openvino_genai_macos_12_6_2024.6.0.0_arm64 /opt/intel/openvino
           rm /tmp/openvino.tar.gz
           ls /opt/intel/openvino
 
       - name: Install OpenCV
         run: |
-          . openvino_bindings/scripts/install_opencv.sh
+          sudo /bin/bash openvino_bindings/scripts/setup_opencv.sh
 
       - name: Install ffmpeg
         run: |
-          . openvino_bindings/scripts/install_ffmpeg.sh
+          sudo /bin/bash openvino_bindings/scripts/setup_ffmpeg.sh
 
+      - name: Install numpy
+        run: |
+          brew install numpy
+
+      - name: Build bindings
+        run: |
+          bazelisk build :macos_bindings
+        working-directory: openvino_bindings
