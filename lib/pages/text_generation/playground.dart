@@ -238,19 +238,22 @@ class _PlaygroundState extends State<Playground> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 24),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              for (final file in provider.userFiles)
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 4.0),
-                                  child: UserFileWidget(
-                                    file: file,
-                                    onDelete: () => provider.removeUserFile(file),
-                                  ),
-                                )
-                            ]
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                for (final file in provider.userFiles)
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: UserFileWidget(
+                                      file: file,
+                                      onDelete: () => provider.removeUserFile(file),
+                                    ),
+                                  )
+                              ]
+                            ),
                           ),
                         )
                       ),
