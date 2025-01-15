@@ -7,6 +7,8 @@ class UserFileWidget extends StatelessWidget {
   final UserFile file;
   const UserFileWidget({super.key, required this.file, this.onDelete});
 
+  final double iconSize = 30.0;
+
   @override
   Widget build(BuildContext context) {
     if (file.error == null) {
@@ -46,9 +48,13 @@ class UserFileWidget extends StatelessWidget {
               ),
               padding: const EdgeInsets.all(8.0),
               child: file.loading
-                ? ProgressRing(
-                  activeColor: theme.activeColor,
-                  backgroundColor: theme.accentColor,
+                ? SizedBox(
+                  width: iconSize,
+                  height: iconSize,
+                  child: ProgressRing(
+                    activeColor: theme.activeColor,
+                    backgroundColor: theme.accentColor,
+                  ),
                 )
                 : icon(theme.activeColor)
             ),
@@ -75,10 +81,9 @@ class UserFileWidget extends StatelessWidget {
   }
 
   Icon icon(Color color) {
-    const size = 30.0;
     return switch(file.kind) {
-      "PDF" => Icon(FluentIcons.pdf, size: size, color: color),
-      _ => Icon(FluentIcons.document, size: size, color: color),
+      "PDF" => Icon(FluentIcons.pdf, size: iconSize, color: color),
+      _ => Icon(FluentIcons.document, size: iconSize, color: color),
     };
   }
 }
