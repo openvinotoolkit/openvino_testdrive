@@ -73,6 +73,7 @@ class OpenVINOLLM extends SimpleLLM<OpenVINOLLMOptions> {
     });
     promptLLM(input.toString(), options: options).then((_) {
         done = true;
+        nextResponse.complete("");
         print("Done!");
     });
 
@@ -87,7 +88,6 @@ class OpenVINOLLM extends SimpleLLM<OpenVINOLLMOptions> {
       );
       nextResponse = Completer<String>();
     }
-
   }
 
   @override

@@ -137,7 +137,7 @@ class TextInferenceProvider extends ChangeNotifier {
     }
   }
 
-  void onMessage(String word) {
+  void onToken(String word) {
      stopWatch.stop();
      if (n == 0) { // dont count first token since it's slow.
        stopWatch.reset();
@@ -218,9 +218,8 @@ class TextInferenceProvider extends ChangeNotifier {
     await for (final output in runnable.stream(message)) {
       final token = output.toString();
       modelOutput += token;
-      onMessage(token);
+      onToken(token);
     }
-    print("end...");
 
     if (_messages.isNotEmpty) {
       _messages.add(Message(Speaker.assistant, modelOutput, null, DateTime.now()));
