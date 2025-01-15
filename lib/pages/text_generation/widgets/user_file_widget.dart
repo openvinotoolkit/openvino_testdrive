@@ -9,12 +9,28 @@ class UserFileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (file.error == null) {
+      return buildWidget(context);
+    } else {
+      return Tooltip(
+        message: file.error,
+        style: const TooltipThemeData(
+          waitDuration: Duration(),
+        ),
+        child: buildWidget(context),
+      );
+    }
+  }
+
+  Widget buildWidget(BuildContext context) {
     final theme = FluentTheme.of(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(8)),
         border: Border.all(
-          color: theme.activeColor,
+          color: file.error == null
+            ? theme.activeColor
+            : Colors.red
         ),
         //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
