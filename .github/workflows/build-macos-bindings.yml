@@ -11,9 +11,7 @@ jobs:
       contents: write
 
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Install OpenVINO
         run: |
@@ -41,3 +39,10 @@ jobs:
         run: |
           bazelisk build :macos_bindings
         working-directory: openvino_bindings
+
+      - name: Upload bindings to artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "macos_bindings.tgz"
+          path: "openvino_bindings/bazel-bin/macos_bindings.tgz"
+          if-no-files-found: error

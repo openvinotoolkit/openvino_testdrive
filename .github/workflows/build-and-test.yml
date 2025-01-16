@@ -13,21 +13,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest]
+        os: [ubuntu-22.04, windows-latest, macos-latest]
     uses: ./.github/workflows/build-ui.yml
     with:
       os: ${{ matrix.os }}
 
   build-linux-bindings:
-    if: false
     name: Build Linux Bindings
     runs-on: ubuntu-22.04-16-cores
     permissions:
         contents: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Build Docker image
@@ -44,7 +42,6 @@ jobs:
           if-no-files-found: error
 
   build-windows-bindings:
-    if: false
     permissions:
       contents: write
     uses: ./.github/workflows/build-windows-bindings.yml
@@ -53,3 +50,115 @@ jobs:
     permissions:
       contents: write
     uses: ./.github/workflows/build-macos-bindings.yml
+
+  package-linux:
+    name: Package combined Linux release
+    runs-on: ubuntu-22.04
+    needs: [ build-linux-bindings, build-ui ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set safe filename
+        id: set_filename
+        run: |
+          SAFE_REF_NAME=${GITHUB_REF_NAME//\//_}
+          echo "SANITIZED_FILENAME=OpenVINO-TestDrive-${SAFE_REF_NAME}-linux.zip" >> $GITHUB_ENV
+
+      - name: Download bindings build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: "linux_bindings.tgz"
+
+      - name: Download flutter build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: "OpenVINO-TestDrive-no-bindings-linux.zip"
+          path: flutter
+
+      - name: Combine artifacts
+        run: |
+          tar -xvf linux_bindings.tgz -C ./bindings
+          rm linux_bindings.tgz
+
+          mkdir -p flutter/data/flutter_assets/bindings
+
+          mv bindings/* flutter/data/flutter_assets/bindings
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.SANITIZED_FILENAME }}
+          path: flutter
+
+  package-windows:
+    name: Package combined Windows release
+    runs-on: ubuntu-22.04
+    needs: [ build-windows-bindings, build-ui ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set safe filename
+        id: set_filename
+        run: |
+          SAFE_REF_NAME=${GITHUB_REF_NAME//\//_}
+          echo "SANITIZED_FILENAME=OpenVINO-TestDrive-${SAFE_REF_NAME}-windows.zip" >> $GITHUB_ENV
+
+      - name: Download bindings build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: "windows_bindings.tar"
+
+      - name: Download flutter build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: "OpenVINO-TestDrive-no-bindings-windows.zip"
+          path: flutter
+
+      - name: Combine artifacts
+        run: |
+          tar -xvf windows_bindings.tar -C ./bindings
+          rm windows_bindings.tar
+
+          mv bindings/* flutter
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.SANITIZED_FILENAME }}
+          path: flutter
+
+  package-macos:
+    name: Package combined MacOS release
+    runs-on: ubuntu-22.04
+    needs: [ build-macos-bindings, build-ui ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set safe filename
+        id: set_filename
+        run: |
+          SAFE_REF_NAME=${GITHUB_REF_NAME//\//_}
+          echo "SANITIZED_FILENAME=OpenVINO-TestDrive-${SAFE_REF_NAME}-macos.zip" >> $GITHUB_ENV
+
+      - name: Download bindings build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: "macos_bindings.tgz"
+
+      - name: Download flutter build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: "OpenVINO-TestDrive-no-bindings-macos.zip"
+
+      - name: Combine artifacts
+        run: |
+          tar -xvf macos_bindings.tgz -C ./bindings
+          rm macos_bindings.tgz
+
+          mv bindings/* flutter/OpenVINO\ Test\ Drive.app/Contents/Frameworks
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.SANITIZED_FILENAME }}
+          path: flutter
