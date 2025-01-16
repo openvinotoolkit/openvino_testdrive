@@ -118,6 +118,7 @@ jobs:
 
       - name: Combine artifacts
         run: |
+          mkdir bindings
           tar -xvf windows_bindings.tar -C ./bindings
           rm windows_bindings.tar
 
@@ -151,6 +152,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: "OpenVINO-TestDrive-no-bindings-macOS.zip"
+          path: flutter
 
       - name: Debug
         run: |
@@ -160,6 +162,7 @@ jobs:
 
       - name: Combine artifacts
         run: |
+          mkdir bindings
           tar -xvf macos_bindings.tgz -C ./bindings
           rm macos_bindings.tgz
 

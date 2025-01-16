@@ -10,5 +10,8 @@ cc_library(
         "-l:libavutil.so",
         "-l:libswresample.so",
     ],
+    includes = [
+        "include",
+    ]
     visibility = ["//visibility:public"],
 )
