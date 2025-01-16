@@ -152,6 +152,12 @@ jobs:
         with:
           name: "OpenVINO-TestDrive-no-bindings-macOS.zip"
 
+      - name: Debug
+        run: |
+          ls -la ./
+          ls -la ./bindings
+          ls -la ./flutter
+
       - name: Combine artifacts
         run: |
           tar -xvf macos_bindings.tgz -C ./bindings

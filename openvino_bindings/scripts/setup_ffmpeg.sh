@@ -12,3 +12,9 @@ git checkout n$FFMPEG_VERSION
 make -j8
 make install
 rm -rf /tmp/build_ffmpeg
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+      touch /etc/ld.so.conf.d/ffmpeg.conf
+      bash -c  "echo /opt/ffmpeg/lib >> /etc/ld.so.conf.d/ffmpeg.conf"
+      ldconfig -v
+fi
