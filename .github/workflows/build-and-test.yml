@@ -71,7 +71,7 @@ jobs:
       - name: Download flutter build artifact
         uses: actions/download-artifact@v4
         with:
-          name: "OpenVINO-TestDrive-no-bindings-linux.zip"
+          name: "OpenVINO-TestDrive-no-bindings-Linux.zip"
           path: flutter
 
       - name: Combine artifacts
@@ -110,7 +110,7 @@ jobs:
       - name: Download flutter build artifact
         uses: actions/download-artifact@v4
         with:
-          name: "OpenVINO-TestDrive-no-bindings-windows.zip"
+          name: "OpenVINO-TestDrive-no-bindings-Windows.zip"
           path: flutter
 
       - name: Combine artifacts
@@ -147,7 +147,7 @@ jobs:
       - name: Download flutter build artifact
         uses: actions/download-artifact@v4
         with:
-          name: "OpenVINO-TestDrive-no-bindings-macos.zip"
+          name: "OpenVINO-TestDrive-no-bindings-macOS.zip"
 
       - name: Combine artifacts
         run: |

@@ -30,6 +30,8 @@ RUN ./setup_opencv.sh
 COPY scripts/setup_ffmpeg.sh /scripts/setup_ffmpeg.sh
 RUN ./setup_ffmpeg.sh
 
+RUN ls /opt/ffmpeg
+
 RUN pip3 install numpy
 
 COPY bazel /build/bazel
