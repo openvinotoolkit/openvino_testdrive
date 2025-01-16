@@ -113,7 +113,11 @@ class _LiveInferenceState extends State<LiveInference> {
                       return DropArea(
                         type: "image",
                         showChild: inferenceResult != null,
-                        onUpload: (String file) { uploadFile(file); },
+                        onUpload: (files) {
+                          if (files.isNotEmpty) {
+                            uploadFile(files.first);
+                          }
+                        },
                         extensions: const ["jpg", "jpeg", "bmp", "png", "tif", "tiff"],
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),

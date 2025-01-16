@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/text_generation/utils/user_file.dart';
-import 'package:inference/widgets/elevation.dart';
 
 class UserFileWidget extends StatelessWidget {
   final Function? onDelete;
@@ -31,10 +30,9 @@ class UserFileWidget extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(8)),
         border: Border.all(
           color: file.error == null
-            ? theme.activeColor
+            ? theme.shadowColor
             : Colors.red
         ),
-        //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -44,7 +42,6 @@ class UserFileWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
                 color: theme.accentColor,
-                //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               padding: const EdgeInsets.all(8.0),
               child: file.loading

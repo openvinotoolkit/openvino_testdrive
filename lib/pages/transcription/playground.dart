@@ -128,7 +128,11 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                         return DropArea(
                           type: "video",
                           showChild: !inference.loaded.isCompleted || inference.videoPath != null,
-                          onUpload: (String file) { uploadFile(file); },
+                          onUpload: (files) {
+                            if (files.isNotEmpty){
+                              uploadFile(files.first);
+                            }
+                          },
                           extensions: const [],
                           child: Builder(
                             builder: (context) {

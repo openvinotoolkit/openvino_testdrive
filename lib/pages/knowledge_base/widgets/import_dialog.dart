@@ -3,29 +3,29 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/widgets/horizontal_rule.dart';
 import 'package:inference/pages/knowledge_base/utils/loader_selector.dart';
-import 'package:langchain/langchain.dart';
 import 'package:path/path.dart';
 
-Future<Map<String, BaseDocumentLoader>> importDialog(BuildContext context, String path) async {
-  final result = await showDialog<Map<String, String>?>(
+Future<List<String>> importDialog(BuildContext context, List<String> files) async {
+  final result = await showDialog<List<String>?>(
     context: context,
     builder: (context) => ImportRAGWidget(
-      path: path,
+      paths: files,
     ),
   );
   if (result != null) {
-    return result.map((key, value) => MapEntry(key, loaderFromName(value, key)));
+    return result;
+    //return result.map((key, value) => MapEntry(key, loaderFromName(value, key)));
   } else {
-    return Map<String, BaseDocumentLoader>.of({});
+    return List<String>.of([]);
   }
 }
 
 class ImportRAGWidget extends StatefulWidget {
-  final String path;
+  final List<String> paths;
 
   const ImportRAGWidget({
     super.key,
-    required this.path,
+    required this.paths,
   });
 
   @override
@@ -34,31 +34,37 @@ class ImportRAGWidget extends StatefulWidget {
 
 class _ImportRAGWidgetState extends State<ImportRAGWidget> {
   late final String baseDir;
-  late final Map<String, String> files;
+  late final Map<String, bool> _files;
 
   @override
   void initState() {
     super.initState();
-    final dir = Directory(widget.path);
-    if (dir.existsSync()) {
-      // its a directory
-      final content = dir.listSync(recursive: true).map((p) => p.path);
-      baseDir = widget.path;
-      files = Map.fromIterable(content, key: (path) {
-          return path;
-        },
-        value: (path) {
-          return defaultLoaderSelector(path);
-        }
-      );
-    } else {
-      // its a file
-      final loader = defaultLoaderSelector(widget.path);
-      baseDir = dirname(widget.path);
-      files = {widget.path: loader};
-    }
 
+    baseDir = dirname(widget.paths.first);
+    _files = { for (var p in buildFilesListFromPaths(widget.paths)) p : true };
   }
+
+  List<String> buildFilesListFromPaths(List<String> paths) {
+    return paths.map((path) {
+        final dir = Directory(path);
+        if (dir.existsSync()) {
+          // its a directory
+          final content = dir.listSync(recursive: true).map((p) => p.path);
+          return content.toList();
+        } else {
+          // its a file
+          return [path];
+        }
+      })
+      .expand((b) => b) //expand flattens list
+      .where((file) => loaderFromPath(file) != null)
+      .toList();
+  }
+
+
+  List<String>  get files => _files.keys.toList();
+  List<String>  get selectedFiles => _files.keys.where((file) => _files[file] ?? false).toList();
+
   @override
   Widget build(BuildContext context) {
     return ContentDialog(
@@ -74,39 +80,24 @@ class _ImportRAGWidgetState extends State<ImportRAGWidget> {
           const HorizontalRule(),
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                children:  [
-                  for (final key in files.keys)
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(key.substring(baseDir.length)),
-                          Row(
-                            children: [
-                              LoaderSelector(
-                                value: files[key]!,
-                                onChange: (value) {
-                                  setState(() {
-                                    files[key] = value;
-                                  });
-                                },
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                     files.remove(key);
-                                  });
-                                },
-                                icon: const Icon(FluentIcons.delete),
-                              )
-                            ],
-                          ),
-                        ]
-                      ),
+              child: TreeView(
+                onItemInvoked: (item, reason) async {
+                  print('onItemInvoked: $item => ${item.selected}');
+                  if (_files.containsKey(item.value)) {
+                    setState(() {
+                      _files[item.value] = !_files[item.value]!;
+                    });
+                  }
+                },
+                selectionMode: TreeViewSelectionMode.multiple,
+                items: [
+                  for (final file in files)
+                    TreeViewItem(
+                      selected: _files[file],
+                      content: Text(file.substring(baseDir.length + 1)),
+                      value: file,
                     ),
-                ]
+                ],
               ),
             ),
           ),
@@ -114,40 +105,19 @@ class _ImportRAGWidgetState extends State<ImportRAGWidget> {
       ),
       actions: [
         FilledButton(
+          onPressed: selectedFiles.isNotEmpty
+            ? () {
+              Navigator.pop(context, selectedFiles);
+              // Delete file here
+            }
+            : null,
           child: const Text('Import'),
-          onPressed: () {
-            Navigator.pop(context, files);
-            // Delete file here
-          },
         ),
         Button(
           child: const Text('Cancel'),
           onPressed: () => Navigator.pop(context, null),
         ),
       ],
-    );
-  }
-}
-
-const List<String> loaders = ["PdfLoader", "TextLoader", "HTMLLoader"];
-
-class LoaderSelector extends StatelessWidget {
-  final String value;
-  final Function(String) onChange;
-  const LoaderSelector({super.key, required this.value, required this.onChange});
-
-  @override
-  Widget build(BuildContext context) {
-    return ComboBox(
-      value: value,
-      items: [
-        for (final loader in loaders)
-          ComboBoxItem<String>(
-            value: loader,
-            child: Text(loader),
-          ),
-      ],
-      onChanged: (v) => onChange(v!)
     );
   }
 }

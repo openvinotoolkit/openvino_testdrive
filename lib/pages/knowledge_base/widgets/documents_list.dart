@@ -6,6 +6,7 @@ import 'package:inference/interop/sentence_transformer.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/objectbox.g.dart';
+import 'package:inference/pages/knowledge_base/utils/loader_selector.dart';
 import 'package:inference/pages/knowledge_base/widgets/experiment.dart';
 import 'package:inference/pages/knowledge_base/widgets/import_dialog.dart';
 import 'package:inference/widgets/grid_container.dart';
@@ -69,13 +70,16 @@ class _DocumentsListState extends State<DocumentsList> {
     return SentenceTransformer.init(embeddingsModelPath, "CPU");
   }
 
-  void processUpload(BuildContext context, String path) async {
-    final files = await importDialog(context, path);
-    for (final file in files.keys){
-      final newDocument = await addDocument(file, files[file]!);
-      setState(() {
-        documents.add(newDocument);
-      });
+  void processUpload(BuildContext context, List<String> paths) async {
+    final files = await importDialog(context, paths);
+    for (final file in files){
+      final loader = loaderFromPath(file);
+      if (loader != null) {
+        final newDocument = await addDocument(file, loader);
+        setState(() {
+          documents.add(newDocument);
+        });
+      }
     }
   }
 
@@ -112,7 +116,7 @@ class _DocumentsListState extends State<DocumentsList> {
               child: DropArea(
                 type: "a document or folder",
                 showChild: documents.isNotEmpty,
-                onUpload: (file) => processUpload(context, file),
+                onUpload: (files) => processUpload(context, files),
                 child: Column(
                   children: [
                     for (final document in documents)

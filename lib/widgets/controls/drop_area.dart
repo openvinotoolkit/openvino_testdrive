@@ -10,7 +10,7 @@ import 'package:flutter_svg/svg.dart';
 class DropArea extends StatefulWidget {
   final Widget? child;
   final bool showChild;
-  final void Function(String) onUpload;
+  final void Function(List<String>) onUpload;
   final String type;
   final List<String>? extensions;
 
@@ -31,7 +31,7 @@ class _DropAreaState extends State<DropArea> {
   bool _showReleaseMessage = false;
   void handleDrop(DropDoneDetails details) {
     if (details.files.isNotEmpty) {
-      widget.onUpload(details.files[0].path);
+      widget.onUpload(details.files.map((m) => m.path).toList());
     }
   }
 
@@ -39,7 +39,10 @@ class _DropAreaState extends State<DropArea> {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
     if (result != null) {
-      widget.onUpload(result.files.single.path!);
+      final files = result.files.map((m) => m.path).whereType<String>().toList();
+      if (files.isNotEmpty) {
+        widget.onUpload(files);
+      }
     }
   }
 

@@ -50,6 +50,14 @@ class Message {
 }
 
 Future<Runnable> buildChain(LLMInference inference, Embeddings embeddingsModel, KnowledgeGroup? group, MemoryVectorStore store) async {
+  if (store.memoryVectors.isEmpty && group == null) {
+    final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: true));
+    final promptTemplate = ChatPromptTemplate.fromTemplate("{question}");
+
+    return Runnable.fromMap<String>({
+      'question': Runnable.passthrough(),
+    }) | promptTemplate | model | const StringOutputParser();
+  }
   //Knowledge base
   final vs = group == null ? store : ObjectBoxStore(embeddings:  embeddingsModel, group: group);
   final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: false));
@@ -74,9 +82,6 @@ Answer the question based only on the following context without specifically nam
   //final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: true));
   //final promptTemplate = ChatPromptTemplate.fromTemplate("{question}");
 
-  //return Runnable.fromMap<String>({
-  //  'question': Runnable.passthrough(),
-  //}) | promptTemplate | model | const StringOutputParser();
 }
 
 class TextInferenceProvider extends ChangeNotifier {
