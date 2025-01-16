@@ -3,7 +3,10 @@ name: Build and test
 on:
   push:
     branches:
-      - dkalinin/integration-tests
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-ui:
