@@ -51,19 +51,20 @@ class _PlaygroundState extends State<Playground> {
     if (!provider.initialized || provider.response != null) return;
     _textController.text = '';
     jumpToBottom(offset: 110); //move to bottom including both
-    provider.message(message).catchError((e) async {
-      if (mounted) {
-        await displayInfoBar(context, builder: (context, close) => InfoBar(
-          title: const Text("An error occurred processing the message"),
-          content: Text(e.toString()),
-          severity: InfoBarSeverity.error,
-          action: IconButton(
-            icon: const Icon(FluentIcons.clear),
-            onPressed: close,
-          ),
-        ));
-      }
-    });
+    provider.message(message);
+    //provider.message(message).catchError((e) async {
+    //  if (mounted) {
+    //    await displayInfoBar(context, builder: (context, close) => InfoBar(
+    //      title: const Text("An error occurred processing the message"),
+    //      content: Text(e.toString()),
+    //      severity: InfoBarSeverity.error,
+    //      action: IconButton(
+    //        icon: const Icon(FluentIcons.clear),
+    //        onPressed: close,
+    //      ),
+    //    ));
+    //  }
+    //});
   }
 
   @override

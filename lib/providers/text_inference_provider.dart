@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/generated_bindings.dart';
 import 'package:inference/interop/llm_inference.dart';
+import 'package:inference/langchain/chain_builder.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box_store.dart';
 import 'package:inference/langchain/openvino_embeddings.dart';
@@ -46,42 +47,8 @@ class Message {
   final String message;
   final Metrics? metrics;
   final DateTime? time;
-  const Message(this.speaker, this.message, this.metrics, this.time);
-}
-
-Future<Runnable> buildChain(LLMInference inference, Embeddings embeddingsModel, KnowledgeGroup? group, MemoryVectorStore store) async {
-  if (store.memoryVectors.isEmpty && group == null) {
-    final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: true));
-    final promptTemplate = ChatPromptTemplate.fromTemplate("{question}");
-
-    return Runnable.fromMap<String>({
-      'question': Runnable.passthrough(),
-    }) | promptTemplate | model | const StringOutputParser();
-  }
-  //Knowledge base
-  final vs = group == null ? store : ObjectBoxStore(embeddings:  embeddingsModel, group: group);
-  final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: false));
-
-
-  final promptTemplate = ChatPromptTemplate.fromTemplate('''
-<|system|>
-Answer the question based only on the following context without specifically naming that it's from that context:
-{context}
-
-<|user|>
-{question}
-<|assistant|>
-''');
-  final retriever = vs.asRetriever();
-
-  return Runnable.fromMap<String>({
-    'context': retriever | Runnable.mapInput((docs) => docs.map((d) => d.pageContent).join('\n')),
-    'question': Runnable.passthrough(),
-  }) | promptTemplate | model | const StringOutputParser();
-
-  //final model = OpenVINOLLM(inference, defaultOptions: const OpenVINOLLMOptions(temperature: 1, topP: 1, applyTemplate: true));
-  //final promptTemplate = ChatPromptTemplate.fromTemplate("{question}");
-
+  final List<String>? sources;
+  const Message(this.speaker, this.message, this.metrics, this.time, {this.sources});
 }
 
 class TextInferenceProvider extends ChangeNotifier {
@@ -235,22 +202,31 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   Future<void> message(String message) async {
+    final List<VectorStore> stores = [];
+    if (store != null && store!.memoryVectors.isNotEmpty) {
+      stores.add(store!);
+    }
+    if (knowledgeGroup != null) {
+      stores.add(ObjectBoxStore(embeddings: embeddingsModel!, group: knowledgeGroup!));
+    }
 
     _response = "...";
     _messages.add(Message(Speaker.user, message, null, DateTime.now()));
     notifyListeners();
-    final runnable = await buildChain(_inference!, embeddingsModel!, knowledgeGroup, store!);
-    //final response = await _inference!.prompt(message, true, temperature, topP);
+    final chain = buildRAGChain(_inference!, embeddingsModel!, OpenVINOLLMOptions(temperature: temperature, topP: topP), stores);
+    final input = await chain.documentChain.invoke({"question": message}) as Map;
+    print(input);
+    final docs = List<String>.from(input["docs"].map((Document doc) => doc.metadata["source"]).toSet());
 
     String modelOutput = "";
-    await for (final output in runnable.stream(message)) {
+    await for (final output in chain.answerChain.stream(input)) {
       final token = output.toString();
       modelOutput += token;
       onToken(token);
     }
 
     if (_messages.isNotEmpty) {
-      _messages.add(Message(Speaker.assistant, modelOutput, null, DateTime.now()));
+      _messages.add(Message(Speaker.assistant, modelOutput, null, DateTime.now(), sources: docs));
     }
     _response = null;
     n = 0;

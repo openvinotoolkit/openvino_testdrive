@@ -52,7 +52,7 @@ class ObjectBoxStore  extends VectorStore {
     if (config.scoreThreshold != null) {
       results = results.where((final r) => r.score >= config.scoreThreshold!);
     }
-    print(results.map((p) => p.object.content));
+    //print(results.map((p) => p.object.content));
 
     return results
         .map((r) => (Document(pageContent: r.object.content, metadata: jsonDecode(r.object.metadata)), r.score))

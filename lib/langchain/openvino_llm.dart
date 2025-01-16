@@ -71,10 +71,10 @@ class OpenVINOLLM extends SimpleLLM<OpenVINOLLMOptions> {
     inference.setListener((value) {
         nextResponse.complete(value);
     });
+    print(input);
     promptLLM(input.toString(), options: options).then((_) {
         done = true;
         nextResponse.complete("");
-        print("Done!");
     });
 
     while (!done) {

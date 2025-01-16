@@ -9,6 +9,7 @@ import 'package:markdown/markdown.dart' as md;
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class AssistantMessage extends StatefulWidget {
@@ -146,6 +147,21 @@ class _AssistantMessageState extends State<AssistantMessage> {
                                         ),
                                       ),
                                     ),
+                                  ),
+                                  if (widget.message.sources != null) Row(
+                                    children: [
+                                      for (final source in widget.message.sources!)
+                                        Tooltip(
+                                          style: const TooltipThemeData(
+                                            waitDuration: Duration.zero,
+                                          ),
+                                          message: source,
+                                          child: FilledButton(
+                                            onPressed: null,
+                                            child: Text(basename(source)
+                                          ))
+                                        )
+                                    ]
                                   ),
                                   IconButton(
                                     icon: const Icon(FluentIcons.copy),
