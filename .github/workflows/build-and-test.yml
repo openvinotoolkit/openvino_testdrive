@@ -79,6 +79,7 @@ jobs:
 
       - name: Combine artifacts
         run: |
+          mkdir bindings
           tar -xvf linux_bindings.tgz -C ./bindings
           rm linux_bindings.tgz
 
