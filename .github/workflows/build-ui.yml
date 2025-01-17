@@ -26,7 +26,7 @@ jobs:
             echo "RELEASE_PATH=build/windows/x64/runner/Release" >> $GITHUB_ENV
           elif [[ "${{ runner.os }}" == "macOS" ]]; then
             mkdir bindings
-            echo "RELEASE_PATH=build/macos/Build/Products/Release" >> $GITHUB_ENV
+            echo "RELEASE_PATH=build/macos/Build/Products/Release/OpenVINO Test Drive.app" >> $GITHUB_ENV
           fi
           echo "OS_NAME=`echo '${{runner.os}}' | tr '[:upper:]' '[:lower:]'`" >> $GITHUB_ENV
       - uses: subosito/flutter-action@v2.18.0
@@ -51,5 +51,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: "OpenVINO-TestDrive-no-bindings-${{runner.os}}.zip"
+          name: "OpenVINO-TestDrive-no-bindings-${{env.OS_NAME}}"
           path: ${{ env.RELEASE_PATH }}

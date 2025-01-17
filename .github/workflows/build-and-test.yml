@@ -77,7 +77,7 @@ jobs:
       - name: Download flutter build artifact
         uses: actions/download-artifact@v4
         with:
-          name: "OpenVINO-TestDrive-no-bindings-${{ matrix.os | title }}.zip"
+          name: "OpenVINO-TestDrive-no-bindings-${{ matrix.os }}"
           path: flutter
 
       - name: Combine artifacts
@@ -87,7 +87,7 @@ jobs:
           rm ${{ matrix.os }}_bindings.${{ matrix.os == 'windows' && 'tar' || 'tgz' }}
 
           if [ "${{ matrix.os }}" == "macos" ]; then
-            mv bindings/* flutter/OpenVINO\ Test\ Drive.app/Contents/Frameworks
+            mv bindings/* flutter/Contents/Frameworks
           elif [ "${{ matrix.os }}" == "windows" ]; then
             mv bindings/* flutter
           else
