@@ -108,15 +108,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download OpenVINO bindings
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          mkdir -p bindings
-          gh release download ${{ env.BINDINGS_RELEASE }} -p linux_bindings.tgz
-          tar -xzf linux_bindings.tgz -C bindings
-          rm linux_bindings.tgz
-
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
