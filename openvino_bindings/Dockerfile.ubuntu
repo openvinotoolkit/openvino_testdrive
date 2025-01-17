@@ -22,11 +22,11 @@ RUN cd /tmp && mkdir -p /opt/intel && \
 
 RUN cd /opt/intel/openvino && ./install_dependencies/install_openvino_dependencies.sh -y
 
+RUN mkdir -p /scripts
+WORKDIR /scripts
 COPY scripts/setup_ffmpeg.sh /scripts/setup_ffmpeg.sh
 RUN ./setup_ffmpeg.sh
 
-RUN mkdir -p /scripts
-WORKDIR /scripts
 COPY scripts/setup_opencv.sh /scripts/setup_opencv.sh
 RUN ./setup_opencv.sh
 
