@@ -22,7 +22,6 @@ jobs:
         with:
           scan-type: fs
           scan-ref: pubspec.lock
-          format: json
           scanners: vuln
           output: trivy-results-vuln.json
 
@@ -31,7 +30,6 @@ jobs:
         with:
           scan-type: fs
           scan-ref: .
-          format: "table"
           scanners: misconfig,secret
           output: trivy-results-misconfig.txt
 
