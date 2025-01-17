@@ -26,24 +26,21 @@ jobs:
           scanners: vuln
           output: trivy-results-vuln.json
 
-      - name: Run Trivy Scan (misconfigs and secrets)
-        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0 # v0.29.0
-        if: always()
-        with:
-          scan-type: fs
-          scan-ref: .
-          format: table
-          scanners: misconfig,secret
-          output: trivy-results-misconfig.txt
-
       - name: Run Trivy Scan (spdx)
         uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0 # 0.29.0
-        if: always()
         with:
           scan-type: fs
           scan-ref: .
           format: spdx-json
           output: trivy-results-spdx.json
+
+      - name: Run Trivy Scan (misconfigs and secrets)
+        uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0 # v0.29.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: misconfig,secret
+          output: trivy-results-misconfig.txt
 
       - name: Upload Trivy results
         uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4.5.0
