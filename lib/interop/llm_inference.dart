@@ -39,6 +39,7 @@ class LLMInference {
   }
 
   Future<ModelResponse> prompt(String message, bool applyTemplate, double temperature, double topP) async {
+    print("Actual prompt: $message");
     int instanceAddress = instance.ref.value.address;
     final result = await Isolate.run(() {
       final messagePtr = message.toNativeUtf8();
@@ -91,6 +92,18 @@ class LLMInference {
     }
 
     return status.ref.value;
+  }
+
+  String getChatTemplate() {
+    final status = llmOV.llmInferenceGetChatTemplate(instance.ref.value);
+
+    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+      throw "LLM get Chat template error: ${status.ref.status} ${status.ref.message.toDartString()}";
+    }
+
+    final result = status.ref.value.toDartString();
+    llmOV.freeStatusOrString(status);
+    return result;
   }
 
   void close() {

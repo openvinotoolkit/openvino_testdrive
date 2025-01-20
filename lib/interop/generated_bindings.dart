@@ -485,6 +485,21 @@ class OpenVINO {
   late final _llmInferenceForceStop = _llmInferenceForceStopPtr
       .asFunction<ffi.Pointer<Status> Function(CLLMInference)>();
 
+  ffi.Pointer<StatusOrString> llmInferenceGetChatTemplate(
+    CLLMInference instance,
+  ) {
+    return _llmInferenceGetChatTemplate(
+      instance,
+    );
+  }
+
+  late final _llmInferenceGetChatTemplatePtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Pointer<StatusOrString> Function(CLLMInference)>>(
+      'llmInferenceGetChatTemplate');
+  late final _llmInferenceGetChatTemplate = _llmInferenceGetChatTemplatePtr
+      .asFunction<ffi.Pointer<StatusOrString> Function(CLLMInference)>();
+
   ffi.Pointer<StatusOrBool> llmInferenceHasChatTemplate(
     CLLMInference instance,
   ) {

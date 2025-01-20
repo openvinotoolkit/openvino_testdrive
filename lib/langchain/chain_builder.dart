@@ -1,6 +1,9 @@
 import 'package:inference/interop/llm_inference.dart';
+import 'package:inference/langchain/jinja_prompt_template.dart';
 import 'package:inference/langchain/openvino_llm.dart';
 import 'package:langchain/langchain.dart';
+import 'package:jinja/jinja.dart';
+
 
 String combineDocuments(
   final List<Document> documents, {
@@ -19,17 +22,17 @@ RAGChain buildRAGChain(LLMInference llmInference, Embeddings embeddings, OpenVIN
 
   if (stores.isEmpty) {
     final model = OpenVINOLLM(llmInference, defaultOptions: options.copyWith(applyTemplate: true));
-    final answer = ChatPromptTemplate.fromTemplate('{question}') | model | const StringOutputParser();
+    final answer = PromptTemplate.fromTemplate('{question}') | model | const StringOutputParser();
     return RAGChain(retrievedDocs, answer);
   }
-  final promptTemplate = ChatPromptTemplate.fromTemplate('''
-<|system|>
+  // if chat template, otherwise
+  final promptTemplate = llmInference.hasChatTemplate()
+    ? JinjaPromptTemplate.fromTemplate(llmInference.getChatTemplate())
+    : ChatPromptTemplate.fromTemplate('''
 Answer the question based only on the following context without specifically naming that it's from that context:
 {context}
 
-<|user|>
-{question}
-<|assistant|>
+Question: {question}
 ''');
 
   final finalInputs = Runnable.fromMap({

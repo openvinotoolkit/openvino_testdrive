@@ -240,6 +240,18 @@ Status* llmInferenceClearHistory(CLLMInference instance) {
     }
 }
 
+
+StatusOrString* llmInferenceGetChatTemplate(CLLMInference instance) {
+    try {
+        auto chat_template = reinterpret_cast<LLMInference*>(instance)->get_chat_template();
+        return new StatusOrString{OkStatus, "", strdup(chat_template.c_str())};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrString{except->status, except->message};
+    }
+
+}
+
 StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance) {
     try {
         bool has_chat_template = reinterpret_cast<LLMInference*>(instance)->has_chat_template();

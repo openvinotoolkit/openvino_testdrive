@@ -25,6 +25,7 @@ class LLMInference {
     void clear_history();
     void force_stop();
     bool has_chat_template();
+    std::string get_chat_template();
 
   private:
     bool _stop = false;

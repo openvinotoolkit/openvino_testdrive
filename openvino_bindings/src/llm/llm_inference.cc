@@ -71,3 +71,14 @@ bool LLMInference::has_chat_template() {
     auto r = nlohmann::json::parse(ifs);
     return r.find("chat_template") != r.end();
 }
+
+std::string LLMInference::get_chat_template() {
+    std::ifstream ifs(model_path + "/tokenizer_config.json");
+    auto r = nlohmann::json::parse(ifs);
+    auto chat_template_iter = r.find("chat_template");
+    if (chat_template_iter == r.end()) {
+        return "";
+    } else {
+        return chat_template_iter.value();
+    }
+}

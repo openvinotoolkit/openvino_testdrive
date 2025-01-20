@@ -166,6 +166,7 @@ EXPORT Status* llmInferenceSetListener(CLLMInference instance, LLMInferenceCallb
 EXPORT StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, bool apply_template, float temperature, float top_p);
 EXPORT Status* llmInferenceClearHistory(CLLMInference instance);
 EXPORT Status* llmInferenceForceStop(CLLMInference instance);
+EXPORT StatusOrString* llmInferenceGetChatTemplate(CLLMInference instance);
 EXPORT StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance);
 EXPORT Status* llmInferenceClose(CLLMInference instance);
 
