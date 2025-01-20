@@ -35,8 +35,7 @@ class ObjectBoxStore  extends VectorStore {
     final VectorStoreSimilaritySearch config =
         const VectorStoreSimilaritySearch(),
   }) async {
-    var filter =
-        EmbeddingEntity_.embeddings.nearestNeighborsF32(embedding, config.k);
+    var filter = EmbeddingEntity_.embeddings.nearestNeighborsF32(embedding, 100);
 
     final filterCondition = config.filter?.values.firstOrNull;
     if (filterCondition != null && filterCondition is Condition<EmbeddingEntity>) {
@@ -45,14 +44,14 @@ class ObjectBoxStore  extends VectorStore {
     QueryBuilder<EmbeddingEntity> builder = embeddingsBox.query(filter);
     final documents = group.documents.map((p) => p.internalId).toList();
     builder.link(EmbeddingEntity_.document, KnowledgeDocument_.internalId.oneOf(documents));
-    final query = builder.build();
+
+    final query = builder.build()..limit = 5;
 
     Iterable<ObjectWithScore<EmbeddingEntity>> results = query.findWithScores();
 
     if (config.scoreThreshold != null) {
-      results = results.where((final r) => r.score >= config.scoreThreshold!);
+      results = results.where((final r) => r.score * 10 <= config.scoreThreshold!);
     }
-    //print(results.map((p) => p.object.content));
 
     return results
         .map((r) => (Document(pageContent: r.object.content, metadata: jsonDecode(r.object.metadata)), r.score))

@@ -150,7 +150,7 @@ class _AssistantMessageState extends State<AssistantMessage> {
                                   ),
                                   if (widget.message.sources != null) Row(
                                     children: [
-                                      for (final source in widget.message.sources!)
+                                      for (final (index, source) in widget.message.sources!.indexed)
                                         Tooltip(
                                           style: const TooltipThemeData(
                                             waitDuration: Duration.zero,
@@ -158,8 +158,8 @@ class _AssistantMessageState extends State<AssistantMessage> {
                                           message: source,
                                           child: FilledButton(
                                             onPressed: null,
-                                            child: Text(basename(source)
-                                          ))
+                                            child: Text("${index + 1}. ${basename(source)}")
+                                          )
                                         )
                                     ]
                                   ),
