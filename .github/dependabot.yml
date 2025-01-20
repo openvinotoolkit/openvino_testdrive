@@ -12,5 +12,6 @@ updates:
 
   - package-ecosystem: pub
     directory: /
+    open-pull-requests-limit: 3
     schedule:
       interval: daily
