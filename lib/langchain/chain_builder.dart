@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:inference/interop/llm_inference.dart';
 import 'package:inference/langchain/jinja_prompt_template.dart';
 import 'package:inference/langchain/openvino_llm.dart';
@@ -58,12 +60,14 @@ class RAGChain {
 
 Runnable<String, RunnableOptions, Object> combineStores(List<VectorStore> stores) {
   final Map<String, VectorStoreRetriever> retrievers = {};
+  const maxDocumentsPerQuery = 4;
 
-  int i = 0;
-  for(final store in stores) {
-    retrievers[i.toString()] = store.asRetriever();
-    i++;
+  for(final (index, store) in stores.indexed) {
+    retrievers[index.toString()] = store.asRetriever();
   }
 
-  return Runnable.fromMap(retrievers) | Runnable.mapInput((input) => List<Document>.from(input.values.expand((v) => v)).sublist(0, 4));
+  return Runnable.fromMap(retrievers) | Runnable.mapInput((input) {
+    final documents = List<Document>.from(input.values.expand((v) => v));
+    return documents.sublist(0, min(documents.length, maxDocumentsPerQuery));
+  });
 }
