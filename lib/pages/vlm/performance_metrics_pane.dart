@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/pages/vlm/providers/vlm_inference_provider.dart';
+import 'package:inference/providers/vlm_inference_provider.dart';
 import 'package:inference/pages/vlm/widgets/vlm_metrics_grid.dart';
 import 'package:provider/provider.dart';
 

@@ -989,6 +989,27 @@ final class VLMMetrics extends ffi.Struct {
 
   @ffi.Float()
   external double generate_time;
+
+  @ffi.Float()
+  external double tokenization_time;
+
+  @ffi.Float()
+  external double detokenization_time;
+
+  @ffi.Float()
+  external double ttft;
+
+  @ffi.Float()
+  external double tpot;
+
+  @ffi.Float()
+  external double throughput;
+
+  @ffi.Int()
+  external int number_of_generated_tokens;
+
+  @ffi.Int()
+  external int number_of_input_tokens;
 }
 
 final class VLMStringWithMetrics extends ffi.Struct {

@@ -9,7 +9,7 @@
 
 #include <mutex>
 
-#include "src/utils/vlm_metrics.h"
+#include "src/utils/utils.h"
 #include "openvino/genai/visual_language/pipeline.hpp"
 
 class VLMInference

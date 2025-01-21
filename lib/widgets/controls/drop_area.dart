@@ -31,8 +31,11 @@ class _DropAreaState extends State<DropArea> {
   bool _showReleaseMessage = false;
 
   void handleDrop(DropDoneDetails details) {
-    if (details.files.isNotEmpty) {
-      widget.onUpload(details.files[0].path);
+    for (var file in details.files) {
+      String extension = file.path.split('.').last.toLowerCase(); // Extract file extension
+      if (widget.extensions?.contains(extension) ?? false) {
+        widget.onUpload(file.path);
+      }
     }
   }
 

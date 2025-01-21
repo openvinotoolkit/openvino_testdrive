@@ -96,10 +96,9 @@ VLMStringWithMetrics VLMInference::prompt(std::string message, int max_new_token
 
     const auto load_time_f = static_cast<float>(load_time);
     const auto generate_time_f = static_cast<float>(generate_time);
-    const auto metrics = VLMMetrics{
-        !std::isnan(load_time_f) ? load_time_f : 0.0f,
-        !std::isnan(generate_time_f) ? generate_time_f : 0.0f,
-    };
+    auto metrics = convertToVLMMetricsStruct(results.perf_metrics);
+    metrics.generate_time = generate_time_f;
+    metrics.load_time = load_time_f;
 
     // Return
     auto res = VLMStringWithMetrics{strdup(join_texts(texts).c_str()), metrics};

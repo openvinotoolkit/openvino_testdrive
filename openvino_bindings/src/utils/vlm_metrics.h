@@ -10,6 +10,13 @@
 typedef struct {
     float load_time;
     float generate_time;
+    const float tokenization_time;
+    const float detokenization_time;
+    const float ttft;
+    const float tpot;
+    const float throughput;
+    const int number_of_generated_tokens;
+    const int number_of_input_tokens;
 } VLMMetrics;
 
 typedef struct {

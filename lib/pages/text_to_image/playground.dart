@@ -7,7 +7,6 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:inference/pages/text_to_image/widgets/assistant_message.dart';
-import 'package:inference/pages/text_to_image/widgets/toolbar_text_input.dart';
 import 'package:inference/pages/text_to_image/widgets/user_message.dart';
 import 'package:inference/pages/text_to_image/widgets/model_properties.dart';
 import 'package:inference/widgets/grid_container.dart';
@@ -15,6 +14,7 @@ import 'package:inference/project.dart';
 import 'package:inference/providers/text_to_image_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/device_selector.dart';
+import 'package:inference/widgets/toolbar_text_input.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 

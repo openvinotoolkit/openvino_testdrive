@@ -11,16 +11,17 @@ import 'package:inference/interop/generated_bindings.dart';
 import 'package:inference/interop/vlm_inference.dart';
 import 'package:inference/project.dart';
 
-enum Speaker { assistant, user }
+enum Speaker { assistant, system, user }
 
 
 class Message {
   final Speaker speaker;
   final String message;
   final VLMMetrics? metrics;
+  final DateTime? time;
   final bool allowedCopy; // Don't allow loading images to be copied
 
-  const Message(this.speaker, this.message, this.metrics, this.allowedCopy);
+  const Message(this.speaker, this.message, this.metrics, this.time, this.allowedCopy);
 }
 
 class VLMInferenceProvider extends ChangeNotifier {
@@ -28,6 +29,7 @@ class VLMInferenceProvider extends ChangeNotifier {
 
   Project? _project;
   String? _device;
+  List<String> _imagePaths = [];
 
   Project? get project => _project;
 
@@ -126,7 +128,7 @@ class VLMInferenceProvider extends ChangeNotifier {
       return null;
     }
 
-    return Message(Speaker.assistant, response!, null, false);
+    return Message(Speaker.assistant, response!, null, DateTime.now(), false);
   }
 
   List<Message> get messages {
@@ -143,13 +145,13 @@ class VLMInferenceProvider extends ChangeNotifier {
   Future<void> message(String message) async {
     _response = "...";
 
-    _messages.add(Message(Speaker.user, message, null, false));
+    _messages.add(Message(Speaker.user, message, null, DateTime.now(), false));
     notifyListeners();
 
     final response = await _inference!.prompt(message, maxTokens);
 
     if (_messages.isNotEmpty) {
-      _messages.add(Message(Speaker.assistant, response.content, response.metrics, true));
+      _messages.add(Message(Speaker.assistant, response.content, response.metrics, DateTime.now(), true));
     }
     _response = null;
 
@@ -161,8 +163,22 @@ class VLMInferenceProvider extends ChangeNotifier {
 
   void setImagePaths(List<String> paths) {
     _inference?.setImagePaths(paths);
+    _imagePaths = paths;
   }
 
+  List<String> getImagePaths(){
+    return _imagePaths;
+  }
+
+  void resetInterimResponse(){
+    if (_response != '...' && response != null) {
+      _messages.add(Message(Speaker.assistant, _response!, null, DateTime.now(), true));
+    }
+    _response = null;
+    if (hasListeners) {
+      notifyListeners();
+    }
+  }
 
   void close() {
     _messages.clear();
@@ -175,10 +191,7 @@ class VLMInferenceProvider extends ChangeNotifier {
 
   void forceStop() {
     _inference?.forceStop();
-    if (_response != '...') {
-      _messages.add(Message(Speaker.assistant, _response!, null, true));
-    }
-    _response = null;
+    resetInterimResponse();
     if (hasListeners) {
       notifyListeners();
     }
@@ -186,7 +199,7 @@ class VLMInferenceProvider extends ChangeNotifier {
 
   void reset() {
     //_inference?.close();
-    _inference?.forceStop();
+    // _inference?.forceStop();
     // _inference?.clearHistory();
     _messages.clear();
     _response = null;
@@ -194,25 +207,6 @@ class VLMInferenceProvider extends ChangeNotifier {
   }
 
 
-  Future<void> _closeInferenceInIsolate(dynamic inference) async {
-    final receivePort = ReceivePort();
-
-    // Spawn an isolate and pass the SendPort and inference
-    await Isolate.spawn((List<dynamic> args) {
-      final SendPort sendPort = args[0];
-      final dynamic inference = args[1];
-      try {
-        inference?.close(); // Perform the blocking operation
-      } catch (e) {
-        print("Error closing inference: $e");
-      } finally {
-        sendPort.send(null); // Notify that the operation is complete
-      }
-    }, [receivePort.sendPort, inference]);
-
-    // Wait for the isolate to complete
-    await receivePort.first;
-  }
 
   Future<void> _waitForLoadCompletion() async {
     if (!loaded.isCompleted) {
@@ -228,7 +222,7 @@ class VLMInferenceProvider extends ChangeNotifier {
 
     if (_inference != null) {
       print("Closing inference");
-      await _closeInferenceInIsolate(_inference!);
+      _inference?.close();
       print("Closing inference done");
     } else {
       close();

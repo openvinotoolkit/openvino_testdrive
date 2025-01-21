@@ -1,6 +1,8 @@
-
-// Copyright (C) 2023-2024 Intel Corporation
-// SPDX-License-Identifier: Apache-2.0
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "load_image.hpp"
@@ -37,6 +39,7 @@ ov::Tensor utils::load_image(const std::filesystem::path& image_path) {
 
     std::vector<uchar> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     cv::Mat cv_image = cv::imdecode(buffer, cv::IMREAD_COLOR);
+    cv::cvtColor(cv_image, cv_image, cv::COLOR_BGR2RGB);
 
     if (cv_image.empty()) {
         throw std::runtime_error{"Failed to load the image."};

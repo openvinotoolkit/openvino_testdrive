@@ -5,7 +5,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:inference/pages/vlm/live_inference_pane.dart';
-import 'package:inference/pages/vlm/providers/vlm_inference_provider.dart';
+import 'package:inference/providers/vlm_inference_provider.dart';
 import 'package:inference/pages/vlm/performance_metrics_pane.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
@@ -35,7 +35,6 @@ class _VLMPageState extends State<VLMPage> {
     );
     final textColor = theme.typography.body?.color ?? Colors.black;
 
-    const inferencePane = VLMLiveInferencePane();
     const metricsPane = VLMPerformanceMetricsPane();
     return ChangeNotifierProxyProvider<PreferenceProvider, VLMInferenceProvider>(
       lazy: false,
@@ -93,7 +92,7 @@ class _VLMPageState extends State<VLMPage> {
                       width: 15,
                     ),
                     title: const Text("Live Inference"),
-                    body: inferencePane,
+                    body: VLMPlayground(project: widget.project),
                   ),
                   PaneItem(
                     icon: SvgPicture.asset("images/stats.svg",
