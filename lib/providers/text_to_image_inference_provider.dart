@@ -13,7 +13,7 @@ import 'package:inference/interop/generated_bindings.dart';
 import 'package:inference/interop/tti_inference.dart';
 import 'package:inference/project.dart';
 
-enum Speaker { assistant, user }
+enum Speaker { assistant, system, user }
 
 class ImageContent {
   final Uint8List imageData;
@@ -24,14 +24,15 @@ class ImageContent {
 
 }
 
-class Message {
+class ImageMessage {
   final Speaker speaker;
   final String message;
   final ImageContent? imageContent;
   final TTIMetrics? metrics;
+  final DateTime? time;
   final bool allowedCopy; // Don't allow loading images to be copied
 
-  const Message(this.speaker, this.message, this.imageContent, this.metrics, this.allowedCopy);
+  const ImageMessage(this.speaker, this.message, this.imageContent, this.metrics, this.time, this.allowedCopy);
 }
 
 class TextToImageInferenceProvider extends ChangeNotifier {
@@ -120,7 +121,7 @@ class TextToImageInferenceProvider extends ChangeNotifier {
   }
 
   bool get initialized => loaded.isCompleted;
-  final List<Message> _messages = [];
+  final List<ImageMessage> _messages = [];
 
   double? _speed;
 
@@ -144,16 +145,16 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     return "Image Generation";
   }
 
-  Message? get interimResponse {
+  ImageMessage? get interimResponse {
     if (_response == null) {
       return null;
     }
     final imageContent = ImageContent(_imageBytes ?? Uint8List(0), _loadWidth, _loadHeight, BoxFit.contain);
 
-    return Message(Speaker.assistant, response!, imageContent, null, false);
+    return ImageMessage(Speaker.assistant, response!, imageContent, null, DateTime.now(), false);
   }
 
-  List<Message> get messages {
+  List<ImageMessage> get messages {
     if (interimResponse == null) {
       return _messages;
     }
@@ -167,7 +168,7 @@ class TextToImageInferenceProvider extends ChangeNotifier {
   Future<void> message(String message) async {
     _response = "Generating image...";
 
-    _messages.add(Message(Speaker.user, message, null, null, false));
+    _messages.add(ImageMessage(Speaker.user, message, null, null, DateTime.now(), false));
     notifyListeners();
 
     _loadWidth = width;
@@ -178,7 +179,7 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     final imageContent = ImageContent(imageData, _loadWidth, _loadHeight, BoxFit.contain);
 
     if (_messages.isNotEmpty) {
-      _messages.add(Message(Speaker.assistant, "Generated image", imageContent, response.metrics, true));
+      _messages.add(ImageMessage(Speaker.assistant, "Generated image", imageContent, response.metrics, DateTime.now(), true));
     }
     _response = null;
 
