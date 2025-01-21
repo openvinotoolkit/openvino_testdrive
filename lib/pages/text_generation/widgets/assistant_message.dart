@@ -84,7 +84,7 @@ class _AssistantMessageState extends State<AssistantMessage> {
                     onEnter: (_) => setState(() { _hovering = true; }),
                     onExit: (_) => setState(() { _hovering = false; }),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 502),
@@ -107,7 +107,8 @@ class _AssistantMessageState extends State<AssistantMessage> {
                           Padding(
                             padding: const EdgeInsets.only(top: 4),
                             child: SelectionContainer.disabled(
-                              child: Row(
+                              child: Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.center,
                                 children: [
                                   if (widget.message.metrics != null) Padding(
                                     padding: const EdgeInsets.only(right: 8),

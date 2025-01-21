@@ -65,28 +65,36 @@ class OpenVINOLLM extends SimpleLLM<OpenVINOLLMOptions> {
   }
 
   Stream<LLMResult> buildStream(PromptValue input, {OpenVINOLLMOptions? options}) async* {
-    Completer<String> nextResponse = Completer<String>();
+    Completer<LLMResult> nextResponse = Completer<LLMResult>();
     bool done = false;
     int i = 0;
     inference.setListener((value) {
-        nextResponse.complete(value);
-    });
-    print(input);
-    promptLLM(input.toString(), options: options).then((_) {
-        done = true;
-        nextResponse.complete("");
-    });
-
-    while (!done) {
-      i++;
-      yield LLMResult(
+      nextResponse.complete(LLMResult(
         id: i.toString(),
-        output: await nextResponse.future,
+        output: value,
         finishReason: FinishReason.unspecified,
         metadata: const {},
         usage: const LanguageModelUsage(),
-      );
-      nextResponse = Completer<String>();
+      ));
+      i++;
+    });
+
+    promptLLM(input.toString(), options: options).then((response) {
+      done = true;
+      nextResponse.complete(LLMResult(
+        id: i.toString(),
+        output: "",
+        finishReason: FinishReason.stop,
+        metadata: {
+          "metrics": response.metrics
+        },
+        usage: const LanguageModelUsage(),
+      ));
+    });
+
+    while (!done) {
+      yield await nextResponse.future;
+      nextResponse = Completer<LLMResult>();
     }
   }
 

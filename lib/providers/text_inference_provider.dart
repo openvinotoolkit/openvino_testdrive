@@ -212,15 +212,21 @@ class TextInferenceProvider extends ChangeNotifier {
     final docs = List<String>.from(input["docs"].map((Document doc) => doc.metadata["source"]).toSet());
 
     String modelOutput = "";
+    Metrics? metrics;
     await for (final output in chain.answerChain.stream(input)) {
-      final token = output.toString();
+      final result = output as LLMResult;
+      final token = result.output;
+      if (result.metadata.containsKey("metrics")) {
+        metrics = result.metadata["metrics"];
+      }
       modelOutput += token;
       onToken(token);
     }
 
     if (_messages.isNotEmpty) {
-      _messages.add(Message(Speaker.assistant, modelOutput, null, DateTime.now(), sources: docs));
+      _messages.add(Message(Speaker.assistant, modelOutput, metrics, DateTime.now(), sources: docs));
     }
+
     _response = null;
     n = 0;
     if (hasListeners) {

@@ -4,8 +4,6 @@ import 'package:inference/interop/llm_inference.dart';
 import 'package:inference/langchain/jinja_prompt_template.dart';
 import 'package:inference/langchain/openvino_llm.dart';
 import 'package:langchain/langchain.dart';
-import 'package:jinja/jinja.dart';
-
 
 String combineDocuments(
   final List<Document> documents, {
@@ -24,7 +22,7 @@ RAGChain buildRAGChain(LLMInference llmInference, Embeddings embeddings, OpenVIN
 
   if (stores.isEmpty) {
     final model = OpenVINOLLM(llmInference, defaultOptions: options.copyWith(applyTemplate: true));
-    final answer = PromptTemplate.fromTemplate('{question}') | model | const StringOutputParser();
+    final answer = PromptTemplate.fromTemplate('{question}') | model;
     return RAGChain(retrievedDocs, answer);
   }
   // if chat template, otherwise
@@ -44,7 +42,7 @@ Question: {question}
   });
   final model = OpenVINOLLM(llmInference, defaultOptions: options.copyWith(applyTemplate: false));
 
-  final answer = finalInputs | promptTemplate | model | const StringOutputParser();
+  final answer = finalInputs | promptTemplate | model;
 
   return RAGChain(retrievedDocs, answer);
 }
