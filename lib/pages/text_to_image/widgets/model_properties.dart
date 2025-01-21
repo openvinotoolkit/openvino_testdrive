@@ -6,9 +6,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/providers/text_to_image_inference_provider.dart';
 import 'package:inference/utils.dart';
 import 'package:inference/widgets/grid_container.dart';
+import 'package:inference/widgets/horizontal_rule.dart';
 import 'package:inference/widgets/model_propery.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ModelProperties extends StatelessWidget {
   const ModelProperties({super.key});
@@ -60,6 +62,16 @@ class ModelProperties extends StatelessWidget {
                             value: formatter.format(inference.project!.tasks.first.performance!.score)
                           );
                         }
+                      ),
+                      if (inference.project!.isPublic) Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const HorizontalRule(),
+                          const Text('External links', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                          HyperlinkButton(
+                              child: const Text("Model on Hugging Face"), onPressed: () { launchUrl(Uri.parse('https://huggingface.co/${inference.project!.modelId}')); }
+                          ),
+                        ],
                       ),
                     ],
                   ),
