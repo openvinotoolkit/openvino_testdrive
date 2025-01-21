@@ -67,19 +67,19 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
       body: const SizedBox.shrink()
     ),
     PaneItem(
+      key: const ValueKey('/knowledge_base'),
+      icon: const Icon(FluentIcons.library),
+      title: const Text('Knowledge base'),
+      body: const SizedBox.shrink(),
+      enabled: true,
+    ),
+    PaneItem(
       key: const ValueKey('/workflows'),
       icon: const Icon(FluentIcons.flow),
       title: const Text('Workflows'),
       body: const SizedBox.shrink(),
       enabled: false,
     ),
-    PaneItem(
-      key: const ValueKey('/knowledge_base'),
-      icon: const Icon(FluentIcons.library),
-      title: const Text('Knowledge base'),
-      body: const SizedBox.shrink(),
-      enabled: false,
-    )
   ].map<NavigationPaneItem>((item) => PaneItem(
     key: item.key,
     icon: item.icon,
