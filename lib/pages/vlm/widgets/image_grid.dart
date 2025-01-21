@@ -73,7 +73,6 @@ class _ImageGridState extends State<ImageGrid> {
               padding: const EdgeInsets.only(bottom: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
-                spacing: 20,
                 children: List.generate(galleryData.length, (index) {
                   String path = galleryData[index];
                   bool isLocalFile = File(path)
@@ -97,45 +96,48 @@ class _ImageGridState extends State<ImageGrid> {
                         hoverStates[index] = false;
                       });
                     },
-                    child: Stack(
-                      children: [
-                        AspectRatio(
-                          aspectRatio: 1,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.black,
-                              image: DecorationImage(
-                                image: isLocalFile
-                                    ? FileImage(File(path)) // Load local file
-                                    : NetworkImage(path) as ImageProvider,
-                                // Load from network
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                        if (isHovered)
-                          Positioned(
-                            top: 5,
-                            right: 5,
-                            child: GestureDetector(
-                              onTap: () => removeImage(index),
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withAlpha(200),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  FluentIcons.cancel,
-                                  size: 12,
-                                  color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20),
+                      child: Stack(
+                        children: [
+                          AspectRatio(
+                            aspectRatio: 1,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.black,
+                                image: DecorationImage(
+                                  image: isLocalFile
+                                      ? FileImage(File(path)) // Load local file
+                                      : NetworkImage(path) as ImageProvider,
+                                  // Load from network
+                                  fit: BoxFit.cover,
                                 ),
                               ),
                             ),
                           ),
-                      ],
+                          if (isHovered)
+                            Positioned(
+                              top: 5,
+                              right: 5,
+                              child: GestureDetector(
+                                onTap: () => removeImage(index),
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withAlpha(200),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    FluentIcons.cancel,
+                                    size: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                   );
                 }),

@@ -7,8 +7,7 @@
 #ifndef VLM_INFERENCE_H_
 #define VLM_INFERENCE_H_
 
-#include <mutex>
-
+#include <condition_variable>
 #include "src/utils/utils.h"
 #include "openvino/genai/visual_language/pipeline.hpp"
 
@@ -30,7 +29,7 @@ public:
         if (device == "GPU") {
             // Cache compiled models on disk for GPU to save time on the
             // next run. It's not beneficial for CPU.
-            enable_compile_cache.insert({ov::cache_dir("vlm_cache")});
+            enable_compile_cache.insert({ov::cache_dir(model_path + "/cache")});
         }
 
         ov_pipe = std::make_unique<ov::genai::VLMPipeline>(model_path, device, enable_compile_cache);
