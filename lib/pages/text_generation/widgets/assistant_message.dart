@@ -151,15 +151,18 @@ class _AssistantMessageState extends State<AssistantMessage> {
                                   if (widget.message.sources != null) Row(
                                     children: [
                                       for (final (index, source) in widget.message.sources!.indexed)
-                                        Tooltip(
-                                          style: const TooltipThemeData(
-                                            waitDuration: Duration.zero,
+                                        Padding(
+                                          padding: const EdgeInsets.only(right: 10),
+                                          child: Tooltip(
+                                            style: const TooltipThemeData(
+                                              waitDuration: Duration.zero,
+                                            ),
+                                            message: source,
+                                            child: FilledButton(
+                                              onPressed: null,
+                                              child: Text("${index + 1}. ${basename(source)}")
+                                            )
                                           ),
-                                          message: source,
-                                          child: FilledButton(
-                                            onPressed: null,
-                                            child: Text("${index + 1}. ${basename(source)}")
-                                          )
                                         )
                                     ]
                                   ),

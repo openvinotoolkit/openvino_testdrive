@@ -62,27 +62,20 @@ class TextInferenceProvider extends ChangeNotifier {
   String? get device => _device;
   Metrics? get metrics => _messages.lastOrNull?.metrics;
 
-  Future<Runnable>? chain;
-
   final List<UserFile> _userFiles = [];
 
-  Future<void> addUserFile(UserFile file ) async {
-    _userFiles.add(file);
-    notifyListeners();
-    await store!.addDocuments(documents: file.documents);
-    file.loading = false;
-    notifyListeners();
+  Future<void> addUserFiles(List<UserFile> files ) async {
+    if (files.isEmpty) return;
+    _userFiles.addAll(files);
+    final documents = files.expand((f) => f.documents).toList();
+    await store!.addDocuments(documents: documents);
   }
 
   void removeUserFile(UserFile file ) {
     _userFiles.remove(file);
     final ids = file.documents.map((p) => p.id).whereType<String>().toList();
-    print("removing $ids");
     store?.delete(ids: ids);
-    notifyListeners();
   }
-
-  List<UserFile> get userFiles => _userFiles;
 
   Embeddings? embeddingsModel;
   MemoryVectorStore? store;
@@ -126,8 +119,6 @@ class TextInferenceProvider extends ChangeNotifier {
       final embeddingsModelPath = platformContext.join(directory.path, "test", "all-MiniLM-L6-v2", "fp16");
       embeddingsModel = await OpenVINOEmbeddings.init(embeddingsModelPath, "CPU");
       store = MemoryVectorStore(embeddings: embeddingsModel!);
-
-      //chain = buildChain(_inference!, knowledgeGroup);
       loaded.complete();
       notifyListeners();
     }
@@ -201,7 +192,12 @@ class TextInferenceProvider extends ChangeNotifier {
     return [..._messages, interimResponse!];
   }
 
-  Future<void> message(String message) async {
+  Future<void> message(String message, List<UserFile> files) async {
+    _response = "...";
+    _messages.add(Message(Speaker.user, message, null, DateTime.now(), sources: files.map((f) => f.path).toList()));
+    notifyListeners();
+
+    await addUserFiles(files);
     final List<VectorStore> stores = [];
     if (store != null && store!.memoryVectors.isNotEmpty) {
       stores.add(store!);
@@ -210,9 +206,6 @@ class TextInferenceProvider extends ChangeNotifier {
       stores.add(ObjectBoxStore(embeddings: embeddingsModel!, group: knowledgeGroup!));
     }
 
-    _response = "...";
-    _messages.add(Message(Speaker.user, message, null, DateTime.now()));
-    notifyListeners();
     final chain = buildRAGChain(_inference!, embeddingsModel!, OpenVINOLLMOptions(temperature: temperature, topP: topP), stores);
     final input = await chain.documentChain.invoke({"question": message}) as Map;
     print(input);
@@ -258,6 +251,10 @@ class TextInferenceProvider extends ChangeNotifier {
   void reset() {
     _inference?.forceStop();
     _inference?.clearHistory();
+    for (final file in _userFiles) {
+      final ids = file.documents.map((p) => p.id).whereType<String>().toList();
+      store?.delete(ids: ids);
+    }
     _messages.clear();
     _response = null;
     notifyListeners();

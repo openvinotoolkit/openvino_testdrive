@@ -37,6 +37,7 @@ class SubmitMessageIntent extends Intent {}
 class _PlaygroundState extends State<Playground> {
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
+  final List<UserFile> newFiles = [];
   bool attachedToBottom = true;
 
   void jumpToBottom({ offset = 0 }) {
@@ -51,7 +52,10 @@ class _PlaygroundState extends State<Playground> {
     if (!provider.initialized || provider.response != null) return;
     _textController.text = '';
     jumpToBottom(offset: 110); //move to bottom including both
-    provider.message(message);
+
+    final validFiles = newFiles.where((f) => f.error == null).toList();
+    provider.message(message, validFiles);
+    newFiles.clear();
     //provider.message(message).catchError((e) async {
     //  if (mounted) {
     //    await displayInfoBar(context, builder: (context, close) => InfoBar(
@@ -92,8 +96,7 @@ class _PlaygroundState extends State<Playground> {
     }
   }
 
-  Future<void> selectDocument(TextInferenceProvider provider) async {
-    print("select document");
+  Future<void> selectDocument() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any, allowMultiple: true);
     if (result != null) {
       for (final file in result.files) {
@@ -105,7 +108,9 @@ class _PlaygroundState extends State<Playground> {
         } else {
           userFile.documents = await loader.load();
         }
-        provider.addUserFile(userFile);
+        setState(() {
+          newFiles.add(userFile);
+        });
       }
     }
   }
@@ -158,7 +163,7 @@ class _PlaygroundState extends State<Playground> {
                               max: 1.0,
                               min: 0.1,
                             ),
-                            const KnowledgeBaseSelector()
+                            //const KnowledgeBaseSelector()
                           ],
                   )
                     ),
@@ -245,12 +250,14 @@ class _PlaygroundState extends State<Playground> {
                             scrollDirection: Axis.horizontal,
                             child: Row(
                               children: [
-                                for (final file in provider.userFiles)
+                                for (final file in newFiles)
                                   Padding(
                                     padding: const EdgeInsets.only(right: 4.0),
                                     child: UserFileWidget(
                                       file: file,
-                                      onDelete: () => provider.removeUserFile(file),
+                                      onDelete: () {
+                                        setState(() => newFiles.remove(file));
+                                      }
                                     ),
                                   )
                               ]
@@ -281,7 +288,7 @@ class _PlaygroundState extends State<Playground> {
                                   child: Tooltip(
                                     message: "Add document",
                                     child: Button(
-                                      onPressed: provider.interimResponse == null ? () => selectDocument(provider) : null,
+                                      onPressed: provider.interimResponse == null ? () => selectDocument() : null,
                                       child: const Icon(FluentIcons.attach, size: 18),
                                     ),
                                   ),

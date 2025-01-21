@@ -6,13 +6,12 @@ class UserFile {
   final String kind;
   List<Document> documents = [];
   String? error;
-  bool loading = true;
 
   UserFile({required this.path, required this.kind});
 
   String get filename => basename(path);
 
-  factory UserFile.fromPath(String path ) {
+  factory UserFile.fromPath(String path) {
     return UserFile(path: path, kind: extension(path).substring(1).toUpperCase());
   }
 }

@@ -1,12 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/text_generation/utils/user_file.dart';
+import 'package:inference/theme_fluent.dart';
 
 class UserFileWidget extends StatelessWidget {
   final Function? onDelete;
   final UserFile file;
   const UserFileWidget({super.key, required this.file, this.onDelete});
 
-  final double iconSize = 30.0;
+  final double iconSize = 14.0;
 
   @override
   Widget build(BuildContext context) {
@@ -27,47 +28,25 @@ class UserFileWidget extends StatelessWidget {
     final theme = FluentTheme.of(context);
     return Container(
       decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(8)),
+        color: cosmosBackground.of(theme).withAlpha(150),
+        borderRadius: const BorderRadius.all(Radius.circular(4)),
         border: Border.all(
           color: file.error == null
-            ? theme.shadowColor
+            ? Colors.transparent
             : Colors.red
         ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                color: theme.accentColor,
-              ),
-              padding: const EdgeInsets.all(8.0),
-              child: file.loading
-                ? SizedBox(
-                  width: iconSize,
-                  height: iconSize,
-                  child: ProgressRing(
-                    activeColor: theme.activeColor,
-                    backgroundColor: theme.accentColor,
-                  ),
-                )
-                : icon(theme.activeColor)
-            ),
+            Icon(FluentIcons.text_document, color: theme.inactiveColor, size: iconSize),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(file.filename),
-                  Text(file.kind, style: TextStyle(
-                      color: theme.inactiveColor.withAlpha(100),
-                  )),
-                ],
-              ),
+              child: Text(file.filename),
             ),
-            IconButton(
+            if (onDelete != null) IconButton(
               icon: const Icon(FluentIcons.clear, size: 8),
               onPressed: () => onDelete?.call(),
             )
@@ -75,12 +54,5 @@ class UserFileWidget extends StatelessWidget {
         ),
       )
     );
-  }
-
-  Icon icon(Color color) {
-    return switch(file.kind) {
-      "PDF" => Icon(FluentIcons.pdf, size: iconSize, color: color),
-      _ => Icon(FluentIcons.document, size: iconSize, color: color),
-    };
   }
 }

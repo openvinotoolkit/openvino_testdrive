@@ -53,6 +53,7 @@ class ObjectBoxStore  extends VectorStore {
       results = results.where((final r) => r.score * 10 <= config.scoreThreshold!);
     }
 
+
     return results
         .map((r) => (Document(pageContent: r.object.content, metadata: jsonDecode(r.object.metadata)), r.score))
         .toList(growable: false);
