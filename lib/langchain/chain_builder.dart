@@ -65,5 +65,5 @@ Runnable<String, RunnableOptions, Object> combineStores(List<VectorStore> stores
     i++;
   }
 
-  return Runnable.fromMap(retrievers) | Runnable.mapInput((input) => List<Document>.from(input.values.expand((v) => v)));
+  return Runnable.fromMap(retrievers) | Runnable.mapInput((input) => List<Document>.from(input.values.expand((v) => v)).sublist(0, 4));
 }

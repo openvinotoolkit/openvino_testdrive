@@ -1,20 +1,20 @@
 import 'package:inference/langchain/loaders/html_loader.dart';
 import 'package:inference/langchain/loaders/pdf_loader.dart';
 import 'package:inference/langchain/loaders/text_loader.dart';
-import 'package:inference/pages/knowledge_base/utils/text_snipper.dart';
 import 'package:langchain/langchain.dart';
 import 'package:path/path.dart';
 
 BaseDocumentLoader? loaderFromPath(String path) {
   final ext = extension(path);
-  const snipper = TextSnipper(windowSize: 400,  windowShift: 200);
+
+  const splitter = CharacterTextSplitter(chunkSize: 400, chunkOverlap: 200);
   switch (ext) {
     case ".pdf":
-      return PdfLoader(path, snipper);
+      return PdfLoader(path, splitter);
     case ".html":
-      return HTMLLoader(path, snipper);
+      return HTMLLoader(path, splitter);
     case ".txt":
-      return TextLoader(path, snipper);
+      return TextLoader(path, splitter);
     default:
       return null;
   }
