@@ -25,6 +25,22 @@ class _TreeState extends State<Tree> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 8, top: 18),
+                child: Button(
+                  onPressed: data.addGroup,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        child: Icon(FluentIcons.fabric_new_folder, size: 18),
+                      ),
+                      Text("Create new"),
+                    ],
+                  ),
+                ),
+              ),
               Column(
                 children: [
                   for (final group in data.groups)
@@ -44,13 +60,6 @@ class _TreeState extends State<Tree> {
                       onDelete: () => data.deleteGroup(group),
                     ),
                 ]
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Button(
-                  onPressed: data.addGroup,
-                  child: const Text("Add group"),
-                ),
               ),
             ],
           ),

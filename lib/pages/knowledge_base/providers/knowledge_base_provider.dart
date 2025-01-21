@@ -46,7 +46,7 @@ class KnowledgeBaseProvider extends ChangeNotifier {
   }
 
   void addGroup() {
-    isEditingId = groupBox.put(KnowledgeGroup("New group"));
+    isEditingId = groupBox.put(KnowledgeGroup("new knowledge base"));
     groups = groupBox.getAll();
     if (groups.length == 1) {
       activeGroup = isEditingId;
