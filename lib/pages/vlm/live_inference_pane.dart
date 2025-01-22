@@ -121,7 +121,7 @@ class _VLMPlaygroundState extends State<VLMPlayground> {
                                 labelText: "Max new tokens",
                                 suffix: "",
                                 initialValue: provider.maxTokens,
-                                roundPowerOfTwo: true,
+                                roundPowerOfTwo: false,
                                 onChanged: (value) {
                                   provider.maxTokens = value;
                                 }),

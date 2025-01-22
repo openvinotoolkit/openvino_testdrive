@@ -2,7 +2,11 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import 'dart:ui';
+
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inference/pages/vlm/widgets/assistant_message.dart';
 import 'package:inference/project.dart';
@@ -26,7 +30,7 @@ void main() {
 
       testMessage = Message(
         Speaker.assistant,
-        "Test message",
+        "Test message Test message Test message",
         null,
         DateTime.now(),
         true,
@@ -42,11 +46,11 @@ void main() {
       );
     }
 
-    testWidgets('renders correctly with message and icon',
-        (WidgetTester tester) async {
+    testWidgets('renders correctly with message', (WidgetTester tester) async {
       await tester.pumpWidget(createTestWidget(AssistantMessage(testMessage)));
 
-      expect(find.text("Test message"), findsOneWidget);
+      expect(
+          find.text("Test message Test message Test message"), findsOneWidget);
 
       // Find all `Container` widgets and pick the first one
       final containerFinder = find.descendant(
@@ -65,6 +69,30 @@ void main() {
       final AssetImage image = decoration.image!.image as AssetImage;
       final AssetImage image2 = thumbnail.image as AssetImage;
       expect(image.assetName, equals(image2.assetName));
+    });
+
+    testWidgets('copies message to clipboard when copy button is pressed',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(createTestWidget(AssistantMessage(testMessage)));
+
+      final assistantMessageFinder = find.byType(AssistantMessage);
+      expect(assistantMessageFinder, findsOneWidget);
+
+      final markdown = find.byType(MarkdownBody);
+
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await gesture.addPointer();
+      final center = tester.getCenter(markdown.first);
+      print(center);
+      await gesture.moveTo(center);
+
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(FluentIcons.copy));
+      await tester.pump();
+
+      final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+      expect(clipboardData!.text, "Test message Test message Test message");
     });
   });
 }
