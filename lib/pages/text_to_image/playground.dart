@@ -15,7 +15,6 @@ import 'package:inference/providers/text_to_image_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/device_selector.dart';
 import 'package:inference/widgets/toolbar_text_input.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class TTIPlayground extends StatefulWidget {
@@ -89,9 +88,6 @@ class _TTIPlaygroundState extends State<TTIPlayground> {
 
   @override
   Widget build(BuildContext context) {
-    Locale locale = Localizations.localeOf(context);
-    final nf = NumberFormat.decimalPatternDigits(
-        locale: locale.languageCode, decimalDigits: 2);
     final theme = FluentTheme.of(context);
 
     return Row(

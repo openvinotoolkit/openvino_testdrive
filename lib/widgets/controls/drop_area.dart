@@ -57,8 +57,6 @@ class _DropAreaState extends State<DropArea> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = FluentTheme.of(context);
-
     return DropTarget(
       onDragDone: handleDrop,
       onDragExited: (_) => hideReleaseMessage(),

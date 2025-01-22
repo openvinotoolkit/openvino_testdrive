@@ -316,6 +316,14 @@ class GetiProject extends Project {
 
     return !checks.contains(false);
   }
+
+  @override
+  int get hashCode{
+    return Object.hash(
+      id,
+      const ListEquality().hash(tasks.map((m) => m.id).toList()),
+    );
+  }
 }
 
 class PublicProject extends Project {

@@ -45,10 +45,10 @@ class _ToolbarTextInputState extends State<ToolbarTextInput> {
     if (!_focusNode.hasFocus) {
       // When the TextBox loses focus, round and update
       final inputValue = int.tryParse(_controller.text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0;
-      // final rounded = _nearestPowerOfTwo(inputValue);
-      //
-      // _controller.text = rounded.toString();
-      widget.onChanged!(inputValue);
+      final rounded = _nearestPowerOfTwo(inputValue);
+
+      _controller.text = rounded.toString();
+      widget.onChanged!(rounded);
 
     }
   }

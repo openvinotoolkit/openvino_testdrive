@@ -16,7 +16,6 @@ import 'package:inference/providers/vlm_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/device_selector.dart';
 import 'package:inference/widgets/grid_container.dart';
-import 'package:inference/widgets/horizontal_rule.dart';
 import 'package:provider/provider.dart';
 
 class VLMPlayground extends StatefulWidget {

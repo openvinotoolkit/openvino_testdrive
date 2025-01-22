@@ -52,9 +52,6 @@ class _ImageGridState extends State<ImageGrid> {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
-
     return DropArea(
       showChild: galleryData.isNotEmpty,
       onUpload: onDrop,
