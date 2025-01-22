@@ -18,19 +18,59 @@ import 'package:path_provider/path_provider.dart';
 
 Dio dioClient() {
   final dio = Dio();
-  if (Config.proxyDirect) {
-    dio.httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () {
-        final client = HttpClient();
-        client.findProxy = (uri) {
-          return 'DIRECT';
-        };
-        //client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-        return client;
-      }
-    );
-  }
+  dio.httpClientAdapter = IOHttpClientAdapter(
+    createHttpClient: () {
+      final client = HttpClient();
+      client.findProxy = (uri) {
+        if (Config.proxyEnabled) {
+          final proxyUri = Uri.parse(Config.proxy);
+          final proxyHost = proxyUri.host.isNotEmpty ? proxyUri.host : Config.proxy;
+          final proxyPort = proxyUri.port != 0 ? ':${proxyUri.port}' : '';
+          return "PROXY $proxyHost$proxyPort";
+        } else {
+          return "DIRECT";
+        }
+      };
+      return client;
+    }
+  );
   return dio;
+}
+
+Future<String> getProxy() async {
+  final dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 10)));
+  dio.httpClientAdapter = IOHttpClientAdapter(
+    createHttpClient: () {
+      final client = HttpClient();
+      client.findProxy = (uri) {
+        return "DIRECT";
+      };
+      return client;
+    },
+  );
+  try {
+    final response = await dio.get('http://wpad/wpad.dat');
+    if (response.statusCode == 200) {
+      return parseWpad(response.data);
+    }
+  } catch (e) {
+    print(e.toString());
+  }
+
+  final proxyEnv = Platform.environment['https_proxy'] ?? Platform.environment['HTTPS_PROXY'] ?? Platform.environment['http_proxy'] ?? Platform.environment['HTTP_PROXY'];
+  if (proxyEnv != null) {
+    return proxyEnv;
+  }
+  return '';
+}
+
+String parseWpad(String wpad) {
+  final regex = RegExp(r'return\s+"PROXY ([^"]+)";');
+  final matches = regex.allMatches(wpad);
+  if (matches.isNotEmpty) {
+    return matches.last.group(1) ?? '';
+  }
+  return '';
 }
 
 void setupErrors() async {
@@ -78,5 +118,12 @@ extension FileFormatter on num {
     final units = ["B", "kB", "MB", "GB", "TB"];
     int digitGroups = (log(this) / log(base)).floor();
     return "${NumberFormat("#,##0").format(this / pow(base, digitGroups))} ${units[digitGroups]}";
+  }
+}
+
+extension StringExtensions on String {
+  String capitalize() {
+    if (isEmpty) return this;
+    return "${this[0].toUpperCase()}${substring(1)}";
   }
 }

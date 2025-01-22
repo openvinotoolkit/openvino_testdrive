@@ -97,35 +97,33 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
 
   late final List<NavigationPaneItem> footerNavigationItems = [
     PaneItem(
-      title: const Text('Dark mode'),
-      icon: Builder(builder: (context) {
-        final appTheme = context.watch<AppTheme>();
-        if (appTheme.mode == ThemeMode.dark) {
-          return const Icon(FluentIcons.clear_night);
-        } else if (appTheme.mode == ThemeMode.light) {
-          return const Icon(FluentIcons.brightness);
-        } else {
-          return const Icon(FluentIcons.half_alpha);
-        }
-      }),
+      key: const ValueKey('/settings'),
+      title: const Text('Settings'),
+      icon: const Icon(FluentIcons.settings),
       body: const SizedBox.shrink(),
       onTap: () {
-        final appTheme = context.read<AppTheme>();
-        appTheme.toggleTheme();
+        if (GoRouterState.of(context).uri.toString() != '/settings') {
+          GoRouter.of(context).go('/settings');
+        }
       },
     ),
   ];
 
   int? _calculateSelectedIndex(BuildContext context) {
     final uri = GoRouterState.of(context).uri.toString();
-    int? index = originalNavigationItems
+    int? indexOriginal = originalNavigationItems
       .indexWhere((item) {
         return uri.startsWith((item.key as ValueKey).value);
     });
-    if (index == -1) {
-      index = null;
+    if (indexOriginal == -1) {
+      int indexFooter = footerNavigationItems
+        .indexWhere((element) => element.key == Key(uri));
+      if (indexFooter == -1) {
+        return 0;
+      }
+      return originalNavigationItems.length + indexFooter;
     }
-    return index;
+    return indexOriginal;
   }
 
   void toggleMaximize() {

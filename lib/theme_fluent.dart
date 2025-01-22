@@ -5,6 +5,7 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
+import 'package:inference/config.dart';
 
 enum NavigationIndicators { sticky, end }
 
@@ -25,27 +26,6 @@ class AppTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  ThemeMode _mode = ThemeMode.system;
-  ThemeMode get mode => _mode;
-  set mode(ThemeMode value) {
-    _mode = value;
-    notifyListeners();
-  }
-
-  void toggleTheme() {
-    switch (mode) {
-      case ThemeMode.system:
-        mode = ThemeMode.light;
-        break;
-      case ThemeMode.light:
-        mode = ThemeMode.dark;
-        break;
-      case ThemeMode.dark:
-        mode = ThemeMode.system;
-        break;
-    }
-  }
-
   PaneDisplayMode _paneMode = PaneDisplayMode.auto;
   PaneDisplayMode get paneMode => _paneMode;
   set paneMode(PaneDisplayMode value) {
@@ -64,6 +44,12 @@ class AppTheme extends ChangeNotifier {
   WindowEffect get windowEffect => _windowEffect;
   set windowEffect(WindowEffect value) {
     _windowEffect = value;
+    notifyListeners();
+  }
+
+  ThemeMode get mode => Config.themeMode;
+  set mode(ThemeMode value) {
+    Config.themeMode = value;
     notifyListeners();
   }
 
