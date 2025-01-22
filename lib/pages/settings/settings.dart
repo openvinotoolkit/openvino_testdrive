@@ -1,4 +1,5 @@
-// Copyright 2025 Intel Corporation.
+// Copyright (c) 2025 Intel Corporation
+//
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
