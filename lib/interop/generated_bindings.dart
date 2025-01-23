@@ -485,35 +485,21 @@ class OpenVINO {
   late final _llmInferenceForceStop = _llmInferenceForceStopPtr
       .asFunction<ffi.Pointer<Status> Function(CLLMInference)>();
 
-  ffi.Pointer<StatusOrString> llmInferenceGetChatTemplate(
+  ffi.Pointer<StatusOrString> llmInferenceGetTokenizerConfig(
     CLLMInference instance,
   ) {
-    return _llmInferenceGetChatTemplate(
+    return _llmInferenceGetTokenizerConfig(
       instance,
     );
   }
 
-  late final _llmInferenceGetChatTemplatePtr = _lookup<
+  late final _llmInferenceGetTokenizerConfigPtr = _lookup<
           ffi
           .NativeFunction<ffi.Pointer<StatusOrString> Function(CLLMInference)>>(
-      'llmInferenceGetChatTemplate');
-  late final _llmInferenceGetChatTemplate = _llmInferenceGetChatTemplatePtr
-      .asFunction<ffi.Pointer<StatusOrString> Function(CLLMInference)>();
-
-  ffi.Pointer<StatusOrBool> llmInferenceHasChatTemplate(
-    CLLMInference instance,
-  ) {
-    return _llmInferenceHasChatTemplate(
-      instance,
-    );
-  }
-
-  late final _llmInferenceHasChatTemplatePtr = _lookup<
-          ffi
-          .NativeFunction<ffi.Pointer<StatusOrBool> Function(CLLMInference)>>(
-      'llmInferenceHasChatTemplate');
-  late final _llmInferenceHasChatTemplate = _llmInferenceHasChatTemplatePtr
-      .asFunction<ffi.Pointer<StatusOrBool> Function(CLLMInference)>();
+      'llmInferenceGetTokenizerConfig');
+  late final _llmInferenceGetTokenizerConfig =
+      _llmInferenceGetTokenizerConfigPtr
+          .asFunction<ffi.Pointer<StatusOrString> Function(CLLMInference)>();
 
   ffi.Pointer<Status> llmInferenceClose(
     CLLMInference instance,

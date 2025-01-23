@@ -241,25 +241,15 @@ Status* llmInferenceClearHistory(CLLMInference instance) {
 }
 
 
-StatusOrString* llmInferenceGetChatTemplate(CLLMInference instance) {
+StatusOrString* llmInferenceGetTokenizerConfig(CLLMInference instance) {
     try {
-        auto chat_template = reinterpret_cast<LLMInference*>(instance)->get_chat_template();
+        auto chat_template = reinterpret_cast<LLMInference*>(instance)->get_tokenizer_config();
         return new StatusOrString{OkStatus, "", strdup(chat_template.c_str())};
     } catch (...) {
         auto except = handle_exceptions();
         return new StatusOrString{except->status, except->message};
     }
 
-}
-
-StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance) {
-    try {
-        bool has_chat_template = reinterpret_cast<LLMInference*>(instance)->has_chat_template();
-        return new StatusOrBool{OkStatus, "", has_chat_template};
-    } catch (...) {
-        auto except = handle_exceptions();
-        return new StatusOrBool{except->status, except->message};
-    }
 }
 
 Status* llmInferenceForceStop(CLLMInference instance) {

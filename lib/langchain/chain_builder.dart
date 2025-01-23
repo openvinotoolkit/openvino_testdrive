@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:inference/interop/llm_inference.dart';
@@ -29,9 +30,15 @@ RAGChain buildRAGChain(LLMInference llmInference, Embeddings embeddings, OpenVIN
     final answer = PromptTemplate.fromTemplate('{question}') | model;
     return RAGChain(retrievedDocs, answer);
   }
+
+
+  final tokenizerConfig = jsonDecode(llmInference.getTokenizerConfig()) as Map<String, dynamic>;
+
+  final hasChatTemplate = tokenizerConfig.containsKey("chat_template");
+
   // if chat template, otherwise
-  final promptTemplate = llmInference.hasChatTemplate()
-    ? JinjaPromptTemplate.fromTemplate(llmInference.getChatTemplate())
+  final promptTemplate = hasChatTemplate
+    ? JinjaPromptTemplate.fromTemplateConfig(tokenizerConfig)
     : ChatPromptTemplate.fromTemplate('''
 Answer the question based only on the following context without specifically naming that it's from that context:
 {context}

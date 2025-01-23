@@ -79,6 +79,7 @@ class TextInferenceProvider extends ChangeNotifier {
     store?.delete(ids: ids);
   }
 
+  LLMInference? _inference;
   Embeddings? embeddingsModel;
   MemoryVectorStore? store;
 
@@ -103,7 +104,6 @@ class TextInferenceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  LLMInference? _inference;
   final stopWatch = Stopwatch();
   int n = 0;
 
@@ -118,6 +118,7 @@ class TextInferenceProvider extends ChangeNotifier {
       final embeddingsModelLoader = AllMiniLMV6.ensureModelIsPresent(downloadProvider);
       // Load the inference model
       _inference = await LLMInference.init(project!.storagePath, device!);
+      print(_inference?.getTokenizerConfig());
       // Make sure the embeddings model is loaded.
       await embeddingsModelLoader;
       embeddingsModel = await OpenVINOEmbeddings.init(await AllMiniLMV6.storagePath, "CPU");
@@ -170,15 +171,7 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   String get task {
-    if (_inference == null) {
-      return "";
-    }
-
-    if (_inference?.chatEnabled == true) {
-      return "Chat";
-    } else {
-      return "Text Generation";
-    }
+    return project?.taskName() ?? "";
   }
 
   Message? get interimResponse {

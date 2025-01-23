@@ -13,11 +13,8 @@ class LLMInference {
 
   NativeCallable<LLMInferenceCallbackFunctionFunction>? nativeListener;
   final Pointer<StatusOrLLMInference> instance;
-  late bool chatEnabled;
 
-  LLMInference(this.instance) {
-    chatEnabled = hasChatTemplate();
-  }
+  LLMInference(this.instance);
 
   static Future<LLMInference> init(String modelPath, String device) async {
     final result = await Isolate.run(() {
@@ -84,18 +81,8 @@ class LLMInference {
     }
   }
 
-  bool hasChatTemplate() {
-    final status = llmOV.llmInferenceHasChatTemplate(instance.ref.value);
-
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
-      throw "LLM Chat template error: ${status.ref.status} ${status.ref.message.toDartString()}";
-    }
-
-    return status.ref.value;
-  }
-
-  String getChatTemplate() {
-    final status = llmOV.llmInferenceGetChatTemplate(instance.ref.value);
+  String getTokenizerConfig() {
+    final status = llmOV.llmInferenceGetTokenizerConfig(instance.ref.value);
 
     if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
       throw "LLM get Chat template error: ${status.ref.status} ${status.ref.message.toDartString()}";

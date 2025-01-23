@@ -8,16 +8,26 @@ import 'package:langchain/langchain.dart';
 final class JinjaPromptTemplate extends BaseChatPromptTemplate {
   final Template jinjaTemplate;
 
-  final String eosToken = "</s>"; //TODO: Remove hardcoded
-  final bool addGenerationPrompt = true; //TODO: Remove hardcoded
+  final String bosToken;
+  final String eosToken;
+  final bool addGenerationPrompt = true;
 
-  const JinjaPromptTemplate(this.jinjaTemplate, {required super.inputVariables});
+  const JinjaPromptTemplate(this.jinjaTemplate, {
+      required this.eosToken,
+      required this.bosToken,
+      required super.inputVariables,
+  });
 
-  factory JinjaPromptTemplate.fromTemplate(String chatTemplate, [Set<String> inputVariables = const {}]) {
+  factory JinjaPromptTemplate.fromTemplateConfig(Map<String, dynamic> chatTemplateConfig, [Set<String> inputVariables = const {}]) {
+    final chatTemplate = chatTemplateConfig["chat_template"];
     final env = Environment();
     final template = env.fromString(chatTemplate);
 
-    return JinjaPromptTemplate(template, inputVariables: inputVariables);
+    return JinjaPromptTemplate(template,
+      eosToken: chatTemplateConfig["eos_token"],
+      bosToken: chatTemplateConfig["bos_token"],
+      inputVariables: inputVariables
+    );
   }
 
   @override
@@ -27,11 +37,6 @@ final class JinjaPromptTemplate extends BaseChatPromptTemplate {
     final List<ChatMessagePromptTemplate>? promptMessages,
   }) {
     throw UnimplementedError();
-    //return JinjaPromptTemplate(
-    //  inputVariables: inputVariables ?? this.inputVariables,
-    //  partialVariables: partialVariables ?? this.partialVariables,
-    //  promptMessages: promptMessages ?? this.promptMessages,
-    //);
   }
 
   @override
@@ -50,6 +55,7 @@ final class JinjaPromptTemplate extends BaseChatPromptTemplate {
       {
         "messages": messages,
         "eos_token": eosToken,
+        "bos_token": bosToken,
         "add_generation_prompt": addGenerationPrompt,
       }
     ));

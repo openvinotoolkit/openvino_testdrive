@@ -8,6 +8,7 @@
 #include <condition_variable>
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <sstream>
 
 #include "llm_inference.h"
 #include "src/utils/errors.h"
@@ -72,13 +73,9 @@ bool LLMInference::has_chat_template() {
     return r.find("chat_template") != r.end();
 }
 
-std::string LLMInference::get_chat_template() {
+std::string LLMInference::get_tokenizer_config() {
     std::ifstream ifs(model_path + "/tokenizer_config.json");
-    auto r = nlohmann::json::parse(ifs);
-    auto chat_template_iter = r.find("chat_template");
-    if (chat_template_iter == r.end()) {
-        return "";
-    } else {
-        return chat_template_iter.value();
-    }
+    std::ostringstream oss;
+    oss << ifs.rdbuf();
+    return oss.str();
 }
