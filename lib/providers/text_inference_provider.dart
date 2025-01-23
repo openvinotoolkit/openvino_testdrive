@@ -115,7 +115,7 @@ class TextInferenceProvider extends ChangeNotifier {
   Future<void> loadModel(DownloadProvider downloadProvider) async {
     if (project != null && device != null) {
       // Start downloading the embedings model if its missing
-      final embeddingsModelLoader = AllMiniLMV6.ensureEmbeddingsModel(downloadProvider);
+      final embeddingsModelLoader = AllMiniLMV6.ensureModelIsPresent(downloadProvider);
       // Load the inference model
       _inference = await LLMInference.init(project!.storagePath, device!);
       // Make sure the embeddings model is loaded.

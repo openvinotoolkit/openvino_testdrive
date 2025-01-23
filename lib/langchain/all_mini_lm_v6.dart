@@ -29,7 +29,7 @@ class AllMiniLMV6 {
     );
   }
 
-  static Future<void> ensureEmbeddingsModel(DownloadProvider downloadProvider) async {
+  static Future<void> ensureModelIsPresent(DownloadProvider downloadProvider) async {
       //steps:
       //1. check if download is in progress
       if (downloadProvider.downloads.containsKey(id)) {
