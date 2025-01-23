@@ -42,7 +42,7 @@ SentenceTransformerTokenizedInputs SentenceTransformerPipeline::generate_tokens(
 }
 
 void SentenceTransformerPipeline::add_tokenizer(ov::Core& core) {
-    #ifdef defined(WIN32)
+    #if _WIN32
         core.add_extension("openvino_tokenizers.dll");
     #elif __APPLE__
         core.add_extension("libopenvino_tokenizers.dylib");

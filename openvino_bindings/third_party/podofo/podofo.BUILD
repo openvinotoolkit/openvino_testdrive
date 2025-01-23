@@ -8,6 +8,31 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
+cc_library(
+    name = "podofo_windows",
+    hdrs = glob([
+        "include/podofo/**/*.h",
+        "include/podofo/**/*.hpp",
+    ]),
+    srcs = glob([
+        "bin/podofo.dll",
+        "bin/libxml2.dll",
+        "bin/liblzma.dll",
+        "bin/iconv-2.dll",
+        "bin/libpng16.dll",
+        "bin/libcrypto-3-x64.dll",
+        "bin/freetype.dll",
+        "bin/tiff.dll",
+        "bin/jpeg62.dll",
+        "bin/zlib1.dll",
+    ]),
+    includes = [
+        "lib",
+    ],
+    strip_include_prefix = "include",
+    visibility = ["//visibility:public"],
+)
+
 cmake(
     name = "podofo_mac",
     build_args = [

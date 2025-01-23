@@ -47,6 +47,7 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
           final downloadProvider = Provider.of<DownloadProvider>(context, listen: false);
 
           textInferenceProvider.loadModel(downloadProvider).catchError((e) async {
+            print(e);
             if (context.mounted) {
               await displayInfoBar(context, builder: (context, close) => InfoBar(
                 title: const Text('Error loading model'),

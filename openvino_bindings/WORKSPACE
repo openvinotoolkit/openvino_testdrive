@@ -125,11 +125,18 @@ new_local_repository(
 )
 
 git_repository(
-    name = "podofo_mac",
+    name = "podofo",
     build_file = "//third_party/podofo:podofo.BUILD",
     tag = "0.10.4",
     remote = "https://github.com/podofo/podofo",
 )
+
+new_local_repository(
+    name = "podofo_windows",
+    build_file = "//third_party/podofo:podofo.BUILD",
+    path = "./third_party/vcpkg_installed/x64-windows",
+)
+
 
 http_archive(
     name = "rules_pkg",

@@ -10,7 +10,8 @@ class OpenVINOEmbeddings implements Embeddings {
   const OpenVINOEmbeddings(this.transformer);
 
   static Future<OpenVINOEmbeddings> init(String modelPath, String device) async {
-    return OpenVINOEmbeddings(await SentenceTransformer.init(modelPath, "CPU"));
+    final sentenceTransformer = await SentenceTransformer.init(modelPath, "CPU");
+    return OpenVINOEmbeddings(sentenceTransformer);
   }
 
   @override

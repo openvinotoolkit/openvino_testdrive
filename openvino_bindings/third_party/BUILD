@@ -13,7 +13,8 @@ alias(
 alias(
     name = "podofo",
     actual = select({
-        "@bazel_tools//src/conditions:darwin_arm64": "@podofo_mac//:podofo_mac",
+        "@bazel_tools//src/conditions:windows": "@podofo_windows//:podofo_windows",
+        "@bazel_tools//src/conditions:darwin_arm64": "@podofo//:podofo_mac",
     }),
     visibility = ["//visibility:public"],
 )
