@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions-dependency:
+        applies-to: version-updates
+        patterns:
+          - "*"
+
+  - package-ecosystem: pub
+    directory: /
+    open-pull-requests-limit: 3
+    schedule:
+      interval: weekly
