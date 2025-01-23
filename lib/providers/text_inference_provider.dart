@@ -15,6 +15,7 @@ import 'package:inference/langchain/openvino_embeddings.dart';
 import 'package:inference/langchain/openvino_llm.dart';
 import 'package:inference/pages/text_generation/utils/user_file.dart';
 import 'package:inference/project.dart';
+import 'package:inference/providers/download_provider.dart';
 import 'package:langchain/langchain.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -111,12 +112,15 @@ class TextInferenceProvider extends ChangeNotifier {
     _device = device;
   }
 
-  Future<void> loadModel() async {
+  Future<void> loadModel(DownloadProvider downloadProvider) async {
     if (project != null && device != null) {
+      // Start downloading the embedings model if its missing
+      final embeddingsModelLoader = AllMiniLMV6.ensureEmbeddingsModel(downloadProvider);
+      // Load the inference model
       _inference = await LLMInference.init(project!.storagePath, device!);
-
-      final embeddingsModelPath = await AllMiniLMV6.storagePath;
-      embeddingsModel = await OpenVINOEmbeddings.init(embeddingsModelPath, "CPU");
+      // Make sure the embeddings model is loaded.
+      await embeddingsModelLoader;
+      embeddingsModel = await OpenVINOEmbeddings.init(await AllMiniLMV6.storagePath, "CPU");
       store = MemoryVectorStore(embeddings: embeddingsModel!);
       loaded.complete();
       notifyListeners();

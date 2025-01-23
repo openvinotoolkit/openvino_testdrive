@@ -8,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:inference/pages/text_generation/performance_metrics.dart';
 import 'package:inference/pages/text_generation/playground.dart';
 import 'package:inference/project.dart';
+import 'package:inference/providers/download_provider.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/utils.dart';
@@ -40,11 +41,12 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
         return TextInferenceProvider(widget.project, null);
       },
       update: (_, preferences, textInferenceProvider) {
-        final init = textInferenceProvider == null ||
-          !textInferenceProvider.sameProps(widget.project, preferences.device);
+        final init = textInferenceProvider == null || !textInferenceProvider.sameProps(widget.project, preferences.device);
         if (init) {
           final textInferenceProvider = TextInferenceProvider(widget.project, preferences.device);
-          textInferenceProvider.loadModel().catchError((e) async {
+          final downloadProvider = Provider.of<DownloadProvider>(context, listen: false);
+
+          textInferenceProvider.loadModel(downloadProvider).catchError((e) async {
             if (context.mounted) {
               await displayInfoBar(context, builder: (context, close) => InfoBar(
                 title: const Text('Error loading model'),
