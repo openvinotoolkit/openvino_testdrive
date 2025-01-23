@@ -9,7 +9,7 @@ import 'package:inference/utils.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   _SettingsPageState createState() => _SettingsPageState();

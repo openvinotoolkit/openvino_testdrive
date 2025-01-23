@@ -9,7 +9,6 @@ import 'package:inference/interop/device.dart';
 import 'package:inference/interop/image_inference.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
-import 'package:inference/theme_fluent.dart';
 import 'package:inference/utils.dart';
 import 'package:inference/widgets/feedback_button.dart';
 import 'package:provider/provider.dart';
