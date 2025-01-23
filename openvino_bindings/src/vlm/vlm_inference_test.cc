@@ -6,11 +6,12 @@
 
 
 #include "gtest/gtest.h"
-#include "tti_inference.h"
+#include "vlm_inference.h"
 
 TEST(VLMInference, Sanity) {
-    std::string model_path = "data/TinyLlama-1.1B-Chat-v1.0-int4-ov";
-    LLMInference inference(model_path, "CPU");
-    std::string output = inference.prompt("What is the color of the sun?", 1.0f, 1.0f);
-    EXPECT_STREQ(output.c_str(), "The color of the sun is a beautiful and awe-inspiring yellow-amber color. It is a natural, radiant, and beautiful color that is associated with warmth, light, and lightning. The sun is often depicted as a radiant, yellow-amber ball of light that shines down on the earth, illuminating the world and inspiring wonder and awe in all who see it.");
+    std::string model_path = std::filesystem::absolute("data/OpenGVLab-InternVL2-4B-ov-fp16");
+    VLMInference inference(model_path, "CPU");
+    inference.setImagePaths({ std::filesystem::absolute("data/images/cat-in-box.jpg")});
+    VLMStringWithMetrics output = inference.prompt("what do you see", 200);
+    EXPECT_STREQ(output.string, "In the image, there is a cat lying comfortably inside a cardboard box. The cat appears to be relaxed and content, with its eyes closed and a peaceful expression on its face. The box is placed on a carpeted floor, and in the background, there is a white sofa or couch. The overall setting suggests a cozy and homely environment.");
 }
