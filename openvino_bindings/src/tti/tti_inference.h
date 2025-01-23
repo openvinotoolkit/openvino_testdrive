@@ -24,7 +24,13 @@ public:
         // Use a lambda to initialize the 'pipe' and measure the construction time in one step
         ov_pipe([&]() {
             auto start_time = std::chrono::steady_clock::now();
-            ov::genai::Text2ImagePipeline temp_pipe(model_path, device); // Construct the pipe
+
+            ov::AnyMap enable_compile_cache;
+            // if (device == "GPU") {
+                enable_compile_cache.insert({ov::cache_dir(model_path + "/cache")});
+            // }
+
+            ov::genai::Text2ImagePipeline temp_pipe(model_path, device, enable_compile_cache); // Construct the pipe
             auto end_time = std::chrono::steady_clock::now();
 
             std::filesystem::path bgr_path = std::filesystem::path(model_path) / "channel_info.json";

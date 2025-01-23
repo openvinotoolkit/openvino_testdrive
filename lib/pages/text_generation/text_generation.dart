@@ -98,7 +98,10 @@ class _TextGenerationPageState extends State<TextGenerationPage> {
                   displayMode: PaneDisplayMode.top,
                   items: [
                     PaneItem(
-                      icon: const Icon(FluentIcons.game),
+                      icon: SvgPicture.asset("images/playground.svg",
+                        colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
+                        width: 15,
+                      ),
                       title: const Text("Playground"),
                       body: Playground(project: widget.project),
                     ),

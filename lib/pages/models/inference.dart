@@ -7,6 +7,7 @@ import 'package:inference/pages/computer_vision/computer_vision.dart';
 import 'package:inference/pages/text_generation/text_generation.dart';
 import 'package:inference/pages/text_to_image/text_to_image_page.dart';
 import 'package:inference/pages/transcription/transcription.dart';
+import 'package:inference/pages/vlm/vlm_page.dart';
 import 'package:inference/project.dart';
 
 class InferencePage extends StatelessWidget {
@@ -24,6 +25,8 @@ class InferencePage extends StatelessWidget {
         return TranscriptionPage(project);
       case ProjectType.textToImage:
         return TextToImagePage(project);
+      case ProjectType.vlm:
+        return VLMPage(project);
     }
   }
 
