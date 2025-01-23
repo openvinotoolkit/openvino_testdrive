@@ -1,0 +1,1 @@
+assets/MiniLM-L6-H384-uncased/*.bin filter=lfs diff=lfs merge=lfs -text
