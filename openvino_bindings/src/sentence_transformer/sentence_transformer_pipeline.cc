@@ -15,12 +15,10 @@ std::vector<float> SentenceTransformerPipeline::generate(std::string prompt) {
     auto tokenized = generate_tokens(prompt);
 
     auto infer_request = embedder_model.create_infer_request();
-    //for (auto& o: embedder_model.inputs()) {
-    //    std::cout << o << std::endl;
-    //}
 
     infer_request.set_tensor("input_ids", tokenized.input_ids);
     infer_request.set_tensor("attention_mask", tokenized.attention_mask);
+    infer_request.set_tensor("token_type_ids", tokenized.token_type_ids);
     infer_request.infer();
     auto result = infer_request.get_output_tensor(0);
     return mean_pool(result);
@@ -31,9 +29,6 @@ SentenceTransformerTokenizedInputs SentenceTransformerPipeline::generate_tokens(
     size_t batch_size = 1;
     infer_request.set_input_tensor(0, ov::Tensor{ov::element::string, {batch_size}, &prompt});
     infer_request.infer();
-    //for (auto& o: tokenizer_model.outputs()) {
-    //    std::cout << o << std::endl;
-    //}
     auto input_ids = infer_request.get_output_tensor(0);
     auto attention_mask = infer_request.get_output_tensor(1);
     auto token_type_ids = infer_request.get_output_tensor(2);
