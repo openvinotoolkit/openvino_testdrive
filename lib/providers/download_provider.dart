@@ -2,6 +2,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:inference/utils.dart';
@@ -20,56 +22,63 @@ class DownloadStats {
   const DownloadStats(this.percentage, this.received, this.total);
 }
 
-class DownloadProvider extends ChangeNotifier {
-  final Map<String, DownloadState> _downloads = {};
+class DownloadRequest {
+  Completer<void> done = Completer<void>();
+  late final StreamController<DownloadStats> _progressController;
+  late final Stream<DownloadStats> stream;
 
-  CancelToken? _cancelToken;
-  Function? onCancel;
-  DownloadProvider();
+  final String id;
+  final Map<String, String> downloads;
+  final List<DownloadState> downloadStates = [];
+  final Map<String, String> headers;
+  Function? onDone;
 
-  Future<void> queue(Map<String, String> downloads, String? token) async{
-    List<Future> promises = [];
+  final _cancelToken = CancelToken();
 
+  DownloadRequest({required this.id, required this.downloads, this.headers = const {}}) {
+    _progressController = StreamController<DownloadStats>();
+    stream = _progressController.stream.asBroadcastStream();
+  }
+
+  Future<void> start() async {
     final dio = dioClient();
-    _cancelToken = CancelToken();
-    for (final url in downloads.keys) {
-      print("downloading: $url");
+
+    List<Future> promises = [];
+    for (final entry in downloads.entries) {
+      final url = entry.key;
+      final destination = entry.value;
+
       final state = DownloadState();
-      _downloads[url] = state;
-      final destination = downloads[url];
-      Map<String, String> headers = {};
-      if (token != null && token.isNotEmpty) {
-        headers["Authorization"] = "Bearer $token";
-      }
-      final promise = dio.download(url, destination,
-        cancelToken: _cancelToken,
+      final promise = dio.download(
+        url,
+        destination,
         options: Options(headers: headers),
+        cancelToken: _cancelToken,
         onReceiveProgress: (int received, int total) {
-          if (!_cancelToken!.isCancelled) {
+          if (!_cancelToken.isCancelled) {
             state.received = received;
             state.total = total;
-            notifyListeners();
+            updateProgress();
           }
         },
-      ).catchError((e) {
-        if (e is DioException && e.type == DioExceptionType.cancel) {
-          print("Download cancelled: $url");
-          return Response(requestOptions: RequestOptions(path: url));
-        } else {
-          _cancelToken?.cancel();
-          throw e;
-        }
-      }).then((_) => state.done);
+      );
+      downloadStates.add(state);
       promises.add(promise);
     }
 
-    await Future.wait(promises, eagerError: true) ;
-    _downloads.clear();
-    notifyListeners();
+    await Future.wait(promises);
+    done.complete();
+    _progressController.close();
+    onDone?.call();
   }
 
+  void updateProgress() {
+    _progressController.add(stats);
+  }
+
+
   DownloadStats get stats {
-    final [received, total] = _downloads.values.fold([0, 0], (collector, element) {
+    final [received, total] = downloadStates.fold([0, 0], (collector, element) {
         return [collector[0] + element.received, collector[1] + element.total];
     });
 
@@ -79,27 +88,19 @@ class DownloadProvider extends ChangeNotifier {
 
     return DownloadStats(received / total, received, total);
   }
+}
 
-  double get percentageComplete {
-    final [received, total] = _downloads.values.fold([0, 0], (collector, element) {
-        return [collector[0] + element.received, collector[1] + element.total];
-    });
-    if (received == 0 || total == 0) {
-      return 0.0;
+class DownloadProvider extends ChangeNotifier {
+  final Map<String, DownloadRequest> downloads = {};
+
+
+  Future<void> requestDownload(DownloadRequest request) async {
+    if (downloads.containsKey(request.id)) {
+      throw Exception("Other download with id '${request.id}' already in progress");
     }
-    return received / total;
-  }
 
-  void cancel() {
-    _cancelToken?.cancel();
-    onCancel?.call();
-  }
-
-  @override
-  void dispose() {
-    if (_downloads.isNotEmpty) {
-      cancel();
-    }
-    super.dispose();
+    downloads[request.id] = request;
+    notifyListeners();
+    await request.start();
   }
 }
