@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 
 //EXPORT StatusOrSentences* pdfExtractSentences(const char* pdf_path);
 

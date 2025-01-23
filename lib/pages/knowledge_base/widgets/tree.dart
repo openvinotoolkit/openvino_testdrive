@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/knowledge_base/providers/knowledge_base_provider.dart';
 import 'package:inference/pages/knowledge_base/widgets/group_item.dart';

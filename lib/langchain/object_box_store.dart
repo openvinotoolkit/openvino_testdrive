@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'dart:convert';
 
 import 'package:inference/langchain/object_box/embedding_entity.dart';

@@ -1,3 +1,7 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:inference/interop/sentence_transformer.dart';
 import 'package:langchain/langchain.dart';
 
