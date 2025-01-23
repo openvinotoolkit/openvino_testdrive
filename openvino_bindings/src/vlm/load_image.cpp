@@ -39,47 +39,22 @@ ov::Tensor utils::load_image(const std::filesystem::path& image_path) {
 
     std::vector<uchar> buffer((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
     cv::Mat cv_image = cv::imdecode(buffer, cv::IMREAD_COLOR);
-    cv::cvtColor(cv_image, cv_image, cv::COLOR_BGR2RGB);
 
     if (cv_image.empty()) {
         throw std::runtime_error{"Failed to load the image."};
     }
 
-    // Ensure the image is converted to the desired number of channels
+    // Convert to RGB
+    cv::cvtColor(cv_image, cv_image, cv::COLOR_BGR2RGB);
+
     if (cv_image.channels() != desired_channels) {
         throw std::runtime_error{"The loaded image does not have the desired number of channels."};
     }
 
-    int width = cv_image.cols;
-    int height = cv_image.rows;
-
-    struct SharedImageAllocator {
-        unsigned char* image;
-        int channels, height, width;
-
-        void* allocate(size_t bytes, size_t) const {
-            if (image && static_cast<size_t>(channels * height * width) == bytes) {
-                return image;
-            }
-            throw std::runtime_error{"Unexpected number of bytes was requested to allocate."};
-        }
-
-        void deallocate(void*, size_t bytes, size_t) {
-            if (static_cast<size_t>(channels * height * width) != bytes) {
-                throw std::runtime_error{"Unexpected number of bytes was requested to deallocate."};
-            }
-            image = nullptr; // Prevent dangling pointer
-        }
-
-        bool is_equal(const SharedImageAllocator& other) const noexcept {
-            return this == &other;
-        }
-    };
-
-    // Wrap OpenCV image data into the custom allocator
+    // Create OpenVINO tensor directly from OpenCV image data
     return ov::Tensor(
         ov::element::u8,
-        ov::Shape{1, static_cast<size_t>(height), static_cast<size_t>(width), static_cast<size_t>(desired_channels)},
-        SharedImageAllocator{cv_image.data, desired_channels, height, width}
+        ov::Shape{1, static_cast<size_t>(cv_image.rows), static_cast<size_t>(cv_image.cols), static_cast<size_t>(desired_channels)},
+        cv_image.data  // Directly pass OpenCV's memory buffer
     );
 }
