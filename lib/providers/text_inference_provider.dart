@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/generated_bindings.dart';
 import 'package:inference/interop/llm_inference.dart';
+import 'package:inference/langchain/all_mini_lm_v6.dart';
 import 'package:inference/langchain/chain_builder.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box_store.dart';
@@ -114,9 +115,7 @@ class TextInferenceProvider extends ChangeNotifier {
     if (project != null && device != null) {
       _inference = await LLMInference.init(project!.storagePath, device!);
 
-      final platformContext = Context(style: Style.platform);
-      final directory = await getApplicationSupportDirectory();
-      final embeddingsModelPath = platformContext.join(directory.path, "test", "all-MiniLM-L6-v2", "fp16");
+      final embeddingsModelPath = await AllMiniLMV6.storagePath;
       embeddingsModel = await OpenVINOEmbeddings.init(embeddingsModelPath, "CPU");
       store = MemoryVectorStore(embeddings: embeddingsModel!);
       loaded.complete();

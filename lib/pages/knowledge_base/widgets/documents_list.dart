@@ -3,18 +3,16 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/sentence_transformer.dart';
+import 'package:inference/langchain/all_mini_lm_v6.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/objectbox.g.dart';
 import 'package:inference/pages/knowledge_base/utils/loader_selector.dart';
-import 'package:inference/pages/knowledge_base/widgets/experiment.dart';
 import 'package:inference/pages/knowledge_base/widgets/import_dialog.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:langchain/langchain.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 class DocumentsList extends StatefulWidget {
@@ -63,10 +61,7 @@ class _DocumentsListState extends State<DocumentsList> {
 
   Future<SentenceTransformer> initSentenceTransformer() async {
     //bit hacky, perhaps move to init of provider?
-    final platformContext = Context(style: Style.platform);
-    final directory = await getApplicationSupportDirectory();
-    final embeddingsModelPath = platformContext.join(directory.path, "test", "all-MiniLM-L6-v2", "fp16");
-
+    final embeddingsModelPath = await AllMiniLMV6.storagePath;
     return SentenceTransformer.init(embeddingsModelPath, "CPU");
   }
 

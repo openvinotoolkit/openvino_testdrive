@@ -107,6 +107,7 @@ flutter:
     - images/
     - images/model_thumbnails/
     - assets/
+    - assets/MiniLM-L6-H384-uncased/
   fonts:
     - family: IntelOne
       fonts:

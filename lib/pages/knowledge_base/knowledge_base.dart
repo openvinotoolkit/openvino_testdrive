@@ -23,16 +23,12 @@ class _KnowledgeBasePageState extends State<KnowledgeBasePage> {
 
   Future<void>? allMiniLMV6;
 
-  void ensureEmbeddingsModel(DownloadProvider downloadProvider) {
-    allMiniLMV6 = AllMiniLMV6.ensureEmbeddingsModel(downloadProvider);
-  }
-
   @override
   void initState() {
     super.initState();
 
     final downloadProvider = Provider.of<DownloadProvider>(context, listen: false);
-    ensureEmbeddingsModel(downloadProvider);
+    allMiniLMV6 = AllMiniLMV6.ensureEmbeddingsModel(downloadProvider);
   }
 
   @override
