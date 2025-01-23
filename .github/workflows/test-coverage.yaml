@@ -44,7 +44,7 @@ jobs:
         run: flutter test --coverage --no-pub
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: coverage/lcov.info
           flags: unittests
@@ -93,7 +93,7 @@ jobs:
         run: flutter test --coverage --no-pub integration_test -d linux
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: coverage/lcov.info
           flags: integrationtests

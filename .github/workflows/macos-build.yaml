@@ -42,7 +42,7 @@ jobs:
           name: ${{ env.SANITIZED_FILENAME }}
           path: build/macos/Build/Products/Release
       - name: macOS Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
