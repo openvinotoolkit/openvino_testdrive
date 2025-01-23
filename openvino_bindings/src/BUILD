@@ -1,12 +1,4 @@
 load(":windows_dll_library.bzl", "windows_dll_library")
-cc_binary(
-    name = "scratch",
-    srcs = ["scratch.cc"],
-    deps = [
-        "//src/pdf:sentence_extractor",
-        "//src/sentence_transformer:sentence_transformer_pipeline",
-    ],
-)
 
 cc_library(
     name = "bindings_deps",
