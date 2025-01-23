@@ -1,26 +1,58 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/langchain/all_mini_lm_v6.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/pages/knowledge_base/providers/knowledge_base_provider.dart';
 import 'package:inference/pages/knowledge_base/widgets/documents_list.dart';
 import 'package:inference/pages/knowledge_base/widgets/tree.dart';
+import 'package:inference/providers/download_provider.dart';
 import 'package:inference/theme_fluent.dart';
+import 'package:inference/widgets/download_request_widget.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:provider/provider.dart';
 
-class KnowledgeBasePage extends StatelessWidget {
+
+class KnowledgeBasePage extends StatefulWidget {
   const KnowledgeBasePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => KnowledgeBaseProvider(
-        groupBox: ObjectBox.instance.store.box<KnowledgeGroup>()
-      ),
-      child: const KnowledgeBase()
-    );
+  State<KnowledgeBasePage> createState() => _KnowledgeBasePageState();
+}
+
+class _KnowledgeBasePageState extends State<KnowledgeBasePage> {
+
+  Future<void>? allMiniLMV6;
+
+  void ensureEmbeddingsModel(DownloadProvider downloadProvider) {
+    allMiniLMV6 = AllMiniLMV6.ensureEmbeddingsModel(downloadProvider);
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    final downloadProvider = Provider.of<DownloadProvider>(context, listen: false);
+    ensureEmbeddingsModel(downloadProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<void>(
+      future: allMiniLMV6,
+      builder: (context, AsyncSnapshot<void> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return ChangeNotifierProvider(
+            create: (_) => KnowledgeBaseProvider(
+              groupBox: ObjectBox.instance.store.box<KnowledgeGroup>()
+            ),
+            child: const KnowledgeBase()
+          );
+        }
+
+        return DownloadRequestWidget(id: AllMiniLMV6.id);
+      }
+    );
+  }
 }
 
 class KnowledgeBase extends StatelessWidget {

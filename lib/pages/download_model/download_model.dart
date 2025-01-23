@@ -54,7 +54,6 @@ class _DownloadPageState extends State<DownloadPage> {
         });
       } else {
         request!.onDone = onComplete;
-        await request!.done.future;
       }
       return;
     }

@@ -23,9 +23,9 @@ class DownloadStats {
 }
 
 class DownloadRequest {
-  Completer<void> done = Completer<void>();
   late final StreamController<DownloadStats> _progressController;
   late final Stream<DownloadStats> stream;
+  final Completer<void> done = Completer();
 
   final String id;
   final Map<String, String> downloads;
@@ -38,6 +38,7 @@ class DownloadRequest {
   DownloadRequest({required this.id, required this.downloads, this.headers = const {}}) {
     _progressController = StreamController<DownloadStats>();
     stream = _progressController.stream.asBroadcastStream();
+    _progressController.done.then((_) => done.complete());
   }
 
   Future<void> start() async {
@@ -67,7 +68,6 @@ class DownloadRequest {
     }
 
     await Future.wait(promises);
-    done.complete();
     _progressController.close();
     onDone?.call();
   }
