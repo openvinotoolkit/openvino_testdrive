@@ -23,8 +23,6 @@ cc_library(
     srcs = ["bindings.cc"],
     deps = [
         ":bindings_deps",
-        "//src/utils:metrics",
-        "//src/utils:tti_metrics",
     ],
     copts = ["-fPIC"],
     alwayslink=1,

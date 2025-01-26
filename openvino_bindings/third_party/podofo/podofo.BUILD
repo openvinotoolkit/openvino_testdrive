@@ -24,7 +24,11 @@ cc_library(
         "bin/freetype.dll",
         "bin/tiff.dll",
         "bin/jpeg62.dll",
+        "bin/bz2.dll",
+        "bin/brotlidec.dll",
+        "bin/brotlicommon.dll",
         "bin/zlib1.dll",
+        "lib/podofo.lib",
     ]),
     includes = [
         "lib",
