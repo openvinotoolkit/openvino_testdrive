@@ -30,7 +30,10 @@ class ModelList extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SearchBar(onChange: (f) => filter.name = f),
+                  SearchBar(
+                    onChange: (f) => filter.name = f,
+                    placeholder: "Find model",
+                  ),
                   IconButton(icon: Icon(filter.order ? FluentIcons.descending : FluentIcons.ascending, size: 18,), onPressed: () => filter.order = !filter.order,),
                 ],
               ),
