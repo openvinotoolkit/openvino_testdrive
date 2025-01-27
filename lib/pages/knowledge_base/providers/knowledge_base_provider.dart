@@ -10,25 +10,8 @@ import 'package:inference/objectbox.g.dart';
 class KnowledgeBaseProvider extends ChangeNotifier {
   Box<KnowledgeGroup> groupBox;
 
-  List<KnowledgeGroup> _groups = [];
-  List<KnowledgeGroup> get groups => _groups;
-
-  set groups(List<KnowledgeGroup> value) {
-    _groups = value;
-    notifyListeners();
-  }
-
   int? _activeGroup;
   int? get activeGroup => _activeGroup;
-  set activeGroup(int? value) {
-    _activeGroup = value;
-    notifyListeners();
-  }
-
-  void renameGroup(KnowledgeGroup group, String value) {
-    groupBox.put(group..name = value);
-    updateGroupsList();
-  }
 
   void deleteGroup(KnowledgeGroup group) {
     final documentsBox = ObjectBox.instance.store.box<KnowledgeDocument>();
@@ -38,28 +21,26 @@ class KnowledgeBaseProvider extends ChangeNotifier {
     }
     documentsBox.removeMany(group.documents.map((i) => i.internalId).toList());
     groupBox.remove(group.internalId);
-    groups.remove(group);
-    notifyListeners();
+
+    if (_activeGroup == group.internalId) {
+      final query = groupBox.query().build();
+      setActiveGroup(query.findFirst());
+    }
   }
 
   void addGroup() {
-    groupBox.put(KnowledgeGroup("new knowledge base"));
-    groups = groupBox.getAll();
+    final newGroup = KnowledgeGroup("new knowledge base");
+    _activeGroup = groupBox.put(newGroup);
+    notifyListeners();
   }
 
-  void setActiveGroup(KnowledgeGroup group) {
-    activeGroup = group.internalId;
-  }
-
-  void updateGroupsList() {
-    groups = groupBox.getAll();
+  void setActiveGroup(KnowledgeGroup? group) {
+    _activeGroup = group?.internalId;
     notifyListeners();
   }
 
   KnowledgeBaseProvider({required this.groupBox}) {
-    groupBox.getAllAsync().then((value) {
-        groups = value;
-        activeGroup = groups.firstOrNull?.internalId;
-    });
+    final query = groupBox.query().build();
+    setActiveGroup(query.findFirst());
   }
 }

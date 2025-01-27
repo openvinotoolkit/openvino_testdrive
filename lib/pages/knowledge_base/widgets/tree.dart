@@ -3,6 +3,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/langchain/object_box/embedding_entity.dart';
+import 'package:inference/langchain/object_box/object_box.dart';
+import 'package:inference/objectbox.g.dart';
 import 'package:inference/pages/knowledge_base/providers/knowledge_base_provider.dart';
 import 'package:inference/pages/knowledge_base/widgets/group_item.dart';
 import 'package:inference/widgets/grid_container.dart';
@@ -19,47 +22,67 @@ class Tree extends StatefulWidget {
 }
 
 class _TreeState extends State<Tree> {
+  late Box<KnowledgeGroup> groupBox;
+  late Stream<Query<KnowledgeGroup>> groupStream;
+
+
+  @override
+  void initState() {
+    super.initState();
+    groupBox = ObjectBox.instance.store.box<KnowledgeGroup>();
+    groupStream = groupBox.query().watch(triggerImmediately: true);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
-    return Consumer<KnowledgeBaseProvider>(
-      builder: (context, data, child) {
-        return GridContainer(
-          color: backgroundColor.of(theme),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8, top: 18, bottom: 18),
-                child: Button(
-                  onPressed: data.addGroup,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        child: Icon(FluentIcons.fabric_new_folder, size: 18),
-                      ),
-                      Text("Create new"),
-                    ],
-                  ),
-                ),
-              ),
-              Column(
+    return StreamBuilder<Query<KnowledgeGroup>>(
+      stream: groupStream,
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Container();
+        }
+        final groups = snapshot.data?.find() ?? [];
+        return Consumer<KnowledgeBaseProvider>(
+          builder: (context, data, child) {
+            return GridContainer(
+              color: backgroundColor.of(theme),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  for (final group in data.groups)
-                    GroupItem(
-                      isActive: data.activeGroup == group.internalId,
-                      group: group,
-                      onActivate: () {
-                        data.activeGroup = group.internalId;
-                      },
-                      onDelete: () => data.deleteGroup(group),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8, top: 18, bottom: 18),
+                    child: Button(
+                      onPressed: data.addGroup,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            child: Icon(FluentIcons.fabric_new_folder, size: 18),
+                          ),
+                          Text("Create new"),
+                        ],
+                      ),
                     ),
-                ]
+                  ),
+                  Column(
+                    children: [
+                      for (final group in groups)
+                        GroupItem(
+                          isActive: data.activeGroup == group.internalId,
+                          group: group,
+                          onActivate: () {
+                            data.setActiveGroup(group);
+                          },
+                          onDelete: () => data.deleteGroup(group),
+                        ),
+                    ]
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          }
         );
       }
     );

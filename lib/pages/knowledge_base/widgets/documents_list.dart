@@ -14,7 +14,6 @@ import 'package:inference/langchain/all_mini_lm_v6.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/objectbox.g.dart';
-import 'package:inference/pages/knowledge_base/providers/knowledge_base_provider.dart';
 import 'package:inference/pages/knowledge_base/utils/loader_selector.dart';
 import 'package:inference/pages/knowledge_base/widgets/change_name_dialog.dart';
 import 'package:inference/pages/knowledge_base/widgets/import_dialog.dart';
@@ -24,7 +23,6 @@ import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:langchain/langchain.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' show basename;
-import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class DocumentsList extends StatefulWidget {
@@ -36,8 +34,10 @@ class DocumentsList extends StatefulWidget {
 }
 
 class _DocumentsListState extends State<DocumentsList> {
+  late Box<KnowledgeGroup> groupBox;
   late Box<KnowledgeDocument> documentBox;
   late Box<EmbeddingEntity> embeddingsBox;
+  late String groupName;
   Future<SentenceTransformer>? transformerFuture;
 
   bool listOrder = false;
@@ -104,9 +104,13 @@ class _DocumentsListState extends State<DocumentsList> {
   @override
   void initState() {
     super.initState();
+    groupBox = ObjectBox.instance.store.box<KnowledgeGroup>();
     documentBox = ObjectBox.instance.store.box<KnowledgeDocument>();
     embeddingsBox = ObjectBox.instance.store.box<EmbeddingEntity>();
     transformerFuture = initSentenceTransformer();
+
+    //caching via state since widget does not (need) updating on name change.
+    groupName = widget.group.name;
 
     documentStream = documentBox.query(KnowledgeDocument_.group.equals(widget.group.internalId)).watch(triggerImmediately: true);
   }
@@ -132,7 +136,7 @@ class _DocumentsListState extends State<DocumentsList> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(widget.group.name,
+                child: Text(groupName,
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
@@ -143,8 +147,10 @@ class _DocumentsListState extends State<DocumentsList> {
                 onPressed: () async {
                   final result = await changeNameDialog(context, widget.group);
                   if (result != null && result.isNotEmpty && context.mounted) {
-                    final provider = Provider.of<KnowledgeBaseProvider>(context, listen: false);
-                    provider.renameGroup(widget.group, result);
+                    groupBox.put(widget.group..name = result);
+                    setState(() {
+                        groupName = result;
+                    });
                   }
                 },
                 icon: const Icon(FluentIcons.edit, size: 16)
