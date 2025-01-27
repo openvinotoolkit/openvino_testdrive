@@ -38,7 +38,7 @@ class UserMessage extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
+          if (message.sources != null) Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Wrap(
               alignment: WrapAlignment.end,
