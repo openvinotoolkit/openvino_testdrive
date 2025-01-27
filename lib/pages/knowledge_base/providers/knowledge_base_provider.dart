@@ -25,16 +25,9 @@ class KnowledgeBaseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int? _isEditingId;
-  int? get isEditingId => _isEditingId;
-  set isEditingId(int? value) {
-    _isEditingId = value;
-    notifyListeners();
-  }
-
   void renameGroup(KnowledgeGroup group, String value) {
     groupBox.put(group..name = value);
-    isEditingId = null;
+    updateGroupsList();
   }
 
   void deleteGroup(KnowledgeGroup group) {
@@ -50,15 +43,17 @@ class KnowledgeBaseProvider extends ChangeNotifier {
   }
 
   void addGroup() {
-    isEditingId = groupBox.put(KnowledgeGroup("new knowledge base"));
+    groupBox.put(KnowledgeGroup("new knowledge base"));
     groups = groupBox.getAll();
-    if (groups.length == 1) {
-      activeGroup = isEditingId;
-    }
   }
 
   void setActiveGroup(KnowledgeGroup group) {
     activeGroup = group.internalId;
+  }
+
+  void updateGroupsList() {
+    groups = groupBox.getAll();
+    notifyListeners();
   }
 
   KnowledgeBaseProvider({required this.groupBox}) {

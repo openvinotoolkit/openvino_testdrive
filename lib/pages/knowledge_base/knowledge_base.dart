@@ -62,56 +62,47 @@ class KnowledgeBase extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
 
-    return GestureDetector(
-      onTap: () {
-        final data = Provider.of<KnowledgeBaseProvider>(context, listen: false);
-        if (data.isEditingId != null) {
-          data.isEditingId = null;
-        }
-      },
-      behavior: HitTestBehavior.deferToChild,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 280,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                GridContainer(
-                  color: backgroundColor.of(theme),
-                  padding: const EdgeInsets.all(16),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                  ),
-                  child: const Text("Knowledge Base",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 280,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              GridContainer(
+                color: backgroundColor.of(theme),
+                padding: const EdgeInsets.all(16),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                ),
+                child: const Text("Knowledge Base",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                const Expanded(
-                  child: Tree(),
-                ),
-              ],
-            ),
+              ),
+              const Expanded(
+                child: Tree(),
+              ),
+            ],
           ),
-          Expanded(
-            child: Consumer<KnowledgeBaseProvider>(
-              builder: (context, data, child) {
-                if (data.activeGroup != null) {
-                  final group = data.groupBox.get(data.activeGroup!);
-                  if (group != null) {
-                    return DocumentsList(group: group, key: Key(group.internalId.toString()));
-                  }
+        ),
+        Expanded(
+          child: Consumer<KnowledgeBaseProvider>(
+            builder: (context, data, child) {
+              if (data.activeGroup != null) {
+                final group = data.groupBox.get(data.activeGroup!);
+                if (group != null) {
+                  return DocumentsList(group: group, key: Key(group.internalId.toString()));
                 }
-                return const Center(child: Text("Select a group from the list to the left"));
               }
-            ),
+              return const Center(child: Text("Select a group from the list to the left"));
+            }
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -9,21 +9,15 @@ import 'package:inference/theme_fluent.dart';
 class GroupItem extends StatefulWidget {
   final KnowledgeGroup group;
   final bool isActive;
-  final bool editable;
-  final Function(String)? onRename;
   final Function()? onActivate;
   final Function()? onDelete;
-  final Function()? onMakeEditable;
 
   const GroupItem({
       super.key,
       required this.group,
-      required this.editable,
       this.onActivate,
       this.isActive = false,
-      this.onRename,
       this.onDelete,
-      this.onMakeEditable,
   });
 
   @override
@@ -49,9 +43,6 @@ class _GroupItemState extends State<GroupItem> {
       onTap: () {
         widget.onActivate?.call();
       },
-      onDoubleTap: () {
-        widget.onMakeEditable?.call();
-      },
       child: MouseRegion(
         onEnter: (_) => setState(() => isHovering = true),
         onExit: (_) => setState(() => isHovering = false),
@@ -65,15 +56,6 @@ class _GroupItemState extends State<GroupItem> {
           height: 32,
           child: Builder(
             builder: (context) {
-              if (widget.editable) {
-                return TextBox(
-                  controller: controller,
-                  onSubmitted: (value) {
-                    widget.onRename?.call(value);
-                  },
-                );
-              }
-
               return Padding(
                 padding: const EdgeInsets.all(0),
                 child: Row(

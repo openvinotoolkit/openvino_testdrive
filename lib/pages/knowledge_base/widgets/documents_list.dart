@@ -11,12 +11,15 @@ import 'package:inference/langchain/all_mini_lm_v6.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box/object_box.dart';
 import 'package:inference/objectbox.g.dart';
+import 'package:inference/pages/knowledge_base/providers/knowledge_base_provider.dart';
 import 'package:inference/pages/knowledge_base/utils/loader_selector.dart';
+import 'package:inference/pages/knowledge_base/widgets/change_name_dialog.dart';
 import 'package:inference/pages/knowledge_base/widgets/import_dialog.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/controls/drop_area.dart';
 import 'package:langchain/langchain.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class DocumentsList extends StatefulWidget {
@@ -99,12 +102,29 @@ class _DocumentsListState extends State<DocumentsList> {
       children: [
         GridContainer(
           color: backgroundColor.of(theme),
-          padding: const EdgeInsets.all(16),
-          child: Text(widget.group.name,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-            ),
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(widget.group.name,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              IconButton(
+                onPressed: () async {
+                  final result = await changeNameDialog(context, widget.group);
+                  if (result != null && result.isNotEmpty && context.mounted) {
+                    final provider = Provider.of<KnowledgeBaseProvider>(context, listen: false);
+                    provider.renameGroup(widget.group, result);
+                  }
+                },
+                icon: const Icon(FluentIcons.edit, size: 16)
+              )
+            ],
           ),
         ),
         Expanded(
