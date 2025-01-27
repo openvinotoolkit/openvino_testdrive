@@ -42,6 +42,7 @@ class UserMessage extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8),
             child: Wrap(
               alignment: WrapAlignment.end,
+              spacing: 5,
               children: [
                 for (final source in message.sources!)
                   UserFileWidget(file: UserFile.fromPath(source))

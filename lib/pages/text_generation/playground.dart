@@ -97,7 +97,7 @@ class _PlaygroundState extends State<Playground> {
   }
 
   Future<void> selectDocument() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.any, allowMultiple: true);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowMultiple: true, allowedExtensions: supportedExtensions);
     if (result != null) {
       for (final file in result.files) {
         final path = file.path!;

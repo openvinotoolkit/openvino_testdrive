@@ -44,3 +44,10 @@ BaseDocumentLoader? loaderFromPath(String path) {
       return null;
   }
 }
+
+List<String> supportedExtensions = [
+  "pdf",
+  "html",
+  "txt",
+  "docx",
+];
