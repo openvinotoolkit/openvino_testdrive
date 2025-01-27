@@ -107,6 +107,7 @@ class DarkLightColor {
 }
 
 const borderColor = DarkLightColor(Color(0xFFF0F0F0), Color(0xFF3B3B3B));
+const highlightColor = DarkLightColor(Color(0xFFFFFFFF), Color(0xFF202020));
 const backgroundColor = DarkLightColor(Color(0xFFF9F9F9), Color(0xFF282828));
 const subtleTextColor = DarkLightColor(Color(0xFF616161), Color(0xFF9F9F9F));
 const neutralBackground = DarkLightColor(Color(0xFFF5F5F5), Color(0xFF343434));

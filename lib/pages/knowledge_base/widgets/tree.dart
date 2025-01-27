@@ -30,7 +30,7 @@ class _TreeState extends State<Tree> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 8, top: 18),
+                padding: const EdgeInsets.only(left: 8, top: 18, bottom: 18),
                 child: Button(
                   onPressed: data.addGroup,
                   child: Row(

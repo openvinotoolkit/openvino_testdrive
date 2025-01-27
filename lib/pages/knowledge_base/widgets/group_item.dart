@@ -4,6 +4,7 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
+import 'package:inference/theme_fluent.dart';
 
 class GroupItem extends StatefulWidget {
   final KnowledgeGroup group;
@@ -31,6 +32,7 @@ class GroupItem extends StatefulWidget {
 
 class _GroupItemState extends State<GroupItem> {
   final controller = TextEditingController();
+  bool isHovering = false;
 
   @override
   void initState() {
@@ -50,42 +52,42 @@ class _GroupItemState extends State<GroupItem> {
       onDoubleTap: () {
         widget.onMakeEditable?.call();
       },
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        margin: const EdgeInsets.all(4),
-        height: 40,
-        decoration: BoxDecoration(
-          border: Border(
-            left: BorderSide(
-              color: widget.isActive ? theme.accentColor : Colors.transparent,
-              width: 5,
-            ),
-          )
-        ),
-        child: Builder(
-          builder: (context) {
-            if (widget.editable) {
-              return TextBox(
-                controller: controller,
-                onSubmitted: (value) {
-                  widget.onRename?.call(value);
-                },
+      child: MouseRegion(
+        onEnter: (_) => setState(() => isHovering = true),
+        onExit: (_) => setState(() => isHovering = false),
+        child: Container(
+          padding: const EdgeInsets.only(left: 8, right: 3),
+          margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+          decoration: ShapeDecoration(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            color: widget.isActive ? highlightColor.of(theme) : null,
+          ),
+          height: 32,
+          child: Builder(
+            builder: (context) {
+              if (widget.editable) {
+                return TextBox(
+                  controller: controller,
+                  onSubmitted: (value) {
+                    widget.onRename?.call(value);
+                  },
+                );
+              }
+
+              return Padding(
+                padding: const EdgeInsets.all(0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(widget.group.name),
+                    if (isHovering) IconButton(icon: const Icon(FluentIcons.delete, size: 10), onPressed: () {
+                        widget.onDelete?.call();
+                    }),
+                  ],
+                ),
               );
             }
-
-            return Padding(
-              padding: const EdgeInsets.only(left: 10, bottom: 5.5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(widget.group.name),
-                  IconButton(icon: const Icon(FluentIcons.delete), onPressed: () {
-                      widget.onDelete?.call();
-                  }),
-                ],
-              ),
-            );
-          }
+          ),
         ),
       ),
     );
