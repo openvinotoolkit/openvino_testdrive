@@ -71,6 +71,7 @@ dependencies:
   video_player: ^2.9.2
   window_manager: ^0.4.3
   jinja: ^0.6.0
+  docx_to_text: ^1.0.1
 
 dev_dependencies:
   flutter_test:

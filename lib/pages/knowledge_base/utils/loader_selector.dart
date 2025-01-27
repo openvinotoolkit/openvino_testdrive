@@ -4,6 +4,7 @@
 
 import 'dart:math';
 
+import 'package:inference/langchain/loaders/docs_loader.dart';
 import 'package:inference/langchain/loaders/html_loader.dart';
 import 'package:inference/langchain/loaders/pdf_loader.dart';
 import 'package:inference/langchain/loaders/text_loader.dart';
@@ -37,6 +38,8 @@ BaseDocumentLoader? loaderFromPath(String path) {
       return HTMLLoader(path, splitter);
     case ".txt":
       return TextLoader(path, splitter);
+    case ".docx":
+      return DocxLoader(path, splitter);
     default:
       return null;
   }
