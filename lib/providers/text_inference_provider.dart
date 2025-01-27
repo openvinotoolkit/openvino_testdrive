@@ -17,8 +17,6 @@ import 'package:inference/pages/text_generation/utils/user_file.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/download_provider.dart';
 import 'package:langchain/langchain.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 
 enum Speaker { system, assistant, user }
 
