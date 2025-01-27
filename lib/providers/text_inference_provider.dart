@@ -118,7 +118,6 @@ class TextInferenceProvider extends ChangeNotifier {
       final embeddingsModelLoader = AllMiniLMV6.ensureModelIsPresent(downloadProvider);
       // Load the inference model
       _inference = await LLMInference.init(project!.storagePath, device!);
-      print(_inference?.getTokenizerConfig());
       // Make sure the embeddings model is loaded.
       await embeddingsModelLoader;
       embeddingsModel = await OpenVINOEmbeddings.init(await AllMiniLMV6.storagePath, "CPU");

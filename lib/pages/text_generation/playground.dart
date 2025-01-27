@@ -163,7 +163,7 @@ class _PlaygroundState extends State<Playground> {
                               max: 1.0,
                               min: 0.1,
                             ),
-                            //const KnowledgeBaseSelector()
+                            const KnowledgeBaseSelector()
                           ],
                   )
                     ),
