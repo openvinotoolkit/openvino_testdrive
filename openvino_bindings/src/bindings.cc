@@ -19,6 +19,7 @@
 #include "src/llm/llm_inference.h"
 #include "src/sentence_transformer/sentence_transformer_pipeline.h"
 #include "src/tti/tti_inference.h"
+#include "src/vlm/vlm_inference.h"
 #include "src/utils/errors.h"
 #include "src/utils/utils.h"
 #include "src/utils/status.h"
@@ -309,6 +310,85 @@ Status* ttiInferenceClose(CTTIInference instance) {
     return new Status{OkStatus};
 }
 
+StatusOrVLMInference* vlmInferenceOpen(const char* model_path, const char* device) {
+    try {
+        auto instance = new VLMInference(model_path, device);
+        return new StatusOrVLMInference{OkStatus, "", instance};
+    } catch (...) {
+        auto except = handle_exceptions();
+        printf(except->message);
+        return new StatusOrVLMInference{except->status, except->message};
+    }
+}
+
+Status* vlmInferenceSetListener(CVLMInference instance, VLMInferenceCallbackFunction callback) {
+    try {
+        auto lambda_callback = [callback](const std::string& word) {
+            callback(new StatusOrString{OkStatus, "", strdup(word.c_str())});
+        };
+        reinterpret_cast<VLMInference*>(instance)->set_streamer(lambda_callback);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
+StatusOrVLMModelResponse* vlmInferencePrompt(CVLMInference instance, const char* message, int max_new_tokens) {
+    try {
+        auto inference = reinterpret_cast<VLMInference*>(instance);
+        auto result = inference->prompt(message, max_new_tokens);
+        auto text = result.string;
+        auto metrics = result.metrics;
+        return new StatusOrVLMModelResponse{OkStatus, {}, metrics, text};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrVLMModelResponse{except->status, except->message, {}, {}};
+    }
+}
+
+Status* vlmInferenceSetImagePaths(CVLMInference instance, const char** paths, int length) {
+    try {
+        auto inference = reinterpret_cast<VLMInference*>(instance);
+
+        std::vector<std::string> stringPaths;
+        stringPaths.reserve(length);
+        for (int i = 0; i < length; ++i) {
+            stringPaths.emplace_back(paths[i]);
+        }
+
+        inference->setImagePaths(stringPaths);
+        return new Status{OkStatus};
+    } catch (...) {
+        return new Status{ErrorStatus};
+    }
+}
+
+StatusOrBool* vlmInferenceHasModelIndex(CVLMInference instance) {
+    try {
+        bool has_chat_template = reinterpret_cast<VLMInference*>(instance)->has_model_index();
+        return new StatusOrBool{OkStatus, "", has_chat_template};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrBool{except->status, except->message};
+    }
+}
+
+Status* vlmInferenceForceStop(CVLMInference instance) {
+    try {
+        reinterpret_cast<VLMInference*>(instance)->force_stop();
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
+Status* vlmInferenceClose(CVLMInference instance) {
+    auto inference = reinterpret_cast<VLMInference*>(instance);
+    inference->force_stop();
+    delete inference;
+    return new Status{OkStatus};
+}
+
 
 StatusOrGraphRunner* graphRunnerOpen(const char* graph) {
     try {
@@ -478,12 +558,16 @@ Status* handle_exceptions() {
     } catch(ov::Exception e) {
         std::string message = "OV Exception: \n";
         message += e.what();
+        std::cout << message << std::endl;
         return new Status{OpenVINOError, strdup(message.c_str())};
     } catch (api_error e) {
+        std::cout << e.what() << std::endl;
         return new Status{e.status, strdup(e.additional_info.c_str())};
     } catch(const std::exception& ex) {
+        std::cout << ex.what() << std::endl;
         return new Status{ErrorStatus, ex.what()};
     } catch (...) {
+        std::cout << "Unknown exception" << std::endl;
         return new Status{ErrorStatus, "Unknown exception"};
     }
 }

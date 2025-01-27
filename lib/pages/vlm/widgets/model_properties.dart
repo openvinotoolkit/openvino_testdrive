@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/providers/text_to_image_inference_provider.dart';
+import 'package:inference/providers/vlm_inference_provider.dart';
 import 'package:inference/utils.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/widgets/horizontal_rule.dart';
@@ -17,7 +17,7 @@ class ModelProperties extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TextToImageInferenceProvider>(builder: (context, inference, child) {
+    return Consumer<VLMInferenceProvider>(builder: (context, inference, child) {
         Locale locale = Localizations.localeOf(context);
         final formatter = NumberFormat.percentPattern(locale.languageCode);
 

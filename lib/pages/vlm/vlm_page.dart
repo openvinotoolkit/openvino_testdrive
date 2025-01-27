@@ -4,24 +4,24 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:inference/pages/vlm/live_inference_pane.dart';
+import 'package:inference/providers/vlm_inference_provider.dart';
+import 'package:inference/pages/vlm/performance_metrics_pane.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
-import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
-import 'package:inference/pages/transcription/performance_metrics.dart';
-import 'package:inference/pages/transcription/playground.dart';
 import 'package:inference/utils.dart';
 import 'package:inference/widgets/controls/close_model_button.dart';
 import 'package:provider/provider.dart';
 
-class TranscriptionPage extends StatefulWidget {
+class VLMPage extends StatefulWidget {
   final Project project;
-  const TranscriptionPage(this.project, {super.key});
+  const VLMPage(this.project, {super.key});
 
   @override
-  State<TranscriptionPage> createState() => _TranscriptionPageState();
+  State<VLMPage> createState() => _VLMPageState();
 }
 
-class _TranscriptionPageState extends State<TranscriptionPage> {
+class _VLMPageState extends State<VLMPage> {
 
 
   int selected = 0;
@@ -35,19 +35,21 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
     );
     final textColor = theme.typography.body?.color ?? Colors.black;
 
-    return ChangeNotifierProxyProvider<PreferenceProvider, SpeechInferenceProvider>(
+    const metricsPane = VLMPerformanceMetricsPane();
+    return ChangeNotifierProxyProvider<PreferenceProvider, VLMInferenceProvider>(
       lazy: false,
       create: (_) {
         final device = Provider.of<PreferenceProvider>(context, listen: false).device;
-        return SpeechInferenceProvider(widget.project, device);
+        return VLMInferenceProvider(widget.project, device)..init();
       },
       update: (_, preferences, imageInferenceProvider) {
         if (imageInferenceProvider != null && imageInferenceProvider.sameProps(widget.project, preferences.device)) {
           return imageInferenceProvider;
         }
-        return SpeechInferenceProvider(widget.project, preferences.device);
+        return VLMInferenceProvider(widget.project, preferences.device)..init();
       },
-      child:  Stack(
+
+      child: Stack(
         children: [
           FluentTheme(
             data: updatedTheme,
@@ -89,8 +91,8 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
                       colorFilter: ColorFilter.mode(textColor, BlendMode.srcIn),
                       width: 15,
                     ),
-                    title: const Text("Playground"),
-                    body: Playground(project: widget.project),
+                    title: const Text("Live Inference"),
+                    body: VLMPlayground(project: widget.project),
                   ),
                   PaneItem(
                     icon: SvgPicture.asset("images/stats.svg",
@@ -98,7 +100,7 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
                       width: 15,
                     ),
                     title: const Text("Performance metrics"),
-                    body: PerformanceMetrics(project: widget.project),
+                    body: metricsPane,
                   ),
                 ],
               )
@@ -124,7 +126,7 @@ class _TranscriptionPageState extends State<TranscriptionPage> {
             ),
           )
         ],
-      )
+      ),
     );
   }
 }

@@ -110,6 +110,7 @@ class _DownloadPageState extends State<DownloadPage> {
   }
 
   Future<void> onClose() async {
+    final navigator = Navigator.of(context);
     final result = await showDialog<bool>(context: context, builder: (BuildContext context) => ContentDialog(
         title: const Text("Download in progress"),
         content: const Text("Downloading will continue in background"),
@@ -127,7 +128,7 @@ class _DownloadPageState extends State<DownloadPage> {
     );
 
     if (result == true && context.mounted) {
-      GoRouter.of(context).pop();
+      navigator.pop();
     }
   }
 

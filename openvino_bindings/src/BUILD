@@ -14,6 +14,7 @@ cc_library(
         "//src/audio:speech_to_text",
         "//src/mediapipe:graph_runner",
         "//src/tti:tti_inference",
+        "//src/vlm:vlm_inference",
     ],
 )
 
