@@ -59,3 +59,22 @@ cmake(
     out_shared_libs = ["libpodofo.2.dylib"],
     visibility = ["//visibility:public"]
 )
+
+
+cmake(
+    name = "podofo_linux",
+    build_args = [
+        "--verbose",
+        "--",  # <- Pass remaining options to the native tool.
+        # https://github.com/bazelbuild/rules_foreign_cc/issues/329
+        # there is no elegant paralell compilation support
+        "VERBOSE=1",
+        "-j 4",
+    ],
+    cache_entries = {
+        "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
+    },
+    lib_source = ":all_srcs",
+    out_shared_libs = ["libpodofo.so"],
+    visibility = ["//visibility:public"],
+)

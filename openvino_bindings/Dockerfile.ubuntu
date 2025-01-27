@@ -6,7 +6,15 @@ RUN apt-get update && apt-get install -y \
     nasm yasm \
     unzip \
     curl \
-    git
+    git \
+    libfontconfig1-dev \
+    libfreetype-dev \
+    libxml2-dev \
+    libssl-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libtiff-dev \
+    libidn11-dev
 
 ENV BAZEL_VERSION=6.1.1
 WORKDIR /bazel

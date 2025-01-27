@@ -15,6 +15,7 @@ alias(
     actual = select({
         "@bazel_tools//src/conditions:windows": "@podofo_windows//:podofo_windows",
         "@bazel_tools//src/conditions:darwin_arm64": "@podofo//:podofo_mac",
+        "//conditions:default": "@podofo//:podofo_linux",
     }),
     visibility = ["//visibility:public"],
 )
