@@ -37,33 +37,6 @@ Dio dioClient() {
   return dio;
 }
 
-Future<String> getProxy() async {
-  final dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 10)));
-  dio.httpClientAdapter = IOHttpClientAdapter(
-    createHttpClient: () {
-      final client = HttpClient();
-      client.findProxy = (uri) {
-        return "DIRECT";
-      };
-      return client;
-    },
-  );
-  try {
-    final response = await dio.get('http://wpad/wpad.dat');
-    if (response.statusCode == 200) {
-      return parseWpad(response.data);
-    }
-  } catch (e) {
-    print(e.toString());
-  }
-
-  final proxyEnv = Platform.environment['https_proxy'] ?? Platform.environment['HTTPS_PROXY'] ?? Platform.environment['http_proxy'] ?? Platform.environment['HTTP_PROXY'];
-  if (proxyEnv != null) {
-    return proxyEnv;
-  }
-  return '';
-}
-
 String parseWpad(String wpad) {
   final regex = RegExp(r'return\s+"PROXY ([^"]+)";');
   final matches = regex.allMatches(wpad);
@@ -125,5 +98,15 @@ extension StringExtensions on String {
   String capitalize() {
     if (isEmpty) return this;
     return "${this[0].toUpperCase()}${substring(1)}";
+  }
+}
+
+class Envvars {
+  String get proxy {
+    final proxyEnv = Platform.environment['https_proxy'] ?? Platform.environment['HTTPS_PROXY'] ?? Platform.environment['http_proxy'] ?? Platform.environment['HTTP_PROXY'];
+    if (proxyEnv != null) {
+      return proxyEnv;
+    }
+    return '';
   }
 }

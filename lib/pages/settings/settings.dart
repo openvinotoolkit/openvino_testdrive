@@ -122,8 +122,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       ToggleSwitch(
                         checked: Config.proxyEnabled,
                         onChanged: (value) {
-                          setState(() {
-                            Config.proxyEnabled = value;
+                          setState(() async{
+                            await Config.setProxyEnabled(value);
                           });
                         },
                       ),
@@ -133,8 +133,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: TextBox(
                           controller: _proxyController,
                           placeholder: '<username>:<password>@<proxy>:<port>',
-                          onChanged: (value) {
-                            Config.proxy = value;
+                          onChanged: (value) async {
+                            Config.setProxy(value);
                           },
                         ),
                       ),
