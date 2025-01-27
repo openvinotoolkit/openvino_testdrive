@@ -75,7 +75,11 @@ class _TreeState extends State<Tree> {
                           onActivate: () {
                             data.setActiveGroup(group);
                           },
-                          onDelete: () => data.deleteGroup(group),
+                          onDelete: () async {
+                            if (await confirmDeleteDialog(context)) {
+                              data.deleteGroup(group);
+                            }
+                          }
                         ),
                     ]
                   ),
@@ -87,4 +91,34 @@ class _TreeState extends State<Tree> {
       }
     );
   }
+}
+
+ Future<bool> confirmDeleteDialog(BuildContext context) async {
+  final result = await showDialog<bool?>(
+    context: context,
+    builder: (context) => ContentDialog(
+
+      constraints: const BoxConstraints(
+        maxWidth: 400,
+      ),
+      title: const Text('Delete knowledge base?'),
+      content: const Text(
+        "Are you sure you want to remove the knowledge base?",
+      ),
+      actions: [
+        Button(
+          child: const Text('Delete'),
+          onPressed: () {
+            Navigator.pop(context, true);
+            // Delete file here
+          },
+        ),
+        FilledButton(
+          child: const Text('Cancel'),
+          onPressed: () => Navigator.pop(context, false),
+        ),
+      ],
+    ),
+  );
+  return result == true;
 }
