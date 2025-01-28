@@ -78,8 +78,8 @@ class _DropAreaState extends State<DropArea> {
 
             final theme = FluentTheme.of(context);
             final String text = _showReleaseMessage
-                ? "Release to drop media"
-                : "Drag and drop ${widget.type} here for testing";
+                ? "Release to drop"
+                : "Drag and drop ${widget.type}";
 
             return Center(
               child: SizedBox(

@@ -175,38 +175,38 @@ class _DocumentsListState extends State<DocumentsList> {
                   filteredDocuments = filteredDocuments.reversed.toList();
                 }
 
-                return DropArea(
-                  type: "a document or folder",
-                  showChild: documents.isNotEmpty,
-                  onUpload: (files) => processUpload(context, files),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 25),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SearchBar(
-                              onChange: (val) => setState(() => search = val),
-                              placeholder: "Find file",
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 25),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SearchBar(
+                            onChange: (val) => setState(() => search = val),
+                            placeholder: "Find file",
+                          ),
+                          FilledButton(
+                            onPressed: selectDocuments,
+                            child: Row(
+                              children: [
+                                const Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: Icon(FluentIcons.upload),
+                                ),
+                                const Text("Upload"),
+                              ],
                             ),
-                            FilledButton(
-                              onPressed: selectDocuments,
-                              child: Row(
-                                children: [
-                                  const Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Icon(FluentIcons.upload),
-                                  ),
-                                  const Text("Upload"),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Table(
+                    ),
+                    DropArea(
+                      type: "a document or folder",
+                      showChild: documents.isNotEmpty,
+                      onUpload: (files) => processUpload(context, files),
+                      child: Table(
                         columnWidths: const <int, TableColumnWidth>{
                           0: FixedColumnWidth(20),
                           1: FlexColumnWidth(),
@@ -288,8 +288,8 @@ class _DocumentsListState extends State<DocumentsList> {
                             ),
                         ],
                       ),
-                    ],
-                  )
+                    ),
+                  ],
                 );
               }
             ),
