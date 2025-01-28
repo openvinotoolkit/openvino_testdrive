@@ -22,12 +22,14 @@
 #include "src/utils/status.h"
 #include "src/utils/metrics.h"
 #include "utils/tti_metrics.h"
+#include "utils/vlm_metrics.h"
 
 typedef void* CImageInference;
 typedef void* CGraphRunner;
 typedef void* CSpeechToText;
 typedef void* CLLMInference;
 typedef void* CTTIInference;
+typedef void* CVLMInference;
 
 typedef struct {
     const char* id;
@@ -96,6 +98,12 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    CLLMInference value;
+} StatusOrVLMInference;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     Metrics metrics;
     const char* value;
 } StatusOrModelResponse;
@@ -119,12 +127,20 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    VLMMetrics metrics;
+    const char* value;
+} StatusOrVLMModelResponse;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     Device* value;
     int size;
 } StatusOrDevices;
 
 typedef void (*ImageInferenceCallbackFunction)(StatusOrString*);
 typedef void (*LLMInferenceCallbackFunction)(StatusOrString*);
+typedef void (*VLMInferenceCallbackFunction)(StatusOrString*);
 
 EXPORT void freeStatus(Status *status);
 EXPORT void freeStatusOrString(StatusOrString *status);
@@ -158,6 +174,15 @@ EXPORT StatusOrTTIInference* ttiInferenceOpen(const char* model_path, const char
 EXPORT StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height, int rounds);
 EXPORT StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance);
 EXPORT Status* ttiInferenceClose(CLLMInference instance);
+
+
+EXPORT StatusOrVLMInference* vlmInferenceOpen(const char* model_path, const char* device);
+EXPORT Status* vlmInferenceSetListener(CVLMInference instance, VLMInferenceCallbackFunction callback);
+EXPORT StatusOrVLMModelResponse* vlmInferencePrompt(CVLMInference instance, const char* message, int max_new_tokens);
+EXPORT Status* vlmInferenceSetImagePaths(CVLMInference instance, const char** paths, int length);
+EXPORT StatusOrBool* vlmInferenceHasModelIndex(CVLMInference instance);
+EXPORT Status* vlmInferenceStop(CVLMInference instance);
+EXPORT Status* vlmInferenceClose(CVLMInference instance);
 
 EXPORT StatusOrGraphRunner* graphRunnerOpen(const char* graph);
 EXPORT Status* graphRunnerQueueImage(CGraphRunner instance, const char* name, int timestamp, unsigned char* image_data, const size_t data_length);

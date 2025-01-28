@@ -13,6 +13,7 @@ cc_library(
         "//src/audio:speech_to_text",
         "//src/mediapipe:graph_runner",
         "//src/tti:tti_inference",
+        "//src/vlm:vlm_inference",
     ],
 )
 
@@ -24,6 +25,7 @@ cc_library(
         ":bindings_deps",
         "//src/utils:metrics",
         "//src/utils:tti_metrics",
+        "//src/utils:vlm_metrics",
     ],
     copts = ["-fPIC"],
     alwayslink=1,

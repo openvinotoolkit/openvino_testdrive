@@ -85,6 +85,7 @@ dev_dependencies:
   path_provider_platform_interface: ^2.1.2
   plugin_platform_interface: ^2.1.8
   build_runner: ^2.4.13
+  mocktail: ^1.0.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -171,9 +172,9 @@ msix_config:
   display_name: OpenVINO Test Drive
   publisher_display_name: Intel
   identity_name: intel.openvino.testdrive
-  msix_version: 24.6.0.0
+  msix_version: 24.6.0.1
   trim_logo: false
-  output_name: OpenVINO Test Drive 24.6.0.0
+  output_name: OpenVINO Test Drive 24.6.0
   capabilities: "internetClient"
   logo_path: "images/logo_250.png"
   app_installer: #<-- app installer configuration

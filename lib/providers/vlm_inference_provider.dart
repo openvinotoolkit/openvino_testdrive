@@ -3,91 +3,57 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:async';
-import 'dart:convert';
-import 'dart:isolate';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:inference/interop/generated_bindings.dart';
-import 'package:inference/interop/tti_inference.dart';
+import 'package:inference/interop/vlm_inference.dart';
 import 'package:inference/project.dart';
 
-enum Speaker { assistant, user }
+enum Speaker { assistant, system, user }
 
-class ImageContent {
-  final Uint8List imageData;
-  final int width;
-  final int height;
-  final BoxFit boxFit;
-  const ImageContent(this.imageData, this.width, this.height, this.boxFit);
-
-}
 
 class Message {
   final Speaker speaker;
   final String message;
-  final ImageContent? imageContent;
-  final TTIMetrics? metrics;
+  final VLMMetrics? metrics;
+  final DateTime? time;
   final bool allowedCopy; // Don't allow loading images to be copied
 
-  const Message(this.speaker, this.message, this.imageContent, this.metrics, this.allowedCopy);
+  const Message(this.speaker, this.message, this.metrics, this.time, this.allowedCopy);
 }
 
-class TextToImageInferenceProvider extends ChangeNotifier {
+class VLMInferenceProvider extends ChangeNotifier {
   Completer<void> loaded = Completer<void>();
 
   Project? _project;
   String? _device;
+  List<String> _imagePaths = [];
 
   Project? get project => _project;
 
   String? get device => _device;
 
-  TTIMetrics? get metrics => _messages.lastOrNull?.metrics;
+  VLMMetrics? get metrics => _messages.lastOrNull?.metrics;
 
-  Uint8List? _imageBytes;
+  int _maxTokens = 100;
 
-  int _loadWidth = 256;
-  int _loadHeight = 256;
+  int get maxTokens => _maxTokens;
 
-  int _width = 256;
-
-  int get width => _width;
-
-  set width(int v) {
-    _width = v;
+  set maxTokens(int v) {
+    _maxTokens = v;
     notifyListeners();
   }
 
-  int _height = 256;
-
-  int get height => _height;
-
-  set height(int v) {
-    _height = v;
-    notifyListeners();
-  }
-
-  int _rounds = 12;
-
-  int get rounds => _rounds;
-
-  set rounds(int v) {
-    _rounds = v;
-    notifyListeners();
-  }
-
-  TTIInference? _inference;
+  VLMInference? _inference;
   final stopWatch = Stopwatch();
   int n = 0;
 
-  TextToImageInferenceProvider(Project? project, String? device) {
+  VLMInferenceProvider(Project? project, String? device) {
     _project = project;
     _device = device;
 
     if (project != null && device != null) {
-      preloadImageBytes();
       print("instantiating project: ${project.name}");
       print(project.storagePath);
       print(device);
@@ -95,23 +61,35 @@ class TextToImageInferenceProvider extends ChangeNotifier {
   }
 
   Future<void> init() async {
-    await TTIInference.init(project!.storagePath, device!).then((instance) {
-      print("done loading");
-      _inference = instance;
-    });
+
+    _inference = await VLMInference.init(project!.storagePath, device!)
+      ..setListener(onMessage);
+
     loaded.complete();
     if (hasListeners) {
       notifyListeners();
     }
   }
 
+  void onMessage(String word) {
+    stopWatch.stop();
+    if (n == 0) { // dont count first token since it's slow.
+      stopWatch.reset();
+    }
 
-  void preloadImageBytes() {
-    rootBundle.load('images/intel-loading.gif').then((data) {
-      _imageBytes = data.buffer.asUint8List();
-      // Optionally notify listeners if you need to update UI
+    double timeElapsed = stopWatch.elapsedMilliseconds.toDouble();
+    double averageElapsed = (n == 0 ? 0.0 : timeElapsed / n);
+    if (n == 0) {
+      _response = word;
+    } else {
+      _response = _response! + word;
+    }
+    _speed = averageElapsed;
+    if (hasListeners) {
       notifyListeners();
-    });
+    }
+    stopWatch.start();
+    n++;
   }
 
 
@@ -148,9 +126,8 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     if (_response == null) {
       return null;
     }
-    final imageContent = ImageContent(_imageBytes ?? Uint8List(0), _loadWidth, _loadHeight, BoxFit.contain);
 
-    return Message(Speaker.assistant, response!, imageContent, null, false);
+    return Message(Speaker.assistant, response!, null, DateTime.now(), false);
   }
 
   List<Message> get messages {
@@ -165,24 +142,38 @@ class TextToImageInferenceProvider extends ChangeNotifier {
   }
 
   Future<void> message(String message) async {
-    _response = "Generating image...";
+    _response = "...";
 
-    _messages.add(Message(Speaker.user, message, null, null, false));
+    _messages.add(Message(Speaker.user, message, null, DateTime.now(), false));
     notifyListeners();
 
-    _loadWidth = width;
-    _loadHeight = height;
-    final response = await _inference!.prompt(message, width, height, rounds);
-
-    final imageData  = base64Decode(response.content);
-    final imageContent = ImageContent(imageData, _loadWidth, _loadHeight, BoxFit.contain);
+    final response = await _inference!.prompt(message, maxTokens);
 
     if (_messages.isNotEmpty) {
-      _messages.add(Message(Speaker.assistant, "Generated image", imageContent, response.metrics, true));
+      _messages.add(Message(Speaker.assistant, response.content, response.metrics, DateTime.now(), true));
     }
     _response = null;
 
     n = 0;
+    if (hasListeners) {
+      notifyListeners();
+    }
+  }
+
+  void setImagePaths(List<String> paths) {
+    _inference?.setImagePaths(paths);
+    _imagePaths = paths;
+  }
+
+  List<String> getImagePaths(){
+    return _imagePaths;
+  }
+
+  void resetInterimResponse(){
+    if (_response != '...' && response != null) {
+      _messages.add(Message(Speaker.assistant, _response!, null, DateTime.now(), true));
+    }
+    _response = null;
     if (hasListeners) {
       notifyListeners();
     }
@@ -198,7 +189,11 @@ class TextToImageInferenceProvider extends ChangeNotifier {
   }
 
   void forceStop() {
-    // TODO(ArendJanKramer): Implement forceStop
+    _inference?.forceStop();
+    resetInterimResponse();
+    if (hasListeners) {
+      notifyListeners();
+    }
   }
 
   void reset() {
@@ -211,25 +206,6 @@ class TextToImageInferenceProvider extends ChangeNotifier {
   }
 
 
-  Future<void> _closeInferenceInIsolate(dynamic inference) async {
-    final receivePort = ReceivePort();
-
-    // Spawn an isolate and pass the SendPort and inference
-    await Isolate.spawn((List<dynamic> args) {
-      final SendPort sendPort = args[0];
-      final dynamic inference = args[1];
-      try {
-        inference?.close(); // Perform the blocking operation
-      } catch (e) {
-        print("Error closing inference: $e");
-      } finally {
-        sendPort.send(null); // Notify that the operation is complete
-      }
-    }, [receivePort.sendPort, inference]);
-
-    // Wait for the isolate to complete
-    await receivePort.first;
-  }
 
   Future<void> _waitForLoadCompletion() async {
     if (!loaded.isCompleted) {
@@ -245,7 +221,7 @@ class TextToImageInferenceProvider extends ChangeNotifier {
 
     if (_inference != null) {
       print("Closing inference");
-      await _closeInferenceInIsolate(_inference!);
+      _inference?.close();
       print("Closing inference done");
     } else {
       close();
