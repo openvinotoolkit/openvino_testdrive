@@ -6,7 +6,6 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:path/path.dart';
 
 class DropArea extends StatefulWidget {
   final Widget? child;
@@ -34,7 +33,10 @@ class _DropAreaState extends State<DropArea> {
   void handleDrop(DropDoneDetails details) {
     widget.onUpload(
       details.files
-        .where((file) => widget.extensions?.contains(extension(file.path, 1)) ?? true)
+        .where((file) {
+          String extension = file.path.split('.').last.toLowerCase(); // Extract file extension
+          return widget.extensions?.contains(extension) ?? true;
+        })
         .map((f) => f.path)
         .toList()
     );
