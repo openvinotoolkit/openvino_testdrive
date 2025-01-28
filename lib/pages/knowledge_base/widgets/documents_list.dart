@@ -201,91 +201,96 @@ class _DocumentsListState extends State<DocumentsList> {
                         ],
                       ),
                     ),
-                    DropArea(
-                      type: "a document or folder",
-                      showChild: documents.isNotEmpty,
-                      onUpload: (files) => processUpload(context, files),
-                      child: Table(
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FixedColumnWidth(20),
-                          1: FlexColumnWidth(),
-                          2: FlexColumnWidth(),
-                          3: FlexColumnWidth(),
-                          4: FixedColumnWidth(24),
-                        },
-                        children: [
-                          TableRow(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: borderColor.of(theme),
-                                  width: 1,
-                                )
-                              )
-                            ),
-                            children: <Widget>[
-                              Container(
-                                height: 40,
+                    Expanded(
+                      child: DropArea(
+                        type: "a document or folder",
+                        showChild: documents.isNotEmpty,
+                        onUpload: (files) => processUpload(context, files),
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Table(
+                            columnWidths: const <int, TableColumnWidth>{
+                              0: FixedColumnWidth(20),
+                              1: FlexColumnWidth(),
+                              2: FlexColumnWidth(),
+                              3: FlexColumnWidth(),
+                              4: FixedColumnWidth(24),
+                            },
+                            children: [
+                              TableRow(
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: borderColor.of(theme),
+                                      width: 1,
+                                    )
+                                  )
+                                ),
+                                children: <Widget>[
+                                  Container(
+                                    height: 40,
+                                  ),
+                                  TableCell(
+                                    verticalAlignment: TableCellVerticalAlignment.middle,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text("Name"),
+                                        if (listOrder)
+                                          IconButton(
+                                            icon: const Icon(FluentIcons.chevron_down, size: 9),
+                                            onPressed: () => setState(() => listOrder = false),
+                                          )
+                                        else
+                                          IconButton(
+                                            icon: const Icon(FluentIcons.chevron_up, size: 9),
+                                            onPressed: () => setState(() => listOrder = true),
+                                          )
+                                      ],
+                                    ),
+                                  ),
+                                  const TableCell(
+                                    verticalAlignment: TableCellVerticalAlignment.middle,
+                                    child: Text("Kind"),
+                                  ),
+                                  const TableCell(
+                                    verticalAlignment: TableCellVerticalAlignment.middle,
+                                    child: Text("Size"),
+                                  ),
+                                  Container(),
+                                ],
                               ),
-                              TableCell(
-                                verticalAlignment: TableCellVerticalAlignment.middle,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text("Name"),
-                                    if (listOrder)
-                                      IconButton(
-                                        icon: const Icon(FluentIcons.chevron_down, size: 9),
-                                        onPressed: () => setState(() => listOrder = false),
-                                      )
-                                    else
-                                      IconButton(
-                                        icon: const Icon(FluentIcons.chevron_up, size: 9),
-                                        onPressed: () => setState(() => listOrder = true),
-                                      )
+
+                              for (final document in filteredDocuments)
+                                TableRow(
+                                  children: <Widget>[
+                                    Container(
+                                      height: 32,
+                                    ),
+                                    TableCell(
+                                      verticalAlignment: TableCellVerticalAlignment.middle,
+                                      child: Text(basename(document.source))
+                                    ),
+                                    TableCell(
+                                      verticalAlignment: TableCellVerticalAlignment.middle,
+                                      child: Text(lookupMimeType(document.source) ?? "")
+                                    ),
+                                    TableCell(
+                                      verticalAlignment: TableCellVerticalAlignment.middle,
+                                      child: Text(File(document.source).statSync().size.readableFileSize()),
+                                    ),
+                                    TableCell(
+                                      verticalAlignment: TableCellVerticalAlignment.middle,
+                                      child: IconButton(
+                                        icon: const Icon(FluentIcons.delete, size: 10),
+                                        onPressed: () => removeDocument(document),
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ),
-                              const TableCell(
-                                verticalAlignment: TableCellVerticalAlignment.middle,
-                                child: Text("Kind"),
-                              ),
-                              const TableCell(
-                                verticalAlignment: TableCellVerticalAlignment.middle,
-                                child: Text("Size"),
-                              ),
-                              Container(),
                             ],
                           ),
-
-                          for (final document in filteredDocuments)
-                            TableRow(
-                              children: <Widget>[
-                                Container(
-                                  height: 32,
-                                ),
-                                TableCell(
-                                  verticalAlignment: TableCellVerticalAlignment.middle,
-                                  child: Text(basename(document.source))
-                                ),
-                                TableCell(
-                                  verticalAlignment: TableCellVerticalAlignment.middle,
-                                  child: Text(lookupMimeType(document.source) ?? "")
-                                ),
-                                TableCell(
-                                  verticalAlignment: TableCellVerticalAlignment.middle,
-                                  child: Text(File(document.source).statSync().size.readableFileSize()),
-                                ),
-                                TableCell(
-                                  verticalAlignment: TableCellVerticalAlignment.middle,
-                                  child: IconButton(
-                                    icon: const Icon(FluentIcons.delete, size: 10),
-                                    onPressed: () => removeDocument(document),
-                                  ),
-                                ),
-                              ],
-                            ),
-                        ],
+                        ),
                       ),
                     ),
                   ],

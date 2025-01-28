@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:inference/langchain/all_mini_lm_v6.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box/object_box.dart';
@@ -98,7 +99,37 @@ class KnowledgeBase extends StatelessWidget {
                   return DocumentsList(group: group, key: Key(group.internalId.toString()));
                 }
               }
-              return const Center(child: Text("Select a group from the list to the left"));
+              return Column(
+                children: [
+                  GridContainer(
+                    color: backgroundColor.of(theme),
+                    child: const SizedBox(height: 56),
+                  ),
+                  Expanded(
+                    child: GridContainer(
+                      color: backgroundColor.of(theme),
+                      child: Center(child:
+                        Padding(
+                          padding: const EdgeInsets.all(50.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset('images/slide_search.svg'),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: const Text(
+                                  "No knowledge bases",
+                                  style: const TextStyle(fontSize: 20)),
+                              ),
+                              const Text("Click 'Create new' to start", textAlign: TextAlign.center),
+                            ],
+                          ),
+                        )
+                      )
+                    ),
+                  ),
+                ],
+              );
             }
           ),
         ),
