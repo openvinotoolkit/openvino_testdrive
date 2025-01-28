@@ -49,6 +49,13 @@ class TTIModelResponse {
   const TTIModelResponse(this.content, this.metrics);
 }
 
+class VLMModelResponse {
+  final String content;
+  final VLMMetrics metrics;
+
+  const VLMModelResponse(this.content, this.metrics);
+}
+
 
 String getLibraryPath() {
   if (Platform.isWindows) {

@@ -29,9 +29,13 @@ class DropArea extends StatefulWidget {
 
 class _DropAreaState extends State<DropArea> {
   bool _showReleaseMessage = false;
+
   void handleDrop(DropDoneDetails details) {
-    if (details.files.isNotEmpty) {
-      widget.onUpload(details.files[0].path);
+    for (var file in details.files) {
+      String extension = file.path.split('.').last.toLowerCase(); // Extract file extension
+      if (widget.extensions?.contains(extension) ?? false) {
+        widget.onUpload(file.path);
+      }
     }
   }
 
@@ -53,51 +57,63 @@ class _DropAreaState extends State<DropArea> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = FluentTheme.of(context);
-
     return DropTarget(
-      onDragDone: (details) => handleDrop(details),
-      onDragExited: (val) => hideReleaseMessage(),
-      onDragEntered: (val) => showReleaseMessage(),
+      onDragDone: handleDrop,
+      onDragExited: (_) => hideReleaseMessage(),
+      onDragEntered: (_) => showReleaseMessage(),
 
-      child: Builder(
-        builder: (context) {
-          if (widget.showChild && !_showReleaseMessage) {
-            return widget.child ?? Container();
-          }
+      child:
+      Padding(
+        padding: const EdgeInsets.all(20),
+        child: Center(
+        child: SizedBox(
+          height: 310,
+          child: Builder(
+            builder: (context) {
+              if (widget.showChild && !_showReleaseMessage) {
+                // If we have a child and aren't showing the drop message, display it.
+                return widget.child ?? const SizedBox.shrink();
+              }
 
-          final String text = _showReleaseMessage
-            ? "Release to drop media"
-            : "Drag and drop ${widget.type} here for testing";
+              final theme = FluentTheme.of(context);
+              final String text = _showReleaseMessage
+                  ? "Release to drop media"
+                  : "Drag and drop ${widget.type} here for testing";
 
-
-          return Center(
-            child: SizedBox(
-              height: 310,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                // spacing: 10,
                 children: [
-                  Text(text, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500)),
-                  (theme.brightness.isDark
-                    ? SvgPicture.asset('images/drop.svg')
-                    : SvgPicture.asset('images/drop_light.svg')
+                  // Top text
+                  Text(
+                    text,
+                    style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+                    textAlign: TextAlign.center,
                   ),
-                  Builder(
-                    builder: (context) {
-                      if (widget.extensions == null) {
-                        return Container();
-                      }
-                      return Text(widget.extensions!.join(", "));
-                    }
-                  )
-                ],
-              ),
-            ),
-          );
-        }
-      )
-    );
 
+                  // SVG scales to available space in the column
+                  Expanded(
+                    // FittedBox automatically scales its child to fit the parent's constraints
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: theme.brightness.isDark
+                          ? SvgPicture.asset('images/drop.svg')
+                          : SvgPicture.asset('images/drop_light.svg'),
+                    ),
+                  ),
+
+                  // Optional file extension text at the bottom
+                  if (widget.extensions != null)
+                    Text(widget.extensions!.join(", "))
+                  else
+                    const SizedBox.shrink(),
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    )
+    );
   }
 }

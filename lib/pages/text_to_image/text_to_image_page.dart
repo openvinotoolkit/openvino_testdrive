@@ -4,8 +4,8 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:inference/pages/text_to_image/live_inference_pane.dart';
-import 'package:inference/pages/text_to_image/providers/text_to_image_inference_provider.dart';
+import 'package:inference/pages/text_to_image/playground.dart';
+import 'package:inference/providers/text_to_image_inference_provider.dart';
 import 'package:inference/pages/text_to_image/performance_metrics_pane.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
@@ -35,7 +35,6 @@ class _TextToImagePageState extends State<TextToImagePage> {
     );
     final textColor = theme.typography.body?.color ?? Colors.black;
 
-    const inferencePane = TTILiveInferencePane();
     const metricsPane = TTIPerformanceMetricsPane();
     return ChangeNotifierProxyProvider<PreferenceProvider, TextToImageInferenceProvider>(
       lazy: false,
@@ -93,7 +92,7 @@ class _TextToImagePageState extends State<TextToImagePage> {
                       width: 15,
                     ),
                     title: const Text("Live Inference"),
-                    body: inferencePane,
+                    body: TTIPlayground(project: widget.project),
                   ),
                   PaneItem(
                     icon: SvgPicture.asset("images/stats.svg",

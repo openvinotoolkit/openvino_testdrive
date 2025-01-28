@@ -32,6 +32,13 @@ cc_library(
 )
 
 cc_library(
+    name = "vlm_metrics",
+    hdrs = [
+        "vlm_metrics.h",
+    ],
+)
+
+cc_library(
     name = "utils",
     srcs = [
         "utils.cc",
@@ -42,6 +49,7 @@ cc_library(
     deps = [
         ":metrics",
         ":tti_metrics",
+        ":vlm_metrics",
         "//third_party:openvino",
     ],
 )

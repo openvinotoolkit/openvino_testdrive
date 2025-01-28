@@ -30,3 +30,18 @@ Metrics convertToMetricsStruct(ov::genai::PerfMetrics m) {
         int(m.num_input_tokens)
     };
 }
+
+VLMMetrics convertToVLMMetricsStruct(ov::genai::PerfMetrics m) {
+    return VLMMetrics{
+        nan_safe(m.get_load_time()),
+        nan_safe(m.get_generate_duration().mean),
+        nan_safe(m.get_tokenization_duration().mean),
+        nan_safe(m.get_detokenization_duration().mean),
+        nan_safe(m.get_ttft().mean),
+        nan_safe(m.get_tpot().mean),
+        nan_safe(m.get_throughput().mean),
+        int(m.num_generated_tokens),
+        int(m.num_input_tokens)
+    };
+}
+

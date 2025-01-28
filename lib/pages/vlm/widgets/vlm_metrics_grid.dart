@@ -8,10 +8,10 @@ import 'package:inference/widgets/metrics_card.dart';
 import 'package:intl/intl.dart';
 
 
-class TTIMetricsGrid extends StatelessWidget {
-  final TTIMetrics metrics;
+class VLMMetricsGrid extends StatelessWidget {
+  final VLMMetrics metrics;
 
-  const TTIMetricsGrid({super.key, required this.metrics});
+  const VLMMetricsGrid({super.key, required this.metrics});
 
   @override
   Widget build(BuildContext context) {
