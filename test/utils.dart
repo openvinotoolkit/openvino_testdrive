@@ -3,27 +3,37 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'dart:io';
+import 'dart:math';
 
-import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
 class FakePathProviderPlatform extends PathProviderPlatform {
+  late String applicationSupportPath;
+
+  FakePathProviderPlatform({String? appDirSuffix}) {
+    if (appDirSuffix != null) {
+      applicationSupportPath = 'com.openvino.console.TestDir_$appDirSuffix';
+    } else {
+      final randomSuffix = (Random().nextInt(90000000) + 10000000).toString();
+      applicationSupportPath = 'com.openvino.console.TestDir_$randomSuffix';
+    }
+  }
+
   @override
   Future<String?> getApplicationSupportPath() async {
-    const path = 'com.openvino.console.TestDir';
-    final fullPath = '${Directory.systemTemp.path}/$path';
+    final fullPath = '${Directory.systemTemp.path}/$applicationSupportPath';
     final directory = Directory(fullPath);
     if (!(await directory.exists())) {
       await directory.create(recursive: true);
     }
     return fullPath;
   }
-}
 
-Future<void> deleteConfigFile() async {
-  final directory = await getApplicationSupportDirectory();
-  final file = File('${directory.path}/config.json');
-  if (await file.exists()) {
-    await file.delete();
+  deleteAppDir() async {
+    final fullPath = '${Directory.systemTemp.path}/$applicationSupportPath';
+    final directory = Directory(fullPath);
+    if (await directory.exists()) {
+      await directory.delete(recursive: true);
+    }
   }
 }

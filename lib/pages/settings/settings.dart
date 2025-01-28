@@ -121,10 +121,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       const SizedBox(height: 8),
                       ToggleSwitch(
                         checked: Config.proxyEnabled,
-                        onChanged: (value) {
-                          setState(() async{
-                            await Config.setProxyEnabled(value);
-                          });
+                        onChanged: (value) async {
+                          await Config.setProxyEnabled(value);
+                          setState(() { });
                         },
                       ),
                       const SizedBox(height: 8),
@@ -135,6 +134,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           placeholder: '<username>:<password>@<proxy>:<port>',
                           onChanged: (value) async {
                             Config.setProxy(value);
+                            setState(() { });
                           },
                         ),
                       ),

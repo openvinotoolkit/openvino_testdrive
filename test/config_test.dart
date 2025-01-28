@@ -6,6 +6,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inference/config.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
 
 import 'mocks.dart';
@@ -14,16 +15,24 @@ import 'utils.dart';
 void main() {
   late MockEnvvars envvars;
 
+
   setUpAll(() {
     envvars = MockEnvvars();
+  });
+
+  setUp(() {
     PathProviderPlatform.instance = FakePathProviderPlatform();
   });
 
-  setUp(() async {
-    await deleteConfigFile();
+  tearDown(() async {
+    if (PathProviderPlatform.instance is FakePathProviderPlatform) {
+      await (PathProviderPlatform.instance as FakePathProviderPlatform).deleteAppDir();
+    }
+    Config.reset();
   });
 
   test('Config proxy settings', () async {
+    print(await getApplicationSupportDirectory());
     await Config.setProxy('http://proxy.example.com:8080');
     expect(Config.proxy, 'http://proxy.example.com:8080');
 
@@ -38,11 +47,11 @@ void main() {
     await Config.setThemeMode(ThemeMode.dark);
     expect(Config.themeMode, ThemeMode.dark);
 
-    await Config.setThemeMode(ThemeMode.light);
-    expect(Config.themeMode, ThemeMode.light);
-
     await Config.setThemeMode(ThemeMode.system);
     expect(Config.themeMode, ThemeMode.system);
+
+    await Config.setThemeMode(ThemeMode.light);
+    expect(Config.themeMode, ThemeMode.light);
   });
 
   test('Config load and save', () async {

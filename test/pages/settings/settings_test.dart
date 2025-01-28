@@ -14,12 +14,16 @@ import '../../utils.dart';
 
 
 void main() {
-  setUpAll(() {
+
+  setUp(() {
     PathProviderPlatform.instance = FakePathProviderPlatform();
   });
 
-  setUp(() async {
-    await deleteConfigFile();
+  tearDown(() async {
+    if (PathProviderPlatform.instance is FakePathProviderPlatform) {
+      await (PathProviderPlatform.instance as FakePathProviderPlatform).deleteAppDir();
+    }
+    Config.reset();
   });
 
   testWidgets('SettingsPage displays and updates theme mode', (WidgetTester tester) async {

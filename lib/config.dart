@@ -44,6 +44,14 @@ class Config {
     await _save('mode', value.index);
   }
 
+  static void reset() {
+    hints = Hints();
+    _proxy = '';
+    _proxyEnabled = false;
+    _mode = ThemeMode.system;
+    envvars = Envvars();
+  }
+
   static Future<String> _getProxy() async {
     final dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 10)));
     dio.httpClientAdapter = IOHttpClientAdapter(
