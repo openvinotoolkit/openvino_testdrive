@@ -3,7 +3,6 @@
 // SPDX-License-Identifier: Apache-2.0
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/config.dart';
 import 'package:inference/langchain/object_box/object_box.dart';
@@ -12,31 +11,17 @@ import 'package:inference/router.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
-import 'package:inference/public_models.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
 const String title = 'OpenVINO TestDrive';
 
-void testConnection() async {
-  final dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 10)));
-
-  try {
-    await dio.get(collections[0].path);
-  } on DioException catch(ex) {
-    if (ex.type == DioExceptionType.connectionError) {
-      // Perhaps proxy issue, disable proxy in future requests.
-      Config.proxyDirect = true;
-    }
-  }
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  testConnection();
   await windowManager.ensureInitialized();
   await ObjectBox.create();
-
+  await Config.loadFromFile();
   WindowOptions windowOptions = WindowOptions(
     size: const Size(1400, 1024),
     center: true,

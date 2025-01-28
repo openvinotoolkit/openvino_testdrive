@@ -13,6 +13,7 @@ import 'package:inference/pages/knowledge_base/knowledge_base.dart';
 import 'package:inference/pages/models/models.dart';
 import 'package:inference/project.dart';
 import 'package:inference/pages/models/inference.dart';
+import 'package:inference/pages/settings/settings.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -27,6 +28,7 @@ final router = GoRouter(navigatorKey: rootNavigatorKey,
       ),
       routes: [
         GoRoute(path: '/home', builder: (context, state) => const HomePage()),
+        GoRoute(path: '/settings', builder: (context, state) => const SettingsPage()),
         GoRoute(path: '/models', builder: (context, state) => const ModelsPage()),
         GoRoute(path: '/models/import', builder: (context, state) => const ImportPage()),
         GoRoute(path: '/models/download', builder: (context, state) => DownloadPage(project: state.extra as PublicProject)),
