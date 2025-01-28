@@ -72,6 +72,7 @@ dependencies:
   window_manager: ^0.4.3
   jinja: ^0.6.0
   docx_to_text: ^1.0.1
+  dart_pdf_reader: ^2.1.0
 
 dev_dependencies:
   flutter_test:

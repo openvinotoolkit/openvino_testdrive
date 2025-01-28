@@ -34,7 +34,7 @@ class _DropAreaState extends State<DropArea> {
   void handleDrop(DropDoneDetails details) {
     widget.onUpload(
       details.files
-        .where((file) => widget.extensions?.contains(extension(file.path, 1)) ?? false)
+        .where((file) => widget.extensions?.contains(extension(file.path, 1)) ?? true)
         .map((f) => f.path)
         .toList()
     );

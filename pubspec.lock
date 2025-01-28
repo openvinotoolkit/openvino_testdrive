@@ -126,6 +126,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  charset:
+    dependency: transitive
+    description:
+      name: charset
+      sha256: "27802032a581e01ac565904ece8c8962564b1070690794f0072f6865958ce8b9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   checked_yaml:
     dependency: transitive
     description:
@@ -222,6 +230,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  dart_pdf_reader:
+    dependency: "direct main"
+    description:
+      name: dart_pdf_reader
+      sha256: "0fb933d8f3e216c8492502da290fcb1713beb5c1c550af9e464a7eba00f6c0bb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   dart_style:
     dependency: transitive
     description:

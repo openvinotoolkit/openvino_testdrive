@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import 'package:inference/interop/pdf_extractor.dart';
+import 'package:inference/scratch.dart';
 import 'package:langchain/langchain.dart';
 import 'package:uuid/uuid.dart';
 
@@ -16,7 +16,7 @@ class PdfLoader extends BaseDocumentLoader {
   Stream<Document> lazyLoad() async* {
     const uuid = Uuid();
 
-    final text = await getTextFromPdf(path);
+    final text = await PdfToTextParser.convertPdfToText(path);
     for (final content in splitter.splitText(text)) {
       yield Document(
         id: uuid.v4().toString(),
