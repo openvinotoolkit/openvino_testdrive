@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import 'package:inference/scratch.dart';
+import 'package:inference/utils/pdf_parser.dart';
 import 'package:langchain/langchain.dart';
 import 'package:uuid/uuid.dart';
 

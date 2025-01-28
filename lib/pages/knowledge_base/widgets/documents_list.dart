@@ -5,7 +5,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dart_pdf_reader/dart_pdf_reader.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/sentence_transformer.dart';
