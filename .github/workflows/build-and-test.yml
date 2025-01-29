@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, windows-latest, macos-latest]
+        os: [ubuntu-22.04, macos-latest]
     uses: ./.github/workflows/build-ui.yml
     with:
       os: ${{ matrix.os }}
@@ -44,6 +44,7 @@ jobs:
           if-no-files-found: error
 
   build-windows-bindings:
+    if: false
     permissions:
       contents: write
     uses: ./.github/workflows/build-windows-bindings.yml
@@ -59,7 +60,7 @@ jobs:
     needs: [ build-linux-bindings, build-windows-bindings, build-macos-bindings, build-ui ]
     strategy:
       matrix:
-        os: [linux, windows, macos]
+        os: [linux, macos]
     steps:
       - uses: actions/checkout@v4
 
