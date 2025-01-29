@@ -43,6 +43,12 @@ jobs:
         run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Enable build
         run: flutter config --enable-${{env.OS_NAME}}-desktop
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          path: |
+            build
+          key: ${{ runner.os }}-flutter
       - name: Build artifacts
         run: flutter build ${{env.OS_NAME}} --release
         env:

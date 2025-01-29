@@ -2,6 +2,11 @@ name: Build MacOS Bindings
 
 on:
   workflow_call:
+    inputs:
+      OPENVINO_VERSION:
+        required: true
+        description: 'The version of OpenVINO to use'
+        type: string
 
 jobs:
   build-macos-bindings:
@@ -19,21 +24,54 @@ jobs:
           -o /tmp/openvino.tar.gz
           sudo mkdir /opt/intel
           sudo tar -xvf /tmp/openvino.tar.gz -C /opt/intel
-          sudo mv /opt/intel/openvino_genai_macos_12_6_2024.6.0.0_arm64 /opt/intel/openvino
+          sudo mv /opt/intel/openvino_genai_macos_12_6_${{ inputs.OPENVINO_VERSION }}.0.0_arm64 /opt/intel/openvino
           rm /tmp/openvino.tar.gz
           ls /opt/intel/openvino
 
+      - name: Install OpenVINO dependencies
+        run: |
+          sudo /bin/bash /opt/intel/openvino/install_dependencies/install_openvino_dependencies.sh -y
+
+      - name: Cache OpenCV build
+        id: cache-opencv
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/include/opencv4
+            /usr/local/lib/libopencv_*
+          key: ${{ runner.os }}-opencv-${{ hashFiles('openvino_bindings/scripts/setup_opencv.sh') }}
+
       - name: Install OpenCV
+        if: steps.cache-opencv.outputs.cache-hit != 'true'
         run: |
           sudo /bin/bash openvino_bindings/scripts/setup_opencv.sh
 
+      - name: Cache ffmpeg
+        id: cache-ffmpeg
+        uses: actions/cache@v4
+        with:
+          path: |
+            /opt/ffmpeg
+          key: ${{ runner.os }}-ffmpeg
+
       - name: Install ffmpeg
+        if: steps.cache-ffmpeg.outputs.cache-hit != 'true'
         run: |
           sudo /bin/bash openvino_bindings/scripts/setup_ffmpeg.sh
 
       - name: Install numpy
         run: |
           brew install numpy
+
+      - name: Cache Bazel build outputs
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/bazel
+            openvino_bindings/bazel-out
+          key: ${{ runner.os }}-bazel-${{ hashFiles('**/*BUILD', '**/*WORKSPACE') }}
+          restore-keys: |
+            ${{ runner.os }}-bazel-
 
       - name: Build bindings
         run: |
