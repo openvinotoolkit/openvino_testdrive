@@ -18,6 +18,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Need to wrap the tar command to fix permission denied error (https://github.com/actions/cache/issues/629#issuecomment-1189184648)
+      - name: "Install gtar wrapper"
+        run: |
+          sudo mv /usr/local/bin/gtar /usr/local/bin/gtar.orig
+          sudo cp macosx/gtar /usr/local/bin/gtar
+          sudo chmod +x /usr/local/bin/gtar
+
       - name: Install OpenVINO
         run: |
           curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2024.6/macos/openvino_genai_macos_12_6_2024.6.0.0_arm64.tar.gz \
@@ -30,7 +37,7 @@ jobs:
 
       - name: Cache OpenCV build
         id: cache-opencv
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             /usr/local/include/opencv4
@@ -44,7 +51,7 @@ jobs:
 
       - name: Cache ffmpeg
         id: cache-ffmpeg
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             /opt/ffmpeg
@@ -60,7 +67,7 @@ jobs:
           brew install numpy
 
       - name: Cache Bazel
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             /private/var/tmp/_bazel_runner/
