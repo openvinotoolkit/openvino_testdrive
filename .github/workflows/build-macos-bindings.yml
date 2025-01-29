@@ -22,7 +22,7 @@ jobs:
       - name: "Install gtar wrapper"
         run: |
           sudo mv /opt/homebrew/bin/gtar /opt/homebrew/bin/gtar.orig
-          sudo echo '#!/bin/bash sudo /opt/homebrew/bin/gtar.orig "$@"' | sudo tee /opt/homebrew/bin/gtar
+          echo '#!/bin/bash\nsudo /opt/homebrew/bin/gtar.orig "$@"' | sudo tee /opt/homebrew/bin/gtar
           sudo chmod +x /opt/homebrew/bin/gtar
 
       - name: Install OpenVINO
@@ -86,3 +86,7 @@ jobs:
           name: "macos_bindings.tgz"
           path: "openvino_bindings/bazel-bin/macos_bindings.tgz"
           if-no-files-found: error
+
+      - name: Restore gtar
+        run: |
+          sudo mv /opt/homebrew/bin/gtar.orig /opt/homebrew/bin/gtar
