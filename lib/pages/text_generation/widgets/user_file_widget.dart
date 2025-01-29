@@ -21,7 +21,7 @@ class UserFileWidget extends StatelessWidget {
       return Tooltip(
         message: file.error,
         style: const TooltipThemeData(
-          waitDuration: Duration(),
+          waitDuration: Duration.zero,
         ),
         child: buildWidget(context),
       );
