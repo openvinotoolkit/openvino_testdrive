@@ -54,9 +54,9 @@ class _TreeState extends State<Tree> {
                     padding: const EdgeInsets.only(left: 8, top: 18, bottom: 18),
                     child: Button(
                       onPressed: data.addGroup,
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             child: Icon(FluentIcons.fabric_new_folder, size: 18),

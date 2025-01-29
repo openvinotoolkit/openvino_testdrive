@@ -188,13 +188,13 @@ class _DocumentsListState extends State<DocumentsList> {
                           ),
                           FilledButton(
                             onPressed: selectDocuments,
-                            child: Row(
+                            child: const Row(
                               children: [
-                                const Padding(
-                                  padding: const EdgeInsets.only(right: 8),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 8),
                                   child: Icon(FluentIcons.upload),
                                 ),
-                                const Text("Upload"),
+                                Text("Upload"),
                               ],
                             ),
                           ),

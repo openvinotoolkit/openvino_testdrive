@@ -5,7 +5,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/langchain/object_box/embedding_entity.dart';
 import 'package:inference/langchain/object_box/object_box.dart';
-import 'package:inference/objectbox.g.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/widgets/controls/no_outline_button.dart';
 import 'package:provider/provider.dart';

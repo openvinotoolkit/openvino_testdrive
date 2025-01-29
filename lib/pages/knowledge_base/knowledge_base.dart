@@ -115,11 +115,11 @@ class KnowledgeBase extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SvgPicture.asset('images/slide_search.svg'),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: const Text(
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
                                   "No knowledge bases",
-                                  style: const TextStyle(fontSize: 20)),
+                                  style: TextStyle(fontSize: 20)),
                               ),
                               const Text("Click 'Create new' to start", textAlign: TextAlign.center),
                             ],
