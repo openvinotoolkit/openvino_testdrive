@@ -10,12 +10,12 @@ cc_library(
         "lib/libavutil.so.*",
         "lib/libswresample.so.*",
     ]),
-    linkopts = [
-        "-lavcodec",
-        "-lavformat",
-        "-lavutil",
-        "-lswresample",
-    ],
+    linkopts = glob([
+        "-l:libavcodec.so.*",
+        "-l:libavformat.so.*",
+        "-l:libavutil.so.*",
+        "-l:libswresample.so.*",
+    ]),
     includes = [
         "include",
     ],
