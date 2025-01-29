@@ -28,10 +28,6 @@ jobs:
           rm /tmp/openvino.tar.gz
           ls /opt/intel/openvino
 
-      - name: Install OpenVINO dependencies
-        run: |
-          sudo /bin/bash /opt/intel/openvino/install_dependencies/install_openvino_dependencies.sh -y
-
       - name: Cache OpenCV build
         id: cache-opencv
         uses: actions/cache@v4
