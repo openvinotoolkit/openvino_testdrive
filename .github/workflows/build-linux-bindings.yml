@@ -46,9 +46,9 @@ jobs:
         id: cache-ffmpeg
         uses: actions/cache@v4
         with:
-        path: |
-            /opt/ffmpeg
-        key: ${{ runner.os }}-ffmpeg
+          path: |
+              /opt/ffmpeg
+          key: ${{ runner.os }}-ffmpeg
 
       - name: Install FFmpeg
         run: |
