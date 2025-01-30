@@ -82,7 +82,7 @@ jobs:
 
       - name: Build bindings
         run: |
-          sudo bazel build //:linux_bindings
+          bazel build //:linux_bindings
         working-directory: openvino_bindings
 
       - name: Upload bindings to artifacts
