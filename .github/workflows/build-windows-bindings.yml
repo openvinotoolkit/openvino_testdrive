@@ -80,6 +80,7 @@ jobs:
         with:
           path: |
             C:\vcpkg
+            openvino_bindings/third_party/vcpkg_installed
           key: ${{ runner.os }}-vcpkg-${{ hashFiles('openvino_bindings/third_party/vcpkg.json') }}
           restore-keys: |
             ${{ runner.os }}-vcpkg-
