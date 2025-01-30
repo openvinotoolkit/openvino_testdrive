@@ -51,6 +51,7 @@ jobs:
           key: ${{ runner.os }}-ffmpeg
 
       - name: Install FFmpeg
+        if: steps.cache-ffmpeg.outputs.cache-hit != 'true'
         run: |
           sudo /bin/bash openvino_bindings/scripts/setup_ffmpeg.sh
 
@@ -64,6 +65,7 @@ jobs:
           key: ${{ runner.os }}-opencv-${{ hashFiles('openvino_bindings/scripts/setup_opencv.sh') }}
 
       - name: Install OpenCV
+        if: steps.cache-opencv.outputs.cache-hit != 'true'
         run: |
           sudo /bin/bash openvino_bindings/scripts/setup_opencv.sh
 
