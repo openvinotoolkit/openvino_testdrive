@@ -18,13 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # # Need to wrap the tar command to fix permission denied error in cache action (https://github.com/actions/cache/issues/629#issuecomment-1189184648)
-      # - name: "Install gtar wrapper"
-      #   run: |
-      #     sudo mv /opt/homebrew/bin/gtar /opt/homebrew/bin/gtar.orig
-      #     echo '#!/bin/bash\nsudo /opt/homebrew/bin/gtar.orig "$@"' | sudo tee /opt/homebrew/bin/gtar
-      #     sudo chmod +x /opt/homebrew/bin/gtar
-
+      # NOTE: cache action executes without sudo, so we need to change ownership (https://github.com/actions/cache/issues/845#issuecomment-1252594999)
       - name: Change ownership
         run: |
           sudo chown -R $USER /usr/local /opt
@@ -37,7 +31,19 @@ jobs:
           sudo tar -xvf /tmp/openvino.tar.gz -C /opt/intel
           sudo mv /opt/intel/openvino_genai_macos_12_6_${{ inputs.OPENVINO_VERSION }}.0.0_arm64 /opt/intel/openvino
           rm /tmp/openvino.tar.gz
-          ls /opt/intel/openvino
+
+      - name: Cache ffmpeg
+        id: cache-ffmpeg
+        uses: actions/cache@v4
+        with:
+          path: |
+            /opt/ffmpeg
+          key: ${{ runner.os }}-ffmpeg
+
+      - name: Install ffmpeg
+        if: steps.cache-ffmpeg.outputs.cache-hit != 'true'
+        run: |
+          sudo /bin/bash openvino_bindings/scripts/setup_ffmpeg.sh
 
       - name: Cache OpenCV build
         id: cache-opencv
@@ -52,19 +58,6 @@ jobs:
         if: steps.cache-opencv.outputs.cache-hit != 'true'
         run: |
           sudo /bin/bash openvino_bindings/scripts/setup_opencv.sh
-
-      - name: Cache ffmpeg
-        id: cache-ffmpeg
-        uses: actions/cache@v4
-        with:
-          path: |
-            /opt/ffmpeg
-          key: ${{ runner.os }}-ffmpeg
-
-      - name: Install ffmpeg
-        if: steps.cache-ffmpeg.outputs.cache-hit != 'true'
-        run: |
-          sudo /bin/bash openvino_bindings/scripts/setup_ffmpeg.sh
 
       - name: Install numpy
         run: |
@@ -90,7 +83,3 @@ jobs:
           name: "macos_bindings.tgz"
           path: "openvino_bindings/bazel-bin/macos_bindings.tgz"
           if-no-files-found: error
-
-      # - name: Restore gtar
-      #   run: |
-      #     sudo mv /opt/homebrew/bin/gtar.orig /opt/homebrew/bin/gtar
