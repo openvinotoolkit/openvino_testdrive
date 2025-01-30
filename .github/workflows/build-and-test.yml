@@ -129,7 +129,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev libglu1-mesa xvfb
+        run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev libglu1-mesa xvfb libtiff5
 
       - name: Download OpenVINO bindings
         uses: actions/download-artifact@v4
