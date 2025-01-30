@@ -17,6 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # NOTE: cache action executes without sudo, so we need to change ownership (https://github.com/actions/cache/issues/845#issuecomment-1252594999)
+      - name: Change ownership
+        run: |
+          sudo chown -R $USER /usr/local
+
       - name: Install dependencies
         run: |
           sudo apt-get update && sudo apt-get install -y \
