@@ -74,8 +74,19 @@ jobs:
           start /wait opencv.exe -suppresslaunch  -y -gm2 -o"C:\"
         shell: cmd
 
+      - name: Cache vcpkg
+        uses: actions/cache@v4
+        id: cache-vcpkg
+        with:
+          path: |
+            C:\vcpkg
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('openvino_bindings/third_party/vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-
+
       # Step 9: Install vcpkg and ffmpeg
       - name: Install vcpkg and ffmpeg
+        if: steps.cache-vcpkg.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           if (!(Test-Path "C:\vcpkg")) { git clone https://github.com/microsoft/vcpkg.git C:\vcpkg }
@@ -98,12 +109,21 @@ jobs:
           C:/tools/msys64/msys2_shell.cmd -defterm -no-start -c "pacman -Sy --noconfirm git patch unzip"
         shell: bash
 
+      - name: Cache Bazel
+        uses: actions/cache@v4
+        with:
+          path: |
+            C:/users/runneradmin.runner/_bazel_runneradmin/
+          key: ${{ runner.os }}-bazel-${{ hashFiles('**/.bazelversion', '**/.bazelrc', '**/WORKSPACE', '**/WORKSPACE.bazel', '**/MODULE.bazel', '**/*BUILD') }}
+          restore-keys: |
+            ${{ runner.os }}-bazel-
+
       # Step 12: Build with Bazel
       - name: Build Windows Bindings with Bazel
+        working-directory: openvino_bindings
         env:
           PYTHON_BIN_PATH: "C:/hostedtoolcache/windows/Python/3.13.0/x64/python.exe"
         run: |
-          cd openvino_bindings
           bazel build -c opt :windows_bindings --action_env PYTHON_BIN_PATH="C:/hostedtoolcache/windows/Python/3.13.0/x64/python.exe"
         shell: bash
 

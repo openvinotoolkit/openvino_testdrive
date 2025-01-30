@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, macos-latest]
+        os: [ubuntu-22.04, windows-latest, macos-latest]
     uses: ./.github/workflows/build-ui.yml
     with:
       os: ${{ matrix.os }}
@@ -28,7 +28,6 @@ jobs:
       OPENVINO_VERSION: '2024.6'
 
   build-windows-bindings:
-    if: false
     permissions:
       contents: write
     uses: ./.github/workflows/build-windows-bindings.yml
@@ -46,7 +45,7 @@ jobs:
     needs: [ build-linux-bindings, build-windows-bindings, build-macos-bindings, build-ui ]
     strategy:
       matrix:
-        os: [linux, macos]
+        os: [linux, windows, macos]
     steps:
       - uses: actions/checkout@v4
 
@@ -156,6 +155,13 @@ jobs:
         run: |
           sudo Xvfb $DISPLAY -screen 0 1280x1024x24 > /dev/null 2>&1 &
           echo "Xvfb started"
+
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          path: |
+            build
+          key: ${{ runner.os }}-flutter
 
       - name: Run integration tests
         run: flutter test --coverage --no-pub integration_test -d linux
