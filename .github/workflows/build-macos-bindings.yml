@@ -91,6 +91,6 @@ jobs:
           path: "openvino_bindings/bazel-bin/macos_bindings.tgz"
           if-no-files-found: error
 
-      - name: Restore gtar
-        run: |
-          sudo mv /opt/homebrew/bin/gtar.orig /opt/homebrew/bin/gtar
+      # - name: Restore gtar
+      #   run: |
+      #     sudo mv /opt/homebrew/bin/gtar.orig /opt/homebrew/bin/gtar
