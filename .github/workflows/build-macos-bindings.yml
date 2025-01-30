@@ -18,12 +18,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Need to wrap the tar command to fix permission denied error in cache action (https://github.com/actions/cache/issues/629#issuecomment-1189184648)
-      - name: "Install gtar wrapper"
+      # # Need to wrap the tar command to fix permission denied error in cache action (https://github.com/actions/cache/issues/629#issuecomment-1189184648)
+      # - name: "Install gtar wrapper"
+      #   run: |
+      #     sudo mv /opt/homebrew/bin/gtar /opt/homebrew/bin/gtar.orig
+      #     echo '#!/bin/bash\nsudo /opt/homebrew/bin/gtar.orig "$@"' | sudo tee /opt/homebrew/bin/gtar
+      #     sudo chmod +x /opt/homebrew/bin/gtar
+
+      - name: Change ownership
         run: |
-          sudo mv /opt/homebrew/bin/gtar /opt/homebrew/bin/gtar.orig
-          echo '#!/bin/bash\nsudo /opt/homebrew/bin/gtar.orig "$@"' | sudo tee /opt/homebrew/bin/gtar
-          sudo chmod +x /opt/homebrew/bin/gtar
+          sudo chown -R $USER /usr/local /opt
 
       - name: Install OpenVINO
         run: |
