@@ -71,9 +71,19 @@ jobs:
         run: |
           sudo pip3 install numpy
 
+      - name: Cache Bazel
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/bazel
+          key: ${{ runner.os }}-bazel-${{ hashFiles('**/.bazelversion', '**/.bazelrc', '**/WORKSPACE', '**/WORKSPACE.bazel', '**/MODULE.bazel', '**/*BUILD') }}
+          restore-keys: |
+            ${{ runner.os }}-bazel-
+
       - name: Build bindings
         run: |
           sudo bazel build //:linux_bindings
+        working-directory: openvino_bindings
 
       - name: Upload bindings to artifacts
         uses: actions/upload-artifact@v4

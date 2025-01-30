@@ -68,7 +68,7 @@ jobs:
         with:
           path: |
             /private/var/tmp/_bazel_runner/
-          key: ${{ runner.os }}-bazel-${{ hashFiles('.bazelversion', '.bazelrc', 'WORKSPACE', 'WORKSPACE.bazel', 'MODULE.bazel', '**/*BUILD') }}
+          key: ${{ runner.os }}-bazel-${{ hashFiles('**/.bazelversion', '**/.bazelrc', '**/WORKSPACE', '**/WORKSPACE.bazel', '**/MODULE.bazel', '**/*BUILD') }}
           restore-keys: |
             ${{ runner.os }}-bazel-
 
