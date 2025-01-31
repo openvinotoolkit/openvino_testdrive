@@ -5,6 +5,14 @@
 import 'package:jinja/jinja.dart';
 import 'package:langchain/langchain.dart';
 
+const textGenerationTemplate = """
+{% for message in messages %}{%- if message['role'] == 'system' %}{{message['content']}}
+
+Question:
+{%- endif %}{% endfor %}
+{% for message in messages %}{%- if message['role'] == 'user' %}{{message['content']}}{%- endif %}{% endfor %}
+""";
+
 final class JinjaPromptTemplate extends BaseChatPromptTemplate {
   final Template jinjaTemplate;
 
@@ -19,7 +27,9 @@ final class JinjaPromptTemplate extends BaseChatPromptTemplate {
   });
 
   factory JinjaPromptTemplate.fromTemplateConfig(Map<String, dynamic> chatTemplateConfig, [Set<String> inputVariables = const {}]) {
-    final chatTemplate = chatTemplateConfig["chat_template"];
+    final chatTemplate = chatTemplateConfig.containsKey("chat_template")
+      ? chatTemplateConfig["chat_template"]
+      : textGenerationTemplate;
     final env = Environment();
     final template = env.fromString(chatTemplate);
 
@@ -46,10 +56,23 @@ final class JinjaPromptTemplate extends BaseChatPromptTemplate {
 
   @override
   PromptValue formatPrompt(final InputValues values) {
-    final messages =[
-      {"role": "system", "content": "Answer the question based on some info:\n ${values['context']}"},
-      {"role": "user", "content": values['question']},
-    ];
+    List<Map<String, dynamic>> messages = [];
+    if (values.containsKey('history')) {
+      for (final message in values['history']) {
+        if (message is AIChatMessage) {
+          messages.add({"role": "assistant", "content": message.contentAsString});
+        }
+        if (message is HumanChatMessage) {
+          messages.add({"role": "user", "content": message.contentAsString});
+        }
+      }
+    }
+    if (values.containsKey('context') && values['context'] != "") {
+      messages.add({"role": "system", "content": "Answer the question based on some info:\n ${values['context']}"});
+    }
+    if (values.containsKey('question')) {
+      messages.add({"role": "user", "content": values['question']});
+    }
 
     return PromptValue.string(jinjaTemplate.render(
       {

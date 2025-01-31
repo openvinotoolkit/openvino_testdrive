@@ -62,6 +62,8 @@ class TextInferenceProvider extends ChangeNotifier {
   String? get device => _device;
   Metrics? get metrics => _messages.lastOrNull?.metrics;
 
+  final memory = ConversationBufferMemory(returnMessages: true);
+
   final List<UserFile> _userFiles = [];
 
   Future<void> addUserFiles(List<UserFile> files ) async {
@@ -199,10 +201,11 @@ class TextInferenceProvider extends ChangeNotifier {
       stores.add(ObjectBoxStore(embeddings: embeddingsModel!, group: knowledgeGroup!));
     }
 
-    final chain = buildRAGChain(_inference!, embeddingsModel!, OpenVINOLLMOptions(temperature: temperature, topP: topP), stores);
+    final chain = buildRAGChain(_inference!, embeddingsModel!, OpenVINOLLMOptions(temperature: temperature, topP: topP), stores, memory);
     final input = await chain.documentChain.invoke({"question": message}) as Map;
-    print(input);
-    final docs = List<String>.from(input["docs"].map((Document doc) => doc.metadata["source"]).toSet());
+    final docs = input.containsKey("docs")
+      ? List<String>.from(input["docs"].map((Document doc) => doc.metadata["source"]).toSet())
+      : null;
 
     String modelOutput = "";
     Metrics? metrics;
@@ -215,6 +218,11 @@ class TextInferenceProvider extends ChangeNotifier {
       modelOutput += token;
       onToken(token);
     }
+
+    memory.saveContext(
+      inputValues: {'input': message},
+      outputValues: {'output': modelOutput},
+    );
 
     if (_messages.isNotEmpty) {
       _messages.add(Message(Speaker.assistant, modelOutput, metrics, DateTime.now(), sources: docs));
@@ -250,6 +258,7 @@ class TextInferenceProvider extends ChangeNotifier {
   void reset() {
     _inference?.forceStop();
     _inference?.clearHistory();
+    memory.clear();
     for (final file in _userFiles) {
       final ids = file.documents.map((p) => p.id).whereType<String>().toList();
       store?.delete(ids: ids);

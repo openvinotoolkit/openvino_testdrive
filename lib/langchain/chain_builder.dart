@@ -17,43 +17,33 @@ String combineDocuments(
     documents.map((final d) => d.pageContent).join(separator);
 
 
-RAGChain buildRAGChain(LLMInference llmInference, Embeddings embeddings, OpenVINOLLMOptions options, List<VectorStore> stores) {
+RAGChain buildRAGChain(LLMInference llmInference, Embeddings embeddings, OpenVINOLLMOptions options, List<VectorStore> stores, BaseChatMemory memory) {
   final retrievers = combineStores(stores);
+
+  final tokenizerConfig = jsonDecode(llmInference.getTokenizerConfig()) as Map<String, dynamic>;
 
   final retrievedDocs = Runnable.fromMap({
     'docs': Runnable.getItemFromMap('question') | retrievers,
     'question': Runnable.getItemFromMap('question'),
   });
 
-  if (stores.isEmpty) {
-    final model = OpenVINOLLM(llmInference, defaultOptions: options.copyWith(applyTemplate: true));
-    final answer = PromptTemplate.fromTemplate('{question}') | model;
-    return RAGChain(retrievedDocs, answer);
-  }
-
-
-  final tokenizerConfig = jsonDecode(llmInference.getTokenizerConfig()) as Map<String, dynamic>;
-
-  final hasChatTemplate = tokenizerConfig.containsKey("chat_template");
-
-  // if chat template, otherwise
-  final promptTemplate = hasChatTemplate
-    ? JinjaPromptTemplate.fromTemplateConfig(tokenizerConfig)
-    : ChatPromptTemplate.fromTemplate('''
-Answer the question based only on the following context without specifically naming that it's from that context:
-{context}
-
-Question: {question}
-''');
+  final promptTemplate = JinjaPromptTemplate.fromTemplateConfig(tokenizerConfig);
 
   final finalInputs = Runnable.fromMap({
     'context': Runnable.getItemFromMap<List<Document>>('docs') |
         Runnable.mapInput<List<Document>, String>(combineDocuments),
     'question': Runnable.getItemFromMap('question'),
+    'history': Runnable.getItemFromMap('question') | Runnable.mapInput((_) async {
+      final m = await memory.loadMemoryVariables();
+      return m['history'];
+    }),
   });
   final model = OpenVINOLLM(llmInference, defaultOptions: options.copyWith(applyTemplate: false));
 
   final answer = finalInputs | promptTemplate | model;
+
+  finalInputs.invoke({'docs': List<Document>.from([]), 'question': "What is the color of the sun?"}).then(print);
+
 
   return RAGChain(retrievedDocs, answer);
 }

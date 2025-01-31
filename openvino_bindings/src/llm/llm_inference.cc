@@ -30,9 +30,10 @@ ov::genai::DecodedResults LLMInference::prompt(std::string message, bool apply_t
     history.push_back({{"role", "user"}, {"content", message}});
     _stop = false;
 
-    auto prompt = (apply_template && has_chat_template()
-        ? pipe.get_tokenizer().apply_chat_template(history, true)
-        : message);
+    //auto prompt = (apply_template && has_chat_template()
+    //    ? pipe.get_tokenizer().apply_chat_template(history, true)
+    //    : message);
+    auto prompt = message;
 
     ov::genai::GenerationConfig config;
     config.max_new_tokens = 1000;
