@@ -70,6 +70,7 @@ void main() {
     );
 
     await tester.tap(find.byType(IconButton));
+    await tester.pumpAndSettle();
 
     expect(callbackCalled, true);
   });
