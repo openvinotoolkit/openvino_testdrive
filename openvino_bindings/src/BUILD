@@ -5,6 +5,7 @@ cc_library(
     deps = [
         "@nlohmann_json//:json",
         "//third_party:opencv",
+        "//src/utils:input_devices",
         "//src/utils:status",
         "//src/utils:utils",
         "//src/image:image_inference",

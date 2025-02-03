@@ -20,6 +20,7 @@
 #include "src/vlm/vlm_inference.h"
 #include "src/utils/errors.h"
 #include "src/utils/utils.h"
+#include "src/utils/input_devices.h"
 #include "src/utils/status.h"
 #include "src/image/json_serialization.h"
 #include "src/image/csv_serialization.h"
@@ -499,6 +500,28 @@ StatusOrDevices* getAvailableDevices() {
     }
 
     return new StatusOrDevices{OkStatus, "", devices, (int)device_ids.size() + 1};
+}
+
+StatusOrInputDevices* getAvailableCameraDevices() {
+    auto cameras = list_camera_devices();
+    InputDevice* devices = new InputDevice[cameras.size()];
+    int i = 0;
+    for (auto camera: cameras) {
+        devices[i] = { (int)camera.first, strdup(camera.second.c_str()) };
+        i++;
+    }
+
+    return new StatusOrInputDevices{OkStatus, "", devices, (int)cameras.size()};
+}
+
+StatusOrString* pdfExtractText(const char* pdf_path) {
+    try {
+        auto output = sentence_extractor::extract_text_from_pdf(pdf_path);
+        return new StatusOrString{OkStatus, "", strdup(output.c_str())};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrString{except->status, except->message};
+    }
 }
 
 Status* handle_exceptions() {

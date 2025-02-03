@@ -37,6 +37,11 @@ typedef struct {
 } Device;
 
 typedef struct {
+    int id;
+    const char* name;
+} InputDevice;
+
+typedef struct {
   float start_ts;
   float end_ts;
   const char* text;
@@ -138,6 +143,13 @@ typedef struct {
     int size;
 } StatusOrDevices;
 
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
+    InputDevice* value;
+    int size;
+} StatusOrInputDevices;
+
 typedef void (*ImageInferenceCallbackFunction)(StatusOrString*);
 typedef void (*LLMInferenceCallbackFunction)(StatusOrString*);
 typedef void (*VLMInferenceCallbackFunction)(StatusOrString*);
@@ -196,6 +208,8 @@ EXPORT StatusOrInt* speechToTextVideoDuration(CSpeechToText instance);
 EXPORT StatusOrWhisperModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language);
 
 EXPORT StatusOrDevices* getAvailableDevices();
+EXPORT StatusOrInputDevices* getAvailableCameraDevices();
+
 Status* handle_exceptions();
 
 //extern "C" void report_rss();

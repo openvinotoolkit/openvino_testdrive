@@ -18,6 +18,20 @@ cc_library(
 )
 
 cc_library(
+    name = "input_devices",
+    hdrs = ["input_devices.h"],
+    deps = [
+         ":errors",
+    ],
+    linkopts = [
+        "mfplat.lib",
+        "mf.lib",
+        "mfuuid.lib",
+        "ole32.lib",
+    ],
+)
+
+cc_library(
     name = "metrics",
     hdrs = [
         "metrics.h",
