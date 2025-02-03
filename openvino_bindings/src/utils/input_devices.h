@@ -74,8 +74,29 @@ std::map<size_t, std::string> list_camera_devices() {
     return {};
 }
 #elif __linux__
+#include <sys/ioctl.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <linux/videodev2.h>
+
 std::map<size_t, std::string> list_camera_devices() {
-    return {};
+    std::map<size_t, std::string> cameras = {};
+
+    for (int i = 0; i < 10; ++i) {  // Check up to 10 devices
+        std::string devName = "/dev/video" + std::to_string(i);
+        std::cout << devName << std::endl;
+        int fd = open(devName.c_str(), O_RDONLY);
+        if (fd == -1) continue;  // Skip if device doesn't exist
+
+        struct v4l2_capability cap;
+        if (ioctl(fd, VIDIOC_QUERYCAP, &cap) == 0) {
+            if (cap.capabilities & V4L2_CAP_VIDEO_CAPTURE) {
+                cameras.insert({i, std::string(reinterpret_cast<char*>(cap.card))});
+            }
+        }
+        close(fd);
+    }
+    return cameras;
 }
 #else
 std::map<size_t, std::string> list_camera_devices() {

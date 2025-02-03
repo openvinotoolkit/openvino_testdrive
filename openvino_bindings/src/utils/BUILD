@@ -23,12 +23,11 @@ cc_library(
     deps = [
          ":errors",
     ],
-    linkopts = [
-        "mfplat.lib",
-        "mf.lib",
-        "mfuuid.lib",
-        "ole32.lib",
-    ],
+    linkopts = select({
+        "@platforms//os:windows": ["mfplat.lib", "mf.lib", "mfuuid.lib", "ole32.lib"],
+        "@platforms//os:linux": [],  # No extra libraries needed for V4L2
+        "@platforms//os:macos": ["-framework AVFoundation", "-framework Foundation"],
+    }),
 )
 
 cc_library(

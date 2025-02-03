@@ -514,16 +514,6 @@ StatusOrInputDevices* getAvailableCameraDevices() {
     return new StatusOrInputDevices{OkStatus, "", devices, (int)cameras.size()};
 }
 
-StatusOrString* pdfExtractText(const char* pdf_path) {
-    try {
-        auto output = sentence_extractor::extract_text_from_pdf(pdf_path);
-        return new StatusOrString{OkStatus, "", strdup(output.c_str())};
-    } catch (...) {
-        auto except = handle_exceptions();
-        return new StatusOrString{except->status, except->message};
-    }
-}
-
 Status* handle_exceptions() {
     try {
         throw;
