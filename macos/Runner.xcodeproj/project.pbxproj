@@ -21,77 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		0C42C75B2CE386520079F72B /* libopenvino_tensorflow_frontend.2500.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C7582CE386520079F72B /* libopenvino_tensorflow_frontend.2500.dylib */; };
-		0C42C75C2CE386520079F72B /* libopenvino_tensorflow_lite_frontend.2500.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C7592CE386520079F72B /* libopenvino_tensorflow_lite_frontend.2500.dylib */; };
-		0C42C75D2CE386520079F72B /* libopenvino_paddle_frontend.2500.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C7562CE386520079F72B /* libopenvino_paddle_frontend.2500.dylib */; };
-		0C42C75E2CE386520079F72B /* libopenvino_onnx_frontend.2500.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C7552CE386520079F72B /* libopenvino_onnx_frontend.2500.dylib */; };
-		0C42C75F2CE386520079F72B /* libopenvino_c.2500.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C7522CE386520079F72B /* libopenvino_c.2500.dylib */; };
-		0C42C7602CE386520079F72B /* libopenvino_genai.2500.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C7532CE386520079F72B /* libopenvino_genai.2500.dylib */; };
-		0C42C7612CE386520079F72B /* libopenvino.2500.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C75A2CE386520079F72B /* libopenvino.2500.dylib */; };
-		0C42C7622CE386520079F72B /* libopenvino_ir_frontend.2500.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C7542CE386520079F72B /* libopenvino_ir_frontend.2500.dylib */; };
-		0C42C7632CE386520079F72B /* libopenvino_pytorch_frontend.2500.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C42C7572CE386520079F72B /* libopenvino_pytorch_frontend.2500.dylib */; };
-		0C42C7642CE386680079F72B /* libopenvino_genai.2500.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C42C7532CE386520079F72B /* libopenvino_genai.2500.dylib */; };
-		0C42C7652CE386680079F72B /* libopenvino_ir_frontend.2500.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C42C7542CE386520079F72B /* libopenvino_ir_frontend.2500.dylib */; };
-		0C42C7662CE386680079F72B /* libopenvino_onnx_frontend.2500.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C42C7552CE386520079F72B /* libopenvino_onnx_frontend.2500.dylib */; };
-		0C42C7672CE386680079F72B /* libopenvino_paddle_frontend.2500.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C42C7562CE386520079F72B /* libopenvino_paddle_frontend.2500.dylib */; };
-		0C42C7682CE386680079F72B /* libopenvino_pytorch_frontend.2500.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C42C7572CE386520079F72B /* libopenvino_pytorch_frontend.2500.dylib */; };
-		0C42C7692CE386680079F72B /* libopenvino_tensorflow_frontend.2500.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C42C7582CE386520079F72B /* libopenvino_tensorflow_frontend.2500.dylib */; };
-		0C42C76A2CE386680079F72B /* libopenvino_tensorflow_lite_frontend.2500.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C42C7592CE386520079F72B /* libopenvino_tensorflow_lite_frontend.2500.dylib */; };
-		0C42C76B2CE388D90079F72B /* libopenvino_c.2500.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C42C7522CE386520079F72B /* libopenvino_c.2500.dylib */; };
-		0C42C76C2CE388DC0079F72B /* libopenvino.2500.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C42C75A2CE386520079F72B /* libopenvino.2500.dylib */; };
-		0C4E1F6C2CECC22800124339 /* libavformat.60.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4E1F692CECC22800124339 /* libavformat.60.dylib */; };
-		0C4E1F6D2CECC22800124339 /* libavutil.58.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4E1F6A2CECC22800124339 /* libavutil.58.dylib */; };
-		0C4E1F6E2CECC22800124339 /* libswresample.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4E1F6B2CECC22800124339 /* libswresample.4.dylib */; };
-		0C4E1F6F2CECC22800124339 /* libavcodec.60.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4E1F672CECC22800124339 /* libavcodec.60.dylib */; };
-		0C4E1F702CECC22800124339 /* libavdevice.60.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C4E1F682CECC22800124339 /* libavdevice.60.dylib */; };
-		0C4E1F712CECC24900124339 /* libswresample.4.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C4E1F6B2CECC22800124339 /* libswresample.4.dylib */; };
-		0C4E1F722CECC25400124339 /* libavcodec.60.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C4E1F672CECC22800124339 /* libavcodec.60.dylib */; };
-		0C4E1F732CECC25400124339 /* libavdevice.60.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C4E1F682CECC22800124339 /* libavdevice.60.dylib */; };
-		0C4E1F742CECC25400124339 /* libavformat.60.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C4E1F692CECC22800124339 /* libavformat.60.dylib */; };
-		0C4E1F752CECC25400124339 /* libavutil.58.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C4E1F6A2CECC22800124339 /* libavutil.58.dylib */; };
-		0C5D47382C6F2F9500307B37 /* libmacos_bindings.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47372C6F2F9500307B37 /* libmacos_bindings.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47392C6F2FB200307B37 /* libmacos_bindings.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 0C5D47372C6F2F9500307B37 /* libmacos_bindings.dylib */; };
-		0C5D473A2C6F308000307B37 /* libmacos_bindings.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47372C6F2F9500307B37 /* libmacos_bindings.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D473C2C6F357C00307B37 /* libblend2d.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D473B2C6F357C00307B37 /* libblend2d.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D473D2C6F359100307B37 /* libblend2d.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 0C5D473B2C6F357C00307B37 /* libblend2d.dylib */; };
-		0C5D473E2C6F35E500307B37 /* libblend2d.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D473B2C6F357C00307B37 /* libblend2d.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D47612C6F382800307B37 /* libopencv_calib3d.410.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47602C6F382800307B37 /* libopencv_calib3d.410.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47622C6F383C00307B37 /* libopencv_calib3d.410.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 0C5D47602C6F382800307B37 /* libopencv_calib3d.410.dylib */; };
-		0C5D47632C6F391C00307B37 /* libopencv_calib3d.410.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47602C6F382800307B37 /* libopencv_calib3d.410.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D476E2C6F397A00307B37 /* libopencv_ximgproc.410.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47642C6F397900307B37 /* libopencv_ximgproc.410.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D476F2C6F397A00307B37 /* libopencv_features2d.410.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47652C6F397900307B37 /* libopencv_features2d.410.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47702C6F397A00307B37 /* libopencv_imgproc.410.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47662C6F397900307B37 /* libopencv_imgproc.410.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47712C6F397A00307B37 /* libopencv_imgcodecs.410.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47672C6F397900307B37 /* libopencv_imgcodecs.410.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47722C6F397A00307B37 /* libopencv_core.410.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47682C6F397900307B37 /* libopencv_core.410.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47732C6F397A00307B37 /* libopencv_flann.410.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47692C6F397900307B37 /* libopencv_flann.410.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47742C6F397A00307B37 /* libopencv_optflow.410.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D476A2C6F397A00307B37 /* libopencv_optflow.410.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47752C6F397A00307B37 /* libopencv_videoio.410.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D476B2C6F397A00307B37 /* libopencv_videoio.410.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47762C6F397A00307B37 /* libopencv_highgui.410.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D476C2C6F397A00307B37 /* libopencv_highgui.410.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47772C6F397A00307B37 /* libopencv_video.410.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D476D2C6F397A00307B37 /* libopencv_video.410.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47782C6F398400307B37 /* libopencv_core.410.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47682C6F397900307B37 /* libopencv_core.410.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D47792C6F398400307B37 /* libopencv_features2d.410.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47652C6F397900307B37 /* libopencv_features2d.410.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D477A2C6F398400307B37 /* libopencv_flann.410.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47692C6F397900307B37 /* libopencv_flann.410.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D477B2C6F398400307B37 /* libopencv_highgui.410.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D476C2C6F397A00307B37 /* libopencv_highgui.410.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D477C2C6F398400307B37 /* libopencv_imgcodecs.410.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47672C6F397900307B37 /* libopencv_imgcodecs.410.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D477D2C6F398400307B37 /* libopencv_imgproc.410.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47662C6F397900307B37 /* libopencv_imgproc.410.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D477E2C6F398400307B37 /* libopencv_optflow.410.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D476A2C6F397A00307B37 /* libopencv_optflow.410.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D477F2C6F398400307B37 /* libopencv_video.410.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D476D2C6F397A00307B37 /* libopencv_video.410.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D47802C6F398400307B37 /* libopencv_videoio.410.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D476B2C6F397A00307B37 /* libopencv_videoio.410.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D47812C6F398400307B37 /* libopencv_ximgproc.410.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47642C6F397900307B37 /* libopencv_ximgproc.410.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D47912C6F3A9B00307B37 /* libopenvino_tokenizers.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47862C6F3A9B00307B37 /* libopenvino_tokenizers.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47962C6F3A9B00307B37 /* libcore_tokenizers.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D478B2C6F3A9B00307B37 /* libcore_tokenizers.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47982C6F3ACE00307B37 /* libcore_tokenizers.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D478B2C6F3A9B00307B37 /* libcore_tokenizers.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D47A12C6F3ACE00307B37 /* libopenvino_tokenizers.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47862C6F3A9B00307B37 /* libopenvino_tokenizers.dylib */; };
-		0C5D47A42C6F3B7000307B37 /* libtbb.12.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47A32C6F3B7000307B37 /* libtbb.12.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
-		0C5D47A52C6F3B7700307B37 /* libtbb.12.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47A32C6F3B7000307B37 /* libtbb.12.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D47AC2C6F59A200307B37 /* libopenvino_auto_batch_plugin.so in Resources */ = {isa = PBXBuildFile; fileRef = 0C5D47A82C6F59A200307B37 /* libopenvino_auto_batch_plugin.so */; };
-		0C5D47AD2C6F59A200307B37 /* libopenvino_arm_cpu_plugin.so in Resources */ = {isa = PBXBuildFile; fileRef = 0C5D47A92C6F59A200307B37 /* libopenvino_arm_cpu_plugin.so */; };
-		0C5D47AE2C6F59A200307B37 /* libopenvino_hetero_plugin.so in Resources */ = {isa = PBXBuildFile; fileRef = 0C5D47AA2C6F59A200307B37 /* libopenvino_hetero_plugin.so */; };
-		0C5D47AF2C6F59A200307B37 /* libopenvino_auto_plugin.so in Resources */ = {isa = PBXBuildFile; fileRef = 0C5D47AB2C6F59A200307B37 /* libopenvino_auto_plugin.so */; };
-		0C5D47B02C6F5C0200307B37 /* libopenvino_arm_cpu_plugin.so in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47A92C6F59A200307B37 /* libopenvino_arm_cpu_plugin.so */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D47B12C6F5C0A00307B37 /* libopenvino_auto_batch_plugin.so in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47A82C6F59A200307B37 /* libopenvino_auto_batch_plugin.so */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D47B22C6F5C0E00307B37 /* libopenvino_auto_plugin.so in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47AB2C6F59A200307B37 /* libopenvino_auto_plugin.so */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		0C5D47B32C6F5C1300307B37 /* libopenvino_hetero_plugin.so in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 0C5D47AA2C6F59A200307B37 /* libopenvino_hetero_plugin.so */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		213B56C50EEAAE6190A0A25B /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5E7865DB70376BADAAEAE6 /* Pods_RunnerTests.framework */; };
 		331C80D8294CF71000263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C80D7294CF71000263BE5 /* RunnerTests.swift */; };
 		335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */; };
@@ -99,6 +28,10 @@
 		33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F22044A3C60003C045 /* Assets.xcassets */; };
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
+		37774C592D2D294400118F12 /* libopenvino_auto_batch_plugin.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47A82C6F59A200307B37 /* libopenvino_auto_batch_plugin.so */; };
+		37774C5A2D2D296F00118F12 /* libopenvino_auto_plugin.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47AB2C6F59A200307B37 /* libopenvino_auto_plugin.so */; };
+		37774C5B2D2D297D00118F12 /* libopenvino_hetero_plugin.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47AA2C6F59A200307B37 /* libopenvino_hetero_plugin.so */; };
+		37774C5C2D2D540500118F12 /* libopenvino_arm_cpu_plugin.so in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C5D47A92C6F59A200307B37 /* libopenvino_arm_cpu_plugin.so */; };
 		428B81CFE7DD85E5D6A540E5 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11E6C6B7198D7B3B20F4A75C /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
@@ -118,53 +51,6 @@
 			remoteInfo = FLX;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		33CC110E2044A8840003C045 /* Bundle Framework */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				0C42C7672CE386680079F72B /* libopenvino_paddle_frontend.2500.dylib in Bundle Framework */,
-				0C4E1F712CECC24900124339 /* libswresample.4.dylib in Bundle Framework */,
-				0C5D47B32C6F5C1300307B37 /* libopenvino_hetero_plugin.so in Bundle Framework */,
-				0C4E1F752CECC25400124339 /* libavutil.58.dylib in Bundle Framework */,
-				0C42C76C2CE388DC0079F72B /* libopenvino.2500.dylib in Bundle Framework */,
-				0C42C7662CE386680079F72B /* libopenvino_onnx_frontend.2500.dylib in Bundle Framework */,
-				0C5D47B12C6F5C0A00307B37 /* libopenvino_auto_batch_plugin.so in Bundle Framework */,
-				0C5D47B22C6F5C0E00307B37 /* libopenvino_auto_plugin.so in Bundle Framework */,
-				0C5D473E2C6F35E500307B37 /* libblend2d.dylib in Bundle Framework */,
-				0C4E1F732CECC25400124339 /* libavdevice.60.dylib in Bundle Framework */,
-				0C5D47782C6F398400307B37 /* libopencv_core.410.dylib in Bundle Framework */,
-				0C42C7642CE386680079F72B /* libopenvino_genai.2500.dylib in Bundle Framework */,
-				0C5D47B02C6F5C0200307B37 /* libopenvino_arm_cpu_plugin.so in Bundle Framework */,
-				0C4E1F742CECC25400124339 /* libavformat.60.dylib in Bundle Framework */,
-				0C5D47802C6F398400307B37 /* libopencv_videoio.410.dylib in Bundle Framework */,
-				0C5D47792C6F398400307B37 /* libopencv_features2d.410.dylib in Bundle Framework */,
-				0C42C7682CE386680079F72B /* libopenvino_pytorch_frontend.2500.dylib in Bundle Framework */,
-				0C42C76A2CE386680079F72B /* libopenvino_tensorflow_lite_frontend.2500.dylib in Bundle Framework */,
-				0C5D47632C6F391C00307B37 /* libopencv_calib3d.410.dylib in Bundle Framework */,
-				0C5D477A2C6F398400307B37 /* libopencv_flann.410.dylib in Bundle Framework */,
-				0C5D477B2C6F398400307B37 /* libopencv_highgui.410.dylib in Bundle Framework */,
-				0C5D47A12C6F3ACE00307B37 /* libopenvino_tokenizers.dylib in Bundle Framework */,
-				0C5D477E2C6F398400307B37 /* libopencv_optflow.410.dylib in Bundle Framework */,
-				0C5D477D2C6F398400307B37 /* libopencv_imgproc.410.dylib in Bundle Framework */,
-				0C5D477F2C6F398400307B37 /* libopencv_video.410.dylib in Bundle Framework */,
-				0C5D47812C6F398400307B37 /* libopencv_ximgproc.410.dylib in Bundle Framework */,
-				0C5D473A2C6F308000307B37 /* libmacos_bindings.dylib in Bundle Framework */,
-				0C4E1F722CECC25400124339 /* libavcodec.60.dylib in Bundle Framework */,
-				0C42C7692CE386680079F72B /* libopenvino_tensorflow_frontend.2500.dylib in Bundle Framework */,
-				0C5D47A52C6F3B7700307B37 /* libtbb.12.dylib in Bundle Framework */,
-				0C5D477C2C6F398400307B37 /* libopencv_imgcodecs.410.dylib in Bundle Framework */,
-				0C5D47982C6F3ACE00307B37 /* libcore_tokenizers.dylib in Bundle Framework */,
-				0C42C76B2CE388D90079F72B /* libopenvino_c.2500.dylib in Bundle Framework */,
-				0C42C7652CE386680079F72B /* libopenvino_ir_frontend.2500.dylib in Bundle Framework */,
-			);
-			name = "Bundle Framework";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0C42C7522CE386520079F72B /* libopenvino_c.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_c.2500.dylib; path = ../bindings/libopenvino_c.2500.dylib; sourceTree = SOURCE_ROOT; };
@@ -242,37 +128,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C5D47A42C6F3B7000307B37 /* libtbb.12.dylib in Frameworks */,
+				37774C5C2D2D540500118F12 /* libopenvino_arm_cpu_plugin.so in Frameworks */,
+				37774C5B2D2D297D00118F12 /* libopenvino_hetero_plugin.so in Frameworks */,
+				37774C5A2D2D296F00118F12 /* libopenvino_auto_plugin.so in Frameworks */,
+				37774C592D2D294400118F12 /* libopenvino_auto_batch_plugin.so in Frameworks */,
 				428B81CFE7DD85E5D6A540E5 /* Pods_Runner.framework in Frameworks */,
-				0C5D47722C6F397A00307B37 /* libopencv_core.410.dylib in Frameworks */,
-				0C5D47772C6F397A00307B37 /* libopencv_video.410.dylib in Frameworks */,
-				0C5D47752C6F397A00307B37 /* libopencv_videoio.410.dylib in Frameworks */,
-				0C5D47702C6F397A00307B37 /* libopencv_imgproc.410.dylib in Frameworks */,
-				0C5D47612C6F382800307B37 /* libopencv_calib3d.410.dylib in Frameworks */,
-				0C5D473C2C6F357C00307B37 /* libblend2d.dylib in Frameworks */,
-				0C5D476F2C6F397A00307B37 /* libopencv_features2d.410.dylib in Frameworks */,
-				0C5D47732C6F397A00307B37 /* libopencv_flann.410.dylib in Frameworks */,
-				0C5D47962C6F3A9B00307B37 /* libcore_tokenizers.dylib in Frameworks */,
-				0C5D47742C6F397A00307B37 /* libopencv_optflow.410.dylib in Frameworks */,
-				0C5D47762C6F397A00307B37 /* libopencv_highgui.410.dylib in Frameworks */,
-				0C5D476E2C6F397A00307B37 /* libopencv_ximgproc.410.dylib in Frameworks */,
-				0C42C75B2CE386520079F72B /* libopenvino_tensorflow_frontend.2500.dylib in Frameworks */,
-				0C42C75C2CE386520079F72B /* libopenvino_tensorflow_lite_frontend.2500.dylib in Frameworks */,
-				0C42C75D2CE386520079F72B /* libopenvino_paddle_frontend.2500.dylib in Frameworks */,
-				0C42C75E2CE386520079F72B /* libopenvino_onnx_frontend.2500.dylib in Frameworks */,
-				0C42C75F2CE386520079F72B /* libopenvino_c.2500.dylib in Frameworks */,
-				0C4E1F6C2CECC22800124339 /* libavformat.60.dylib in Frameworks */,
-				0C4E1F6D2CECC22800124339 /* libavutil.58.dylib in Frameworks */,
-				0C4E1F6E2CECC22800124339 /* libswresample.4.dylib in Frameworks */,
-				0C4E1F6F2CECC22800124339 /* libavcodec.60.dylib in Frameworks */,
-				0C4E1F702CECC22800124339 /* libavdevice.60.dylib in Frameworks */,
-				0C42C7602CE386520079F72B /* libopenvino_genai.2500.dylib in Frameworks */,
-				0C42C7612CE386520079F72B /* libopenvino.2500.dylib in Frameworks */,
-				0C42C7622CE386520079F72B /* libopenvino_ir_frontend.2500.dylib in Frameworks */,
-				0C42C7632CE386520079F72B /* libopenvino_pytorch_frontend.2500.dylib in Frameworks */,
-				0C5D47382C6F2F9500307B37 /* libmacos_bindings.dylib in Frameworks */,
-				0C5D47712C6F397A00307B37 /* libopencv_imgcodecs.410.dylib in Frameworks */,
-				0C5D47912C6F3A9B00307B37 /* libopenvino_tokenizers.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -440,8 +300,9 @@
 				33CC10E92044A3C60003C045 /* Sources */,
 				33CC10EA2044A3C60003C045 /* Frameworks */,
 				33CC10EB2044A3C60003C045 /* Resources */,
-				33CC110E2044A8840003C045 /* Bundle Framework */,
-				3399D490228B24CF009A79C7 /* ShellScript */,
+				37774C5D2D2EEF8A00118F12 /* Bundle Libraries */,
+				37774C5F2D2F542600118F12 /* Sign Libraries */,
+				3399D490228B24CF009A79C7 /* Run Script */,
 				9B80A0F0DE430B7EAD998043 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -519,13 +380,6 @@
 			files = (
 				33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */,
 				33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */,
-				0C5D47AC2C6F59A200307B37 /* libopenvino_auto_batch_plugin.so in Resources */,
-				0C5D47AF2C6F59A200307B37 /* libopenvino_auto_plugin.so in Resources */,
-				0C5D47392C6F2FB200307B37 /* libmacos_bindings.dylib in Resources */,
-				0C5D47622C6F383C00307B37 /* libopencv_calib3d.410.dylib in Resources */,
-				0C5D47AD2C6F59A200307B37 /* libopenvino_arm_cpu_plugin.so in Resources */,
-				0C5D47AE2C6F59A200307B37 /* libopenvino_hetero_plugin.so in Resources */,
-				0C5D473D2C6F359100307B37 /* libblend2d.dylib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -554,7 +408,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3399D490228B24CF009A79C7 /* ShellScript */ = {
+		3399D490228B24CF009A79C7 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -564,6 +418,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -590,7 +445,45 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"$FLUTTER_ROOT\"/packages/flutter_tools/bin/macos_assemble.sh && touch Flutter/ephemeral/tripwire";
+			shellScript = "\"$FLUTTER_ROOT\"/packages/flutter_tools/bin/macos_assemble.sh && touch Flutter/ephemeral/tripwire\n";
+		};
+		37774C5D2D2EEF8A00118F12 /* Bundle Libraries */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle Libraries";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PROJECT_DIR}\"/Scripts/libraries_tools.sh bundle\n";
+		};
+		37774C5F2D2F542600118F12 /* Sign Libraries */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Sign Libraries";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PROJECT_DIR}\"/Scripts/libraries_tools.sh sign\n";
 		};
 		543C0C5B7DCBDB2F3CBC7E75 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

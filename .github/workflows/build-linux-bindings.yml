@@ -1,0 +1,100 @@
+name: Build Linux Bindings
+
+on:
+  workflow_call:
+    inputs:
+      OPENVINO_VERSION:
+        required: true
+        description: 'The version of OpenVINO to use'
+        type: string
+
+jobs:
+  build-linux-bindings:
+    runs-on: ubuntu-22.04-16-cores
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # NOTE: cache action executes without sudo, so we need to change ownership (https://github.com/actions/cache/issues/845#issuecomment-1252594999)
+      - name: Change ownership
+        run: |
+          sudo chown $USER /usr/local/lib /usr/local/include
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+            build-essential \
+            nasm yasm \
+            unzip \
+            curl \
+            git
+
+      - name: Install Bazel
+        run: |
+          BAZEL_VERSION=6.1.1
+          curl -fSsL -O https://github.com/bazelbuild/bazel/releases/download/$BAZEL_VERSION/bazel-$BAZEL_VERSION-installer-linux-x86_64.sh && \
+          chmod +x bazel-*.sh && \
+          sudo ./bazel-$BAZEL_VERSION-installer-linux-x86_64.sh && \
+          rm -f bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
+
+      - name: Install OpenVINO
+        run: |
+          sudo mkdir -p /opt/intel
+          curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2024.6/linux/openvino_genai_ubuntu22_${{ inputs.OPENVINO_VERSION }}.0.0_x86_64.tar.gz \
+          --output openvino.tgz && tar -xf openvino.tgz && \
+          sudo mv openvino_genai_ubuntu22_${{ inputs.OPENVINO_VERSION }}.0.0_x86_64 /opt/intel/openvino && rm openvino.tgz
+          cd /opt/intel/openvino && sudo ./install_dependencies/install_openvino_dependencies.sh -y
+
+      - name: Cache ffmpeg
+        id: cache-ffmpeg
+        uses: actions/cache@v4
+        with:
+          path: |
+              /opt/ffmpeg
+          key: ${{ runner.os }}-ffmpeg
+
+      - name: Install FFmpeg
+        if: steps.cache-ffmpeg.outputs.cache-hit != 'true'
+        run: |
+          sudo /bin/bash openvino_bindings/scripts/setup_ffmpeg.sh
+
+      - name: Cache OpenCV build
+        id: cache-opencv
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/include/opencv4
+            /usr/local/lib/libopencv_*
+          key: ${{ runner.os }}-opencv-${{ hashFiles('openvino_bindings/scripts/setup_opencv.sh') }}
+
+      - name: Install OpenCV
+        if: steps.cache-opencv.outputs.cache-hit != 'true'
+        run: |
+          sudo /bin/bash openvino_bindings/scripts/setup_opencv.sh
+
+      - name: Install numpy
+        run: |
+          sudo pip3 install numpy
+
+      - name: Cache Bazel
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/bazel
+          key: ${{ runner.os }}-bazel-${{ hashFiles('**/.bazelversion', '**/.bazelrc', '**/WORKSPACE', '**/WORKSPACE.bazel', '**/MODULE.bazel', '**/*BUILD') }}
+          restore-keys: |
+            ${{ runner.os }}-bazel-
+
+      - name: Build bindings
+        run: |
+          bazel build //:linux_bindings
+        working-directory: openvino_bindings
+
+      - name: Upload bindings to artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "linux_bindings.tgz"
+          path: openvino_bindings/bazel-bin/linux_bindings.tgz
+          if-no-files-found: error
