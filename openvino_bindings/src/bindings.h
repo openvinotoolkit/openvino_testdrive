@@ -156,6 +156,7 @@ typedef void (*VLMInferenceCallbackFunction)(StatusOrString*);
 
 EXPORT void freeStatus(Status *status);
 EXPORT void freeStatusOrString(StatusOrString *status);
+EXPORT void freeStatusOrInt(StatusOrInt *status);
 EXPORT void freeStatusOrImageInference(StatusOrImageInference *status);
 EXPORT void freeStatusOrLLMInference(StatusOrLLMInference *status);
 EXPORT void freeStatusOrSpeechToText(StatusOrSpeechToText *status);
@@ -203,6 +204,7 @@ EXPORT Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const 
 EXPORT StatusOrString* graphRunnerGet(CGraphRunner instance);
 EXPORT Status* graphRunnerStop(CGraphRunner instance);
 EXPORT Status* graphRunnerStartCamera(CGraphRunner instance, int cameraIndex, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay);
+EXPORT StatusOrInt* graphRunnerGetTimestamp(CGraphRunner instance);
 EXPORT Status* graphRunnerStopCamera(CGraphRunner instance);
 
 EXPORT StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device);

@@ -38,12 +38,19 @@ class LiveInference extends StatefulWidget {
 
 class _LiveInferenceState extends State<LiveInference> {
   Future<ImageInferenceResult>? inferenceResult;
+  late ImageInferenceProvider inferenceProvider;
   ui.Image? image;
 
   Future<List<CameraDevice>> cameraDevices = CameraDevice.getDevices();
   CameraDevice? cameraDevice;
 
   LiveInferenceMode mode = LiveInferenceMode.image;
+
+  @override
+  void initState() {
+    super.initState();
+    inferenceProvider = Provider.of<ImageInferenceProvider>(context, listen: false);
+  }
 
   void showUploadMenu() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
@@ -54,16 +61,19 @@ class _LiveInferenceState extends State<LiveInference> {
   }
 
   void uploadFile(String path) async {
+    if (mode == LiveInferenceMode.image) {
+      inferenceProvider.closeCamera();
+    }
     setState(() {
+        mode = LiveInferenceMode.image;
+        cameraDevice = null;
         image = null;
         inferenceResult = null;
     });
 
     Uint8List imageData = File(path).readAsBytesSync();
-    final inferenceProvider = Provider.of<ImageInferenceProvider>(context, listen: false);
     final uiImage = await decodeImageFromList(imageData);
     setState(() {
-        mode = LiveInferenceMode.image;
         image = uiImage;
         inferenceResult = inferenceProvider.infer(imageData, SerializationOutput(json: true));
     });
@@ -125,10 +135,10 @@ class _LiveInferenceState extends State<LiveInference> {
                               buttonBuilder: (context, callback) {
                                 return NoOutlineButton(
                                   onPressed: callback,
-                                  child: const Row(
+                                  child: Row(
                                     children: [
-                                      Text("Choose camera"),
-                                      Padding(
+                                      cameraDevice == null ? const Text("Choose camera") : Text("Choose camera: ${cameraDevice!.name}"),
+                                      const Padding(
                                         padding: EdgeInsets.only(left: 8),
                                         child: Icon(FluentIcons.chevron_down, size: 12),
                                       ),

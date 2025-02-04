@@ -36,9 +36,21 @@ class GraphRunner {
     return GraphRunner(result);
   }
 
+  int getTimestamp() {
+    final status = ov.graphRunnerGetTimestamp(instance.ref.value);
+
+    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+      throw "GraphRunner::get error: ${status.ref.status} ${status.ref.message.toDartString()}";
+    }
+    final content = status.ref.value;
+    ov.freeStatusOrInt(status);
+    return content;
+  }
+
   Future<String> get() async {
+    int instanceAddress = instance.ref.value.address;
     return await Isolate.run(() {
-      final status = ov.graphRunnerGet(instance.ref.value);
+      final status = ov.graphRunnerGet(Pointer<Void>.fromAddress(instanceAddress));
 
       if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
         throw "GraphRunner::get error: ${status.ref.status} ${status.ref.message.toDartString()}";
@@ -78,12 +90,14 @@ class GraphRunner {
   }
 
   Future<void> queueImage(String nodeName, int timestamp, Uint8List file) async {
+
+    int instanceAddress = instance.ref.value.address;
     await Isolate.run(() {
       final _data =  calloc.allocate<Uint8>(file.lengthInBytes);
       final _bytes = _data.asTypedList(file.lengthInBytes);
       _bytes.setRange(0, file.lengthInBytes, file);
       final nodeNamePtr = nodeName.toNativeUtf8();
-      final status = ov.graphRunnerQueueImage(instance.ref.value, nodeNamePtr, timestamp, _data, file.lengthInBytes);
+      final status = ov.graphRunnerQueueImage(Pointer<Void>.fromAddress(instanceAddress), nodeNamePtr, timestamp, _data, file.lengthInBytes);
       calloc.free(nodeNamePtr);
 
       if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
@@ -93,9 +107,10 @@ class GraphRunner {
   }
 
   Future<void> queueSerializationOutput(String nodeName, int timestamp, SerializationOutput output) async {
+    int instanceAddress = instance.ref.value.address;
     await Isolate.run(() {
       final nodeNamePtr = nodeName.toNativeUtf8();
-      final status = ov.graphRunnerQueueSerializationOutput(instance.ref.value, nodeNamePtr, timestamp, output.json, output.csv, output.overlay);
+      final status = ov.graphRunnerQueueSerializationOutput(Pointer<Void>.fromAddress(instanceAddress), nodeNamePtr, timestamp, output.json, output.csv, output.overlay);
       calloc.free(nodeNamePtr);
 
       if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {

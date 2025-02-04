@@ -47,6 +47,20 @@ class OpenVINO {
   late final _freeStatusOrString = _freeStatusOrStringPtr
       .asFunction<void Function(ffi.Pointer<StatusOrString>)>();
 
+  void freeStatusOrInt(
+    ffi.Pointer<StatusOrInt> status,
+  ) {
+    return _freeStatusOrInt(
+      status,
+    );
+  }
+
+  late final _freeStatusOrIntPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<StatusOrInt>)>>(
+          'freeStatusOrInt');
+  late final _freeStatusOrInt =
+      _freeStatusOrIntPtr.asFunction<void Function(ffi.Pointer<StatusOrInt>)>();
+
   void freeStatusOrImageInference(
     ffi.Pointer<StatusOrImageInference> status,
   ) {
@@ -842,6 +856,20 @@ class OpenVINO {
   late final _graphRunnerStartCamera = _graphRunnerStartCameraPtr.asFunction<
       ffi.Pointer<Status> Function(CGraphRunner, int,
           ImageInferenceCallbackFunction, bool, bool, bool)>();
+
+  ffi.Pointer<StatusOrInt> graphRunnerGetTimestamp(
+    CGraphRunner instance,
+  ) {
+    return _graphRunnerGetTimestamp(
+      instance,
+    );
+  }
+
+  late final _graphRunnerGetTimestampPtr = _lookup<
+          ffi.NativeFunction<ffi.Pointer<StatusOrInt> Function(CGraphRunner)>>(
+      'graphRunnerGetTimestamp');
+  late final _graphRunnerGetTimestamp = _graphRunnerGetTimestampPtr
+      .asFunction<ffi.Pointer<StatusOrInt> Function(CGraphRunner)>();
 
   ffi.Pointer<Status> graphRunnerStopCamera(
     CGraphRunner instance,

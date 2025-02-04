@@ -29,6 +29,8 @@ class GraphRunner  {
     if (timestamp > this->timestamp) {
       this->timestamp = timestamp;
     }
+
+    std::cout << "timestamp: " << timestamp << std::endl;
     auto packet = mediapipe::MakePacket<T>(content).At(mediapipe::Timestamp(timestamp));
     graph->AddPacketToInputStream(name, packet);
   }

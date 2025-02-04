@@ -40,6 +40,10 @@ void freeStatusOrString(StatusOrString *status) {
     delete status;
 }
 
+void freeStatusOrInt(StatusOrInt *status) {
+    delete status;
+}
+
 //void freeStatusOrSpeechToText(StatusOrSpeechToText *status) {
 //    delete status;
 //}
@@ -432,6 +436,16 @@ Status* graphRunnerStartCamera(CGraphRunner instance, int camera_index, ImageInf
         return new Status{OkStatus, ""};
     } catch (...) {
         return handle_exceptions();
+    }
+}
+
+StatusOrInt* graphRunnerGetTimestamp(CGraphRunner instance) {
+    try {
+        auto graph_runner = reinterpret_cast<GraphRunner*>(instance);
+        return new StatusOrInt{OkStatus, "", (int)graph_runner->timestamp};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrInt{except->status, except->message};
     }
 }
 

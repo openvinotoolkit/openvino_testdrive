@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 #ifndef CAMERA_HANDLER_H_
 #define CAMERA_HANDLER_H_
 

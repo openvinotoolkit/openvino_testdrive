@@ -17,7 +17,6 @@ class ImageInferenceProvider extends ChangeNotifier {
   Completer<void> loaded = Completer<void>();
   final Project project;
   final String device;
-  int timestamp = 0;
   GraphRunner? _inference;
   GraphRunner? get inference => _inference;
 
@@ -51,9 +50,9 @@ class ImageInferenceProvider extends ChangeNotifier {
   }
 
   Future<ImageInferenceResult> infer(Uint8List file, SerializationOutput output) async {
+    int timestamp = inference!.getTimestamp() + 1;
     _inference!.queueImage("input", timestamp, file);
     _inference!.queueSerializationOutput("serialization_output", timestamp, output);
-    timestamp += 1;
     final result = await _inference!.get();
     return ImageInferenceResult.fromJson(jsonDecode(result));
   }
