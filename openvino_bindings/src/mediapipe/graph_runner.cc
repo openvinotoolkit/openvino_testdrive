@@ -33,3 +33,17 @@ void GraphRunner::stop() {
     graph->CloseAllInputStreams();
     graph->WaitUntilDone();
 }
+
+
+
+std::shared_ptr<CameraHandler> GraphRunner::open_camera(int deviceIndex) {
+    camera_handler = std::make_shared<CameraHandler>(deviceIndex);
+    return camera_handler;
+}
+
+void GraphRunner::stop_camera() {
+    if (camera_handler) {
+        camera_handler->stop_camera();
+        camera_handler.reset();
+    }
+}

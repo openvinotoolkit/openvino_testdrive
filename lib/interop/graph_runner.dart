@@ -10,12 +10,14 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
+import 'package:inference/interop/device.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 
 final ov = getBindings();
 
 class GraphRunner {
   final Pointer<StatusOrGraphRunner> instance;
+  NativeCallable<ImageInferenceCallbackFunctionFunction>? nativeListener;
 
   GraphRunner(this.instance);
 
@@ -44,6 +46,36 @@ class GraphRunner {
       final content = status.ref.value.toDartString();
       ov.freeStatusOrString(status);
       return content;
+    });
+  }
+
+//EXPORT Status* graphRunnerStartCamera(CGraphRunner instance, int cameraIndex, ImageInferenceCallbackFunction callback);
+  Future<void> startCamera(String nodeName, int deviceIndex, Function(String) callback, SerializationOutput output) async {
+    void wrapCallback(Pointer<StatusOrString> ptr) {
+      if (StatusEnum.fromValue(ptr.ref.status) != StatusEnum.OkStatus) {
+        // TODO(RHeckerIntel): instead of throw, call an onError callback.
+        throw "ImageInference infer error: ${ptr.ref.status} ${ptr.ref.message.toDartString()}";
+      }
+      callback(ptr.ref.value.toDartString());
+      ov.freeStatusOrString(ptr);
+    }
+
+    nativeListener?.close();
+    nativeListener = NativeCallable<ImageInferenceCallbackFunctionFunction>.listener(wrapCallback);
+    await Isolate.run(() {
+      final status = ov.graphRunnerStartCamera(instance.ref.value, deviceIndex, nativeListener!.nativeFunction, output.json, output.csv, output.overlay);
+      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+        throw "GraphRunner::StartCamera error: ${status.ref.status} ${status.ref.message.toDartString()}";
+      }
+    });
+  }
+//EXPORT Status* graphRunnerStopCamera(CGraphRunner instance);
+  Future<void> stopCamera() async {
+    await Isolate.run(() {
+      final status = ov.graphRunnerStopCamera(instance.ref.value);
+      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+        throw "GraphRunner::StopCamera error: ${status.ref.status} ${status.ref.message.toDartString()}";
+      }
     });
   }
 

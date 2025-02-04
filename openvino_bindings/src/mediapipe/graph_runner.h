@@ -12,6 +12,7 @@
 #include <memory>
 #include "mediapipe/framework/calculator_framework.h"
 #include <opencv2/opencv.hpp>
+#include "src/utils/camera_handler.h"
 
 class GraphRunner  {
  public:
@@ -28,20 +29,17 @@ class GraphRunner  {
 
   std::string get();
   void stop();
-  //void Queue(const std::string& input);
-  //void Stop();
 
-  //bool OpenCamera(const std::string& device);
+  std::shared_ptr<CameraHandler> open_camera(int deviceIndex);
+  void stop_camera();
 
-  //static void SetupLogging(const char* filename);
-  //std::thread camera_thread;
  private:
 
   // Data stored in these variables is unique to each instance of the add-on.
   int64 timestamp = 0;
   std::shared_ptr<mediapipe::OutputStreamPoller> poller;
   std::shared_ptr<mediapipe::CalculatorGraph> graph;
-  //bool running = false;
+  std::shared_ptr<CameraHandler> camera_handler;
 };
 
 

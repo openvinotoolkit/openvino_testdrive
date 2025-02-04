@@ -39,7 +39,7 @@ typedef struct {
 typedef struct {
     int id;
     const char* name;
-} InputDevice;
+} CameraDevice;
 
 typedef struct {
   float start_ts;
@@ -146,9 +146,9 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
-    InputDevice* value;
+    CameraDevice* value;
     int size;
-} StatusOrInputDevices;
+} StatusOrCameraDevices;
 
 typedef void (*ImageInferenceCallbackFunction)(StatusOrString*);
 typedef void (*LLMInferenceCallbackFunction)(StatusOrString*);
@@ -162,6 +162,7 @@ EXPORT void freeStatusOrSpeechToText(StatusOrSpeechToText *status);
 EXPORT void freeStatusOrModelResponse(StatusOrModelResponse *status);
 EXPORT void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *status);
 EXPORT void freeStatusOrDevices(StatusOrDevices *status);
+EXPORT void freeStatusOrCameraDevices(StatusOrCameraDevices *status);
 
 EXPORT StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json);
 EXPORT StatusOrString* imageInferenceInfer(CImageInference instance, unsigned char* image_data, const size_t data_length, bool json, bool csv, bool overlay);
@@ -201,6 +202,8 @@ EXPORT Status* graphRunnerQueueImage(CGraphRunner instance, const char* name, in
 EXPORT Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* name, int timestamp, bool json, bool csv, bool overlay);
 EXPORT StatusOrString* graphRunnerGet(CGraphRunner instance);
 EXPORT Status* graphRunnerStop(CGraphRunner instance);
+EXPORT Status* graphRunnerStartCamera(CGraphRunner instance, int cameraIndex, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay);
+EXPORT Status* graphRunnerStopCamera(CGraphRunner instance);
 
 EXPORT StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device);
 EXPORT Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path);
@@ -208,7 +211,7 @@ EXPORT StatusOrInt* speechToTextVideoDuration(CSpeechToText instance);
 EXPORT StatusOrWhisperModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language);
 
 EXPORT StatusOrDevices* getAvailableDevices();
-EXPORT StatusOrInputDevices* getAvailableCameraDevices();
+EXPORT StatusOrCameraDevices* getAvailableCameraDevices();
 
 Status* handle_exceptions();
 

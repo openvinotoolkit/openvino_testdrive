@@ -1,6 +1,20 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "camera_handler",
+    hdrs = [
+        "camera_handler.h",
+    ],
+    srcs = [
+         "camera_handler.cc",
+    ],
+    deps = [
+        "//third_party:opencv",
+        ":errors",
+    ],
+)
+
+cc_library(
     name = "errors",
     hdrs = [
         "errors.h",

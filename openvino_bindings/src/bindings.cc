@@ -70,6 +70,15 @@ void freeStatusOrDevices(StatusOrDevices *status) {
     delete status;
 }
 
+void freeStatusOrDevices(StatusOrCameraDevices *status) {
+    if (status->status == StatusEnum::OkStatus) {
+        delete [] status->value;
+        status->value = NULL;        // Prevent dangling pointers
+    }
+    delete status;
+}
+
+
 StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json) {
     try {
         auto instance = new ImageInference(model_path, get_task_type(task), device);
@@ -412,6 +421,36 @@ Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* n
     }
 }
 
+Status* graphRunnerStartCamera(CGraphRunner instance, int camera_index, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay) {
+    try {
+        auto runner = reinterpret_cast<GraphRunner*>(instance);
+
+        int i = 0;
+        SerializationOutput serialization_options{json, csv, overlay};
+        auto lambda_callback = [callback, runner, &i, &serialization_options](cv::Mat frame) {
+            runner->queue("input", i, frame);
+            runner->queue("serialization_output", i, serialization_options);
+            auto response = runner->get();
+            callback(new StatusOrString{OkStatus, "", strdup(response.c_str())});
+            i++;
+        };
+        auto handler = runner->open_camera(camera_index);
+        handler->open_camera(lambda_callback);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
+Status* graphRunnerStopCamera(CGraphRunner instance) {
+    try {
+        reinterpret_cast<GraphRunner*>(instance)->stop_camera();
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
 StatusOrString* graphRunnerGet(CGraphRunner instance) {
     try {
         auto graph_runner = reinterpret_cast<GraphRunner*>(instance);
@@ -502,16 +541,16 @@ StatusOrDevices* getAvailableDevices() {
     return new StatusOrDevices{OkStatus, "", devices, (int)device_ids.size() + 1};
 }
 
-StatusOrInputDevices* getAvailableCameraDevices() {
+StatusOrCameraDevices* getAvailableCameraDevices() {
     auto cameras = list_camera_devices();
-    InputDevice* devices = new InputDevice[cameras.size()];
+    CameraDevice* devices = new CameraDevice[cameras.size()];
     int i = 0;
     for (auto camera: cameras) {
         devices[i] = { (int)camera.first, strdup(camera.second.c_str()) };
         i++;
     }
 
-    return new StatusOrInputDevices{OkStatus, "", devices, (int)cameras.size()};
+    return new StatusOrCameraDevices{OkStatus, "", devices, (int)cameras.size()};
 }
 
 Status* handle_exceptions() {
