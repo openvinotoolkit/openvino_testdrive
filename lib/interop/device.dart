@@ -35,10 +35,6 @@ class Device {
       return devices;
     });
 
-    for (var b in result) {
-      print("${b.id}, ${b.name}");
-    }
-
     return result;
   }
 }
@@ -63,15 +59,10 @@ class CameraDevice {
           status.ref.value[i].name.toDartString()
         ));
       }
-      //TODO: implement cleanup.
-      //deviceOV.freeStatusOrDevices(status);
+      deviceOV.freeStatusOrCameraDevices(status);
 
       return devices;
     });
-
-    for (var b in result) {
-      print("${b.id}, ${b.name}");
-    }
 
     return result;
   }
