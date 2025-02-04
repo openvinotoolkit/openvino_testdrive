@@ -5,10 +5,16 @@ echo "Installing ffmpeg from source"
 rm -rf /tmp/build_ffmpeg
 mkdir /tmp/build_ffmpeg
 cd /tmp/build_ffmpeg
-curl -L https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.xz --output ffmpeg.tar.xz
-tar -xJf ffmpeg.tar.xz
-cd ./ffmpeg-$FFMPEG_VERSION
-./configure --enable-shared --prefix=/usr
+git clone https://git.ffmpeg.org/ffmpeg.git
+cd ffmpeg
+git checkout n$FFMPEG_VERSION
+./configure --prefix=/opt/ffmpeg --disable-autodetect --enable-rpath --enable-shared --disable-swscale --disable-avfilter --disable-static --disable-doc --install-name-dir=@rpath
 make -j8
 make install
 rm -rf /tmp/build_ffmpeg
+
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+      touch /etc/ld.so.conf.d/ffmpeg.conf
+      bash -c  "echo /opt/ffmpeg/lib >> /etc/ld.so.conf.d/ffmpeg.conf"
+      ldconfig -v
+fi
