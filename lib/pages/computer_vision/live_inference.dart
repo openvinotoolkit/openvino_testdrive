@@ -147,8 +147,16 @@ class _LiveInferenceState extends State<LiveInference> {
                                 );
                               },
                               items: [
+                                MenuFlyoutItem(text: const Text("None"), onPressed: () {
+                                    setState(() {
+                                        mode = LiveInferenceMode.image;
+                                        cameraDevice = null;
+                                    });
+                                }),
+
                                 for (final device in devices)
                                   MenuFlyoutItem(text: Text(device.name), onPressed: () => openCamera(device)),
+
                               ]
                             );
                           }

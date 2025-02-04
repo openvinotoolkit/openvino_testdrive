@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2024 Intel Corporation
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 #ifndef WINDOWS_INPUT_DEVICES_H_
 #define WINDOWS_INPUT_DEVICES_H_
 

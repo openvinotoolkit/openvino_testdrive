@@ -74,7 +74,7 @@ void freeStatusOrDevices(StatusOrDevices *status) {
     delete status;
 }
 
-void freeStatusOrDevices(StatusOrCameraDevices *status) {
+void freeStatusOrCameraDevices(StatusOrCameraDevices *status) {
     if (status->status == StatusEnum::OkStatus) {
         delete [] status->value;
         status->value = NULL;        // Prevent dangling pointers
