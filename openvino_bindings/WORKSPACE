@@ -109,13 +109,13 @@ git_repository(
 new_local_repository(
     name = "linux_ffmpeg",
     build_file = "//third_party/ffmpeg:linux.BUILD",
-    path = "/usr"
+    path = "/opt/ffmpeg"
 )
 
 new_local_repository(
     name = "mac_ffmpeg",
     build_file = "//third_party/ffmpeg:mac.BUILD",
-    path = "/opt/homebrew/opt/ffmpeg@6",
+    path = "/opt/ffmpeg",
 )
 
 new_local_repository(

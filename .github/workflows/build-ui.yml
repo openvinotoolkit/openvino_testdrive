@@ -1,0 +1,70 @@
+name: Build UI
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        description: 'The operating system to build for'
+        type: string
+
+jobs:
+  build-ui:
+    name: Build UI
+    runs-on: ${{ inputs.os }}
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Determine comon OS vars
+        shell: bash
+        run: |
+          if [[ "${{ runner.os }}" == "Linux" ]]; then
+            echo "RELEASE_PATH=build/linux/x64/release/bundle" >> $GITHUB_ENV
+          elif [[ "${{ runner.os }}" == "Windows" ]]; then
+            echo "RELEASE_PATH=build/windows/x64/runner/Release" >> $GITHUB_ENV
+          elif [[ "${{ runner.os }}" == "macOS" ]]; then
+            mkdir bindings
+            echo "RELEASE_PATH=build/macos/Build/Products/Release/OpenVINO Test Drive.app" >> $GITHUB_ENV
+          fi
+          echo "OS_NAME=`echo '${{runner.os}}' | tr '[:upper:]' '[:lower:]'`" >> $GITHUB_ENV
+
+      - uses: subosito/flutter-action@v2.18.0
+        with:
+          channel: 'stable'
+          flutter-version-file: pubspec.yaml
+          cache: true
+
+      - name: Install linux dependencies
+        if: ${{ runner.os == 'Linux' }}
+        run: sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev
+
+      - name: Install project dependencies
+        run: flutter pub get
+
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          path: |
+            build
+          key: ${{ runner.os }}-flutter
+
+      - name: Generate intermediates
+        run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      - name: Enable build
+        run: flutter config --enable-${{env.OS_NAME}}-desktop
+
+      - name: Build artifacts
+        run: flutter build ${{env.OS_NAME}} --release
+        env:
+          FLUTTER_NOT_BUNDLE_LIBRARIES: true
+          FLUTTER_NOT_SIGN_LIBS: true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "OpenVINO-TestDrive-no-bindings-${{env.OS_NAME}}"
+          path: ${{ env.RELEASE_PATH }}

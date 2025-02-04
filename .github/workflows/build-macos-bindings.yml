@@ -1,0 +1,85 @@
+name: Build MacOS Bindings
+
+on:
+  workflow_call:
+    inputs:
+      OPENVINO_VERSION:
+        required: true
+        description: 'The version of OpenVINO to use'
+        type: string
+
+jobs:
+  build-macos-bindings:
+    name: Build MacOS Bindings
+    runs-on: macos-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # NOTE: cache action executes without sudo, so we need to change ownership (https://github.com/actions/cache/issues/845#issuecomment-1252594999)
+      - name: Change ownership
+        run: |
+          sudo chown -R $USER /usr/local /opt
+
+      - name: Install OpenVINO
+        run: |
+          curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2024.6/macos/openvino_genai_macos_12_6_2024.6.0.0_arm64.tar.gz \
+          -o /tmp/openvino.tar.gz
+          sudo mkdir /opt/intel
+          sudo tar -xvf /tmp/openvino.tar.gz -C /opt/intel
+          sudo mv /opt/intel/openvino_genai_macos_12_6_${{ inputs.OPENVINO_VERSION }}.0.0_arm64 /opt/intel/openvino
+          rm /tmp/openvino.tar.gz
+
+      - name: Cache ffmpeg
+        id: cache-ffmpeg
+        uses: actions/cache@v4
+        with:
+          path: |
+            /opt/ffmpeg
+          key: ${{ runner.os }}-ffmpeg
+
+      - name: Install ffmpeg
+        if: steps.cache-ffmpeg.outputs.cache-hit != 'true'
+        run: |
+          sudo /bin/bash openvino_bindings/scripts/setup_ffmpeg.sh
+
+      - name: Cache OpenCV build
+        id: cache-opencv
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/include/opencv4
+            /usr/local/lib/libopencv_*
+          key: ${{ runner.os }}-opencv-${{ hashFiles('openvino_bindings/scripts/setup_opencv.sh') }}
+
+      - name: Install OpenCV
+        if: steps.cache-opencv.outputs.cache-hit != 'true'
+        run: |
+          sudo /bin/bash openvino_bindings/scripts/setup_opencv.sh
+
+      - name: Install numpy
+        run: |
+          brew install numpy
+
+      - name: Cache Bazel
+        uses: actions/cache@v4
+        with:
+          path: |
+            /private/var/tmp/_bazel_runner/
+          key: ${{ runner.os }}-bazel-${{ hashFiles('**/.bazelversion', '**/.bazelrc', '**/WORKSPACE', '**/WORKSPACE.bazel', '**/MODULE.bazel', '**/*BUILD') }}
+          restore-keys: |
+            ${{ runner.os }}-bazel-
+
+      - name: Build bindings
+        run: |
+          bazelisk build :macos_bindings
+        working-directory: openvino_bindings
+
+      - name: Upload bindings to artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: "macos_bindings.tgz"
+          path: "openvino_bindings/bazel-bin/macos_bindings.tgz"
+          if-no-files-found: error

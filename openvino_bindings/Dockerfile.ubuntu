@@ -32,11 +32,14 @@ RUN cd /opt/intel/openvino && ./install_dependencies/install_openvino_dependenci
 
 RUN mkdir -p /scripts
 WORKDIR /scripts
+COPY scripts/setup_ffmpeg.sh /scripts/setup_ffmpeg.sh
+RUN ./setup_ffmpeg.sh
+
 COPY scripts/setup_opencv.sh /scripts/setup_opencv.sh
 RUN ./setup_opencv.sh
 
-COPY scripts/setup_ffmpeg.sh /scripts/setup_ffmpeg.sh
-RUN ./setup_ffmpeg.sh
+
+RUN ls /opt/ffmpeg
 
 RUN pip3 install numpy
 
