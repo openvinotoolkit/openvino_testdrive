@@ -10,11 +10,11 @@ class CameraHandler {
   int device;
   public:
     CameraHandler(int device): device(device) {}
-    void open_camera(const std::function<void(cv::Mat frame)> onFrameCallback);
+    void open_camera(const std::function<void(cv::Mat frame)>& onFrameCallback);
     void stop_camera();
 
   private:
-    void start_camera_process(const std::function<void(cv::Mat frame)> onFrameCallback);
+    void start_camera_process(const std::function<void(cv::Mat frame)>& onFrameCallback);
 
     bool camera_get_frame = false;
     std::thread camera_thread;

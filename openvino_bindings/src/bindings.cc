@@ -425,17 +425,10 @@ Status* graphRunnerStartCamera(CGraphRunner instance, int camera_index, ImageInf
     try {
         auto runner = reinterpret_cast<GraphRunner*>(instance);
 
-        int i = 0;
-        SerializationOutput serialization_options{json, csv, overlay};
-        auto lambda_callback = [callback, runner, &i, &serialization_options](cv::Mat frame) {
-            runner->queue("input", i, frame);
-            runner->queue("serialization_output", i, serialization_options);
-            auto response = runner->get();
+        auto lambda_callback = [callback](std::string response) {
             callback(new StatusOrString{OkStatus, "", strdup(response.c_str())});
-            i++;
         };
-        auto handler = runner->open_camera(camera_index);
-        handler->open_camera(lambda_callback);
+        runner->open_camera(camera_index, SerializationOutput{json, csv, overlay}, lambda_callback);
         return new Status{OkStatus, ""};
     } catch (...) {
         return handle_exceptions();
@@ -562,10 +555,10 @@ Status* handle_exceptions() {
         std::cout << message << std::endl;
         return new Status{OpenVINOError, strdup(message.c_str())};
     } catch (api_error e) {
-        std::cout << e.what() << std::endl;
+        std::cout << "api error: " << e.what() << std::endl;
         return new Status{e.status, strdup(e.additional_info.c_str())};
     } catch(const std::exception& ex) {
-        std::cout << ex.what() << std::endl;
+        std::cout << "std::exception: " << ex.what() << std::endl;
         return new Status{ErrorStatus, ex.what()};
     } catch (...) {
         std::cout << "Unknown exception" << std::endl;

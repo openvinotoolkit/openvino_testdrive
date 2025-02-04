@@ -11,11 +11,14 @@
 #include <vector>
 #include <memory>
 #include "mediapipe/framework/calculator_framework.h"
+#include "src/mediapipe/serialization/serialization_calculators.h"
 #include <opencv2/opencv.hpp>
 #include "src/utils/camera_handler.h"
 
 class GraphRunner  {
  public:
+  int64 timestamp = 0;
+
   GraphRunner():
     graph(std::make_shared<mediapipe::CalculatorGraph>()) {}
   void open_graph(std::string graph_content);
@@ -23,6 +26,9 @@ class GraphRunner  {
 
   template<typename T>
   void queue(std::string name, int timestamp, T content) {
+    if (timestamp > this->timestamp) {
+      this->timestamp = timestamp;
+    }
     auto packet = mediapipe::MakePacket<T>(content).At(mediapipe::Timestamp(timestamp));
     graph->AddPacketToInputStream(name, packet);
   }
@@ -30,13 +36,10 @@ class GraphRunner  {
   std::string get();
   void stop();
 
-  std::shared_ptr<CameraHandler> open_camera(int deviceIndex);
+  void open_camera(int deviceIndex, SerializationOutput serializationOutput, const std::function<void(std::string output)>& callback);
   void stop_camera();
 
  private:
-
-  // Data stored in these variables is unique to each instance of the add-on.
-  int64 timestamp = 0;
   std::shared_ptr<mediapipe::OutputStreamPoller> poller;
   std::shared_ptr<mediapipe::CalculatorGraph> graph;
   std::shared_ptr<CameraHandler> camera_handler;

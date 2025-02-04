@@ -49,8 +49,7 @@ class GraphRunner {
     });
   }
 
-//EXPORT Status* graphRunnerStartCamera(CGraphRunner instance, int cameraIndex, ImageInferenceCallbackFunction callback);
-  Future<void> startCamera(String nodeName, int deviceIndex, Function(String) callback, SerializationOutput output) async {
+  Future<void> startCamera(int deviceIndex, Function(String) callback, SerializationOutput output) async {
     void wrapCallback(Pointer<StatusOrString> ptr) {
       if (StatusEnum.fromValue(ptr.ref.status) != StatusEnum.OkStatus) {
         // TODO(RHeckerIntel): instead of throw, call an onError callback.
@@ -62,17 +61,16 @@ class GraphRunner {
 
     nativeListener?.close();
     nativeListener = NativeCallable<ImageInferenceCallbackFunctionFunction>.listener(wrapCallback);
-    await Isolate.run(() {
-      final status = ov.graphRunnerStartCamera(instance.ref.value, deviceIndex, nativeListener!.nativeFunction, output.json, output.csv, output.overlay);
-      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
-        throw "GraphRunner::StartCamera error: ${status.ref.status} ${status.ref.message.toDartString()}";
-      }
-    });
+    final nativeFunction = nativeListener!.nativeFunction;
+    final status = ov.graphRunnerStartCamera(instance.ref.value, deviceIndex, nativeFunction, output.json, output.csv, output.overlay);
+    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+      throw "GraphRunner::StartCamera error: ${status.ref.status} ${status.ref.message.toDartString()}";
+    }
   }
-//EXPORT Status* graphRunnerStopCamera(CGraphRunner instance);
   Future<void> stopCamera() async {
+    int instanceAddress = instance.ref.value.address;
     await Isolate.run(() {
-      final status = ov.graphRunnerStopCamera(instance.ref.value);
+      final status = ov.graphRunnerStopCamera(Pointer<Void>.fromAddress(instanceAddress));
       if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
         throw "GraphRunner::StopCamera error: ${status.ref.status} ${status.ref.message.toDartString()}";
       }

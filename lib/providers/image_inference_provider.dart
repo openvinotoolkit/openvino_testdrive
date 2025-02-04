@@ -60,24 +60,19 @@ class ImageInferenceProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    if (_inference != null) {
-      _inference?.close();
-    }
+    _inference?.close();
     super.dispose();
   }
 
-  void openCamera(int id) {
-    // TODO(RHeckerIntel): Implemnet for graph runner
+  void openCamera(int deviceIndex, Function(ImageInferenceResult) callback, SerializationOutput output) {
+    _inference!.startCamera(deviceIndex, (String output) => callback(ImageInferenceResult.fromJson(jsonDecode(output))), output);
   }
 
   void closeCamera() {
-    // TODO(RHeckerIntel): Implemnet for graph runner
+    _inference?.stopCamera();
   }
 
   void setListener(Function(ImageInferenceResult) fn) {
     // TODO(RHeckerIntel): Implemnet for graph runner
   }
-
-
-
 }
