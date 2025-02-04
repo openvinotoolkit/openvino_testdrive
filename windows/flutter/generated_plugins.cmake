@@ -3,9 +3,11 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  camera_windows
   desktop_drop
   flutter_acrylic
   irondash_engine_context
+  permission_handler_windows
   screen_brightness_windows
   screen_retriever_windows
   super_native_extensions

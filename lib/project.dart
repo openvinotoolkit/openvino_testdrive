@@ -18,7 +18,6 @@ final platformContext = Context(style: Style.platform);
 
 const currentApplicationVersion = "1.0.0";
 
-
 class Score {
   double score = 0.0;
 
@@ -38,25 +37,13 @@ class Label {
   Label(this.id, this.name, this.color, this.isEmpty);
 
   static Label fromJson(json) {
-    return Label(
-      json["id"],
-      json["name"],
-      json["color"],
-      json["is_empty"]
-    );
+    return Label(json["id"], json["name"], json["color"], json["is_empty"]);
   }
 
   Object toMap() {
-    return {
-        "id": id,
-        "name": name,
-        "color": color,
-        "is_empty": isEmpty
-    };
+    return {"id": id, "name": name, "color": color, "is_empty": isEmpty};
   }
-
 }
-
 
 class Task {
   String id;
@@ -68,10 +55,14 @@ class Task {
   String architecture;
   String optimization;
 
-  Task(this.id, this.name, this.taskType, this.modelPaths, this.performance, this.labels, this.architecture, this.optimization);
+  // Task(this.id, this.name, this.taskType, this.modelPaths, this.performance, this.labels, this.architecture, this.optimization);
+  Task(this.id, this.name, this.taskType, this.modelPaths, this.performance,
+      this.labels, this.architecture, this.optimization) {
+    print("📌 Model Paths for Task '$name': $modelPaths");
+  }
 
   String calculatorName() {
-    switch(taskType) {
+    switch (taskType) {
       case "rotated_detection":
         return "RotatedDetection";
       case "anomaly_classification":
@@ -88,40 +79,41 @@ class Task {
 
   Object toMap() {
     return {
-        "id": id,
-        "name": name,
-        "task_type": taskType,
-        "model_paths": modelPaths,
-        "performance": performance?.toMap(),
-        "labels": labels.map((label) => label.toMap()).toList(),
-        "architecture": architecture,
-        "optimization": optimization,
+      "id": id,
+      "name": name,
+      "task_type": taskType,
+      "model_paths": modelPaths,
+      "performance": performance?.toMap(),
+      "labels": labels.map((label) => label.toMap()).toList(),
+      "architecture": architecture,
+      "optimization": optimization,
     };
   }
 
   static Task fromJson(json) {
     return Task(
-      json["id"],
-      json["name"],
-      json["task_type"],
-      List<String>.from(json["model_paths"]),
-      (json["performance"] == null ? null : Score(json["performance"])),
-      List<Label>.from(json["labels"].map((labelJson) => Label.fromJson(labelJson))),
-      json["architecture"],
-      json["optimization"]
-    );
+        json["id"],
+        json["name"],
+        json["task_type"],
+        List<String>.from(json["model_paths"]),
+        (json["performance"] == null ? null : Score(json["performance"])),
+        List<Label>.from(
+            json["labels"].map((labelJson) => Label.fromJson(labelJson))),
+        json["architecture"],
+        json["optimization"]);
   }
 }
 
 enum ProjectType { image, text, textToImage, speech }
+
 ProjectType parseProjectType(String name) {
   if (name == "image") {
     return ProjectType.image;
   }
-  if (name == "text" || name == "text-generation"){
+  if (name == "text" || name == "text-generation") {
     return ProjectType.text;
   }
-  if (name == "textToImage" || name == "text-to-image"){
+  if (name == "textToImage" || name == "text-to-image") {
     return ProjectType.textToImage;
   }
   if (name == "speech") {
@@ -132,7 +124,7 @@ ProjectType parseProjectType(String name) {
 }
 
 String projectTypeToString(ProjectType type) {
-  switch(type){
+  switch (type) {
     case ProjectType.text:
       return "text";
     case ProjectType.textToImage:
@@ -166,9 +158,12 @@ class Project {
     return tasks.first.architecture;
   }
 
-
   List<Label> labels() {
-    return tasks.map((t) => t.labels).expand((i) => i).where((label) => !label.isEmpty).toList();
+    return tasks
+        .map((t) => t.labels)
+        .expand((i) => i)
+        .where((label) => !label.isEmpty)
+        .toList();
   }
 
   String samplePath() {
@@ -188,10 +183,13 @@ class Project {
 
   bool get isDownloaded => true;
 
-  Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic) {
+  Project(this.id, this.modelId, this.applicationVersion, this.name,
+      this.creationTime, this.type, this.storagePath, this.isPublic) {
     final dir = Directory(storagePath);
     if (dir.existsSync()) {
-      size = dir.listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
+      size = dir
+          .listSync(recursive: true)
+          .fold(0, (acc, m) => acc! + m.statSync().size);
     }
   }
 
@@ -214,7 +212,7 @@ class Project {
   }
 
   static Project fromJson(Map<String, dynamic> json, String storagePath) {
-    return switch(json){
+    return switch (json) {
       {'is_public': true} => PublicProject.fromJson(json, storagePath),
       _ => GetiProject.fromJson(json, storagePath),
     };
@@ -226,14 +224,14 @@ class Project {
     ];
 
     if (isDownloaded) {
-
-      checks.addAll(tasks.map((task) => task.modelPaths).expand((v) => v).map((path) {
-          return File(platformContext.join(storagePath, path)).existsSync();
+      checks.addAll(
+          tasks.map((task) => task.modelPaths).expand((v) => v).map((path) {
+        return File(platformContext.join(storagePath, path)).existsSync();
       }));
 
       checks.addAll([
-          //File(platformContext.join(storagePath, "sample.jpg")).existsSync(),
-          File(platformContext.join(storagePath, "thumbnail.jpg")).existsSync(),
+        //File(platformContext.join(storagePath, "sample.jpg")).existsSync(),
+        File(platformContext.join(storagePath, "thumbnail.jpg")).existsSync(),
       ]);
     }
 
@@ -242,8 +240,10 @@ class Project {
 }
 
 class GetiProject extends Project {
-  GetiProject(String id, String modelId, String applicationVersion, String name, String creationTime, ProjectType type, String storagePath)
-    : super(id, modelId, applicationVersion, name, creationTime, type, storagePath, false);
+  GetiProject(String id, String modelId, String applicationVersion, String name,
+      String creationTime, ProjectType type, String storagePath)
+      : super(id, modelId, applicationVersion, name, creationTime, type,
+            storagePath, false);
 
   List<Score?> scores() {
     return tasks.map((t) => t.performance).toList();
@@ -253,7 +253,7 @@ class GetiProject extends Project {
   ImageProvider thumbnailImage() {
     final path = platformContext.join(storagePath, "thumbnail.jpg");
     final imageFile = File(path);
-    if (imageFile.existsSync()){
+    if (imageFile.existsSync()) {
       return FileImage(imageFile);
     } else {
       return const AssetImage('images/intel-loading.gif');
@@ -265,14 +265,13 @@ class GetiProject extends Project {
       throw const FormatException("Project is for different version");
     }
     var project = GetiProject(
-      json["id"],
-      json["model_id"],
-      json["application_version"],
-      json["name"],
-      json["creation_time"],
-      parseProjectType(json["type"]),
-      storagePath
-    );
+        json["id"],
+        json["model_id"],
+        json["application_version"],
+        json["name"],
+        json["creation_time"],
+        parseProjectType(json["type"]),
+        storagePath);
     project.hasSample = json["has_sample"] != null && json["has_sample"];
     project.tasks = List.from(json["tasks"].map((task) => Task.fromJson(task)));
     return project;
@@ -280,7 +279,7 @@ class GetiProject extends Project {
 
   @override
   bool operator ==(other) {
-    if (other is! Project){
+    if (other is! Project) {
       return false;
     }
 
@@ -289,10 +288,9 @@ class GetiProject extends Project {
     }
 
     return const ListEquality().equals(
-      other.tasks.map((m) => m.id).toList(),
-      tasks.map((m) => m.id).toList()
-    );
+        other.tasks.map((m) => m.id).toList(), tasks.map((m) => m.id).toList());
   }
+
   @override
   bool verify() {
     final platformContext = Context(style: Style.platform);
@@ -300,13 +298,14 @@ class GetiProject extends Project {
       File(platformContext.join(storagePath, "project.json")).existsSync(),
     ];
 
-    checks.addAll(tasks.map((task) => task.modelPaths).expand((v) => v).map((path) {
-        return File(platformContext.join(storagePath, path)).existsSync();
+    checks.addAll(
+        tasks.map((task) => task.modelPaths).expand((v) => v).map((path) {
+      return File(platformContext.join(storagePath, path)).existsSync();
     }));
 
     checks.addAll([
-        File(platformContext.join(storagePath, "sample.jpg")).existsSync(),
-        File(platformContext.join(storagePath, "thumbnail.jpg")).existsSync(),
+      File(platformContext.join(storagePath, "sample.jpg")).existsSync(),
+      File(platformContext.join(storagePath, "thumbnail.jpg")).existsSync(),
     ]);
 
     return !checks.contains(false);
@@ -320,8 +319,18 @@ class PublicProject extends Project {
   Image thumbnail;
   PublicModelInfo? modelInfo;
 
-  PublicProject(String id, String modelId, String applicationVersion, String name, String creationTime, ProjectType type, String storagePath, this.thumbnail, this.modelInfo)
-    : super(id, modelId, applicationVersion, name, creationTime, type, storagePath, true);
+  PublicProject(
+      String id,
+      String modelId,
+      String applicationVersion,
+      String name,
+      String creationTime,
+      ProjectType type,
+      String storagePath,
+      this.thumbnail,
+      this.modelInfo)
+      : super(id, modelId, applicationVersion, name, creationTime, type,
+            storagePath, true);
 
   @override
   ImageProvider thumbnailImage() {
@@ -333,16 +342,15 @@ class PublicProject extends Project {
 
   static PublicProject fromJson(Map<String, dynamic> json, String storagePath) {
     final project = PublicProject(
-      json['id'],
-      json['model_id'],
-      json['application_version'],
-      json['name'],
-      json['creation_time'],
-      parseProjectType(json['type']),
-      storagePath,
-      getThumbnail(json['name']),
-      null
-    );
+        json['id'],
+        json['model_id'],
+        json['application_version'],
+        json['name'],
+        json['creation_time'],
+        parseProjectType(json['type']),
+        storagePath,
+        getThumbnail(json['name']),
+        null);
 
     project.tasks = List<Task>.from(json['tasks'].map((t) => Task.fromJson(t)));
     return project;

@@ -30,7 +30,7 @@ migrate_working_dir/
 .flutter-plugins
 .flutter-plugins-dependencies
 .pub-cache/
-.pub/
+.pu/
 /build/
 
 # Symbolication related

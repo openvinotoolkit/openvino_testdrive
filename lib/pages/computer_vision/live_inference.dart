@@ -22,7 +22,6 @@ import 'package:provider/provider.dart';
 
 import 'dart:ui' as ui;
 
-
 class LiveInference extends StatefulWidget {
   final Project project;
 
@@ -37,7 +36,8 @@ class _LiveInferenceState extends State<LiveInference> {
   ui.Image? image;
 
   void showUploadMenu() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
 
     if (result != null) {
       uploadFile(result.files.single.path!);
@@ -46,16 +46,18 @@ class _LiveInferenceState extends State<LiveInference> {
 
   void uploadFile(String path) async {
     setState(() {
-        image = null;
-        inferenceResult = null;
+      image = null;
+      inferenceResult = null;
     });
 
     Uint8List imageData = File(path).readAsBytesSync();
-    final inferenceProvider = Provider.of<ImageInferenceProvider>(context, listen: false);
+    final inferenceProvider =
+        Provider.of<ImageInferenceProvider>(context, listen: false);
     final uiImage = await decodeImageFromList(imageData);
     setState(() {
-        image = uiImage;
-        inferenceResult = inferenceProvider.infer(imageData, SerializationOutput(json: true));
+      image = uiImage;
+      inferenceResult =
+          inferenceProvider.infer(imageData, SerializationOutput(json: true));
     });
   }
 
@@ -77,28 +79,32 @@ class _LiveInferenceState extends State<LiveInference> {
                     child: Row(
                       children: [
                         DropDownButton(
-                          buttonBuilder: (context, callback) {
-                            return NoOutlineButton(
-                              onPressed: callback,
-                              child: const Row(
-                                children: [
-                                  Text("Choose image file"),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 8),
-                                    child: Icon(FluentIcons.chevron_down, size: 12),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          items: [
-                            MenuFlyoutItem(text: const Text("Choose image file"), onPressed: showUploadMenu),
-                            //MenuFlyoutItem(text: const Text("Camera"), onPressed: () {}),
-                            MenuFlyoutItem(text: const Text("Sample image"), onPressed: () {
-                              uploadFile(widget.project.samplePath());
-                            }),
-                          ]
-                        ),
+                            buttonBuilder: (context, callback) {
+                              return NoOutlineButton(
+                                onPressed: callback,
+                                child: const Row(
+                                  children: [
+                                    Text("Choose image file"),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 8),
+                                      child: Icon(FluentIcons.chevron_down,
+                                          size: 12),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            items: [
+                              MenuFlyoutItem(
+                                  text: const Text("Choose image file"),
+                                  onPressed: showUploadMenu),
+                              //MenuFlyoutItem(text: const Text("Camera"), onPressed: () {}),
+                              MenuFlyoutItem(
+                                  text: const Text("Sample image"),
+                                  onPressed: () {
+                                    uploadFile(widget.project.samplePath());
+                                  }),
+                            ]),
                         const DeviceSelector(),
                       ],
                     ),
@@ -108,32 +114,42 @@ class _LiveInferenceState extends State<LiveInference> {
               Expanded(
                 child: GridContainer(
                   color: backgroundColor.of(theme),
-                  child: Builder(
-                    builder: (context) {
-                      return DropArea(
-                        type: "image",
-                        showChild: inferenceResult != null,
-                        onUpload: (String file) { uploadFile(file); },
-                        extensions: const ["jpg", "jpeg", "bmp", "png", "tif", "tiff"],
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: FutureBuilder<ImageInferenceResult>(
+                  child: Builder(builder: (context) {
+                    return DropArea(
+                      type: "image",
+                      showChild: inferenceResult != null,
+                      onUpload: (String file) {
+                        uploadFile(file);
+                      },
+                      extensions: const [
+                        "jpg",
+                        "jpeg",
+                        "bmp",
+                        "png",
+                        "tif",
+                        "tiff"
+                      ],
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FutureBuilder<ImageInferenceResult>(
                             future: inferenceResult,
                             builder: (context, snapshot) {
-                              if(snapshot.hasData) {
+                              if (snapshot.hasData) {
                                 return Canvas(
                                   image: image!,
-                                  annotations: snapshot.data!.parseAnnotations(),
-                                  labelDefinitions: widget.project.labelDefinitions,
+                                  annotations:
+                                      snapshot.data!.parseAnnotations(),
+                                  labelDefinitions:
+                                      widget.project.labelDefinitions,
                                 );
                               }
-                              return Center(child: Image.asset('images/intel-loading.gif', width: 100));
-                            }
-                          ),
-                        ),
-                      );
-                    }
-                  ),
+                              return Center(
+                                  child: Image.asset('images/intel-loading.gif',
+                                      width: 100));
+                            }),
+                      ),
+                    );
+                  }),
                 ),
               )
             ],

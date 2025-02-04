@@ -21,7 +21,7 @@ void testConnection() async {
 
   try {
     await dio.get(collections[0].path);
-  } on DioException catch(ex) {
+  } on DioException catch (ex) {
     if (ex.type == DioExceptionType.connectionError) {
       // Perhaps proxy issue, disable proxy in future requests.
       Config.proxyDirect = true;
@@ -56,8 +56,11 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<PreferenceProvider>(create: (_) => PreferenceProvider(PreferenceProvider.defaultDevice)),
-        ChangeNotifierProvider<ProjectProvider>(create: (_) => ProjectProvider([])),
+        ChangeNotifierProvider<PreferenceProvider>(
+            create: (_) =>
+                PreferenceProvider(PreferenceProvider.defaultDevice)),
+        ChangeNotifierProvider<ProjectProvider>(
+            create: (_) => ProjectProvider([])),
         ChangeNotifierProvider(create: (_) => AppTheme()),
       ],
       builder: (context, child) {
@@ -84,9 +87,9 @@ class App extends StatelessWidget {
           // locale: theme.locale,
           builder: (context, child) => NavigationPaneTheme(
             data: const NavigationPaneThemeData(
-              // backgroundColor: theme.windowEffect != flutter_acrylic.WindowEffect.disabled
-              //   ? Colors.transparent : null,
-            ),
+                // backgroundColor: theme.windowEffect != flutter_acrylic.WindowEffect.disabled
+                //   ? Colors.transparent : null,
+                ),
             child: child!,
           ),
           routeInformationParser: router.routeInformationParser,
