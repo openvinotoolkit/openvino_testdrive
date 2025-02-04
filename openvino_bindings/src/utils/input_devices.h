@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#ifndef WINDOWS_INPUT_DEVICES_H_
-#define WINDOWS_INPUT_DEVICES_H_
+#ifndef INPUT_DEVICES_H_
+#define INPUT_DEVICES_H_
 
 #include <iostream>
 #include <vector>
@@ -110,4 +110,4 @@ std::map<size_t, std::string> list_camera_devices() {
 }
 #endif
 
-#endif // WINDOWS_INPUT_DEVICES_H_
+#endif // INPUT_DEVICES_H_

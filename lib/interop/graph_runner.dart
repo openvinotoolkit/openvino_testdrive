@@ -10,7 +10,6 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
-import 'package:inference/interop/device.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 
 final ov = getBindings();
