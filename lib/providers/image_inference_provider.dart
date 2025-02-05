@@ -57,9 +57,15 @@ class ImageInferenceProvider extends ChangeNotifier {
     return ImageInferenceResult.fromJson(jsonDecode(result));
   }
 
+
+  Future<void> close() async  {
+    await closeCamera();
+    await _inference?.stop();
+  }
+
   @override
-  void dispose() {
-    _inference?.close();
+  void dispose() async {
+    await close();
     super.dispose();
   }
 
@@ -67,8 +73,8 @@ class ImageInferenceProvider extends ChangeNotifier {
     _inference!.startCamera(deviceIndex, (String output) => callback(ImageInferenceResult.fromJson(jsonDecode(output))), output);
   }
 
-  void closeCamera() {
-    _inference?.stopCamera();
+  Future<void> closeCamera() async {
+    await _inference?.stopCamera();
   }
 
   void setListener(Function(ImageInferenceResult) fn) {

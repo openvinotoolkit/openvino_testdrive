@@ -82,8 +82,12 @@ class GraphRunner {
     int instanceAddress = instance.ref.value.address;
     await Isolate.run(() {
       final status = ov.graphRunnerStopCamera(Pointer<Void>.fromAddress(instanceAddress));
-      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
-        throw "GraphRunner::StopCamera error: ${status.ref.status} ${status.ref.message.toDartString()}";
+      switch(StatusEnum.fromValue(status.ref.status)) {
+        case StatusEnum.OkStatus:
+        case StatusEnum.ErrorStatus: //Fail gracefully since race condition could happen with stopping the camera and we dont care about that
+          break;
+        default:
+          throw "GraphRunner::StopCamera error: ${status.ref.status} ${status.ref.message.toDartString()}";
       }
     });
   }
@@ -119,13 +123,12 @@ class GraphRunner {
   }
 
   Future<void> stop() async {
-    final status = ov.graphRunnerStop(instance.ref.value);
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
-      throw "QueueSerializationOutput error: ${status.ref.status} ${status.ref.message.toDartString()}";
-    }
-  }
-
-  void close() {
-    stop();
+    int instanceAddress = instance.ref.value.address;
+    await Isolate.run(() {
+      final status = ov.graphRunnerStop(Pointer<Void>.fromAddress(instanceAddress));
+      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+        throw "GraphRunner::stop error: ${status.ref.status} ${status.ref.message.toDartString()}";
+      }
+    });
   }
 }
