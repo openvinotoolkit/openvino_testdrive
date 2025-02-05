@@ -71,57 +71,55 @@ class _DropAreaState extends State<DropArea> {
       child:
       Padding(
         padding: const EdgeInsets.all(20),
-        child: Center(
-          child: Builder(
-            builder: (context) {
-              if (widget.showChild && !_showReleaseMessage) {
-                // If we have a child and aren't showing the drop message, display it.
-                return widget.child ?? const SizedBox.shrink();
-              }
+        child: Builder(
+          builder: (context) {
+            if (widget.showChild && !_showReleaseMessage) {
+              // If we have a child and aren't showing the drop message, display it.
+              return widget.child ?? const SizedBox.shrink();
+            }
 
-              final theme = FluentTheme.of(context);
-              final String text = _showReleaseMessage
-                  ? "Release to drop"
-                  : "Drag and drop ${widget.type}";
+            final theme = FluentTheme.of(context);
+            final String text = _showReleaseMessage
+                ? "Release to drop"
+                : "Drag and drop ${widget.type}";
 
-              return Center(
-                child: SizedBox(
-                  height: 310,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      // Top text
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          text,
-                          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
-                          textAlign: TextAlign.center,
-                        ),
+            return Center(
+              child: SizedBox(
+                height: 310,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // Top text
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        text,
+                        style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.center,
                       ),
+                    ),
 
-                      // SVG scales to available space in the column
-                      Expanded(
-                        // FittedBox automatically scales its child to fit the parent's constraints
-                        child: FittedBox(
-                          fit: BoxFit.contain,
-                          child: theme.brightness.isDark
-                              ? SvgPicture.asset('images/drop.svg')
-                              : SvgPicture.asset('images/drop_light.svg'),
-                        ),
+                    // SVG scales to available space in the column
+                    Expanded(
+                      // FittedBox automatically scales its child to fit the parent's constraints
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: theme.brightness.isDark
+                            ? SvgPicture.asset('images/drop.svg')
+                            : SvgPicture.asset('images/drop_light.svg'),
                       ),
+                    ),
 
-                      // Optional file extension text at the bottom
-                      if (widget.extensions != null)
-                        Text(widget.extensions!.join(", "))
-                      else
-                        const SizedBox.shrink(),
-                    ],
-                  )
-                ),
-              );
-            },
-          )
+                    // Optional file extension text at the bottom
+                    if (widget.extensions != null)
+                      Text(widget.extensions!.join(", "))
+                    else
+                      const SizedBox.shrink(),
+                  ],
+                )
+              ),
+            );
+          },
         ),
       )
     );
