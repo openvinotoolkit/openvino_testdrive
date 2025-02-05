@@ -38,6 +38,11 @@ typedef struct {
 } Device;
 
 typedef struct {
+    int id;
+    const char* name;
+} CameraDevice;
+
+typedef struct {
   float start_ts;
   float end_ts;
   const char* text;
@@ -152,12 +157,20 @@ typedef struct {
     int size;
 } StatusOrDevices;
 
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
+    CameraDevice* value;
+    int size;
+} StatusOrCameraDevices;
+
 typedef void (*ImageInferenceCallbackFunction)(StatusOrString*);
 typedef void (*LLMInferenceCallbackFunction)(StatusOrString*);
 typedef void (*VLMInferenceCallbackFunction)(StatusOrString*);
 
 EXPORT void freeStatus(Status *status);
 EXPORT void freeStatusOrString(StatusOrString *status);
+EXPORT void freeStatusOrInt(StatusOrInt *status);
 EXPORT void freeStatusOrImageInference(StatusOrImageInference *status);
 EXPORT void freeStatusOrLLMInference(StatusOrLLMInference *status);
 EXPORT void freeStatusOrSpeechToText(StatusOrSpeechToText *status);
@@ -165,6 +178,7 @@ EXPORT void freeStatusOrModelResponse(StatusOrModelResponse *status);
 EXPORT void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *status);
 EXPORT void freeStatusOrDevices(StatusOrDevices *status);
 EXPORT void freeStatusOrEmbeddings(StatusOrEmbeddings *status);
+EXPORT void freeStatusOrCameraDevices(StatusOrCameraDevices *status);
 
 EXPORT StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json);
 EXPORT StatusOrString* imageInferenceInfer(CImageInference instance, unsigned char* image_data, const size_t data_length, bool json, bool csv, bool overlay);
@@ -204,6 +218,9 @@ EXPORT Status* graphRunnerQueueImage(CGraphRunner instance, const char* name, in
 EXPORT Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* name, int timestamp, bool json, bool csv, bool overlay);
 EXPORT StatusOrString* graphRunnerGet(CGraphRunner instance);
 EXPORT Status* graphRunnerStop(CGraphRunner instance);
+EXPORT Status* graphRunnerStartCamera(CGraphRunner instance, int cameraIndex, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay);
+EXPORT StatusOrInt* graphRunnerGetTimestamp(CGraphRunner instance);
+EXPORT Status* graphRunnerStopCamera(CGraphRunner instance);
 
 EXPORT StatusOrSentenceTransformer* sentenceTransformerOpen(const char* model_path, const char* device);
 EXPORT StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, const char* prompt);
@@ -217,6 +234,8 @@ EXPORT StatusOrInt* speechToTextVideoDuration(CSpeechToText instance);
 EXPORT StatusOrWhisperModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language);
 
 EXPORT StatusOrDevices* getAvailableDevices();
+EXPORT StatusOrCameraDevices* getAvailableCameraDevices();
+
 Status* handle_exceptions();
 
 //extern "C" void report_rss();

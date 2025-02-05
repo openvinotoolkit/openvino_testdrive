@@ -47,6 +47,20 @@ class OpenVINO {
   late final _freeStatusOrString = _freeStatusOrStringPtr
       .asFunction<void Function(ffi.Pointer<StatusOrString>)>();
 
+  void freeStatusOrInt(
+    ffi.Pointer<StatusOrInt> status,
+  ) {
+    return _freeStatusOrInt(
+      status,
+    );
+  }
+
+  late final _freeStatusOrIntPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<StatusOrInt>)>>(
+          'freeStatusOrInt');
+  late final _freeStatusOrInt =
+      _freeStatusOrIntPtr.asFunction<void Function(ffi.Pointer<StatusOrInt>)>();
+
   void freeStatusOrImageInference(
     ffi.Pointer<StatusOrImageInference> status,
   ) {
@@ -151,6 +165,21 @@ class OpenVINO {
       'freeStatusOrEmbeddings');
   late final _freeStatusOrEmbeddings = _freeStatusOrEmbeddingsPtr
       .asFunction<void Function(ffi.Pointer<StatusOrEmbeddings>)>();
+
+  void freeStatusOrCameraDevices(
+    ffi.Pointer<StatusOrCameraDevices> status,
+  ) {
+    return _freeStatusOrCameraDevices(
+      status,
+    );
+  }
+
+  late final _freeStatusOrCameraDevicesPtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<StatusOrCameraDevices>)>>(
+      'freeStatusOrCameraDevices');
+  late final _freeStatusOrCameraDevices = _freeStatusOrCameraDevicesPtr
+      .asFunction<void Function(ffi.Pointer<StatusOrCameraDevices>)>();
 
   ffi.Pointer<StatusOrImageInference> imageInferenceOpen(
     ffi.Pointer<pkg_ffi.Utf8> model_path,
@@ -816,6 +845,65 @@ class OpenVINO {
   late final _graphRunnerStop = _graphRunnerStopPtr
       .asFunction<ffi.Pointer<Status> Function(CGraphRunner)>();
 
+  ffi.Pointer<Status> graphRunnerStartCamera(
+    CGraphRunner instance,
+    int cameraIndex,
+    ImageInferenceCallbackFunction callback,
+    bool json,
+    bool csv,
+    bool overlay,
+  ) {
+    return _graphRunnerStartCamera(
+      instance,
+      cameraIndex,
+      callback,
+      json,
+      csv,
+      overlay,
+    );
+  }
+
+  late final _graphRunnerStartCameraPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<Status> Function(
+              CGraphRunner,
+              ffi.Int,
+              ImageInferenceCallbackFunction,
+              ffi.Bool,
+              ffi.Bool,
+              ffi.Bool)>>('graphRunnerStartCamera');
+  late final _graphRunnerStartCamera = _graphRunnerStartCameraPtr.asFunction<
+      ffi.Pointer<Status> Function(CGraphRunner, int,
+          ImageInferenceCallbackFunction, bool, bool, bool)>();
+
+  ffi.Pointer<StatusOrInt> graphRunnerGetTimestamp(
+    CGraphRunner instance,
+  ) {
+    return _graphRunnerGetTimestamp(
+      instance,
+    );
+  }
+
+  late final _graphRunnerGetTimestampPtr = _lookup<
+          ffi.NativeFunction<ffi.Pointer<StatusOrInt> Function(CGraphRunner)>>(
+      'graphRunnerGetTimestamp');
+  late final _graphRunnerGetTimestamp = _graphRunnerGetTimestampPtr
+      .asFunction<ffi.Pointer<StatusOrInt> Function(CGraphRunner)>();
+
+  ffi.Pointer<Status> graphRunnerStopCamera(
+    CGraphRunner instance,
+  ) {
+    return _graphRunnerStopCamera(
+      instance,
+    );
+  }
+
+  late final _graphRunnerStopCameraPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<Status> Function(CGraphRunner)>>(
+          'graphRunnerStopCamera');
+  late final _graphRunnerStopCamera = _graphRunnerStopCameraPtr
+      .asFunction<ffi.Pointer<Status> Function(CGraphRunner)>();
+
   ffi.Pointer<StatusOrSentenceTransformer> sentenceTransformerOpen(
     ffi.Pointer<pkg_ffi.Utf8> model_path,
     ffi.Pointer<pkg_ffi.Utf8> device,
@@ -968,6 +1056,16 @@ class OpenVINO {
   late final _getAvailableDevices = _getAvailableDevicesPtr
       .asFunction<ffi.Pointer<StatusOrDevices> Function()>();
 
+  ffi.Pointer<StatusOrCameraDevices> getAvailableCameraDevices() {
+    return _getAvailableCameraDevices();
+  }
+
+  late final _getAvailableCameraDevicesPtr = _lookup<
+          ffi.NativeFunction<ffi.Pointer<StatusOrCameraDevices> Function()>>(
+      'getAvailableCameraDevices');
+  late final _getAvailableCameraDevices = _getAvailableCameraDevicesPtr
+      .asFunction<ffi.Pointer<StatusOrCameraDevices> Function()>();
+
   ffi.Pointer<Status> handle_exceptions() {
     return _handle_exceptions();
   }
@@ -998,7 +1096,8 @@ enum StatusEnum {
   SpeechToTextError(-80),
   SpeechToTextFileNotOpened(-81),
   SpeechToTextChunkHasNoData(-82),
-  SpeechToTextChunkOutOfBounds(-83);
+  SpeechToTextChunkOutOfBounds(-83),
+  InputDeviceError(-90);
 
   final int value;
   const StatusEnum(this.value);
@@ -1023,6 +1122,7 @@ enum StatusEnum {
         -81 => SpeechToTextFileNotOpened,
         -82 => SpeechToTextChunkHasNoData,
         -83 => SpeechToTextChunkOutOfBounds,
+        -90 => InputDeviceError,
         _ => throw ArgumentError("Unknown value for StatusEnum: $value"),
       };
 }
@@ -1107,6 +1207,13 @@ final class VLMStringWithMetrics extends ffi.Struct {
 
 final class Device extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> id;
+
+  external ffi.Pointer<pkg_ffi.Utf8> name;
+}
+
+final class CameraDevice extends ffi.Struct {
+  @ffi.Int()
+  external int id;
 
   external ffi.Pointer<pkg_ffi.Utf8> name;
 }
@@ -1298,6 +1405,18 @@ final class StatusOrDevices extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
   external ffi.Pointer<Device> value;
+
+  @ffi.Int()
+  external int size;
+}
+
+final class StatusOrCameraDevices extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external ffi.Pointer<CameraDevice> value;
 
   @ffi.Int()
   external int size;

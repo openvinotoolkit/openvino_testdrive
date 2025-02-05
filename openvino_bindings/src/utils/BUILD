@@ -1,6 +1,20 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "camera_handler",
+    hdrs = [
+        "camera_handler.h",
+    ],
+    srcs = [
+         "camera_handler.cc",
+    ],
+    deps = [
+        "//third_party:opencv",
+        ":errors",
+    ],
+)
+
+cc_library(
     name = "errors",
     hdrs = [
         "errors.h",
@@ -15,6 +29,19 @@ cc_library(
     hdrs = [
         "status.h",
     ],
+)
+
+cc_library(
+    name = "input_devices",
+    hdrs = ["input_devices.h"],
+    deps = [
+         ":errors",
+    ],
+    linkopts = select({
+        "@platforms//os:windows": ["mfplat.lib", "mf.lib", "mfuuid.lib", "ole32.lib"],
+        "@platforms//os:linux": [],  # No extra libraries needed for V4L2
+        "@platforms//os:macos": ["-framework AVFoundation", "-framework Foundation"],
+    }),
 )
 
 cc_library(

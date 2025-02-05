@@ -17,20 +17,35 @@ inline std::string error_to_string(StatusEnum error) {
             return "Ok";
         case ErrorStatus:
             return "ErrorStatus"; //generic error
+        case OpenVINOError:
+            return "OpenVINOError";
         case ModelTypeNotSupplied:
             return "ModelTypeNotSupplied";
         case ModelTypeNotSupported:
             return "ModelTypeNotSupported";
+        case TaskTypeNotSupported:
+            return "TaskTypeNotSupported";
+
         case OverlayUnableToLoadFont:
             return "OverlayUnableToLoadFont";
         case OverlayLabelNotFound:
             return "OverlayLabelNotFound";
         case OverlayNoOutputSelected:
             return "OverlayNoOutputSelected";
+
         case FontLoadError:
             return "FontLoadError";
+        case InferenceAnomalyLabelsIncorrect:
+            return "InferenceAnomalyLabelsIncorrect";
+
+        case CameraNotOpenend:
+            return "CameraNotOpenend";
+
+        case MediapipeNextPackageFailure:
+            return "MediapipeNextPackageFailure";
+
         default:
-            return "Undefined";
+            return "Undefined: " + std::to_string(error);
     }
 }
 
