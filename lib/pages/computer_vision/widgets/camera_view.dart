@@ -31,7 +31,6 @@ class _CameraViewState extends State<CameraView> {
   }
 
   void startCamera(){
-    streamController = StreamController<ImageInferenceResult>();
     inferenceProvider.openCamera(widget.deviceIndex, onFrame, SerializationOutput(overlay: true));
   }
 
@@ -39,6 +38,7 @@ class _CameraViewState extends State<CameraView> {
   void initState() {
     super.initState();
     inferenceProvider = Provider.of<ImageInferenceProvider>(context, listen: false);
+    streamController = StreamController<ImageInferenceResult>();
     startCamera();
   }
 
@@ -49,11 +49,18 @@ class _CameraViewState extends State<CameraView> {
   }
 
   @override
+  void didUpdateWidget(covariant CameraView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.deviceIndex != widget.deviceIndex) {
+      inferenceProvider.closeCamera().then((_) => startCamera());
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return StreamBuilder<ImageInferenceResult>(
       stream: streamController.stream,
       builder: (context, AsyncSnapshot<ImageInferenceResult> snapshot) {
-        print(snapshot);
         final overlayData = snapshot.data?.overlay;
         final overlayImage = overlayData == null
           ? null
