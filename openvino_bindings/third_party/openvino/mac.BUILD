@@ -1,4 +1,4 @@
-OPENVINO_VERSION = "2460"
+OPENVINO_VERSION = "2500"
 
 package(
     default_visibility = ["//visibility:public"],
