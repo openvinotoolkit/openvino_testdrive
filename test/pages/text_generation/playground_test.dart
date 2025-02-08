@@ -53,28 +53,41 @@ main() {
   setUpAll(() {
     inference = MockLLMInference();
   });
-  //testWidgets('test something', (tester) async {
-  //  final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
-  //  provider.inference = inference;
-  //  provider.loaded.complete();
 
-  //  final completer = Completer<void>();
+  testWidgets('test chat with large language model', (tester) async {
+    final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
+    provider.inference = inference;
+    provider.loaded.complete();
 
-  //  final metrics = calloc<Metrics>();
-  //  when(() => inference.prompt(any(), any(), any())).thenAnswer((_) async {
-  //    await completer.future;
-  //    return ModelResponse("The color of the sun is yellow", metrics.ref);
+    final completer = Completer<void>();
 
-  //  });
+    final metrics = calloc<Metrics>();
+    when(() => inference.prompt(any(), any(), any())).thenAnswer((_) async {
+      await completer.future;
+      return ModelResponse("The color of the sun is yellow", metrics.ref);
 
-  //  await tester.pumpWidget(renderWidget(provider, preferenceProvider, largeLanguageModel()));
+    });
 
-  //  await tester.enterText(find.byType(TextBox), 'What is the color of the sun?');
+    await tester.pumpWidget(renderWidget(provider, preferenceProvider, largeLanguageModel()));
+
+    await tester.enterText(find.byType(TextBox), 'What is the color of the sun?');
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(FluentIcons.send));
+    await tester.pumpAndSettle();
+
+    expect(find.text('...'), findsOneWidget);
+
+    //inference.prompt gets a result.
+    completer.complete();
+    await tester.pumpAndSettle();
+    expect(find.text('The color of the sun is yellow'), findsOneWidget);
 
 
 
-  //  calloc.free(metrics);
-  //});
+
+    calloc.free(metrics);
+  });
+
 
 
 }
