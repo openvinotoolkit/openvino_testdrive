@@ -104,38 +104,7 @@ class _PlaygroundState extends State<Playground> {
                 child: GridContainer(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                          children: [
-                            const DeviceSelector(),
-                            const Divider(size: 24,direction: Axis.vertical,),
-                            const SizedBox(width: 24,),
-                            const Text('Temperature '),
-                            Tooltip(
-                              message: 'Temperature controls the randomness of the output. Higher values mean more random outputs.',
-                              child: Icon(FluentIcons.info, size: 16, color: subtleTextColor.of(theme),),
-                            ),
-                            Slider(
-                              value: provider.temperature,
-                              onChanged: (value) { provider.temperature = value; },
-                              label: nf.format(provider.temperature),
-                              min: 0.1,
-                              max: 2.0,
-                            ),
-                            const SizedBox(width: 24,),
-                            const Text('Top P '),
-                            Tooltip(
-                              message: 'Top P controls the diversity of the output by limiting the selection to a subset of the most probable tokens.',
-                              child: Icon(FluentIcons.info, size: 16, color: subtleTextColor.of(theme)),
-                            ),
-                            Slider(
-                              value: provider.topP,
-                              onChanged: (value) { provider.topP = value; },
-                              label: nf.format(provider.topP),
-                              max: 1.0,
-                              min: 0.1,
-                            ),
-                          ],
-                  )
+                      child: const DeviceSelector()
                     ),
                   ),
                 ),

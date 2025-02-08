@@ -45,14 +45,26 @@ class ModelProperties extends StatelessWidget {
                       value: inference.project!.architecture,
                     ),
                     ModelProperty(
-                      title: "Temperature",
+                      title: "Temperature: ${nf.format(inference.temperature)}",
                       description: "Temperature controls the randomness of the output. Higher values mean more random outputs.",
-                      value: nf.format(inference.temperature),
+                      child: Slider(
+                        value: inference.temperature,
+                        onChanged: (value) { inference.temperature = value; },
+                        label: nf.format(inference.temperature),
+                        max: 1.0,
+                        min: 0.1,
+                      ),
                     ),
                     ModelProperty(
-                      title: "Top P",
+                      title: "Top P: ${nf.format(inference.topP)}",
                       description: "Top P controls the diversity of the output by limiting the selection to a subset of the most probable tokens.",
-                      value: nf.format(inference.topP),
+                      child: Slider(
+                        value: inference.topP,
+                        onChanged: (value) { inference.topP = value; },
+                        label: nf.format(inference.topP),
+                        max: 2.0,
+                        min: 0.1,
+                      ),
                     ),
                     if (inference.project!.isPublic) Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
