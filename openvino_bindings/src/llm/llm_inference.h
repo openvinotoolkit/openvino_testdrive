@@ -27,7 +27,10 @@ class LLMInference {
     bool has_chat_template();
     std::string get_tokenizer_config();
 
+    static ov::genai::GenerationConfig config_from_json(std::string configJson);
   private:
+
+
     bool _stop = false;
     std::string model_path;
     std::mutex streamer_lock;

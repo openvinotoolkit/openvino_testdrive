@@ -1,6 +1,16 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "json_utils",
+    hdrs = [
+        "json_utils.h",
+    ],
+    deps = [
+        "@nlohmann_json//:json",
+    ]
+)
+
+cc_library(
     name = "camera_handler",
     hdrs = [
         "camera_handler.h",

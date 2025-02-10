@@ -5,13 +5,7 @@
 import 'package:jinja/jinja.dart';
 import 'package:langchain/langchain.dart';
 
-const textGenerationTemplate = """
-{% for message in messages %}{%- if message['role'] == 'system' %}{{message['content']}}
-
-Question:
-{%- endif %}{% endfor %}
-{% for message in messages %}{%- if message['role'] == 'user' %}{{message['content']}}{%- endif %}{% endfor %}
-""";
+const textGenerationTemplate = """{%- set output = namespace(message='', system='') %}{% for message in messages %}{%- if message['role'] == 'system' %}{%- set output.system = message['content']%}{%- endif %}{% endfor %} {% for message in messages %}{%- if message['role'] == 'user' %}{%- set output.message = message['content'] -%}{%- endif%}{% endfor %}{%-if output.system != ''%}{{output.system}} Question: {%- endif %}{%-if output.message %}{{output.message}}{%- endif %}""";
 
 final class JinjaPromptTemplate extends BaseChatPromptTemplate {
   final Template jinjaTemplate;
@@ -31,6 +25,7 @@ final class JinjaPromptTemplate extends BaseChatPromptTemplate {
       ? chatTemplateConfig["chat_template"]
       : textGenerationTemplate;
     final env = Environment();
+    print(chatTemplate);
     final template = env.fromString(chatTemplate);
 
     return JinjaPromptTemplate(template,
@@ -73,6 +68,12 @@ final class JinjaPromptTemplate extends BaseChatPromptTemplate {
     if (values.containsKey('question')) {
       messages.add({"role": "user", "content": values['question']});
     }
+    print({
+        "messages": messages,
+        "eos_token": eosToken,
+        "bos_token": bosToken,
+        "add_generation_prompt": addGenerationPrompt,
+      });
 
     return PromptValue.string(jinjaTemplate.render(
       {

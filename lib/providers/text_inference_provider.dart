@@ -135,10 +135,12 @@ class TextInferenceProvider extends ChangeNotifier {
 
      double timeElapsed = stopWatch.elapsedMilliseconds.toDouble();
      double averageElapsed = (n == 0 ? 0.0 : timeElapsed / n);
-     if (n == 0) {
-       _response = word;
-     } else {
-       _response = _response! + word;
+     if (_response != null) {
+      if (n == 0) {
+        _response = word;
+      } else {
+        _response = _response! + word;
+      }
      }
      _speed = averageElapsed;
      if (hasListeners) {

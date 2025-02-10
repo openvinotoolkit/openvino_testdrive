@@ -11,6 +11,7 @@ cc_library(
          "//third_party:openvino",
          "//src/utils:errors",
          "//src/utils:utils",
+         "//src/utils:json_utils",
     ],
     visibility = ["//visibility:public"],
 )

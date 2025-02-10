@@ -42,9 +42,6 @@ RAGChain buildRAGChain(LLMInference llmInference, Embeddings embeddings, OpenVIN
 
   final answer = finalInputs | promptTemplate | model;
 
-  finalInputs.invoke({'docs': List<Document>.from([]), 'question': "What is the color of the sun?"}).then(print);
-
-
   return RAGChain(retrievedDocs, answer);
 }
 

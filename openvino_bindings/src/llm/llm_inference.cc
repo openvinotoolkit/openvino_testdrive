@@ -12,6 +12,7 @@
 
 #include "llm_inference.h"
 #include "src/utils/errors.h"
+#include "src/utils/json_utils.h"
 
 void LLMInference::set_streamer(const std::function<void(const std::string& response)> callback) {
     streamer = [callback, this](std::string word) {
@@ -39,6 +40,7 @@ ov::genai::DecodedResults LLMInference::prompt(std::string message, bool apply_t
     config.max_new_tokens = 1000;
     config.temperature = temperature;
     config.top_p = top_p;
+    config.repetition_penalty = 1.1;
     ov::genai::DecodedResults result;
 
     _done = false;
@@ -79,4 +81,17 @@ std::string LLMInference::get_tokenizer_config() {
     std::ostringstream oss;
     oss << ifs.rdbuf();
     return oss.str();
+}
+
+ov::genai::GenerationConfig LLMInference::config_from_json(std::string config_json) {
+    ov::genai::GenerationConfig config;
+    nlohmann::json data = nlohmann::json::parse(config_json);
+    read_json_param(data, "max_new_tokens", config.max_new_tokens);
+    read_json_param(data, "temperature", config.temperature);
+    read_json_param(data, "top_p", config.top_p);
+    read_json_param(data, "repetition_penalty", config.repetition_penalty);
+    read_json_param(data, "num_beams", config.num_beams);
+    read_json_param(data, "num_return_sequences", config.num_return_sequences);
+    read_json_param(data, "num_beam_groups", config.num_beam_groups);
+    return config;
 }
