@@ -22,7 +22,7 @@ class ModelProperties extends StatelessWidget {
 
     return Consumer<TextInferenceProvider>(builder: (context, inference, child) {
       return SizedBox(
-        width: 280,
+        width: 310,
         child: GridContainer(
           padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
           child: Column(

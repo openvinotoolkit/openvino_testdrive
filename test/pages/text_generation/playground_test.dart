@@ -4,7 +4,7 @@
 
 import 'dart:async';
 
-import 'dart:ffi';
+import 'dart:ffi' as ffi;
 import 'package:ffi/ffi.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -68,7 +68,7 @@ main() {
       return ModelResponse("The color of the sun is yellow", metrics.ref);
 
     });
-
+    await tester.binding.setSurfaceSize(const Size(1900, 1024));
     await tester.pumpWidget(renderWidget(provider, preferenceProvider, largeLanguageModel()));
 
     await tester.enterText(find.byType(TextBox), 'What is the color of the sun?');
@@ -84,7 +84,9 @@ main() {
     expect(find.text('The color of the sun is yellow'), findsOneWidget);
 
     calloc.free(metrics);
+    addTearDown(() => tester.binding.setSurfaceSize(null));
   });
+
 
   testWidgets('test chat reset clears chat', (tester) async {
     final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
@@ -95,6 +97,7 @@ main() {
       return ModelResponse("The color of the sun is yellow", metrics.ref);
     });
 
+    await tester.binding.setSurfaceSize(const Size(1900, 1024));
     await tester.pumpWidget(renderWidget(provider, preferenceProvider, largeLanguageModel()));
     await tester.enterText(find.byType(TextBox), 'What is the color of the sun?');
     await tester.tap(find.byIcon(FluentIcons.send));
@@ -107,6 +110,7 @@ main() {
     expect(provider.messages, isEmpty);
 
     calloc.free(metrics);
+    addTearDown(() => tester.binding.setSurfaceSize(null));
   });
 
 
