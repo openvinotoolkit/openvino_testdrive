@@ -70,7 +70,7 @@ jobs:
       # Step 8: Download and Install OpenCV
       - name: Download OpenCV
         run: |
-          curl -L -o opencv.exe https://github.com/opencv/opencv/releases/download/4.9.0/opencv-4.9.0-windows.exe
+          curl -L -o opencv.exe https://github.com/opencv/opencv/releases/download/4.11.0/opencv-4.11.0-windows.exe
           start /wait opencv.exe -suppresslaunch  -y -gm2 -o"C:\"
         shell: cmd
 
