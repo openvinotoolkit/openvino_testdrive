@@ -140,48 +140,25 @@ class _PlaygroundState extends State<Playground> {
                               child: Text("Start chatting with ${provider.project?.name ?? "the model"}!"),
                             );
                           }
-                          return Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              SingleChildScrollView(
-                                controller: _scrollController,
-                                child: Padding(padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 20), child: SelectionArea(
-                                  child: SelectionArea(
-                                    child: Column(
-                                      children: provider.messages.map((message) { switch (message.speaker) {
-                                        case Speaker.user: return Padding(
-                                          padding: const EdgeInsets.only(left: 42),
-                                          child: UserMessage(message),
-                                        );
-                                        case Speaker.system: return Text('System: ${message.message}');
-                                        case Speaker.assistant: return AssistantMessage(message);
-                                      }}).toList(),
+                          return SingleChildScrollView(
+                            controller: _scrollController,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 20),
+                              child: SelectionArea(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: provider.messages.map((message) => switch (message.speaker) {
+                                    Speaker.user => Padding(
+                                      padding: const EdgeInsets.only(left: 42),
+                                      child: UserMessage(message),
                                     ),
-                                  ),
-                                ),),
-                              ),
-                              Positioned(
-                                bottom: 10,
-                                child: Builder(builder: (context) => attachedToBottom
-                                  ? const SizedBox()
-                                  : Padding(
-                                    padding: const EdgeInsets.only(top:2),
-                                    child: FilledButton(child: const Row(
-                                      children: [
-                                        Icon(FluentIcons.chevron_down, size: 12),
-                                        SizedBox(width: 4),
-                                        Text('Scroll to bottom'),
-                                      ],
-                                    ), onPressed: () {
-                                      jumpToBottom();
-                                      setState(() {
-                                        attachedToBottom = true;
-                                      });
-                                    }),
-                                  )
+                                    Speaker.system => Text('System: ${message.message}'),
+                                    Speaker.assistant => AssistantMessage(message)
+                                  }).toList(),
                                 ),
-                              )
-                            ],
+                              ),
+                            ),
                           );
                         }),
                       ),
