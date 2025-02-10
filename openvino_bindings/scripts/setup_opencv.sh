@@ -1,5 +1,5 @@
 #!/bin/bash
-export OPENCV_VERSION=4.10.0
+export OPENCV_VERSION=4.11.0
 
 echo "Installing OpenCV from source"
 rm -rf /tmp/build_opencv

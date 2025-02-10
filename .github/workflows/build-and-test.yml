@@ -53,7 +53,7 @@ jobs:
         id: set_filename
         run: |
           SAFE_REF_NAME=${GITHUB_REF_NAME//\//_}
-          echo "SANITIZED_FILENAME=OpenVINO-TestDrive-${SAFE_REF_NAME}-${{ matrix.os }}.zip" >> $GITHUB_ENV
+          echo "SANITIZED_FILENAME=OpenVINO-TestDrive-${SAFE_REF_NAME}-${{ matrix.os }}" >> $GITHUB_ENV
 
       - name: Download bindings build artifact
         uses: actions/download-artifact@v4
