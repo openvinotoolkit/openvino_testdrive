@@ -57,7 +57,7 @@ cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local \
       -DWITH_JPEG=ON \
       -DWITH_PNG=ON \
       -DWITH_TIFF=ON \
-      -DOBSENSOR_USE_ORBBEC_SDK=OFF \
+      -DOBSENSOR_USE_ORBBEC_SDK=OFF
 make -j `nproc`
 make install
 rm -rf /tmp/build_opencv
