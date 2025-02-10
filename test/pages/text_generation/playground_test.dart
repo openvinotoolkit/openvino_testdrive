@@ -12,6 +12,7 @@ import 'package:inference/interop/device.dart' show Device;
 import 'package:inference/interop/llm_inference.dart';
 import 'package:inference/interop/openvino_bindings.dart' show ModelResponse, Metrics;
 import 'package:inference/pages/text_generation/playground.dart';
+import 'package:inference/pages/text_generation/widgets/user_message.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/text_inference_provider.dart';
@@ -82,8 +83,28 @@ main() {
     await tester.pumpAndSettle();
     expect(find.text('The color of the sun is yellow'), findsOneWidget);
 
+    calloc.free(metrics);
+  });
 
+  testWidgets('test chat reset clears chat', (tester) async {
+    final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
+    provider.inference = inference;
+    provider.loaded.complete();
+    final metrics = calloc<Metrics>();
+    when(() => inference.prompt(any(), any(), any())).thenAnswer((_) async {
+      return ModelResponse("The color of the sun is yellow", metrics.ref);
+    });
 
+    await tester.pumpWidget(renderWidget(provider, preferenceProvider, largeLanguageModel()));
+    await tester.enterText(find.byType(TextBox), 'What is the color of the sun?');
+    await tester.tap(find.byIcon(FluentIcons.send));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(UserMessage), findsOneWidget);
+    await tester.tap(find.byIcon(FluentIcons.rocket));
+    await tester.pumpAndSettle();
+    expect(find.byType(UserMessage), findsNothing);
+    expect(provider.messages, isEmpty);
 
     calloc.free(metrics);
   });

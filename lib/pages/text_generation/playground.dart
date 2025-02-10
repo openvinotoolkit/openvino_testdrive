@@ -102,30 +102,34 @@ class _PlaygroundState extends State<Playground> {
               SizedBox(
                 height: 64,
                 child: GridContainer(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: const DeviceSelector()
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: DeviceSelector()
                     ),
-                  ),
                 ),
+              ),
              Expanded(child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: theme.brightness.isDark ? backgroundColor.dark : theme.scaffoldBackgroundColor
                 ),
-               child: GridContainer(child: SizedBox(
-                width: double.infinity,
-                child: Builder(builder: (context) {
-                  if (!provider.initialized) {
-                    return const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 64,height: 64, child: ProgressRing()),
-                        Padding(
-                          padding: EdgeInsets.only(top: 18),
-                          child: Text("Loading model..."),
-                        )
-                      ],
-                    );
+                child: GridContainer(child: SizedBox(
+                  width: double.infinity,
+                  child: Builder(builder: (context) {
+                    if (!provider.initialized) {
+                      return const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 64,
+                            height: 64,
+                            child: ProgressRing()
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 18),
+                            child: Text("Loading model..."),
+                          )
+                        ],
+                      );
                   }
                   return Column(
                     children: [
