@@ -20,6 +20,7 @@ cc_library(
         "@mediapipe//mediapipe/framework:calculator_framework",
         "@mediapipe//mediapipe/framework/port:parse_text_proto",
         "//src/utils:errors",
+        "//src/utils:camera_handler",
         ":calculators"
     ],
     visibility = ["//visibility:public"],

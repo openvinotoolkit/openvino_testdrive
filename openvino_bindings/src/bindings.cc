@@ -20,6 +20,7 @@
 #include "src/vlm/vlm_inference.h"
 #include "src/utils/errors.h"
 #include "src/utils/utils.h"
+#include "src/utils/input_devices.h"
 #include "src/utils/status.h"
 #include "src/image/json_serialization.h"
 #include "src/image/csv_serialization.h"
@@ -36,6 +37,10 @@ void freeStatusOrString(StatusOrString *status) {
         free((void*)status->value);  // Free the allocated memory
         status->value = NULL;        // Prevent dangling pointers
     }
+    delete status;
+}
+
+void freeStatusOrInt(StatusOrInt *status) {
     delete status;
 }
 
@@ -68,6 +73,15 @@ void freeStatusOrDevices(StatusOrDevices *status) {
     }
     delete status;
 }
+
+void freeStatusOrCameraDevices(StatusOrCameraDevices *status) {
+    if (status->status == StatusEnum::OkStatus) {
+        delete [] status->value;
+        status->value = NULL;        // Prevent dangling pointers
+    }
+    delete status;
+}
+
 
 StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json) {
     try {
@@ -411,6 +425,39 @@ Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* n
     }
 }
 
+Status* graphRunnerStartCamera(CGraphRunner instance, int camera_index, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay) {
+    try {
+        auto runner = reinterpret_cast<GraphRunner*>(instance);
+
+        auto lambda_callback = [callback](std::string response) {
+            callback(new StatusOrString{OkStatus, "", strdup(response.c_str())});
+        };
+        runner->open_camera(camera_index, SerializationOutput{json, csv, overlay}, lambda_callback);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
+StatusOrInt* graphRunnerGetTimestamp(CGraphRunner instance) {
+    try {
+        auto graph_runner = reinterpret_cast<GraphRunner*>(instance);
+        return new StatusOrInt{OkStatus, "", (int)graph_runner->timestamp};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrInt{except->status, except->message};
+    }
+}
+
+Status* graphRunnerStopCamera(CGraphRunner instance) {
+    try {
+        reinterpret_cast<GraphRunner*>(instance)->stop_camera();
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
 StatusOrString* graphRunnerGet(CGraphRunner instance) {
     try {
         auto graph_runner = reinterpret_cast<GraphRunner*>(instance);
@@ -501,6 +548,18 @@ StatusOrDevices* getAvailableDevices() {
     return new StatusOrDevices{OkStatus, "", devices, (int)device_ids.size() + 1};
 }
 
+StatusOrCameraDevices* getAvailableCameraDevices() {
+    auto cameras = list_camera_devices();
+    CameraDevice* devices = new CameraDevice[cameras.size()];
+    int i = 0;
+    for (auto camera: cameras) {
+        devices[i] = { (int)camera.first, strdup(camera.second.c_str()) };
+        i++;
+    }
+
+    return new StatusOrCameraDevices{OkStatus, "", devices, (int)cameras.size()};
+}
+
 Status* handle_exceptions() {
     try {
         throw;
@@ -510,10 +569,10 @@ Status* handle_exceptions() {
         std::cout << message << std::endl;
         return new Status{OpenVINOError, strdup(message.c_str())};
     } catch (api_error e) {
-        std::cout << e.what() << std::endl;
+        std::cout << "api error: " << e.what() << std::endl;
         return new Status{e.status, strdup(e.additional_info.c_str())};
     } catch(const std::exception& ex) {
-        std::cout << ex.what() << std::endl;
+        std::cout << "std::exception: " << ex.what() << std::endl;
         return new Status{ErrorStatus, ex.what()};
     } catch (...) {
         std::cout << "Unknown exception" << std::endl;

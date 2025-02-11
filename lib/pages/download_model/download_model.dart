@@ -74,7 +74,11 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
     }
 
     try {
-      downloadProvider.onCancel = () => deleteProjectData(widget.project);
+      downloadProvider.onCancel = () async {
+        // TODO: (Ronald Hecker) remove ugly solution by downloading in background and handle downloading properly
+        await Future.delayed(const Duration(seconds: 1));
+        deleteProjectData(widget.project);
+      };
       await downloadProvider.queue(files, widget.project.modelInfo?.collection.token);
       projectProvider.addProject(widget.project);
       await getAdditionalModelInfo(widget.project);

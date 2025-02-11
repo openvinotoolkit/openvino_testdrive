@@ -30,6 +30,28 @@ std::string GraphRunner::get() {
 }
 
 void GraphRunner::stop() {
+    stop_camera();
     graph->CloseAllInputStreams();
     graph->WaitUntilDone();
+}
+
+
+
+void GraphRunner::open_camera(int deviceIndex, SerializationOutput serializationOutput, const std::function<void(std::string output)>& callback) {
+    camera_handler = std::make_shared<CameraHandler>(deviceIndex);
+    auto lambda_callback = [this, callback, serializationOutput](cv::Mat frame) {
+        timestamp++;
+        queue("input", timestamp, frame);
+        queue("serialization_output", timestamp, serializationOutput);
+        callback(get());
+    };
+
+    camera_handler->open_camera(lambda_callback);
+}
+
+void GraphRunner::stop_camera() {
+    if (camera_handler) {
+        camera_handler->stop_camera();
+        camera_handler.reset();
+    }
 }

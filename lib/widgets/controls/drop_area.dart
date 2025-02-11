@@ -66,21 +66,21 @@ class _DropAreaState extends State<DropArea> {
       Padding(
         padding: const EdgeInsets.all(20),
         child: Center(
-        child: SizedBox(
-          height: 310,
-          child: Builder(
-            builder: (context) {
-              if (widget.showChild && !_showReleaseMessage) {
-                // If we have a child and aren't showing the drop message, display it.
-                return widget.child ?? const SizedBox.shrink();
-              }
+        child: Builder(
+          builder: (context) {
+            if (widget.showChild && !_showReleaseMessage) {
+              // If we have a child and aren't showing the drop message, display it.
+              return widget.child ?? const SizedBox.shrink();
+            }
 
-              final theme = FluentTheme.of(context);
-              final String text = _showReleaseMessage
-                  ? "Release to drop media"
-                  : "Drag and drop ${widget.type} here for testing";
+            final theme = FluentTheme.of(context);
+            final String text = _showReleaseMessage
+                ? "Release to drop media"
+                : "Drag and drop ${widget.type} here for testing";
 
-              return Column(
+            return SizedBox(
+              height: 310,
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 // spacing: 10,
                 children: [
@@ -108,9 +108,9 @@ class _DropAreaState extends State<DropArea> {
                   else
                     const SizedBox.shrink(),
                 ],
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     )
