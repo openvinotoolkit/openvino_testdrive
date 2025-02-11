@@ -67,9 +67,7 @@ class _DropAreaState extends State<DropArea> {
       onDragDone: handleDrop,
       onDragExited: (_) => hideReleaseMessage(),
       onDragEntered: (_) => showReleaseMessage(),
-
-      child:
-      Padding(
+      child: Padding(
         padding: const EdgeInsets.all(20),
         child: Builder(
           builder: (context) {
@@ -98,7 +96,6 @@ class _DropAreaState extends State<DropArea> {
                         textAlign: TextAlign.center,
                       ),
                     ),
-
                     // SVG scales to available space in the column
                     Expanded(
                       // FittedBox automatically scales its child to fit the parent's constraints
@@ -116,7 +113,7 @@ class _DropAreaState extends State<DropArea> {
                     else
                       const SizedBox.shrink(),
                   ],
-                ),
+                )
               ),
             );
           },

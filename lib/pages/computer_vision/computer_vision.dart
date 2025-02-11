@@ -33,7 +33,6 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
     );
 
     return ChangeNotifierProxyProvider<PreferenceProvider, ImageInferenceProvider>(
-      lazy: false,
       create: (_) {
         final device = Provider.of<PreferenceProvider>(context, listen: false).device;
         return ImageInferenceProvider(widget.project, device)..init();
@@ -42,7 +41,17 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
         if (imageInferenceProvider != null && imageInferenceProvider.sameProps(widget.project, preferences.device)) {
           return imageInferenceProvider;
         }
-        return ImageInferenceProvider(widget.project, preferences.device)..init();
+        final provider = ImageInferenceProvider(widget.project, preferences.device);
+        // If there was a previous provider make sure we close the camera before loading a new one.
+        // This ensures that the camera is ready to be used again when the model is loaded.
+        if (imageInferenceProvider != null) {
+          imageInferenceProvider.closeCamera().then((_) {
+              provider.init();
+          });
+        } else {
+          provider.init();
+        }
+        return provider;
       },
       child: Stack(
         children: [

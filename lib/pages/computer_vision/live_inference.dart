@@ -7,9 +7,11 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/interop/device.dart' show CameraDevice;
 import 'package:inference/interop/image_inference.dart';
-import 'package:inference/interop/openvino_bindings.dart';
+import 'package:inference/interop/openvino_bindings.dart' show SerializationOutput;
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
+import 'package:inference/pages/computer_vision/widgets/camera_view.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/image_inference_provider.dart';
@@ -22,6 +24,8 @@ import 'package:provider/provider.dart';
 
 import 'dart:ui' as ui;
 
+
+enum LiveInferenceMode { camera, image }
 
 class LiveInference extends StatefulWidget {
   final Project project;
@@ -36,22 +40,36 @@ class _LiveInferenceState extends State<LiveInference> {
   Future<ImageInferenceResult>? inferenceResult;
   ui.Image? image;
 
-  void showUploadMenu() async {
+  Future<List<CameraDevice>> cameraDevices = CameraDevice.getDevices();
+  CameraDevice? cameraDevice;
+
+  LiveInferenceMode mode = LiveInferenceMode.image;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void showUploadMenu(ImageInferenceProvider inferenceProvider) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
 
     if (result != null) {
-      uploadFile(result.files.single.path!);
+      uploadFile(result.files.single.path!, inferenceProvider);
     }
   }
 
-  void uploadFile(String path) async {
+  void uploadFile(String path, ImageInferenceProvider inferenceProvider) async {
+    if (mode == LiveInferenceMode.image) {
+      inferenceProvider.closeCamera();
+    }
     setState(() {
+        mode = LiveInferenceMode.image;
+        cameraDevice = null;
         image = null;
         inferenceResult = null;
     });
 
     Uint8List imageData = File(path).readAsBytesSync();
-    final inferenceProvider = Provider.of<ImageInferenceProvider>(context, listen: false);
     final uiImage = await decodeImageFromList(imageData);
     setState(() {
         image = uiImage;
@@ -59,92 +77,140 @@ class _LiveInferenceState extends State<LiveInference> {
     });
   }
 
+  void openCamera(CameraDevice camera) {
+    setState(() {
+        mode = LiveInferenceMode.camera;
+        cameraDevice = camera;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 64,
-                child: GridContainer(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      children: [
-                        DropDownButton(
-                          buttonBuilder: (context, callback) {
-                            return NoOutlineButton(
-                              onPressed: callback,
-                              child: const Row(
-                                children: [
-                                  Text("Choose image file"),
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 8),
-                                    child: Icon(FluentIcons.chevron_down, size: 12),
+    return Consumer<ImageInferenceProvider>(
+      builder: (context, inferenceProvider, child) {
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 64,
+                    child: GridContainer(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            DropDownButton(
+                              buttonBuilder: (context, callback) {
+                                return NoOutlineButton(
+                                  onPressed: callback,
+                                  child: const Row(
+                                    children: [
+                                      Text("Choose image file"),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 8),
+                                        child: Icon(FluentIcons.chevron_down, size: 12),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            );
-                          },
-                          items: [
-                            MenuFlyoutItem(text: const Text("Choose image file"), onPressed: showUploadMenu),
-                            //MenuFlyoutItem(text: const Text("Camera"), onPressed: () {}),
-                            MenuFlyoutItem(text: const Text("Sample image"), onPressed: () {
-                              uploadFile(widget.project.samplePath());
-                            }),
-                          ]
-                        ),
-                        const DeviceSelector(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: GridContainer(
-                  color: backgroundColor.of(theme),
-                  child: Builder(
-                    builder: (context) {
-                      return DropArea(
-                        type: "image",
-                        showChild: inferenceResult != null,
-                        onUpload: (files) {
-                          if (files.isNotEmpty) {
-                            uploadFile(files.first);
-                          }
-                        },
-                        extensions: const ["jpg", "jpeg", "bmp", "png", "tif", "tiff"],
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: FutureBuilder<ImageInferenceResult>(
-                            future: inferenceResult,
-                            builder: (context, snapshot) {
-                              if(snapshot.hasData) {
-                                return Canvas(
-                                  image: image!,
-                                  annotations: snapshot.data!.parseAnnotations(),
-                                  labelDefinitions: widget.project.labelDefinitions,
+                                );
+                              },
+                              items: [
+                                MenuFlyoutItem(text: const Text("Choose image file"), onPressed: () => showUploadMenu(inferenceProvider)),
+                                //MenuFlyoutItem(text: const Text("Camera"), onPressed: () {}),
+                                MenuFlyoutItem(text: const Text("Sample image"), onPressed: () {
+                                  uploadFile(widget.project.samplePath(), inferenceProvider);
+                                }),
+                              ]
+                            ),
+                            FutureBuilder(
+                              future: cameraDevices,
+                              builder: (context, snapshot) {
+                                List<CameraDevice> devices = snapshot.data ?? [];
+
+                                return DropDownButton(
+                                  buttonBuilder: (context, callback) {
+                                    return NoOutlineButton(
+                                      onPressed: callback,
+                                      child: Row(
+                                        children: [
+                                          cameraDevice == null ? const Text("Choose camera") : Text("Choose camera: ${cameraDevice!.name}"),
+                                          const Padding(
+                                            padding: EdgeInsets.only(left: 8),
+                                            child: Icon(FluentIcons.chevron_down, size: 12),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  items: [
+                                    MenuFlyoutItem(text: const Text("None"), onPressed: () {
+                                        setState(() {
+                                            mode = LiveInferenceMode.image;
+                                            cameraDevice = null;
+                                        });
+                                    }),
+
+                                    for (final device in devices)
+                                      MenuFlyoutItem(text: Text(device.name), onPressed: () => openCamera(device)),
+                                  ]
                                 );
                               }
-                              return Center(child: Image.asset('images/intel-loading.gif', width: 100));
-                            }
-                          ),
+                            ),
+                            const DeviceSelector(),
+                          ],
                         ),
-                      );
-                    }
+                      ),
+                    ),
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
-        ModelProperties(project: widget.project),
-      ],
+                  Expanded(
+                    child: GridContainer(
+                      color: backgroundColor.of(theme),
+                      child: FutureBuilder(
+                        future: inferenceProvider.loaded.future,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done) {
+                            return switch(mode) {
+                              LiveInferenceMode.camera => CameraView(deviceIndex: cameraDevice!.id),
+                              LiveInferenceMode.image => DropArea(
+                                type: "image",
+                                showChild: inferenceResult != null,
+                                onUpload: (List<String> files) { uploadFile(files.first, inferenceProvider); },
+                                extensions: const ["jpg", "jpeg", "bmp", "png", "tif", "tiff"],
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: FutureBuilder<ImageInferenceResult>(
+                                    future: inferenceResult,
+                                    builder: (context, snapshot) {
+                                      if(snapshot.hasData) {
+                                        return Canvas(
+                                          image: image!,
+                                          annotations: snapshot.data!.parseAnnotations(),
+                                          labelDefinitions: widget.project.labelDefinitions,
+                                        );
+                                      }
+                                      return Center(child: Image.asset('images/intel-loading.gif', width: 100));
+                                    }
+                                  ),
+                                ),
+                              )
+                          };
+                        }
+                        return Center(child: Image.asset('images/intel-loading.gif', width: 100));
+                      }
+                      ),
+                    )
+                  )
+                ],
+              ),
+            ),
+            ModelProperties(project: widget.project),
+          ],
+        );
+      }
     );
   }
 }

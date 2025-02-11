@@ -79,7 +79,7 @@ class TextInferenceProvider extends ChangeNotifier {
     store?.delete(ids: ids);
   }
 
-  LLMInference? _inference;
+  LLMInference? inference;
   Embeddings? embeddingsModel;
   MemoryVectorStore? store;
 
@@ -117,7 +117,7 @@ class TextInferenceProvider extends ChangeNotifier {
       // Start downloading the embedings model if its missing
       final embeddingsModelLoader = AllMiniLMV6.ensureModelIsPresent(downloadProvider);
       // Load the inference model
-      _inference = await LLMInference.init(project!.storagePath, device!);
+      inference = await LLMInference.init(project!.storagePath, device!);
       // Make sure the embeddings model is loaded.
       await embeddingsModelLoader;
       embeddingsModel = await OpenVINOEmbeddings.init(await AllMiniLMV6.storagePath, "CPU");
@@ -201,7 +201,7 @@ class TextInferenceProvider extends ChangeNotifier {
       stores.add(ObjectBoxStore(embeddings: embeddingsModel!, group: knowledgeGroup!));
     }
 
-    final chain = buildRAGChain(_inference!, embeddingsModel!, OpenVINOLLMOptions(temperature: temperature, topP: topP), stores, memory);
+    final chain = buildRAGChain(inference!, embeddingsModel!, OpenVINOLLMOptions(temperature: temperature, topP: topP), stores, memory);
     final input = await chain.documentChain.invoke({"question": message}) as Map;
     final docs = input.containsKey("docs")
       ? List<String>.from(input["docs"].map((Document doc) => doc.metadata["source"]).toSet())
@@ -237,15 +237,15 @@ class TextInferenceProvider extends ChangeNotifier {
 
   void close() {
     _messages.clear();
-    _inference?.close();
+    inference?.close();
     _response = null;
-    if (_inference != null) {
-      _inference!.close();
+    if (inference != null) {
+      inference!.close();
     }
   }
 
   void forceStop() {
-    _inference?.forceStop();
+    inference?.forceStop();
     if (_response != '...') {
       _messages.add(Message(Speaker.assistant, _response!, null, DateTime.now()));
     }
@@ -256,8 +256,8 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   void reset() {
-    _inference?.forceStop();
-    _inference?.clearHistory();
+    inference?.forceStop();
+    inference?.clearHistory();
     memory.clear();
     for (final file in _userFiles) {
       final ids = file.documents.map((p) => p.id).whereType<String>().toList();
@@ -271,8 +271,8 @@ class TextInferenceProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    if (_inference != null) {
-      _inference?.close();
+    if (inference != null) {
+      inference?.close();
       super.dispose();
     } else {
       close();

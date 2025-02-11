@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:inference/pages/knowledge_base/utils/loader_selector.dart';
 import 'package:inference/pages/text_generation/utils/user_file.dart';
 import 'package:inference/pages/text_generation/widgets/user_file_widget.dart';
+import 'package:inference/pages/text_generation/widgets/llm_options.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/pages/text_generation/widgets/assistant_message.dart';
 import 'package:inference/pages/text_generation/widgets/model_properties.dart';
@@ -19,7 +20,6 @@ import 'package:inference/project.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/device_selector.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Playground extends StatefulWidget {
@@ -54,21 +54,20 @@ class _PlaygroundState extends State<Playground> {
     jumpToBottom(offset: 110); //move to bottom including both
 
     final validFiles = newFiles.where((f) => f.error == null).toList();
-    provider.message(message, validFiles);
+    provider.message(message, validFiles).catchError((e) async {
+      if (mounted) {
+        await displayInfoBar(context, builder: (context, close) => InfoBar(
+          title: const Text("An error occurred processing the message"),
+          content: Text(e.toString()),
+          severity: InfoBarSeverity.error,
+          action: IconButton(
+            icon: const Icon(FluentIcons.clear),
+            onPressed: close,
+          ),
+        ));
+      }
+    });
     newFiles.clear();
-    //provider.message(message).catchError((e) async {
-    //  if (mounted) {
-    //    await displayInfoBar(context, builder: (context, close) => InfoBar(
-    //      title: const Text("An error occurred processing the message"),
-    //      content: Text(e.toString()),
-    //      severity: InfoBarSeverity.error,
-    //      action: IconButton(
-    //        icon: const Icon(FluentIcons.clear),
-    //        onPressed: close,
-    //      ),
-    //    ));
-    //  }
-    //});
   }
 
   @override
@@ -117,9 +116,6 @@ class _PlaygroundState extends State<Playground> {
 
   @override
   Widget build(BuildContext context) {
-    Locale locale = Localizations.localeOf(context);
-    final nf = NumberFormat.decimalPatternDigits(
-      locale: locale.languageCode, decimalDigits: 2);
     final theme = FluentTheme.of(context);
 
     return Row(
@@ -128,65 +124,62 @@ class _PlaygroundState extends State<Playground> {
         Consumer<TextInferenceProvider>(builder: (context, provider, child) =>
           Expanded(child: Column(
             children: [
-              SizedBox(
-                height: 64,
-                child: GridContainer(
+              Expander(
+                headerShape: (_) => const RoundedRectangleBorder(
+                  side: BorderSide.none,
+                  borderRadius: BorderRadius.zero,
+                ),
+                contentShape: (_) => const RoundedRectangleBorder(
+                  side: BorderSide.none,
+                  borderRadius: BorderRadius.zero,
+                ),
+                icon: const Row(
+                  children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Text("Options"),
+                      ),
+                      Icon(FluentIcons.settings),
+                  ]
+                ),
+                header: const SizedBox(
+                  height: 64,
+                  child: GridContainer(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Row(
-                          children: [
-                            const DeviceSelector(),
-                            const Divider(size: 24,direction: Axis.vertical,),
-                            const SizedBox(width: 24,),
-                            const Text('Temperature '),
-                            Tooltip(
-                              message: 'Temperature controls the randomness of the output. Higher values mean more random outputs.',
-                              child: Icon(FluentIcons.info, size: 16, color: subtleTextColor.of(theme),),
-                            ),
-                            Slider(
-                              value: provider.temperature,
-                              onChanged: (value) { provider.temperature = value; },
-                              label: nf.format(provider.temperature),
-                              min: 0.1,
-                              max: 2.0,
-                            ),
-                            const SizedBox(width: 24,),
-                            const Text('Top P '),
-                            Tooltip(
-                              message: 'Top P controls the diversity of the output by limiting the selection to a subset of the most probable tokens.',
-                              child: Icon(FluentIcons.info, size: 16, color: subtleTextColor.of(theme)),
-                            ),
-                            Slider(
-                              value: provider.topP,
-                              onChanged: (value) { provider.topP = value; },
-                              label: nf.format(provider.topP),
-                              max: 1.0,
-                              min: 0.1,
-                            ),
-                            const KnowledgeBaseSelector()
-                          ],
-                  )
+                        children: [
+                          DeviceSelector(),
+                          const KnowledgeBaseSelector(),
+                        ]
+                      )
                     ),
                   ),
                 ),
+                content: LLMOptions(provider),
+              ),
              Expanded(child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: theme.brightness.isDark ? backgroundColor.dark : theme.scaffoldBackgroundColor
                 ),
-               child: GridContainer(child: SizedBox(
-                width: double.infinity,
-                child: Builder(builder: (context) {
-                  if (!provider.initialized) {
-                    return const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 64,height: 64, child: ProgressRing()),
-                        Padding(
-                          padding: EdgeInsets.only(top: 18),
-                          child: Text("Loading model..."),
-                        )
-                      ],
-                    );
+                child: GridContainer(child: SizedBox(
+                  width: double.infinity,
+                  child: Builder(builder: (context) {
+                    if (!provider.initialized) {
+                      return const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 64,
+                            height: 64,
+                            child: ProgressRing()
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 18),
+                            child: Text("Loading model..."),
+                          )
+                        ],
+                      );
                   }
                   return Column(
                     children: [
@@ -197,48 +190,25 @@ class _PlaygroundState extends State<Playground> {
                               child: Text("Start chatting with ${provider.project?.name ?? "the model"}!"),
                             );
                           }
-                          return Stack(
-                            alignment: Alignment.bottomCenter,
-                            children: [
-                              SingleChildScrollView(
-                                controller: _scrollController,
-                                child: Padding(padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 20), child: SelectionArea(
-                                  child: SelectionArea(
-                                    child: Column(
-                                      children: provider.messages.map((message) { switch (message.speaker) {
-                                        case Speaker.user: return Padding(
-                                          padding: const EdgeInsets.only(left: 42),
-                                          child: UserMessage(message),
-                                        );
-                                        case Speaker.system: return Text('System: ${message.message}');
-                                        case Speaker.assistant: return AssistantMessage(message);
-                                      }}).toList(),
+                          return SingleChildScrollView(
+                            controller: _scrollController,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 20),
+                              child: SelectionArea(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: provider.messages.map((message) => switch (message.speaker) {
+                                    Speaker.user => Padding(
+                                      padding: const EdgeInsets.only(left: 42),
+                                      child: UserMessage(message),
                                     ),
-                                  ),
-                                ),),
-                              ),
-                              Positioned(
-                                bottom: 10,
-                                child: Builder(builder: (context) => attachedToBottom
-                                  ? const SizedBox()
-                                  : Padding(
-                                    padding: const EdgeInsets.only(top:2),
-                                    child: FilledButton(child: const Row(
-                                      children: [
-                                        Icon(FluentIcons.chevron_down, size: 12),
-                                        SizedBox(width: 4),
-                                        Text('Scroll to bottom'),
-                                      ],
-                                    ), onPressed: () {
-                                      jumpToBottom();
-                                      setState(() {
-                                        attachedToBottom = true;
-                                      });
-                                    }),
-                                  )
+                                    Speaker.system => Text('System: ${message.message}'),
+                                    Speaker.assistant => AssistantMessage(message)
+                                  }).toList(),
                                 ),
-                              )
-                            ],
+                              ),
+                            ),
                           );
                         }),
                       ),
