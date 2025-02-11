@@ -24,66 +24,45 @@ class _AssistantMessageState extends State<AssistantMessage> {
 
   @override
   Widget build(BuildContext context) {
-    Locale locale = Localizations.localeOf(context);
-    final nf = NumberFormat.decimalPatternDigits(
-        locale: locale.languageCode, decimalDigits: 0);
     final theme = FluentTheme.of(context);
     final backgroundColor = theme.brightness.isDark
      ? theme.scaffoldBackgroundColor
      : const Color(0xFFF5F5F5);
 
     return Consumer<TextInferenceProvider>(builder: (context, inferenceProvider, child) =>
-      Align(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 10, top: 20),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16.0),
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: inferenceProvider.project!.thumbnailImage(),
-                        fit: BoxFit.cover,
-                      ),
+      Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10, top: 20),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16.0),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: inferenceProvider.project!.thumbnailImage(),
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
               ),
-              Column(
+            ),
+            Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: SelectionContainer.disabled(
-                      child: Row(
-                        children: [
-                          Text(
-                            inferenceProvider.project!.name,
-                            style:  TextStyle(
-                              color: subtleTextColor.of(theme),
-                            ),
-                          ),
-                          if (widget.message.time != null) Text(
-                            DateFormat(' | yyyy-MM-dd HH:mm:ss').format(widget.message.time!),
-                            style:  TextStyle(
-                              color: subtleTextColor.of(theme),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  MessageHeader(
+                    agentName: inferenceProvider.project?.name,
+                    timestamp: widget.message.time,
                   ),
                   MouseRegion(
                     onEnter: (_) => setState(() { _hovering = true; }),
                     onExit: (_) => setState(() { _hovering = false; }),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Container(
                           constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 502),
@@ -103,79 +82,137 @@ class _AssistantMessageState extends State<AssistantMessage> {
                           ),
                         ),
                         if (_hovering)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: SelectionContainer.disabled(
-                              child: Row(
-                                children: [
-                                  if (widget.message.metrics != null) Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Tooltip(
-                                      message: 'Time to first token',
-                                      child: Text(
-                                        'TTF: ${nf.format(widget.message.metrics!.ttft)}ms',
-                                        style:  TextStyle(
-                                          fontSize: 12,
-                                          color: subtleTextColor.of(theme),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  if (widget.message.metrics != null) Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Tooltip(
-                                      message: 'Time per output token',
-                                      child: Text(
-                                        'TPOT: ${nf.format(widget.message.metrics!.tpot)}ms',
-                                        style:  TextStyle(
-                                          fontSize: 12,
-                                          color: subtleTextColor.of(theme),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  if (widget.message.metrics != null) Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: Tooltip(
-                                      message: 'Generate total duration',
-                                      child: Text(
-                                        'Generate: ${nf.format(widget.message.metrics!.generate_time/1000)}s',
-                                        style:  TextStyle(
-                                          fontSize: 12,
-                                          color: subtleTextColor.of(theme),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(FluentIcons.copy),
-                                    onPressed: () async{
-                                      await displayInfoBar(context, builder: (context, close) =>
-                                        InfoBar(
-                                          title: const Text('Copied to clipboard'),
-                                          severity: InfoBarSeverity.info,
-                                          action: IconButton(
-                                            icon: const Icon(FluentIcons.clear),
-                                            onPressed: close,
-                                          ),
-                                        ),
-                                      );
-                                      Clipboard.setData(ClipboardData(text: widget.message.message));
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ) else const SizedBox(height: 34)
+                          MessageMiscellanious(message: widget.message)
+                        else
+                          const SizedBox(height: 34)
+
                       ],
                     ),
                   ),
+
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+}
+
+
+class MessageHeader extends StatelessWidget {
+
+  final String? agentName;
+  final DateTime? timestamp;
+  const MessageHeader({super.key, this.agentName, this.timestamp});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: SelectionContainer.disabled(
+        child: Row(
+          children: [
+            if (agentName != null) Text(
+              agentName!,
+              style:  TextStyle(
+                color: subtleTextColor.of(theme),
+              ),
+            ),
+            if (timestamp != null) Text(
+              DateFormat(' | yyyy-MM-dd HH:mm:ss').format(timestamp!),
+              style:  TextStyle(
+                color: subtleTextColor.of(theme),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+}
+
+
+class MessageMiscellanious extends StatelessWidget {
+  final Message message;
+
+  const MessageMiscellanious({super.key, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    Locale locale = Localizations.localeOf(context);
+    final nf = NumberFormat.decimalPatternDigits(
+        locale: locale.languageCode, decimalDigits: 0);
+    final theme = FluentTheme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: SelectionContainer.disabled(
+        child: Row(
+          children: [
+            if (message.metrics != null) Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Tooltip(
+                message: 'Time to first token',
+                child: Text(
+                  'TTF: ${nf.format(message.metrics!.ttft)}ms',
+                  style:  TextStyle(
+                    fontSize: 12,
+                    color: subtleTextColor.of(theme),
+                  ),
+                ),
+              ),
+            ),
+            if (message.metrics != null) Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Tooltip(
+                message: 'Time per output token',
+                child: Text(
+                  'TPOT: ${nf.format(message.metrics!.tpot)}ms',
+                  style:  TextStyle(
+                    fontSize: 12,
+                    color: subtleTextColor.of(theme),
+                  ),
+                ),
+              ),
+            ),
+            if (message.metrics != null) Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Tooltip(
+                message: 'Generate total duration',
+                child: Text(
+                  'Generate: ${nf.format(message.metrics!.generate_time/1000)}s',
+                  style:  TextStyle(
+                    fontSize: 12,
+                    color: subtleTextColor.of(theme),
+                  ),
+                ),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(FluentIcons.copy),
+              onPressed: () async{
+                await displayInfoBar(context, builder: (context, close) =>
+                  InfoBar(
+                    title: const Text('Copied to clipboard'),
+                    severity: InfoBarSeverity.info,
+                    action: IconButton(
+                      icon: const Icon(FluentIcons.clear),
+                      onPressed: close,
+                    ),
+                  ),
+                );
+                Clipboard.setData(ClipboardData(text: message.message));
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 }

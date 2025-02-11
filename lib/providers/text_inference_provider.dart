@@ -66,7 +66,7 @@ class TextInferenceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  LLMInference? _inference;
+  LLMInference? inference;
   final stopWatch = Stopwatch();
   int n = 0;
 
@@ -77,7 +77,7 @@ class TextInferenceProvider extends ChangeNotifier {
 
   Future<void> loadModel() async {
     if (project != null && device != null) {
-      _inference = await LLMInference.init(project!.storagePath, device!)
+      inference = await LLMInference.init(project!.storagePath, device!)
         ..setListener(onMessage);
       loaded.complete();
       notifyListeners();
@@ -127,11 +127,11 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   String get task {
-    if (_inference == null) {
+    if (inference == null) {
       return "";
     }
 
-    if (_inference?.chatEnabled == true) {
+    if (inference?.chatEnabled == true) {
       return "Chat";
     } else {
       return "Text Generation";
@@ -156,7 +156,7 @@ class TextInferenceProvider extends ChangeNotifier {
     _response = "...";
     _messages.add(Message(Speaker.user, message, null, DateTime.now()));
     notifyListeners();
-    final response = await _inference!.prompt(message, temperature, topP);
+    final response = await inference!.prompt(message, temperature, topP);
 
     if (_messages.isNotEmpty) {
       _messages.add(Message(Speaker.assistant, response.content, response.metrics, DateTime.now()));
@@ -170,15 +170,15 @@ class TextInferenceProvider extends ChangeNotifier {
 
   void close() {
     _messages.clear();
-    _inference?.close();
+    inference?.close();
     _response = null;
-    if (_inference != null) {
-      _inference!.close();
+    if (inference != null) {
+      inference!.close();
     }
   }
 
   void forceStop() {
-    _inference?.forceStop();
+    inference?.forceStop();
     if (_response != '...') {
       _messages.add(Message(Speaker.assistant, _response!, null, DateTime.now()));
     }
@@ -189,8 +189,8 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   void reset() {
-    _inference?.forceStop();
-    _inference?.clearHistory();
+    inference?.forceStop();
+    inference?.clearHistory();
     _messages.clear();
     _response = null;
     notifyListeners();
@@ -199,8 +199,8 @@ class TextInferenceProvider extends ChangeNotifier {
 
   @override
   void dispose() {
-    if (_inference != null) {
-      _inference?.close();
+    if (inference != null) {
+      inference?.close();
       super.dispose();
     } else {
       close();
