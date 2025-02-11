@@ -7,14 +7,16 @@ import 'package:inference/theme_fluent.dart';
 
 class ModelProperty extends StatelessWidget {
   final String title;
-  final String value;
+  final String? value;
   final String? description;
+  final Widget? child;
 
   const ModelProperty({
       super.key,
       required this.title,
-      required this.value,
+      this.value,
       this.description,
+      this.child,
     });
 
   @override
@@ -31,6 +33,7 @@ class ModelProperty extends StatelessWidget {
               fontWeight: FontWeight.w600,
               fontSize: 14,
             )),
+
             if (description != null && description!.isNotEmpty) ...[
               const SizedBox(width: 4),
               Tooltip(
@@ -44,13 +47,17 @@ class ModelProperty extends StatelessWidget {
             ],
           ],),
         ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Text(value, style: TextStyle(
-              fontSize: 16,
-              color: subtleTextColor.of(theme),
-          )),
-        ),
+        if (value != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(value!, style: TextStyle(
+                fontSize: 16,
+                color: subtleTextColor.of(theme),
+            )),
+          ),
+
+        if (child != null)
+          child!
       ]
     );
   }

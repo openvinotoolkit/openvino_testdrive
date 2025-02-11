@@ -17,7 +17,6 @@ class ImageInferenceProvider extends ChangeNotifier {
   Completer<void> loaded = Completer<void>();
   final Project project;
   final String device;
-  int timestamp = 0;
   GraphRunner? _inference;
   GraphRunner? get inference => _inference;
 
@@ -51,33 +50,34 @@ class ImageInferenceProvider extends ChangeNotifier {
   }
 
   Future<ImageInferenceResult> infer(Uint8List file, SerializationOutput output) async {
+    int timestamp = inference!.getTimestamp() + 1;
     _inference!.queueImage("input", timestamp, file);
     _inference!.queueSerializationOutput("serialization_output", timestamp, output);
-    timestamp += 1;
     final result = await _inference!.get();
     return ImageInferenceResult.fromJson(jsonDecode(result));
   }
 
+
+  Future<void> close() async  {
+    await closeCamera();
+    await _inference?.stop();
+  }
+
   @override
-  void dispose() {
-    if (_inference != null) {
-      _inference?.close();
-    }
+  void dispose() async {
+    await close();
     super.dispose();
   }
 
-  void openCamera(int id) {
-    // TODO(RHeckerIntel): Implemnet for graph runner
+  void openCamera(int deviceIndex, Function(ImageInferenceResult) callback, SerializationOutput output) {
+    _inference!.startCamera(deviceIndex, (String output) => callback(ImageInferenceResult.fromJson(jsonDecode(output))), output);
   }
 
-  void closeCamera() {
-    // TODO(RHeckerIntel): Implemnet for graph runner
+  Future<void> closeCamera() async {
+    await _inference?.stopCamera();
   }
 
   void setListener(Function(ImageInferenceResult) fn) {
     // TODO(RHeckerIntel): Implemnet for graph runner
   }
-
-
-
 }

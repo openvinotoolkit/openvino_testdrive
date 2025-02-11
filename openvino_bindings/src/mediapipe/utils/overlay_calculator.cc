@@ -76,11 +76,11 @@ absl::Status OverlayCalculator::GetiProcess(CalculatorContext *cc) {
       cc->Inputs().Tag("INFERENCE_RESULT").Get<geti::InferenceResult>();
 
   auto overlay = geti::draw_overlay(input_image, result, draw_options, label_definitions, face);
-  cv::Mat overlay_rgb;
-  cv::cvtColor(overlay, overlay_rgb, cv::COLOR_RGB2BGRA);
+  //cv::Mat overlay_rgb;
+  //cv::cvtColor(overlay, overlay_rgb, cv::COLOR_RGB2BGRA);
 
   cc->Outputs().Tag("IMAGE").AddPacket(
-      MakePacket<cv::Mat>(overlay_rgb).At(cc->InputTimestamp()));
+      MakePacket<cv::Mat>(overlay).At(cc->InputTimestamp()));
 
   return absl::OkStatus();
 }
