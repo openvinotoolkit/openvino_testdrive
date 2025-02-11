@@ -89,9 +89,6 @@ class _PlaygroundState extends State<Playground> {
 
   @override
   Widget build(BuildContext context) {
-    Locale locale = Localizations.localeOf(context);
-    final nf = NumberFormat.decimalPatternDigits(
-      locale: locale.languageCode, decimalDigits: 2);
     final theme = FluentTheme.of(context);
 
     return Row(
@@ -109,8 +106,8 @@ class _PlaygroundState extends State<Playground> {
                   side: BorderSide.none,
                   borderRadius: BorderRadius.zero,
                 ),
-                icon: Row(
-                  children: const [
+                icon: const Row(
+                  children: [
                       Padding(
                         padding: EdgeInsets.only(right: 8),
                         child: Text("Options"),
@@ -118,10 +115,10 @@ class _PlaygroundState extends State<Playground> {
                       Icon(FluentIcons.settings),
                   ]
                 ),
-                header: SizedBox(
+                header: const SizedBox(
                   height: 64,
                   child: GridContainer(
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16),
                         child: DeviceSelector()
                       ),
