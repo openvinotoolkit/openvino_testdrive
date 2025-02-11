@@ -101,6 +101,14 @@ class _PlaygroundState extends State<Playground> {
           Expanded(child: Column(
             children: [
               Expander(
+                headerShape: (_) => const RoundedRectangleBorder(
+                  side: BorderSide.none,
+                  borderRadius: BorderRadius.zero,
+                ),
+                contentShape: (_) => const RoundedRectangleBorder(
+                  side: BorderSide.none,
+                  borderRadius: BorderRadius.zero,
+                ),
                 icon: Row(
                   children: const [
                       Padding(
