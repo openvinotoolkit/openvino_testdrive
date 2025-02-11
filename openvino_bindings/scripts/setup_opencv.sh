@@ -12,6 +12,11 @@ mkdir opencv/release
 #git checkout tags/$OPENCV_VERSION
 cd opencv
 git checkout tags/$OPENCV_VERSION
+
+# Remove requiring ORBEC_SDK for macOS
+# It should be fixed with update to OpenCV 4.11.0
+sed -i '/if(APPLE)/,/endif()/d' modules/videoio/cmake/detect_obsensor.cmake
+
 cd release
 # -DOPENCV_EXTRA_MODULES_PATH=/tmp/build_opencv/opencv_contrib/modules \
 cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local \
@@ -51,7 +56,8 @@ cmake .. -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local \
       -DWITH_PTHREADS_PF=ON \
       -DWITH_JPEG=ON \
       -DWITH_PNG=ON \
-      -DWITH_TIFF=ON
+      -DWITH_TIFF=ON \
+      -DOBSENSOR_USE_ORBBEC_SDK=OFF
 make -j `nproc`
 make install
 rm -rf /tmp/build_opencv
