@@ -41,7 +41,6 @@ void main() {
   });
 
   test('test inference provider sets messages with question and answer ', () async {
-      print("Testing...");
     final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
 
     final completer = Completer<void>();
@@ -62,7 +61,6 @@ void main() {
   });
 
   test('test inference provider dispose triggers close ', () async {
-      print("Testing...");
     final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
     provider.inference = inference;
     provider.dispose();
