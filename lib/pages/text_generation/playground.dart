@@ -15,7 +15,6 @@ import 'package:inference/project.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/device_selector.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class Playground extends StatefulWidget {
