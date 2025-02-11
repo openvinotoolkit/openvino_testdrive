@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:inference/pages/text_generation/widgets/llm_options.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/pages/text_generation/widgets/assistant_message.dart';
 import 'package:inference/pages/text_generation/widgets/model_properties.dart';
@@ -99,14 +100,26 @@ class _PlaygroundState extends State<Playground> {
         Consumer<TextInferenceProvider>(builder: (context, provider, child) =>
           Expanded(child: Column(
             children: [
-              SizedBox(
-                height: 64,
-                child: GridContainer(
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: DeviceSelector()
-                    ),
+              Expander(
+                icon: Row(
+                  children: const [
+                      Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Text("Options"),
+                      ),
+                      Icon(FluentIcons.settings),
+                  ]
                 ),
+                header: SizedBox(
+                  height: 64,
+                  child: GridContainer(
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: DeviceSelector()
+                      ),
+                  ),
+                ),
+                content: LLMOptions(provider),
               ),
              Expanded(child: DecoratedBox(
                 decoration: BoxDecoration(

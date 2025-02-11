@@ -60,4 +60,12 @@ void main() {
     expect(provider.messages[1].message, "The color of the sun is yellow");
     calloc.free(metrics);
   });
+
+  test('test inference provider dispose triggers close ', () async {
+      print("Testing...");
+    final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
+    provider.inference = inference;
+    provider.dispose();
+    verify(inference.close).called(1);
+  });
 }

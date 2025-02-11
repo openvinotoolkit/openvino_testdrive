@@ -22,7 +22,7 @@ class ModelProperties extends StatelessWidget {
 
     return Consumer<TextInferenceProvider>(builder: (context, inference, child) {
       return SizedBox(
-        width: 310,
+        width: 280,
         child: GridContainer(
           padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 24),
           child: Column(
@@ -45,26 +45,14 @@ class ModelProperties extends StatelessWidget {
                       value: inference.project!.architecture,
                     ),
                     ModelProperty(
-                      title: "Temperature: ${nf.format(inference.temperature)}",
+                      title: "Temperature",
                       description: "Temperature controls the randomness of the output. Higher values mean more random outputs.",
-                      child: Slider(
-                        value: inference.temperature,
-                        onChanged: (value) { inference.temperature = value; },
-                        label: nf.format(inference.temperature),
-                        max: 1.0,
-                        min: 0.1,
-                      ),
+                      value: nf.format(inference.temperature),
                     ),
                     ModelProperty(
-                      title: "Top P: ${nf.format(inference.topP)}",
+                      title: "Top P",
                       description: "Top P controls the diversity of the output by limiting the selection to a subset of the most probable tokens.",
-                      child: Slider(
-                        value: inference.topP,
-                        onChanged: (value) { inference.topP = value; },
-                        label: nf.format(inference.topP),
-                        max: 2.0,
-                        min: 0.1,
-                      ),
+                      value: nf.format(inference.topP),
                     ),
                     if (inference.project!.isPublic) Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
