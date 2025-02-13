@@ -21,6 +21,7 @@ cmake(
     cache_entries = {
         "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
         "OpenVINO_DIR": "/opt/intel/openvino/runtime/cmake",
+        "OpenCV_DIR": "/usr/local",
     },
     lib_source = ":all_srcs",
     out_static_libs = ["libmodel_api.a"],
