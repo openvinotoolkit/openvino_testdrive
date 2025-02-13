@@ -5,6 +5,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:inference/pages/models/models.dart';
 import 'package:inference/pages/models/widgets/model_filter.dart';
 import 'package:inference/providers/project_filter_provider.dart';
 import 'package:provider/provider.dart';
@@ -12,8 +13,8 @@ import 'package:provider/provider.dart';
 Widget modelWidget(ProjectFilterProvider provider) {
   return ChangeNotifierProvider.value(
     value: provider,
-    child: const FluentApp(
-      home: ModelFilter()
+    child: FluentApp(
+      home: ModelFilter(filterOptions: ModelsPage.filterOptions)
     )
   );
 }

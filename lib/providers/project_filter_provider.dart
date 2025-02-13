@@ -6,7 +6,6 @@ import 'dart:core';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/project.dart';
-import 'package:inference/public_model_info.dart';
 
 class Option {
   final String name;
@@ -88,7 +87,9 @@ class ProjectFilterProvider extends ChangeNotifier {
       filtered = filtered.where((model) => model.task == option!.filter);
     }
 
+    final filteredList = filtered.toList();
+    filteredList.sort((a,b) => a.name.compareTo(b.name) * (order ? -1 : 1));
 
-    return filtered.toList();
+    return filteredList;
   }
 }

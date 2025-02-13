@@ -11,14 +11,9 @@ import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/import_model_button.dart';
 import 'package:provider/provider.dart';
 
-class ModelsPage extends StatefulWidget {
+class ModelsPage extends StatelessWidget {
   const ModelsPage({super.key});
 
-  @override
-  State<ModelsPage> createState() => _ModelsPageState();
-}
-
-class _ModelsPageState extends State<ModelsPage> {
   static Map<String, List<Option>> get filterOptions {
     var options = {
       "Image": [

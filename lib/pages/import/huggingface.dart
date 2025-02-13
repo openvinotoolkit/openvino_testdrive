@@ -17,17 +17,8 @@ import 'package:inference/widgets/fixed_grid.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:provider/provider.dart';
 
-class Huggingface extends StatefulWidget {
+class Huggingface extends StatelessWidget {
   const Huggingface({super.key});
-
-  @override
-  State<Huggingface> createState() => _HuggingfaceState();
-}
-
-class _HuggingfaceState extends State<Huggingface> {
-  List<String> selectedOptimizations = [];
-  String? searchValue;
-  bool orderAsc = true;
 
   static Map<String, List<Option>> get filterOptions {
     var options = {
@@ -89,7 +80,7 @@ class _HuggingfaceState extends State<Huggingface> {
                                     constraints: const BoxConstraints(maxWidth: 184),
                                     child: DropdownMultipleSelect(
                                       items: const ['int4', 'int8', 'fp16'],
-                                      selectedItems: selectedOptimizations,
+                                      selectedItems: filter.optimizations,
                                       onChanged: (value) {
                                         filter.optimizations = value;
                                       },
@@ -99,7 +90,7 @@ class _HuggingfaceState extends State<Huggingface> {
                                 )
                               ],
                             ),
-                            IconButton(icon: Icon(orderAsc ? FluentIcons.descending : FluentIcons.ascending, size: 18,), onPressed: () => setState(() => orderAsc = !orderAsc),),
+                            IconButton(icon: Icon(filter.order ? FluentIcons.descending : FluentIcons.ascending, size: 18,), onPressed: () => filter.order = !filter.order),
                           ],
                         ),
                         Padding(
@@ -111,16 +102,20 @@ class _HuggingfaceState extends State<Huggingface> {
                               alignment: Alignment.centerLeft,
                               child: Wrap(
                                 spacing: 8,
-                                children: selectedOptimizations.map((opt) {
-                                  return Badge(text: opt, onDelete: () {
-                                    if (opt == importProvider.selectedModel?.optimizationPrecision && selectedOptimizations.length > 1) {
-                                      importProvider.selectedModel = null;
-                                    }
-                                    setState(() {
-                                      selectedOptimizations.remove(opt);
+                                children: [
+                                  ...filter.optimizations.map((opt) {
+                                    return Badge(text: opt, onDelete: () {
+                                      if (opt == importProvider.selectedModel?.optimizationPrecision && filter.optimizations.length > 1) {
+                                        importProvider.selectedModel = null;
+                                      }
+                                      filter.removeOptimization(opt);
                                     });
-                                  });
-                                }).toList(),
+                                  }),
+                                  if (filter.option != null)
+                                    Badge(text: filter.option!.name, onDelete: () {
+                                        filter.option = null;
+                                    })
+                                ]
                               ),
                             ),
                           ),
@@ -142,14 +137,12 @@ class _HuggingfaceState extends State<Huggingface> {
                                     tileWidth: 226,
                                     spacing: 24,
                                     itemCount: allModels.length,
-                                    emptyWidget: EmptyModelListWidget(searchQuery: searchValue),
+                                    emptyWidget: EmptyModelListWidget(searchQuery: filter.name),
                                     itemBuilder: (context, index) => ModelCard(
                                       model: allModels[index],
                                       checked: importProvider.selectedModel == allModels[index],
                                       onChecked: (value) {
-                                        setState(() {
-                                          importProvider.selectedModel = value ? allModels[index] : null;
-                                        });
+                                        importProvider.selectedModel = value ? allModels[index] : null;
                                       },
                                     ),
                                   );
