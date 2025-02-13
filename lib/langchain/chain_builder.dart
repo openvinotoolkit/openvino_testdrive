@@ -17,7 +17,7 @@ String combineDocuments(
     documents.map((final d) => d.pageContent).join(separator);
 
 
-RAGChain buildRAGChain(LLMInference llmInference, Embeddings embeddings, OpenVINOLLMOptions options, List<VectorStore> stores, BaseChatMemory memory) {
+RAGChain buildRAGChain(LLMInference llmInference, OpenVINOLLMOptions options, List<VectorStore> stores, BaseChatMemory memory) {
   final retrievers = combineStores(stores);
 
   final tokenizerConfig = jsonDecode(llmInference.getTokenizerConfig()) as Map<String, dynamic>;
@@ -41,10 +41,6 @@ RAGChain buildRAGChain(LLMInference llmInference, Embeddings embeddings, OpenVIN
   final model = OpenVINOLLM(llmInference, defaultOptions: options.copyWith(applyTemplate: false));
 
   final answer = finalInputs | promptTemplate | model;
-
-  finalInputs.invoke({'docs': List<Document>.from([]), 'question': "What is the color of the sun?"}).then(print);
-
-
   return RAGChain(retrievedDocs, answer);
 }
 

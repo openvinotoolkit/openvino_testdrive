@@ -128,24 +128,24 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   void onToken(String word) {
-     stopWatch.stop();
-     if (n == 0) { // dont count first token since it's slow.
-       stopWatch.reset();
-     }
+    stopWatch.stop();
+    if (n == 0) { // dont count first token since it's slow.
+      stopWatch.reset();
+    }
 
-     double timeElapsed = stopWatch.elapsedMilliseconds.toDouble();
-     double averageElapsed = (n == 0 ? 0.0 : timeElapsed / n);
-     if (n == 0) {
-       _response = word;
-     } else {
-       _response = _response! + word;
-     }
-     _speed = averageElapsed;
-     if (hasListeners) {
-       notifyListeners();
-     }
-     stopWatch.start();
-     n++;
+    double timeElapsed = stopWatch.elapsedMilliseconds.toDouble();
+    double averageElapsed = (n == 0 ? 0.0 : timeElapsed / n);
+    if (n == 0) {
+      _response = word;
+    } else {
+      _response = _response! + word;
+    }
+    _speed = averageElapsed;
+    if (hasListeners) {
+      notifyListeners();
+    }
+    stopWatch.start();
+    n++;
   }
 
   bool sameProps(Project? project, String? device) {
@@ -197,11 +197,11 @@ class TextInferenceProvider extends ChangeNotifier {
     if (store != null && store!.memoryVectors.isNotEmpty) {
       stores.add(store!);
     }
-    if (knowledgeGroup != null) {
+    if (knowledgeGroup != null && embeddingsModel != null) {
       stores.add(ObjectBoxStore(embeddings: embeddingsModel!, group: knowledgeGroup!));
     }
 
-    final chain = buildRAGChain(inference!, embeddingsModel!, OpenVINOLLMOptions(temperature: temperature, topP: topP), stores, memory);
+    final chain = buildRAGChain(inference!, OpenVINOLLMOptions(temperature: temperature, topP: topP), stores, memory);
     final input = await chain.documentChain.invoke({"question": message}) as Map;
     final docs = input.containsKey("docs")
       ? List<String>.from(input["docs"].map((Document doc) => doc.metadata["source"]).toSet())

@@ -34,8 +34,8 @@ final class JinjaPromptTemplate extends BaseChatPromptTemplate {
     final template = env.fromString(chatTemplate);
 
     return JinjaPromptTemplate(template,
-      eosToken: chatTemplateConfig["eos_token"],
-      bosToken: chatTemplateConfig["bos_token"],
+      eosToken: chatTemplateConfig.containsKey("eos_token") ? chatTemplateConfig["eos_token"] : "",
+      bosToken: chatTemplateConfig.containsKey("bos_token") ? chatTemplateConfig["bos_token"] : "",
       inputVariables: inputVariables
     );
   }

@@ -22,7 +22,11 @@ class _KnowledgeBaseSelectorState extends State<KnowledgeBaseSelector> {
   @override
   void initState() {
     super.initState();
-    groups = ObjectBox.instance.store.box<KnowledgeGroup>().getAll();
+    try {
+      groups = ObjectBox.instance.store.box<KnowledgeGroup>().getAll();
+    } catch (e) {
+      groups = [];
+    }
   }
 
   @override

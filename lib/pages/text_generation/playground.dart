@@ -150,7 +150,7 @@ class _PlaygroundState extends State<Playground> {
                       child: Row(
                         children: [
                           DeviceSelector(),
-                          const KnowledgeBaseSelector(),
+                          KnowledgeBaseSelector(),
                         ]
                       )
                     ),
