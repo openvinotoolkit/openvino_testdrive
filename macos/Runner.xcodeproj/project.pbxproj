@@ -54,15 +54,15 @@
 
 /* Begin PBXFileReference section */
 		0C004E1F2CF751B9003B9A15 /* libpodofo.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpodofo.2.dylib; path = ../bindings/libpodofo.2.dylib; sourceTree = SOURCE_ROOT; };
-		0C42C7522CE386520079F72B /* libopenvino_c.2460.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_c.2460.dylib; path = ../bindings/libopenvino_c.2460.dylib; sourceTree = SOURCE_ROOT; };
-		0C42C7532CE386520079F72B /* libopenvino_genai.2460.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_genai.2460.dylib; path = ../bindings/libopenvino_genai.2460.dylib; sourceTree = SOURCE_ROOT; };
-		0C42C7542CE386520079F72B /* libopenvino_ir_frontend.2460.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_ir_frontend.2460.dylib; path = ../bindings/libopenvino_ir_frontend.2460.dylib; sourceTree = SOURCE_ROOT; };
-		0C42C7552CE386520079F72B /* libopenvino_onnx_frontend.2460.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_onnx_frontend.2460.dylib; path = ../bindings/libopenvino_onnx_frontend.2460.dylib; sourceTree = SOURCE_ROOT; };
-		0C42C7562CE386520079F72B /* libopenvino_paddle_frontend.2460.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_paddle_frontend.2460.dylib; path = ../bindings/libopenvino_paddle_frontend.2460.dylib; sourceTree = SOURCE_ROOT; };
-		0C42C7572CE386520079F72B /* libopenvino_pytorch_frontend.2460.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_pytorch_frontend.2460.dylib; path = ../bindings/libopenvino_pytorch_frontend.2460.dylib; sourceTree = SOURCE_ROOT; };
-		0C42C7582CE386520079F72B /* libopenvino_tensorflow_frontend.2460.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_tensorflow_frontend.2460.dylib; path = ../bindings/libopenvino_tensorflow_frontend.2460.dylib; sourceTree = SOURCE_ROOT; };
-		0C42C7592CE386520079F72B /* libopenvino_tensorflow_lite_frontend.2460.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_tensorflow_lite_frontend.2460.dylib; path = ../bindings/libopenvino_tensorflow_lite_frontend.2460.dylib; sourceTree = SOURCE_ROOT; };
-		0C42C75A2CE386520079F72B /* libopenvino.2460.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino.2460.dylib; path = ../bindings/libopenvino.2460.dylib; sourceTree = SOURCE_ROOT; };
+		0C42C7522CE386520079F72B /* libopenvino_c.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_c.2500.dylib; path = ../bindings/libopenvino_c.2500.dylib; sourceTree = SOURCE_ROOT; };
+		0C42C7532CE386520079F72B /* libopenvino_genai.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_genai.2500.dylib; path = ../bindings/libopenvino_genai.2500.dylib; sourceTree = SOURCE_ROOT; };
+		0C42C7542CE386520079F72B /* libopenvino_ir_frontend.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_ir_frontend.2500.dylib; path = ../bindings/libopenvino_ir_frontend.2500.dylib; sourceTree = SOURCE_ROOT; };
+		0C42C7552CE386520079F72B /* libopenvino_onnx_frontend.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_onnx_frontend.2500.dylib; path = ../bindings/libopenvino_onnx_frontend.2500.dylib; sourceTree = SOURCE_ROOT; };
+		0C42C7562CE386520079F72B /* libopenvino_paddle_frontend.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_paddle_frontend.2500.dylib; path = ../bindings/libopenvino_paddle_frontend.2500.dylib; sourceTree = SOURCE_ROOT; };
+		0C42C7572CE386520079F72B /* libopenvino_pytorch_frontend.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_pytorch_frontend.2500.dylib; path = ../bindings/libopenvino_pytorch_frontend.2500.dylib; sourceTree = SOURCE_ROOT; };
+		0C42C7582CE386520079F72B /* libopenvino_tensorflow_frontend.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_tensorflow_frontend.2500.dylib; path = ../bindings/libopenvino_tensorflow_frontend.2500.dylib; sourceTree = SOURCE_ROOT; };
+		0C42C7592CE386520079F72B /* libopenvino_tensorflow_lite_frontend.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_tensorflow_lite_frontend.2500.dylib; path = ../bindings/libopenvino_tensorflow_lite_frontend.2500.dylib; sourceTree = SOURCE_ROOT; };
+		0C42C75A2CE386520079F72B /* libopenvino.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino.2500.dylib; path = ../bindings/libopenvino.2500.dylib; sourceTree = SOURCE_ROOT; };
 		0C4E1F672CECC22800124339 /* libavcodec.60.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavcodec.60.dylib; path = ../bindings/libavcodec.60.dylib; sourceTree = SOURCE_ROOT; };
 		0C4E1F682CECC22800124339 /* libavdevice.60.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavdevice.60.dylib; path = ../bindings/libavdevice.60.dylib; sourceTree = SOURCE_ROOT; };
 		0C4E1F692CECC22800124339 /* libavformat.60.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libavformat.60.dylib; path = ../bindings/libavformat.60.dylib; sourceTree = SOURCE_ROOT; };
@@ -236,15 +236,15 @@
 				0C5D476D2C6F397A00307B37 /* libopencv_video.410.dylib */,
 				0C5D476B2C6F397A00307B37 /* libopencv_videoio.410.dylib */,
 				0C5D47A32C6F3B7000307B37 /* libtbb.12.dylib */,
-				0C42C7522CE386520079F72B /* libopenvino_c.2460.dylib */,
-				0C42C7532CE386520079F72B /* libopenvino_genai.2460.dylib */,
-				0C42C7542CE386520079F72B /* libopenvino_ir_frontend.2460.dylib */,
-				0C42C7552CE386520079F72B /* libopenvino_onnx_frontend.2460.dylib */,
-				0C42C7562CE386520079F72B /* libopenvino_paddle_frontend.2460.dylib */,
-				0C42C7572CE386520079F72B /* libopenvino_pytorch_frontend.2460.dylib */,
-				0C42C7582CE386520079F72B /* libopenvino_tensorflow_frontend.2460.dylib */,
-				0C42C7592CE386520079F72B /* libopenvino_tensorflow_lite_frontend.2460.dylib */,
-				0C42C75A2CE386520079F72B /* libopenvino.2460.dylib */,
+				0C42C7522CE386520079F72B /* libopenvino_c.2500.dylib */,
+				0C42C7532CE386520079F72B /* libopenvino_genai.2500.dylib */,
+				0C42C7542CE386520079F72B /* libopenvino_ir_frontend.2500.dylib */,
+				0C42C7552CE386520079F72B /* libopenvino_onnx_frontend.2500.dylib */,
+				0C42C7562CE386520079F72B /* libopenvino_paddle_frontend.2500.dylib */,
+				0C42C7572CE386520079F72B /* libopenvino_pytorch_frontend.2500.dylib */,
+				0C42C7582CE386520079F72B /* libopenvino_tensorflow_frontend.2500.dylib */,
+				0C42C7592CE386520079F72B /* libopenvino_tensorflow_lite_frontend.2500.dylib */,
+				0C42C75A2CE386520079F72B /* libopenvino.2500.dylib */,
 				0C5D47642C6F397900307B37 /* libopencv_ximgproc.410.dylib */,
 				0C5D473B2C6F357C00307B37 /* libblend2d.dylib */,
 				0C5D47372C6F2F9500307B37 /* libmacos_bindings.dylib */,
