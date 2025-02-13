@@ -25,7 +25,7 @@ jobs:
 
       - name: Install OpenVINO
         run: |
-          curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2024.6/macos/openvino_genai_macos_12_6_2024.6.0.0_arm64.tar.gz \
+          curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2025.0/macos/openvino_genai_macos_12_6_2025.0.0.0_arm64.tar.gz \
           -o /tmp/openvino.tar.gz
           sudo mkdir /opt/intel
           sudo tar -xvf /tmp/openvino.tar.gz -C /opt/intel
