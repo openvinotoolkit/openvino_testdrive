@@ -4,6 +4,7 @@
 
 import 'dart:core';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/project.dart';
 import 'package:inference/public_model_info.dart';
 
@@ -12,28 +13,6 @@ class Option {
   final String filter;
 
   const Option(this.name, this.filter);
-
-  static Map<String, List<Option>> get filterOptions {
-    var options = {
-      "Image": [
-        const Option("Detection", "detection"),
-        const Option("Classification", "classification"),
-        const Option("Segmentation", "segmentation"),
-        const Option("Anomaly detection","anomaly")
-      ],
-      "Text Generation": [
-        const Option("Text generation", "text"),
-      ],
-      "Image Generation": [
-        const Option("Text to Image", "text-to-image")
-      ],
-      "Audio": [
-        const Option("Speech to text", "speech")
-      ]
-    };
-
-    return options;
-  }
 }
 
 
@@ -53,15 +32,20 @@ class ProjectFilterProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  final List<String> optimizations = [];
+  List<String> _optimizations = [];
+  List<String> get optimizations => _optimizations;
+  set optimizations(List<String> optimizations) {
+    _optimizations = optimizations;
+    notifyListeners();
+  }
 
   void addOptimization(String opt) {
-    optimizations.add(opt);
+    _optimizations.add(opt);
     notifyListeners();
   }
 
   void removeOptimization(String opt) {
-    optimizations.remove(opt);
+    _optimizations.remove(opt);
     notifyListeners();
   }
 
@@ -90,22 +74,18 @@ class ProjectFilterProvider extends ChangeNotifier {
     return filteredList;
   }
 
-  List<PublicModelInfo> applyFilterOnPublicModelInfo(List<PublicModelInfo> projects) {
+  List<Model> applyFilterOnModel(List<Model> projects) {
     var filtered = projects
       .where((project) =>
           project.id.toLowerCase().contains((name ?? "").toLowerCase())
       );
 
     if (optimizations.isNotEmpty) {
-      filtered = filtered.where((model) {
-          return optimizations.where((opt) {
-              return model.name.contains(opt);
-          }).isNotEmpty;
-      });
+      filtered = filtered.where((model) => optimizations.contains(model.optimizationPrecision)).toList();
     }
 
     if (option != null) {
-      filtered = filtered.where((model) => model.taskType == option!.filter);
+      filtered = filtered.where((model) => model.task == option!.filter);
     }
 
 

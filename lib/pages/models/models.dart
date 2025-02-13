@@ -19,6 +19,28 @@ class ModelsPage extends StatefulWidget {
 }
 
 class _ModelsPageState extends State<ModelsPage> {
+  static Map<String, List<Option>> get filterOptions {
+    var options = {
+      "Image": [
+        const Option("Detection", "detection"),
+        const Option("Classification", "classification"),
+        const Option("Segmentation", "segmentation"),
+        const Option("Anomaly detection","anomaly")
+      ],
+      "Text Generation": [
+        const Option("Text generation", "text"),
+      ],
+      "Image Generation": [
+        const Option("Text to Image", "text-to-image")
+      ],
+      "Audio": [
+        const Option("Speech to text", "speech")
+      ]
+    };
+
+    return options;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
@@ -50,9 +72,9 @@ class _ModelsPageState extends State<ModelsPage> {
                   ),
                   Expanded(
                     child: GridContainer(
-                    color: backgroundColor.of(theme),
+                      color: backgroundColor.of(theme),
                       padding: const EdgeInsets.all(13),
-                      child: const ModelFilter()
+                      child: ModelFilter(filterOptions: filterOptions)
                     ),
                   ),
                 ],
