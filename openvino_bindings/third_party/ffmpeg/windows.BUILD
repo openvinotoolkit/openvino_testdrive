@@ -5,10 +5,20 @@ package(
 cc_library(
     name = "ffmpeg",
     hdrs = glob([
-        "include/**/*.h",
+        "include/libavcodec/*.h",
+        "include/libavutil/*.h",
+        "include/libavformat/*.h",
+        "include/libavfilter/*.h",
+        "include/libswscale/*.h",
+        "include/libswresample/*.h",
     ]),
     srcs = glob([
-        "bin/*.dll",
+        "bin/avcodec-60.dll",
+        "bin/avutil-58.dll",
+        "bin/avformat-60.dll",
+        "bin/avfilter-9.dll",
+        "bin/swscale-7.dll",
+        "bin/swresample-4.dll",
         "lib/*.lib",
     ]),
     includes = [

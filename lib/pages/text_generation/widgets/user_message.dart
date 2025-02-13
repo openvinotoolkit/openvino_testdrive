@@ -4,6 +4,8 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:inference/pages/text_generation/utils/user_file.dart';
+import 'package:inference/pages/text_generation/widgets/user_file_widget.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
@@ -35,7 +37,18 @@ class UserMessage extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
+          if (message.sources != null) Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Wrap(
+              alignment: WrapAlignment.end,
+              spacing: 5,
+              children: [
+                for (final source in message.sources!)
+                  UserFileWidget(file: UserFile.fromPath(source))
+              ],
+            ),
+          ),
         ],
       ),),
     );

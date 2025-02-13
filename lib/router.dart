@@ -9,6 +9,7 @@ import 'package:inference/openvino_console_app.dart';
 import 'package:inference/pages/download_model/download_model.dart';
 import 'package:inference/pages/home/home.dart';
 import 'package:inference/pages/import/import.dart';
+import 'package:inference/pages/knowledge_base/knowledge_base.dart';
 import 'package:inference/pages/models/models.dart';
 import 'package:inference/project.dart';
 import 'package:inference/pages/models/inference.dart';
@@ -32,6 +33,7 @@ final router = GoRouter(navigatorKey: rootNavigatorKey,
         GoRoute(path: '/models/import', builder: (context, state) => const ImportPage()),
         GoRoute(path: '/models/download', builder: (context, state) => DownloadPage(project: state.extra as PublicProject)),
         GoRoute(path: '/models/inference', builder: (context, state) => InferencePage(state.extra as Project)),
+        GoRoute(path: '/knowledge_base', builder: (context, state) => const KnowledgeBasePage()),
       ],
     )
   ]

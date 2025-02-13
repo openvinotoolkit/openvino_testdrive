@@ -7,15 +7,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/deployment_processor.dart';
 import 'package:inference/project.dart';
 
+
 class ProjectProvider extends ChangeNotifier {
     final List<Project> _projects = [];
-
-    bool _publicLoaded = false;
-    bool get publicLoaded => _publicLoaded;
-    set publicLoaded(bool value) {
-        _publicLoaded = value;
-        notifyListeners();
-    }
 
     UnmodifiableListView<Project> get projects => UnmodifiableListView(_projects);
 

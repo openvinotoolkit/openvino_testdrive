@@ -11,6 +11,17 @@ alias(
 )
 
 alias(
+    name = "podofo",
+    actual = select({
+        "@bazel_tools//src/conditions:windows": "@podofo_windows//:podofo_windows",
+        "@bazel_tools//src/conditions:darwin_arm64": "@podofo//:podofo_mac",
+        "//conditions:default": "@podofo//:podofo_linux",
+    }),
+    visibility = ["//visibility:public"],
+)
+
+
+alias(
     name = "model_api_cmake",
     actual = select({
         "@bazel_tools//src/conditions:windows": "@model_api//:model_api_cmake_windows",

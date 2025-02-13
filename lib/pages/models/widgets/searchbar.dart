@@ -7,10 +7,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 class SearchBar extends StatefulWidget {
   static const escape = 4294967323;
 
+  final String placeholder;
   final Function(String) onChange;
   const SearchBar({
       super.key,
       required this.onChange,
+      required this.placeholder,
   });
 
   @override
@@ -43,7 +45,7 @@ class _SearchBarState extends State<SearchBar> {
       height: 30,
       width: 278,
       child: TextBox(
-        placeholder: "Find model",
+        placeholder: widget.placeholder,
         suffix: const Padding(
           padding: EdgeInsets.all(6),
           child: Icon(FluentIcons.search),

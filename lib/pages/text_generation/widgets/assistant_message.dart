@@ -9,6 +9,7 @@ import 'package:markdown/markdown.dart' as md;
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 
 class AssistantMessage extends StatefulWidget {
@@ -63,6 +64,7 @@ class _AssistantMessageState extends State<AssistantMessage> {
                     onEnter: (_) => setState(() { _hovering = true; }),
                     onExit: (_) => setState(() { _hovering = false; }),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 502),
@@ -85,7 +87,6 @@ class _AssistantMessageState extends State<AssistantMessage> {
                           MessageMiscellanious(message: widget.message)
                         else
                           const SizedBox(height: 34)
-
                       ],
                     ),
                   ),
@@ -193,6 +194,24 @@ class MessageMiscellanious extends StatelessWidget {
                 ),
               ),
             ),
+            if (message.sources != null) Row(
+              children: [
+                for (final (index, source) in message.sources!.indexed)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Tooltip(
+                      style: const TooltipThemeData(
+                        waitDuration: Duration.zero,
+                      ),
+                      message: source,
+                      child: FilledButton(
+                        onPressed: null,
+                        child: Text("${index + 1}. ${basename(source)}")
+                      )
+                    ),
+                  )
+              ]
+            ),
             IconButton(
               icon: const Icon(FluentIcons.copy),
               onPressed: () async{
@@ -214,5 +233,4 @@ class MessageMiscellanious extends StatelessWidget {
       ),
     );
   }
-
 }

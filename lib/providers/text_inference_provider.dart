@@ -7,7 +7,16 @@ import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/interop/generated_bindings.dart';
 import 'package:inference/interop/llm_inference.dart';
+import 'package:inference/langchain/all_mini_lm_v6.dart';
+import 'package:inference/langchain/chain_builder.dart';
+import 'package:inference/langchain/object_box/embedding_entity.dart';
+import 'package:inference/langchain/object_box_store.dart';
+import 'package:inference/langchain/openvino_embeddings.dart';
+import 'package:inference/langchain/openvino_llm.dart';
+import 'package:inference/pages/text_generation/utils/user_file.dart';
 import 'package:inference/project.dart';
+import 'package:inference/providers/download_provider.dart';
+import 'package:langchain/langchain.dart';
 
 enum Speaker { system, assistant, user }
 
@@ -38,7 +47,8 @@ class Message {
   final String message;
   final Metrics? metrics;
   final DateTime? time;
-  const Message(this.speaker, this.message, this.metrics, this.time);
+  final List<String>? sources;
+  const Message(this.speaker, this.message, this.metrics, this.time, {this.sources});
 }
 
 class TextInferenceProvider extends ChangeNotifier {
@@ -51,6 +61,34 @@ class TextInferenceProvider extends ChangeNotifier {
   Project? get project => _project;
   String? get device => _device;
   Metrics? get metrics => _messages.lastOrNull?.metrics;
+
+  final memory = ConversationBufferMemory(returnMessages: true);
+
+  final List<UserFile> _userFiles = [];
+
+  Future<void> addUserFiles(List<UserFile> files ) async {
+    if (files.isEmpty) return;
+    _userFiles.addAll(files);
+    final documents = files.expand((f) => f.documents).toList();
+    await store!.addDocuments(documents: documents);
+  }
+
+  void removeUserFile(UserFile file ) {
+    _userFiles.remove(file);
+    final ids = file.documents.map((p) => p.id).whereType<String>().toList();
+    store?.delete(ids: ids);
+  }
+
+  LLMInference? inference;
+  Embeddings? embeddingsModel;
+  MemoryVectorStore? store;
+
+  KnowledgeGroup? _knowledgeGroup;
+  KnowledgeGroup? get knowledgeGroup => _knowledgeGroup;
+  set knowledgeGroup(KnowledgeGroup? group) {
+    _knowledgeGroup = group;
+    notifyListeners();
+  }
 
   double _temperature = 1;
   double get temperature => _temperature;
@@ -66,7 +104,6 @@ class TextInferenceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  LLMInference? inference;
   final stopWatch = Stopwatch();
   int n = 0;
 
@@ -75,34 +112,40 @@ class TextInferenceProvider extends ChangeNotifier {
     _device = device;
   }
 
-  Future<void> loadModel() async {
+  Future<void> loadModel(DownloadProvider downloadProvider) async {
     if (project != null && device != null) {
-      inference = await LLMInference.init(project!.storagePath, device!)
-        ..setListener(onMessage);
+      // Start downloading the embedings model if its missing
+      final embeddingsModelLoader = AllMiniLMV6.ensureModelIsPresent(downloadProvider);
+      // Load the inference model
+      inference = await LLMInference.init(project!.storagePath, device!);
+      // Make sure the embeddings model is loaded.
+      await embeddingsModelLoader;
+      embeddingsModel = await OpenVINOEmbeddings.init(await AllMiniLMV6.storagePath, "CPU");
+      store = MemoryVectorStore(embeddings: embeddingsModel!);
       loaded.complete();
       notifyListeners();
     }
   }
 
-  void onMessage(String word) {
-     stopWatch.stop();
-     if (n == 0) { // dont count first token since it's slow.
-       stopWatch.reset();
-     }
+  void onToken(String word) {
+    stopWatch.stop();
+    if (n == 0) { // dont count first token since it's slow.
+      stopWatch.reset();
+    }
 
-     double timeElapsed = stopWatch.elapsedMilliseconds.toDouble();
-     double averageElapsed = (n == 0 ? 0.0 : timeElapsed / n);
-     if (n == 0) {
-       _response = word;
-     } else {
-       _response = _response! + word;
-     }
-     _speed = averageElapsed;
-     if (hasListeners) {
-       notifyListeners();
-     }
-     stopWatch.start();
-     n++;
+    double timeElapsed = stopWatch.elapsedMilliseconds.toDouble();
+    double averageElapsed = (n == 0 ? 0.0 : timeElapsed / n);
+    if (n == 0) {
+      _response = word;
+    } else {
+      _response = _response! + word;
+    }
+    _speed = averageElapsed;
+    if (hasListeners) {
+      notifyListeners();
+    }
+    stopWatch.start();
+    n++;
   }
 
   bool sameProps(Project? project, String? device) {
@@ -127,15 +170,7 @@ class TextInferenceProvider extends ChangeNotifier {
   }
 
   String get task {
-    if (inference == null) {
-      return "";
-    }
-
-    if (inference?.chatEnabled == true) {
-      return "Chat";
-    } else {
-      return "Text Generation";
-    }
+    return project?.taskName() ?? "";
   }
 
   Message? get interimResponse {
@@ -152,15 +187,47 @@ class TextInferenceProvider extends ChangeNotifier {
     return [..._messages, interimResponse!];
   }
 
-  Future<void> message(String message) async {
+  Future<void> message(String message, List<UserFile> files) async {
     _response = "...";
-    _messages.add(Message(Speaker.user, message, null, DateTime.now()));
+    _messages.add(Message(Speaker.user, message, null, DateTime.now(), sources: files.map((f) => f.path).toList()));
     notifyListeners();
-    final response = await inference!.prompt(message, temperature, topP);
+
+    await addUserFiles(files);
+    final List<VectorStore> stores = [];
+    if (store != null && store!.memoryVectors.isNotEmpty) {
+      stores.add(store!);
+    }
+    if (knowledgeGroup != null && embeddingsModel != null) {
+      stores.add(ObjectBoxStore(embeddings: embeddingsModel!, group: knowledgeGroup!));
+    }
+
+    final chain = buildRAGChain(inference!, OpenVINOLLMOptions(temperature: temperature, topP: topP), stores, memory);
+    final input = await chain.documentChain.invoke({"question": message}) as Map;
+    final docs = input.containsKey("docs")
+      ? List<String>.from(input["docs"].map((Document doc) => doc.metadata["source"]).toSet())
+      : null;
+
+    String modelOutput = "";
+    Metrics? metrics;
+    await for (final output in chain.answerChain.stream(input)) {
+      final result = output as LLMResult;
+      final token = result.output;
+      if (result.metadata.containsKey("metrics")) {
+        metrics = result.metadata["metrics"];
+      }
+      modelOutput += token;
+      onToken(token);
+    }
+
+    memory.saveContext(
+      inputValues: {'input': message},
+      outputValues: {'output': modelOutput},
+    );
 
     if (_messages.isNotEmpty) {
-      _messages.add(Message(Speaker.assistant, response.content, response.metrics, DateTime.now()));
+      _messages.add(Message(Speaker.assistant, modelOutput, metrics, DateTime.now(), sources: docs));
     }
+
     _response = null;
     n = 0;
     if (hasListeners) {
@@ -191,6 +258,11 @@ class TextInferenceProvider extends ChangeNotifier {
   void reset() {
     inference?.forceStop();
     inference?.clearHistory();
+    memory.clear();
+    for (final file in _userFiles) {
+      final ids = file.documents.map((p) => p.id).whereType<String>().toList();
+      store?.delete(ids: ids);
+    }
     _messages.clear();
     _response = null;
     notifyListeners();

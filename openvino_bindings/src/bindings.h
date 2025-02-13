@@ -29,6 +29,7 @@ typedef void* CGraphRunner;
 typedef void* CSpeechToText;
 typedef void* CLLMInference;
 typedef void* CTTIInference;
+typedef void* CSentenceTransformer;
 typedef void* CVLMInference;
 
 typedef struct {
@@ -85,6 +86,12 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    CSentenceTransformer value;
+} StatusOrSentenceTransformer;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     CSpeechToText value;
 } StatusOrSpeechToText;
 
@@ -132,6 +139,13 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
+    float* value;
+    int size;
+} StatusOrEmbeddings;
+
+typedef struct {
+    enum StatusEnum status;
+    const char* message;
     VLMMetrics metrics;
     const char* value;
 } StatusOrVLMModelResponse;
@@ -163,6 +177,7 @@ EXPORT void freeStatusOrSpeechToText(StatusOrSpeechToText *status);
 EXPORT void freeStatusOrModelResponse(StatusOrModelResponse *status);
 EXPORT void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *status);
 EXPORT void freeStatusOrDevices(StatusOrDevices *status);
+EXPORT void freeStatusOrEmbeddings(StatusOrEmbeddings *status);
 EXPORT void freeStatusOrCameraDevices(StatusOrCameraDevices *status);
 
 EXPORT StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json);
@@ -178,10 +193,10 @@ EXPORT Status* load_font(const char* font_path);
 
 EXPORT StatusOrLLMInference* llmInferenceOpen(const char* model_path, const char* device);
 EXPORT Status* llmInferenceSetListener(CLLMInference instance, LLMInferenceCallbackFunction callback);
-EXPORT StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, float temperature, float top_p);
+EXPORT StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, bool apply_template, float temperature, float top_p);
 EXPORT Status* llmInferenceClearHistory(CLLMInference instance);
 EXPORT Status* llmInferenceForceStop(CLLMInference instance);
-EXPORT StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance);
+EXPORT StatusOrString* llmInferenceGetTokenizerConfig(CLLMInference instance);
 EXPORT Status* llmInferenceClose(CLLMInference instance);
 
 EXPORT StatusOrTTIInference* ttiInferenceOpen(const char* model_path, const char* device);
@@ -206,6 +221,12 @@ EXPORT Status* graphRunnerStop(CGraphRunner instance);
 EXPORT Status* graphRunnerStartCamera(CGraphRunner instance, int cameraIndex, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay);
 EXPORT StatusOrInt* graphRunnerGetTimestamp(CGraphRunner instance);
 EXPORT Status* graphRunnerStopCamera(CGraphRunner instance);
+
+EXPORT StatusOrSentenceTransformer* sentenceTransformerOpen(const char* model_path, const char* device);
+EXPORT StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, const char* prompt);
+EXPORT Status* sentenceTransformerClose(CSentenceTransformer instance);
+
+EXPORT StatusOrString* pdfExtractText(const char* pdf_path);
 
 EXPORT StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device);
 EXPORT Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path);

@@ -11,11 +11,13 @@
 #include <nlohmann/json.hpp>
 #include <openvino/openvino.hpp>
 
+#include "src/pdf/sentence_extractor.h"
 #include "src/audio/speech_to_text.h"
 #include "src/image/image_inference.h"
 #include "src/mediapipe/graph_runner.h"
 #include "src/mediapipe/serialization/serialization_calculators.h"
 #include "src/llm/llm_inference.h"
+#include "src/sentence_transformer/sentence_transformer_pipeline.h"
 #include "src/tti/tti_inference.h"
 #include "src/vlm/vlm_inference.h"
 #include "src/utils/errors.h"
@@ -74,6 +76,14 @@ void freeStatusOrDevices(StatusOrDevices *status) {
     delete status;
 }
 
+void freeStatusOrEmbeddings(StatusOrEmbeddings *status) {
+    if (status->status == StatusEnum::OkStatus) {
+        delete [] status->value;
+        status->value = nullptr;
+    }
+    delete status;
+}
+
 void freeStatusOrCameraDevices(StatusOrCameraDevices *status) {
     if (status->status == StatusEnum::OkStatus) {
         delete [] status->value;
@@ -81,7 +91,6 @@ void freeStatusOrCameraDevices(StatusOrCameraDevices *status) {
     }
     delete status;
 }
-
 
 StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json) {
     try {
@@ -224,10 +233,10 @@ Status* llmInferenceSetListener(CLLMInference instance, LLMInferenceCallbackFunc
     }
 }
 
-StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, float temperature, float top_p) {
+StatusOrModelResponse* llmInferencePrompt(CLLMInference instance, const char* message, bool apply_template, float temperature, float top_p) {
     try {
         auto inference = reinterpret_cast<LLMInference*>(instance);
-        auto result = inference->prompt(message, temperature, top_p);
+        auto result = inference->prompt(message, temperature, apply_template, top_p);
         std::string text = result;
         return new StatusOrModelResponse{OkStatus, "", convertToMetricsStruct(result.perf_metrics), strdup(text.c_str())};
     } catch (...) {
@@ -245,14 +254,16 @@ Status* llmInferenceClearHistory(CLLMInference instance) {
     }
 }
 
-StatusOrBool* llmInferenceHasChatTemplate(CLLMInference instance) {
+
+StatusOrString* llmInferenceGetTokenizerConfig(CLLMInference instance) {
     try {
-        bool has_chat_template = reinterpret_cast<LLMInference*>(instance)->has_chat_template();
-        return new StatusOrBool{OkStatus, "", has_chat_template};
+        auto chat_template = reinterpret_cast<LLMInference*>(instance)->get_tokenizer_config();
+        return new StatusOrString{OkStatus, "", strdup(chat_template.c_str())};
     } catch (...) {
         auto except = handle_exceptions();
-        return new StatusOrBool{except->status, except->message};
+        return new StatusOrString{except->status, except->message};
     }
+
 }
 
 Status* llmInferenceForceStop(CLLMInference instance) {
@@ -480,6 +491,35 @@ Status* graphRunnerStop(CGraphRunner instance) {
     }
 }
 
+StatusOrSentenceTransformer* sentenceTransformerOpen(const char* model_path, const char* device) {
+    try {
+        auto instance = new SentenceTransformerPipeline(model_path, device);
+        return new StatusOrSentenceTransformer{OkStatus, "", instance};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrSentenceTransformer{except->status, except->message};
+    }
+}
+
+StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, const char* prompt) {
+    try {
+        auto object = reinterpret_cast<SentenceTransformerPipeline*>(instance);
+        auto result = object->generate(prompt);
+        auto data = new std::vector<float>(result.begin(), result.end());
+        return new StatusOrEmbeddings{OkStatus, "", data->data(), (int)data->size()};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrEmbeddings{except->status, except->message};
+    }
+
+}
+
+Status* sentenceTransformerClose(CSentenceTransformer instance) {
+    auto inference = reinterpret_cast<SentenceTransformerPipeline*>(instance);
+    delete inference;
+    return new Status{OkStatus};
+}
+
 StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device) {
     try {
         auto instance = new SpeechToText(model_path, device);
@@ -548,16 +588,31 @@ StatusOrDevices* getAvailableDevices() {
     return new StatusOrDevices{OkStatus, "", devices, (int)device_ids.size() + 1};
 }
 
-StatusOrCameraDevices* getAvailableCameraDevices() {
-    auto cameras = list_camera_devices();
-    CameraDevice* devices = new CameraDevice[cameras.size()];
-    int i = 0;
-    for (auto camera: cameras) {
-        devices[i] = { (int)camera.first, strdup(camera.second.c_str()) };
-        i++;
+StatusOrString* pdfExtractText(const char* pdf_path) {
+    try {
+        auto output = sentence_extractor::extract_text_from_pdf(pdf_path);
+        return new StatusOrString{OkStatus, "", strdup(output.c_str())};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrString{except->status, except->message};
     }
+}
 
-    return new StatusOrCameraDevices{OkStatus, "", devices, (int)cameras.size()};
+StatusOrCameraDevices* getAvailableCameraDevices() {
+    try {
+        auto cameras = list_camera_devices();
+        CameraDevice* devices = new CameraDevice[cameras.size()];
+        int i = 0;
+        for (auto camera: cameras) {
+            devices[i] = { (int)camera.first, strdup(camera.second.c_str()) };
+            i++;
+        }
+
+        return new StatusOrCameraDevices{OkStatus, "", devices, (int)cameras.size()};
+    } catch (...) {
+        auto except = handle_exceptions();
+        return new StatusOrCameraDevices{except->status, except->message};
+    }
 }
 
 Status* handle_exceptions() {

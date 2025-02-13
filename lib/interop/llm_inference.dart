@@ -13,11 +13,8 @@ class LLMInference {
 
   NativeCallable<LLMInferenceCallbackFunctionFunction>? nativeListener;
   final Pointer<StatusOrLLMInference> instance;
-  late bool chatEnabled;
 
-  LLMInference(this.instance) {
-    chatEnabled = hasChatTemplate();
-  }
+  LLMInference(this.instance);
 
   static Future<LLMInference> init(String modelPath, String device) async {
     final result = await Isolate.run(() {
@@ -38,11 +35,12 @@ class LLMInference {
     return LLMInference(result);
   }
 
-  Future<ModelResponse> prompt(String message, double temperature, double topP) async {
+  Future<ModelResponse> prompt(String message, bool applyTemplate, double temperature, double topP) async {
+    print("Actual prompt: $message");
     int instanceAddress = instance.ref.value.address;
     final result = await Isolate.run(() {
       final messagePtr = message.toNativeUtf8();
-      final status = llmOV.llmInferencePrompt(Pointer<Void>.fromAddress(instanceAddress), messagePtr, temperature, topP);
+      final status = llmOV.llmInferencePrompt(Pointer<Void>.fromAddress(instanceAddress), messagePtr, applyTemplate, temperature, topP);
       calloc.free(messagePtr);
       return status;
     })
@@ -83,14 +81,16 @@ class LLMInference {
     }
   }
 
-  bool hasChatTemplate() {
-    final status = llmOV.llmInferenceHasChatTemplate(instance.ref.value);
+  String getTokenizerConfig() {
+    final status = llmOV.llmInferenceGetTokenizerConfig(instance.ref.value);
 
     if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
-      throw "LLM Chat template error: ${status.ref.status} ${status.ref.message.toDartString()}";
+      throw "LLM get Chat template error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
 
-    return status.ref.value;
+    final result = status.ref.value.toDartString();
+    llmOV.freeStatusOrString(status);
+    return result;
   }
 
   void close() {

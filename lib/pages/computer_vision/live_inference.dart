@@ -156,7 +156,6 @@ class _LiveInferenceState extends State<LiveInference> {
 
                                     for (final device in devices)
                                       MenuFlyoutItem(text: Text(device.name), onPressed: () => openCamera(device)),
-
                                   ]
                                 );
                               }
@@ -179,7 +178,7 @@ class _LiveInferenceState extends State<LiveInference> {
                               LiveInferenceMode.image => DropArea(
                                 type: "image",
                                 showChild: inferenceResult != null,
-                                onUpload: (String file) { uploadFile(file, inferenceProvider); },
+                                onUpload: (List<String> files) { uploadFile(files.first, inferenceProvider); },
                                 extensions: const ["jpg", "jpeg", "bmp", "png", "tif", "tiff"],
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
