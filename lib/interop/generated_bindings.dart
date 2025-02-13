@@ -151,6 +151,21 @@ class OpenVINO {
   late final _freeStatusOrDevices = _freeStatusOrDevicesPtr
       .asFunction<void Function(ffi.Pointer<StatusOrDevices>)>();
 
+  void freeStatusOrEmbeddings(
+    ffi.Pointer<StatusOrEmbeddings> status,
+  ) {
+    return _freeStatusOrEmbeddings(
+      status,
+    );
+  }
+
+  late final _freeStatusOrEmbeddingsPtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Void Function(ffi.Pointer<StatusOrEmbeddings>)>>(
+      'freeStatusOrEmbeddings');
+  late final _freeStatusOrEmbeddings = _freeStatusOrEmbeddingsPtr
+      .asFunction<void Function(ffi.Pointer<StatusOrEmbeddings>)>();
+
   void freeStatusOrCameraDevices(
     ffi.Pointer<StatusOrCameraDevices> status,
   ) {
@@ -446,12 +461,14 @@ class OpenVINO {
   ffi.Pointer<StatusOrModelResponse> llmInferencePrompt(
     CLLMInference instance,
     ffi.Pointer<pkg_ffi.Utf8> message,
+    bool apply_template,
     double temperature,
     double top_p,
   ) {
     return _llmInferencePrompt(
       instance,
       message,
+      apply_template,
       temperature,
       top_p,
     );
@@ -462,11 +479,12 @@ class OpenVINO {
           ffi.Pointer<StatusOrModelResponse> Function(
               CLLMInference,
               ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Bool,
               ffi.Float,
               ffi.Float)>>('llmInferencePrompt');
   late final _llmInferencePrompt = _llmInferencePromptPtr.asFunction<
       ffi.Pointer<StatusOrModelResponse> Function(
-          CLLMInference, ffi.Pointer<pkg_ffi.Utf8>, double, double)>();
+          CLLMInference, ffi.Pointer<pkg_ffi.Utf8>, bool, double, double)>();
 
   ffi.Pointer<Status> llmInferenceClearHistory(
     CLLMInference instance,
@@ -496,20 +514,21 @@ class OpenVINO {
   late final _llmInferenceForceStop = _llmInferenceForceStopPtr
       .asFunction<ffi.Pointer<Status> Function(CLLMInference)>();
 
-  ffi.Pointer<StatusOrBool> llmInferenceHasChatTemplate(
+  ffi.Pointer<StatusOrString> llmInferenceGetTokenizerConfig(
     CLLMInference instance,
   ) {
-    return _llmInferenceHasChatTemplate(
+    return _llmInferenceGetTokenizerConfig(
       instance,
     );
   }
 
-  late final _llmInferenceHasChatTemplatePtr = _lookup<
+  late final _llmInferenceGetTokenizerConfigPtr = _lookup<
           ffi
-          .NativeFunction<ffi.Pointer<StatusOrBool> Function(CLLMInference)>>(
-      'llmInferenceHasChatTemplate');
-  late final _llmInferenceHasChatTemplate = _llmInferenceHasChatTemplatePtr
-      .asFunction<ffi.Pointer<StatusOrBool> Function(CLLMInference)>();
+          .NativeFunction<ffi.Pointer<StatusOrString> Function(CLLMInference)>>(
+      'llmInferenceGetTokenizerConfig');
+  late final _llmInferenceGetTokenizerConfig =
+      _llmInferenceGetTokenizerConfigPtr
+          .asFunction<ffi.Pointer<StatusOrString> Function(CLLMInference)>();
 
   ffi.Pointer<Status> llmInferenceClose(
     CLLMInference instance,
@@ -885,6 +904,74 @@ class OpenVINO {
   late final _graphRunnerStopCamera = _graphRunnerStopCameraPtr
       .asFunction<ffi.Pointer<Status> Function(CGraphRunner)>();
 
+  ffi.Pointer<StatusOrSentenceTransformer> sentenceTransformerOpen(
+    ffi.Pointer<pkg_ffi.Utf8> model_path,
+    ffi.Pointer<pkg_ffi.Utf8> device,
+  ) {
+    return _sentenceTransformerOpen(
+      model_path,
+      device,
+    );
+  }
+
+  late final _sentenceTransformerOpenPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrSentenceTransformer> Function(
+              ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('sentenceTransformerOpen');
+  late final _sentenceTransformerOpen = _sentenceTransformerOpenPtr.asFunction<
+      ffi.Pointer<StatusOrSentenceTransformer> Function(
+          ffi.Pointer<pkg_ffi.Utf8>, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<StatusOrEmbeddings> sentenceTransformerGenerate(
+    CSentenceTransformer instance,
+    ffi.Pointer<pkg_ffi.Utf8> prompt,
+  ) {
+    return _sentenceTransformerGenerate(
+      instance,
+      prompt,
+    );
+  }
+
+  late final _sentenceTransformerGeneratePtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrEmbeddings> Function(CSentenceTransformer,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('sentenceTransformerGenerate');
+  late final _sentenceTransformerGenerate =
+      _sentenceTransformerGeneratePtr.asFunction<
+          ffi.Pointer<StatusOrEmbeddings> Function(
+              CSentenceTransformer, ffi.Pointer<pkg_ffi.Utf8>)>();
+
+  ffi.Pointer<Status> sentenceTransformerClose(
+    CSentenceTransformer instance,
+  ) {
+    return _sentenceTransformerClose(
+      instance,
+    );
+  }
+
+  late final _sentenceTransformerClosePtr = _lookup<
+          ffi
+          .NativeFunction<ffi.Pointer<Status> Function(CSentenceTransformer)>>(
+      'sentenceTransformerClose');
+  late final _sentenceTransformerClose = _sentenceTransformerClosePtr
+      .asFunction<ffi.Pointer<Status> Function(CSentenceTransformer)>();
+
+  ffi.Pointer<StatusOrString> pdfExtractText(
+    ffi.Pointer<pkg_ffi.Utf8> pdf_path,
+  ) {
+    return _pdfExtractText(
+      pdf_path,
+    );
+  }
+
+  late final _pdfExtractTextPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<StatusOrString> Function(
+              ffi.Pointer<pkg_ffi.Utf8>)>>('pdfExtractText');
+  late final _pdfExtractText = _pdfExtractTextPtr.asFunction<
+      ffi.Pointer<StatusOrString> Function(ffi.Pointer<pkg_ffi.Utf8>)>();
+
   ffi.Pointer<StatusOrSpeechToText> speechToTextOpen(
     ffi.Pointer<pkg_ffi.Utf8> model_path,
     ffi.Pointer<pkg_ffi.Utf8> device,
@@ -1199,6 +1286,17 @@ final class StatusOrGraphRunner extends ffi.Struct {
 
 typedef CGraphRunner = ffi.Pointer<ffi.Void>;
 
+final class StatusOrSentenceTransformer extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external CSentenceTransformer value;
+}
+
+typedef CSentenceTransformer = ffi.Pointer<ffi.Void>;
+
 final class StatusOrSpeechToText extends ffi.Struct {
   @ffi.Int()
   external int status;
@@ -1275,6 +1373,18 @@ final class StatusOrTTIModelResponse extends ffi.Struct {
   external TTIMetrics metrics;
 
   external ffi.Pointer<pkg_ffi.Utf8> value;
+}
+
+final class StatusOrEmbeddings extends ffi.Struct {
+  @ffi.Int()
+  external int status;
+
+  external ffi.Pointer<pkg_ffi.Utf8> message;
+
+  external ffi.Pointer<ffi.Float> value;
+
+  @ffi.Int()
+  external int size;
 }
 
 final class StatusOrVLMModelResponse extends ffi.Struct {

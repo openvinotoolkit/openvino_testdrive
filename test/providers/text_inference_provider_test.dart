@@ -2,68 +2,48 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
-import 'dart:async';
-import 'dart:ffi';
-import 'package:ffi/ffi.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inference/interop/llm_inference.dart';
-import 'package:inference/interop/openvino_bindings.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 
 import 'package:mocktail/mocktail.dart';
 
 import '../fixtures.dart';
+import '../mocks.dart';
 
-
-class MockLLMInference extends Mock implements LLMInference {}
 
 void main() {
-  late MockLLMInference inference;
-
-  setUpAll(() {
-    inference = MockLLMInference();
-  });
-
   test('test inference provider sets interim message ', () async {
     final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
-
-    final completer = Completer<void>();
-    final metrics = calloc<Metrics>();
-    when(() => inference.prompt(any(), any(), any())).thenAnswer((_) async {
-      await completer.future;
-      return ModelResponse("The color of the sun is yellow", metrics.ref);
-
-    });
-    provider.inference = inference;
-    provider.message("What is the color of the sun?");
+    final llmInference = MockLLMInference();
+    provider.inference = llmInference.instance;
+    provider.message("What is the color of the sun?", []);
     expect(provider.interimResponse?.message, "...");
-    calloc.free(metrics);
+    llmInference.clean();
   });
 
   test('test inference provider sets messages with question and answer ', () async {
     final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
+    final llmInference = MockLLMInference(
+      listenerAnswer: "The color of the sun is yellow",
+    );
 
-    final completer = Completer<void>();
-    final metrics = calloc<Metrics>();
-    when(() => inference.prompt(any(), any(), any())).thenAnswer((_) async {
-      await completer.future;
-      return ModelResponse("The color of the sun is yellow", metrics.ref);
-
-    });
-    provider.inference = inference;
-    final request = provider.message("What is the color of the sun?");
+    provider.inference = llmInference.instance;
+    final request = provider.message("What is the color of the sun?", []);
     expect(provider.messages[0].message, "What is the color of the sun?");
-    completer.complete();
+    llmInference.listenerCallback.complete();
+    await Future.delayed(Duration.zero);
+    llmInference.promptCallback.complete();
     await request;
     expect(provider.interimResponse, null);
     expect(provider.messages[1].message, "The color of the sun is yellow");
-    calloc.free(metrics);
+    llmInference.clean();
   });
 
   test('test inference provider dispose triggers close ', () async {
     final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
-    provider.inference = inference;
+    final llmInference = MockLLMInference();
+    provider.inference = llmInference.instance;
     provider.dispose();
-    verify(inference.close).called(1);
+    verify(llmInference.instance.close).called(1);
   });
 }

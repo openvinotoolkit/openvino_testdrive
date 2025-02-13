@@ -6,7 +6,6 @@ import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inference/deployment_processor.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/download_provider.dart';
 import 'package:inference/providers/project_provider.dart';
@@ -19,40 +18,48 @@ String formatBytes(int bytes) {
   return "${NumberFormat("#,##0").format(bytes / pow(1024, 2))} MB";
 }
 
-
-class DownloadPage extends StatelessWidget {
+class DownloadPage extends StatefulWidget {
   final PublicProject project;
   const DownloadPage({super.key, required this.project});
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider<DownloadProvider>(
-      create: (_) => DownloadProvider(),
-      child: DownloadModelPage(project: project),
-    );
-  }
+  State<DownloadPage> createState() => _DownloadPageState();
 }
 
-class DownloadModelPage extends StatefulWidget {
-  final PublicProject project;
-  const DownloadModelPage({super.key, required this.project});
+class _DownloadPageState extends State<DownloadPage> {
+  DownloadRequest? request;
 
-  @override
-  State<DownloadModelPage> createState() => _DownloadModelPageState();
-}
-
-class _DownloadModelPageState extends State<DownloadModelPage> {
   @override
   void initState() {
     super.initState();
     startDownload();
   }
 
+  void onComplete() {
+    print("on complete!");
+    if (context.mounted) {
+      print("going to model...");
+      GoRouter.of(context).go("/models/inference", extra: widget.project);
+    }
+  }
+
   void startDownload() async {
-    final downloadProvider = Provider.of<DownloadProvider>(context, listen: false);
-    final projectProvider = Provider.of<ProjectProvider>(context, listen: false);
     final router = GoRouter.of(context);
-    late Map<String, String> files;
+    final downloadProvider = Provider.of<DownloadProvider>(context, listen: false);
+    if (downloadProvider.downloads.containsKey(widget.project.id)) {
+      request = downloadProvider.downloads[widget.project.id]!;
+      if (request!.done.isCompleted) {
+        Future.delayed(Duration.zero, () {
+          router.go("/models/inference", extra: widget.project);
+        });
+      } else {
+        request!.onDone = onComplete;
+      }
+      return;
+    }
+
+    final projectProvider = Provider.of<ProjectProvider>(context, listen: false);
+    Map<String, String> files = {};
 
     try {
       files = await listDownloadFiles(widget.project);
@@ -74,16 +81,15 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
     }
 
     try {
-      downloadProvider.onCancel = () async {
-        // TODO: (Ronald Hecker) remove ugly solution by downloading in background and handle downloading properly
-        await Future.delayed(const Duration(seconds: 1));
-        deleteProjectData(widget.project);
-      };
-      await downloadProvider.queue(files, widget.project.modelInfo?.collection.token);
+      request = DownloadRequest(
+        id: widget.project.id,
+        downloads: files,
+      );
+      request!.onDone = onComplete;
+      setState(() {});
       projectProvider.addProject(widget.project);
       await getAdditionalModelInfo(widget.project);
-      projectProvider.completeLoading(widget.project);
-      router.go("/models/inference", extra: widget.project);
+      downloadProvider.requestDownload(request!);
     } catch(e) {
       print(e);
       if (mounted) {
@@ -107,7 +113,7 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
     final navigator = Navigator.of(context);
     final result = await showDialog<bool>(context: context, builder: (BuildContext context) => ContentDialog(
         title: const Text("Download in progress"),
-        content: const Text("Press 'continue' to keep downloading the model"),
+        content: const Text("Downloading will continue in background"),
         actions: <Widget>[
           FilledButton(
             onPressed: () => context.pop(false),
@@ -115,7 +121,7 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
           ),
           Button(
             onPressed: () => context.pop(true),
-            child: const Text('Cancel download'),
+            child: const Text('Go back'),
           ),
         ]
       )
@@ -133,13 +139,13 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8.0),
       header: Container(
         decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-                    color: theme.resources.controlStrokeColorDefault,
-                    width: 1.0
-                )
-            )
-          ),
+          border: Border(
+              bottom: BorderSide(
+                  color: theme.resources.controlStrokeColorDefault,
+                  width: 1.0
+              )
+          )
+        ),
         height: 56,
         padding: const EdgeInsets.symmetric(horizontal: 12.0),
         child: Row(
@@ -187,36 +193,43 @@ class _DownloadModelPageState extends State<DownloadModelPage> {
               children: [
                 Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Consumer<DownloadProvider>(builder: (context, downloadProvider, child) {
-                    final stats = downloadProvider.stats;
-                    return Column(
-                      children: [
-                        ProgressRing(
-                          value: stats.percentage * 100,
-                          strokeWidth: 8,
-                        ),
-                        SizedBox(
-                            width: 140,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(formatBytes(stats.received), textAlign: TextAlign.end,),
-                                  const Text("/"),
-                                  Text(formatBytes(stats.total))
-                                ],
+                  child: StreamBuilder<DownloadStats>(
+                    stream: request?.stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final stats = snapshot.data!;
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ProgressRing(
+                              value: stats.percentage * 100,
+                              strokeWidth: 8,
+                            ),
+                            SizedBox(
+                              width: 140,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(formatBytes(stats.received), textAlign: TextAlign.end,),
+                                    const Text("/"),
+                                    Text(formatBytes(stats.total))
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text("Downloading model weights"),
-                          )
-                      ]
-                    );
-                  }
-                ),
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text("Downloading model weights"),
+                            )
+                          ]
+                        );
+                      }
+                      return const ProgressRing();
+                    }
+                  ),
                 )
               ],
             ),

@@ -53,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0C004E1F2CF751B9003B9A15 /* libpodofo.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpodofo.2.dylib; path = ../bindings/libpodofo.2.dylib; sourceTree = SOURCE_ROOT; };
 		0C42C7522CE386520079F72B /* libopenvino_c.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_c.2500.dylib; path = ../bindings/libopenvino_c.2500.dylib; sourceTree = SOURCE_ROOT; };
 		0C42C7532CE386520079F72B /* libopenvino_genai.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_genai.2500.dylib; path = ../bindings/libopenvino_genai.2500.dylib; sourceTree = SOURCE_ROOT; };
 		0C42C7542CE386520079F72B /* libopenvino_ir_frontend.2500.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopenvino_ir_frontend.2500.dylib; path = ../bindings/libopenvino_ir_frontend.2500.dylib; sourceTree = SOURCE_ROOT; };
@@ -217,6 +218,7 @@
 		D73912EC22F37F3D000D13A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0C004E1F2CF751B9003B9A15 /* libpodofo.2.dylib */,
 				0C5D47A92C6F59A200307B37 /* libopenvino_arm_cpu_plugin.so */,
 				0C5D47A82C6F59A200307B37 /* libopenvino_auto_batch_plugin.so */,
 				0C5D47AB2C6F59A200307B37 /* libopenvino_auto_plugin.so */,
@@ -850,7 +852,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 24.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openvino.console;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -882,7 +884,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.4;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 24.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.openvino.console;
 				PROVISIONING_PROFILE_SPECIFIER = "";

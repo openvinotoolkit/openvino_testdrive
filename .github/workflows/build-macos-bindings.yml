@@ -52,6 +52,7 @@ jobs:
           path: |
             /usr/local/include/opencv4
             /usr/local/lib/libopencv_*
+            /usr/local/lib/cmake/opencv4
           key: ${{ runner.os }}-opencv-${{ hashFiles('openvino_bindings/scripts/setup_opencv.sh') }}
 
       - name: Install OpenCV

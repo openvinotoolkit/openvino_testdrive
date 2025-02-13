@@ -8,6 +8,7 @@
 #include <condition_variable>
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <sstream>
 
 #include "llm_inference.h"
 #include "src/utils/errors.h"
@@ -25,13 +26,14 @@ void LLMInference::set_streamer(const std::function<void(const std::string& resp
     };
 }
 
-ov::genai::DecodedResults LLMInference::prompt(std::string message, float temperature, float top_p) {
+ov::genai::DecodedResults LLMInference::prompt(std::string message, bool apply_template, float temperature, float top_p) {
     history.push_back({{"role", "user"}, {"content", message}});
     _stop = false;
 
-    auto prompt = (has_chat_template()
-        ? pipe.get_tokenizer().apply_chat_template(history, true)
-        : message);
+    //auto prompt = (apply_template && has_chat_template()
+    //    ? pipe.get_tokenizer().apply_chat_template(history, true)
+    //    : message);
+    auto prompt = message;
 
     ov::genai::GenerationConfig config;
     config.max_new_tokens = 1000;
@@ -70,4 +72,11 @@ bool LLMInference::has_chat_template() {
     std::ifstream ifs(model_path + "/tokenizer_config.json");
     auto r = nlohmann::json::parse(ifs);
     return r.find("chat_template") != r.end();
+}
+
+std::string LLMInference::get_tokenizer_config() {
+    std::ifstream ifs(model_path + "/tokenizer_config.json");
+    std::ostringstream oss;
+    oss << ifs.rdbuf();
+    return oss.str();
 }

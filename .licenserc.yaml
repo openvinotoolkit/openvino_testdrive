@@ -15,6 +15,7 @@ header:
     - test/**
   paths-ignore:
     - "**/BUILD"
+    - "**/*.json"
     - "**/*.bzl"
     - "**/*.proto"
     - lib/interop/generated_bindings.dart

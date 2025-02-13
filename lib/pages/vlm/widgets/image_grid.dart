@@ -32,13 +32,16 @@ class _ImageGridState extends State<ImageGrid> {
     galleryData = List<String>.from(widget.initialGalleryData);
   }
 
-  void onDrop(String path) {
-    if (!galleryData.contains(path)) {
-      setState(() {
+  void onDrop(List<String> files) {
+
+    setState(() {
+    for (final path in files) {
+      if (!galleryData.contains(path)) {
         galleryData.add(path);
-      });
-      widget.onFileListChange(galleryData);
+      }
     }
+    });
+    widget.onFileListChange(galleryData);
   }
 
   void removeImage(int index) {

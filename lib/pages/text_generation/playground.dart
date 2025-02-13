@@ -4,13 +4,18 @@
 
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:inference/pages/knowledge_base/utils/loader_selector.dart';
+import 'package:inference/pages/text_generation/utils/user_file.dart';
+import 'package:inference/pages/text_generation/widgets/user_file_widget.dart';
 import 'package:inference/pages/text_generation/widgets/llm_options.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/pages/text_generation/widgets/assistant_message.dart';
 import 'package:inference/pages/text_generation/widgets/model_properties.dart';
 import 'package:inference/pages/text_generation/widgets/user_message.dart';
+import 'package:inference/pages/text_generation/widgets/knowledge_base_selector.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
@@ -32,6 +37,7 @@ class SubmitMessageIntent extends Intent {}
 class _PlaygroundState extends State<Playground> {
   final _textController = TextEditingController();
   final _scrollController = ScrollController();
+  final List<UserFile> newFiles = [];
   bool attachedToBottom = true;
 
   void jumpToBottom({ offset = 0 }) {
@@ -46,7 +52,9 @@ class _PlaygroundState extends State<Playground> {
     if (!provider.initialized || provider.response != null) return;
     _textController.text = '';
     jumpToBottom(offset: 110); //move to bottom including both
-    provider.message(message).catchError((e) async {
+
+    final validFiles = newFiles.where((f) => f.error == null).toList();
+    provider.message(message, validFiles).catchError((e) async {
       if (mounted) {
         await displayInfoBar(context, builder: (context, close) => InfoBar(
           title: const Text("An error occurred processing the message"),
@@ -59,6 +67,7 @@ class _PlaygroundState extends State<Playground> {
         ));
       }
     });
+    newFiles.clear();
   }
 
   @override
@@ -83,6 +92,25 @@ class _PlaygroundState extends State<Playground> {
     super.didChangeDependencies();
     if (attachedToBottom) {
       jumpToBottom();
+    }
+  }
+
+  Future<void> selectDocument() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowMultiple: true, allowedExtensions: supportedExtensions);
+    if (result != null) {
+      for (final file in result.files) {
+        final path = file.path!;
+        UserFile userFile = UserFile.fromPath(path);
+        final loader = loaderFromPath(path);
+        if (loader == null) {
+          userFile.error = "File type '${userFile.kind}' is not supported.";
+        } else {
+          userFile.documents = await loader.load();
+        }
+        setState(() {
+          newFiles.add(userFile);
+        });
+      }
     }
   }
 
@@ -117,10 +145,15 @@ class _PlaygroundState extends State<Playground> {
                 header: const SizedBox(
                   height: 64,
                   child: GridContainer(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: DeviceSelector()
-                      ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          DeviceSelector(),
+                          KnowledgeBaseSelector(),
+                        ]
+                      )
+                    ),
                   ),
                 ),
                 content: LLMOptions(provider),
@@ -181,6 +214,29 @@ class _PlaygroundState extends State<Playground> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 24),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                for (final file in newFiles)
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: UserFileWidget(
+                                      file: file,
+                                      onDelete: () {
+                                        setState(() => newFiles.remove(file));
+                                      }
+                                    ),
+                                  )
+                              ]
+                            ),
+                          ),
+                        )
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 24),
                         child: Column(
                           children: [
                             Row(
@@ -194,6 +250,16 @@ class _PlaygroundState extends State<Playground> {
                                     child: Button(
                                       onPressed: provider.interimResponse == null ? () => provider.reset() : null,
                                       child: const Icon(FluentIcons.rocket, size: 18),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8, bottom: 20),
+                                  child: Tooltip(
+                                    message: "Add document",
+                                    child: Button(
+                                      onPressed: provider.interimResponse == null ? () => selectDocument() : null,
+                                      child: const Icon(FluentIcons.attach, size: 18),
                                     ),
                                   ),
                                 ),

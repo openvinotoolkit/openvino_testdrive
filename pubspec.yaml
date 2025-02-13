@@ -59,6 +59,10 @@ dependencies:
   flutter_markdown: ^0.7.4+3
   markdown: ^7.2.2
   super_clipboard: ^0.8.24
+  langchain: ^0.7.7+1
+  objectbox: ^4.0.3
+  objectbox_flutter_libs: any
+  html: ^0.15.5
   url_launcher: ^6.3.1
   vector_math: ^2.1.4
   archive: ^3.6.1
@@ -66,6 +70,9 @@ dependencies:
   video_player_win: ^3.1.1
   video_player: ^2.9.2
   window_manager: ^0.4.3
+  jinja: ^0.6.0
+  docx_to_text: ^1.0.1
+  dart_pdf_reader: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -79,12 +86,12 @@ dev_dependencies:
   flutter_lints: ^3.0.0
   msix: ^3.16.7
   ffigen: ^13.0.0
-  html: ^0.15.4
   integration_test:
     sdk: flutter
   path_provider_platform_interface: ^2.1.2
   plugin_platform_interface: ^2.1.8
   build_runner: ^2.4.13
+  objectbox_generator: any
   mocktail: ^1.0.4
 
 # For information on the generic Dart part of this file, see the
@@ -103,6 +110,7 @@ flutter:
     - images/
     - images/model_thumbnails/
     - assets/
+    - assets/MiniLM-L6-H384-uncased/
   fonts:
     - family: IntelOne
       fonts:

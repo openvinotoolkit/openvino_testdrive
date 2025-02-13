@@ -5,6 +5,8 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/config.dart';
+import 'package:inference/langchain/object_box/object_box.dart';
+import 'package:inference/providers/download_provider.dart';
 import 'package:inference/router.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/providers/preference_provider.dart';
@@ -18,6 +20,7 @@ const String title = 'OpenVINO TestDrive';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
+  await ObjectBox.create();
   await Config.loadFromFile();
   WindowOptions windowOptions = WindowOptions(
     size: const Size(1400, 1024),
@@ -43,6 +46,7 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<PreferenceProvider>(create: (_) => PreferenceProvider(PreferenceProvider.defaultDevice)),
         ChangeNotifierProvider<ProjectProvider>(create: (_) => ProjectProvider([])),
+        ChangeNotifierProvider<DownloadProvider>(create: (_) => DownloadProvider()),
         ChangeNotifierProvider(create: (_) => AppTheme()),
       ],
       builder: (context, child) {
