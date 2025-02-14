@@ -83,12 +83,12 @@ class TextInferenceProvider extends ChangeNotifier {
   Embeddings? embeddingsModel;
   MemoryVectorStore? store;
 
-  KnowledgeGroup? _knowledgeGroup;
-  KnowledgeGroup? get knowledgeGroup => _knowledgeGroup;
-  set knowledgeGroup(KnowledgeGroup? group) {
-    _knowledgeGroup = group;
-    notifyListeners();
-  }
+  //KnowledgeGroup? _knowledgeGroup;
+  //KnowledgeGroup? get knowledgeGroup => _knowledgeGroup;
+  //set knowledgeGroup(KnowledgeGroup? group) {
+  //  _knowledgeGroup = group;
+  //  notifyListeners();
+  //}
 
   double _temperature = 1;
   double get temperature => _temperature;
@@ -197,9 +197,9 @@ class TextInferenceProvider extends ChangeNotifier {
     if (store != null && store!.memoryVectors.isNotEmpty) {
       stores.add(store!);
     }
-    if (knowledgeGroup != null && embeddingsModel != null) {
-      stores.add(ObjectBoxStore(embeddings: embeddingsModel!, group: knowledgeGroup!));
-    }
+    //if (knowledgeGroup != null && embeddingsModel != null) {
+    //  stores.add(ObjectBoxStore(embeddings: embeddingsModel!, group: knowledgeGroup!));
+    //}
 
     final chain = buildRAGChain(inference!, OpenVINOLLMOptions(temperature: temperature, topP: topP), stores, memory);
     final input = await chain.documentChain.invoke({"question": message}) as Map;

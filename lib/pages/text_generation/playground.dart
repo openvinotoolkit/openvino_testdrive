@@ -15,7 +15,7 @@ import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/pages/text_generation/widgets/assistant_message.dart';
 import 'package:inference/pages/text_generation/widgets/model_properties.dart';
 import 'package:inference/pages/text_generation/widgets/user_message.dart';
-import 'package:inference/pages/text_generation/widgets/knowledge_base_selector.dart';
+//import 'package:inference/pages/text_generation/widgets/knowledge_base_selector.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 import 'package:inference/theme_fluent.dart';
@@ -150,7 +150,7 @@ class _PlaygroundState extends State<Playground> {
                       child: Row(
                         children: [
                           DeviceSelector(),
-                          KnowledgeBaseSelector(),
+                          //KnowledgeBaseSelector(),
                         ]
                       )
                     ),
