@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 
 
 class ModelFilter extends StatelessWidget {
-  const ModelFilter({super.key});
+  final Map<String, List<Option>> filterOptions;
+  const ModelFilter({super.key, required this.filterOptions});
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +20,8 @@ class ModelFilter extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ...Option.filterOptions.keys.map((key) {
-            return Group(key, Option.filterOptions[key]!);
+          ...filterOptions.keys.map((key) {
+            return Group(key, filterOptions[key]!);
           }),
         ]
       ),

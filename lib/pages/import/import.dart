@@ -8,6 +8,8 @@ import 'package:go_router/go_router.dart';
 import 'package:inference/pages/import/huggingface.dart';
 import 'package:inference/pages/import/providers/import_provider.dart';
 import 'package:inference/pages/import/widgets/import_geti_model_dialog.dart';
+import 'package:inference/providers/project_filter_provider.dart';
+import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/controls/close_model_button.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +28,7 @@ class _ImportPageState extends State<ImportPage> {
     final theme = FluentTheme.of(context);
     final updatedTheme = theme.copyWith(
         navigationPaneTheme: theme.navigationPaneTheme.merge(NavigationPaneThemeData(
-            backgroundColor: theme.scaffoldBackgroundColor,
+            backgroundColor: backgroundColor.of(theme),
         ))
     );
 
@@ -56,7 +58,10 @@ class _ImportPageState extends State<ImportPage> {
                   PaneItem(
                     icon: SvgPicture.asset('images/huggingface_logo-noborder.svg', width: 15,),
                     title: const Text("Huggingface"),
-                    body: const  Huggingface(),
+                    body: ChangeNotifierProvider<ProjectFilterProvider>(
+                      create: (_) => ProjectFilterProvider(),
+                      child: const  Huggingface()
+                    ),
                   ),
                   PaneItemAction(
                     icon: const Icon(FluentIcons.project_collection),

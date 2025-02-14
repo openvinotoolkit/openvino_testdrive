@@ -11,14 +11,31 @@ import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/import_model_button.dart';
 import 'package:provider/provider.dart';
 
-class ModelsPage extends StatefulWidget {
+class ModelsPage extends StatelessWidget {
   const ModelsPage({super.key});
 
-  @override
-  State<ModelsPage> createState() => _ModelsPageState();
-}
+  static Map<String, List<Option>> get filterOptions {
+    var options = {
+      "Image": [
+        const Option("Detection", "detection"),
+        const Option("Classification", "classification"),
+        const Option("Segmentation", "segmentation"),
+        const Option("Anomaly detection","anomaly")
+      ],
+      "Text Generation": [
+        const Option("Text generation", "text"),
+      ],
+      "Image Generation": [
+        const Option("Text to Image", "text-to-image")
+      ],
+      "Audio": [
+        const Option("Speech to text", "speech")
+      ]
+    };
 
-class _ModelsPageState extends State<ModelsPage> {
+    return options;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
@@ -50,9 +67,9 @@ class _ModelsPageState extends State<ModelsPage> {
                   ),
                   Expanded(
                     child: GridContainer(
-                    color: backgroundColor.of(theme),
+                      color: backgroundColor.of(theme),
                       padding: const EdgeInsets.all(13),
-                      child: const ModelFilter()
+                      child: ModelFilter(filterOptions: filterOptions)
                     ),
                   ),
                 ],
