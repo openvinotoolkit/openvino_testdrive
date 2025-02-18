@@ -28,6 +28,9 @@ class Huggingface extends StatelessWidget {
       "Image Generation": [
         const Option("Text to Image", "text-to-image")
       ],
+      "Visual language models": [
+        const Option("Image to text", "image-text-to-text")
+      ],
       "Audio": [
         const Option("Speech to text", "speech")
       ]

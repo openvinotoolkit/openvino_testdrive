@@ -124,7 +124,7 @@ ProjectType parseProjectType(String name) {
   if (name == "textToImage" || name == "text-to-image"){
     return ProjectType.textToImage;
   }
-  if (name == "vlm"){
+  if (name == "vlm" || name == "image-text-to-text"){
     return ProjectType.vlm;
   }
   if (name == "speech") {
