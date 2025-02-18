@@ -84,8 +84,7 @@ class _DownloadPageState extends State<DownloadPage> {
       request = DownloadRequest(
         id: widget.project.id,
         downloads: files,
-      );
-      request!.onDone = onComplete;
+      )..onDone = onComplete;
       setState(() {});
       projectProvider.addProject(widget.project);
       await getAdditionalModelInfo(widget.project);

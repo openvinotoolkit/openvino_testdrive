@@ -8,10 +8,13 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:inference/config.dart';
 import 'package:inference/deployment_processor.dart';
 import 'package:inference/project.dart';
+import 'package:inference/router.dart';
+import 'package:inference/widgets/dialogs/critical_error.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -46,6 +49,18 @@ String parseWpad(String wpad) {
   return '';
 }
 
+
+Future<T?> showGlobalDialog<T extends Object?>(WidgetBuilder builder) async {
+  if (rootNavigatorKey.currentContext?.mounted == true) {
+    return await showDialog(
+      context: rootNavigatorKey.currentContext!,
+      builder: builder
+    );
+  } else {
+    return null;
+  }
+}
+
 void setupErrors() async {
     final directory = await getApplicationSupportDirectory();
     final platformContext = Context(style: Style.platform);
@@ -71,6 +86,7 @@ ${stack.toString()}
 """;
       print(contents);
       File(errorPath).writeAsStringSync(contents, mode: FileMode.append);
+      showCriticalErrorDialog(error, stack);
       return true;
     };
 }

@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:go_router/go_router.dart';
 import 'package:inference/deployment_processor.dart';
 import 'package:inference/interop/device.dart';
-import 'package:inference/interop/image_inference.dart';
 import 'package:inference/providers/preference_provider.dart';
 import 'package:inference/providers/project_provider.dart';
 import 'package:inference/utils.dart';
@@ -36,16 +35,11 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
   void initState() {
     super.initState();
 
-    //setLoggingOutput();
-    ensureFontIsStored().then((_) {
-      fontPath().then((font) => ImageInference.setupFont(font));
-    });
-
     setupErrors();
-
-    Device.getDevices().then((devices) {
+    Device.getDevices() .then((devices) {
       PreferenceProvider.availableDevices = devices;
     });
+    ensureFontIsStored();
 
     final projectsProvider = Provider.of<ProjectProvider>(context, listen: false);
     final addProjects = projectsProvider.addProjects;
@@ -197,7 +191,7 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
           right: 24,
           bottom: 24,
           child: FeedbackButton()
-        )
+        ),
       ],
     );
   }
