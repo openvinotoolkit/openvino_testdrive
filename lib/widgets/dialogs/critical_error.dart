@@ -7,8 +7,9 @@ void showCriticalErrorDialog(dynamic e, StackTrace trace) {
         maxWidth: 756,
         maxHeight: 500,
       ),
-      title: const Text("A critical error occured."),
+      title: const Text("An error occured."),
       content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
@@ -18,15 +19,13 @@ void showCriticalErrorDialog(dynamic e, StackTrace trace) {
               child: Text(e.toString(), overflow: TextOverflow.ellipsis),
             ),
           ),
-          Expanded(
-            child: Expander(
-              header: const Text("More details"),
-              content: SizedBox(
-                height: 180,
-                child: SingleChildScrollView(
-                  child: SelectableText("$e\n$trace")),
-              )
-            ),
+          Expander(
+            header: const Text("Details"),
+            content: SizedBox(
+              height: 180,
+              child: SingleChildScrollView(
+                child: SelectableText("$e\n$trace")),
+            )
           ),
         ],
       ),
