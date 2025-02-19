@@ -11,7 +11,7 @@
 #include <nlohmann/json.hpp>
 #include <openvino/openvino.hpp>
 
-#include "src/pdf/sentence_extractor.h"
+//#include "src/pdf/sentence_extractor.h"
 #include "src/audio/speech_to_text.h"
 #include "src/image/image_inference.h"
 #include "src/mediapipe/graph_runner.h"
@@ -590,8 +590,8 @@ StatusOrDevices* getAvailableDevices() {
 
 StatusOrString* pdfExtractText(const char* pdf_path) {
     try {
-        auto output = sentence_extractor::extract_text_from_pdf(pdf_path);
-        return new StatusOrString{OkStatus, "", strdup(output.c_str())};
+        //auto output = sentence_extractor::extract_text_from_pdf(pdf_path);
+        return new StatusOrString{OkStatus, "", ""};
     } catch (...) {
         auto except = handle_exceptions();
         return new StatusOrString{except->status, except->message};

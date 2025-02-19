@@ -32,8 +32,8 @@ BaseDocumentLoader? loaderFromPath(String path) {
 
   const splitter = WindowTextSplitter(chunkSize: 400, chunkOverlap: 200);
   switch (ext) {
-    case ".pdf":
-      return PdfLoader(path, splitter);
+    //case ".pdf":
+    //  return PdfLoader(path, splitter);
     case ".html":
       return HTMLLoader(path, splitter);
     case ".txt":
@@ -46,7 +46,7 @@ BaseDocumentLoader? loaderFromPath(String path) {
 }
 
 List<String> supportedExtensions = [
-  "pdf",
+  //"pdf",
   "html",
   "txt",
   "docx",
