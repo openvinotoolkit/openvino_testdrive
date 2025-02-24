@@ -195,7 +195,7 @@ class ModelInfo {
 void generate() async {
 
   final popular = {
-    "Phi-3-mini-4k-instruct-int4-ov": "Unlock AI Power: Experience the Phi 3 Mini Model on Your PC",
+    "InternVL2-2B-int4-ov": "Let images be described by InternVL2",
     "whisper-base-fp16-ov": "We make it easy to connect with people: Use Whisper to transcribe videos",
     "open_llama_3b_v2-int8-ov": "Unlock the Power of AI on Your PC: Start Chatting with the Mistral 7b Instruct",
     "LCM_Dreamshaper_v7-int8-ov": "Generate images with Dreamshaper V7",
@@ -203,6 +203,7 @@ void generate() async {
 
   final List<Collection> collections = [
     Collection("speech-to-text-672321d5c070537a178a8aeb", "OpenVINO", "OpenVINO", "speech", (String name) => "Transcribe video with $name"),
+    Collection("visual-language-models-6792248a0eed57085d2b094b", "OpenVINO", "OpenVINO", "vlm", (String name) => "Understand images with $name"),
     Collection("llm-6687aaa2abca3bbcec71a9bd", "OpenVINO", "OpenVINO", "text-generation", (String name) => "Chat with $name"),
     Collection("image-generation-6763eab8ac097237330c78c5", "arendjan", "OpenVINO", "text-to-image", (String name) => "Generate images with $name"),
   ];

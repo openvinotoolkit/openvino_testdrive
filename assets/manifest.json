@@ -12,6 +12,17 @@
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
+      "name": "InternVL2 2B",
+      "id": "InternVL2-2B-int4-ov",
+      "fileSize": 1543251481,
+      "optimizationPrecision": "int4",
+      "contextWindow": 0,
+      "description": "Let images be described by InternVL2",
+      "task": "image-text-to-text",
+      "author": "OpenVINO",
+      "collection": "visual-language-models-6792248a0eed57085d2b094b"
+    },
+    {
       "name": "Whisper Base",
       "id": "whisper-base-fp16-ov",
       "fileSize": 251616604,
@@ -23,20 +34,9 @@
       "collection": "speech-to-text-672321d5c070537a178a8aeb"
     },
     {
-      "name": "Open Llama 3b V2",
-      "id": "open_llama_3b_v2-int8-ov",
-      "fileSize": 3435816420,
-      "optimizationPrecision": "int8",
-      "contextWindow": 2048,
-      "description": "Unlock the Power of AI on Your PC: Start Chatting with the Mistral 7b Instruct",
-      "task": "text-generation",
-      "author": "OpenVINO",
-      "collection": "llm-6687aaa2abca3bbcec71a9bd"
-    },
-    {
       "name": "LCM Dreamshaper V7",
       "id": "LCM_Dreamshaper_v7-int8-ov",
-      "fileSize": 1076861241,
+      "fileSize": 2292848281,
       "optimizationPrecision": "int8",
       "contextWindow": 0,
       "description": "Generate images with Dreamshaper V7",
@@ -184,10 +184,76 @@
       "fileSize": 251616604,
       "optimizationPrecision": "fp16",
       "contextWindow": 0,
-      "description": "We make it easy to connect with people: Use Whisper to transcribe videos.",
+      "description": "We make it easy to connect with people: Use Whisper to transcribe videos",
       "task": "speech",
       "author": "OpenVINO",
       "collection": "speech-to-text-672321d5c070537a178a8aeb"
+    },
+    {
+      "name": "InternVL2 1B",
+      "id": "InternVL2-1B-int4-ov",
+      "fileSize": 798470894,
+      "optimizationPrecision": "int4",
+      "contextWindow": 0,
+      "description": "Understand images with InternVL2 1B",
+      "task": "image-text-to-text",
+      "author": "OpenVINO",
+      "collection": "visual-language-models-6792248a0eed57085d2b094b"
+    },
+    {
+      "name": "InternVL2 1B",
+      "id": "InternVL2-1B-int8-ov",
+      "fileSize": 971131111,
+      "optimizationPrecision": "int8",
+      "contextWindow": 0,
+      "description": "Understand images with InternVL2 1B",
+      "task": "image-text-to-text",
+      "author": "OpenVINO",
+      "collection": "visual-language-models-6792248a0eed57085d2b094b"
+    },
+    {
+      "name": "InternVL2 1B",
+      "id": "InternVL2-1B-fp16-ov",
+      "fileSize": 1902600009,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 0,
+      "description": "Understand images with InternVL2 1B",
+      "task": "image-text-to-text",
+      "author": "OpenVINO",
+      "collection": "visual-language-models-6792248a0eed57085d2b094b"
+    },
+    {
+      "name": "InternVL2 2B",
+      "id": "InternVL2-2B-int4-ov",
+      "fileSize": 1543251481,
+      "optimizationPrecision": "int4",
+      "contextWindow": 0,
+      "description": "Let images be described by InternVL2",
+      "task": "image-text-to-text",
+      "author": "OpenVINO",
+      "collection": "visual-language-models-6792248a0eed57085d2b094b"
+    },
+    {
+      "name": "InternVL2 2B",
+      "id": "InternVL2-2B-int8-ov",
+      "fileSize": 2270289710,
+      "optimizationPrecision": "int8",
+      "contextWindow": 0,
+      "description": "Understand images with InternVL2 2B",
+      "task": "image-text-to-text",
+      "author": "OpenVINO",
+      "collection": "visual-language-models-6792248a0eed57085d2b094b"
+    },
+    {
+      "name": "InternVL2 2B",
+      "id": "InternVL2-2B-fp16-ov",
+      "fileSize": 4443747254,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 0,
+      "description": "Understand images with InternVL2 2B",
+      "task": "image-text-to-text",
+      "author": "OpenVINO",
+      "collection": "visual-language-models-6792248a0eed57085d2b094b"
     },
     {
       "name": "Phi 2",
@@ -1240,7 +1306,7 @@
       "fileSize": 2159924401,
       "optimizationPrecision": "int4",
       "contextWindow": 4096,
-      "description": "Unlock AI Power: Experience the Phi 3 Mini Model on Your PC",
+      "description": "Chat with Phi 3 Mini 4k Instruct",
       "task": "text-generation",
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
@@ -1633,7 +1699,7 @@
     {
       "name": "LCM Dreamshaper V7",
       "id": "LCM_Dreamshaper_v7-int8-ov",
-      "fileSize": 1076861241,
+      "fileSize": 2292848281,
       "optimizationPrecision": "int8",
       "contextWindow": 0,
       "description": "Generate images with Dreamshaper V7",
