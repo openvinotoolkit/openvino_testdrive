@@ -1,6 +1,17 @@
 {
   "popular_models": [
     {
+      "name": "Phi 3 Mini 4k Instruct",
+      "id": "Phi-3-mini-4k-instruct-int4-ov",
+      "fileSize": 2159924401,
+      "optimizationPrecision": "int4",
+      "contextWindow": 4096,
+      "description": "Unlock AI Power: Experience the Phi 3 Mini Model on Your PC",
+      "task": "text-generation",
+      "author": "OpenVINO",
+      "collection": "llm-6687aaa2abca3bbcec71a9bd"
+    },
+    {
       "name": "InternVL2 2B",
       "id": "InternVL2-2B-int4-ov",
       "fileSize": 1543251481,
@@ -21,17 +32,6 @@
       "task": "speech",
       "author": "OpenVINO",
       "collection": "speech-to-text-672321d5c070537a178a8aeb"
-    },
-    {
-      "name": "Open Llama 3b V2",
-      "id": "open_llama_3b_v2-int8-ov",
-      "fileSize": 3435816420,
-      "optimizationPrecision": "int8",
-      "contextWindow": 2048,
-      "description": "Unlock the Power of AI on Your PC: Start Chatting with the Mistral 7b Instruct",
-      "task": "text-generation",
-      "author": "OpenVINO",
-      "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
     {
       "name": "LCM Dreamshaper V7",
