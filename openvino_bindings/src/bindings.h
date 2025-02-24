@@ -226,8 +226,6 @@ EXPORT StatusOrSentenceTransformer* sentenceTransformerOpen(const char* model_pa
 EXPORT StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, const char* prompt);
 EXPORT Status* sentenceTransformerClose(CSentenceTransformer instance);
 
-EXPORT StatusOrString* pdfExtractText(const char* pdf_path);
-
 EXPORT StatusOrSpeechToText* speechToTextOpen(const char* model_path, const char* device);
 EXPORT Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_path);
 EXPORT StatusOrInt* speechToTextVideoDuration(CSpeechToText instance);

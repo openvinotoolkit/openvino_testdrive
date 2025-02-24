@@ -6,7 +6,6 @@ import 'dart:math';
 
 import 'package:inference/langchain/loaders/docs_loader.dart';
 import 'package:inference/langchain/loaders/html_loader.dart';
-import 'package:inference/langchain/loaders/pdf_loader.dart';
 import 'package:inference/langchain/loaders/text_loader.dart';
 import 'package:langchain/langchain.dart';
 import 'package:path/path.dart';
@@ -32,8 +31,6 @@ BaseDocumentLoader? loaderFromPath(String path) {
 
   const splitter = WindowTextSplitter(chunkSize: 400, chunkOverlap: 200);
   switch (ext) {
-    case ".pdf":
-      return PdfLoader(path, splitter);
     case ".html":
       return HTMLLoader(path, splitter);
     case ".txt":
@@ -46,7 +43,6 @@ BaseDocumentLoader? loaderFromPath(String path) {
 }
 
 List<String> supportedExtensions = [
-  "pdf",
   "html",
   "txt",
   "docx",

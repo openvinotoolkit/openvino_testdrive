@@ -957,21 +957,6 @@ class OpenVINO {
   late final _sentenceTransformerClose = _sentenceTransformerClosePtr
       .asFunction<ffi.Pointer<Status> Function(CSentenceTransformer)>();
 
-  ffi.Pointer<StatusOrString> pdfExtractText(
-    ffi.Pointer<pkg_ffi.Utf8> pdf_path,
-  ) {
-    return _pdfExtractText(
-      pdf_path,
-    );
-  }
-
-  late final _pdfExtractTextPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<StatusOrString> Function(
-              ffi.Pointer<pkg_ffi.Utf8>)>>('pdfExtractText');
-  late final _pdfExtractText = _pdfExtractTextPtr.asFunction<
-      ffi.Pointer<StatusOrString> Function(ffi.Pointer<pkg_ffi.Utf8>)>();
-
   ffi.Pointer<StatusOrSpeechToText> speechToTextOpen(
     ffi.Pointer<pkg_ffi.Utf8> model_path,
     ffi.Pointer<pkg_ffi.Utf8> device,
