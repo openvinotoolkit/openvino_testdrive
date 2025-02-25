@@ -95,8 +95,8 @@ class LLMInference {
 
   void close() {
     llmOV.llmInferenceForceStop(instance.ref.value);
-    nativeListener?.close();
     final status = llmOV.llmInferenceClose(instance.ref.value);
+    nativeListener?.close();
 
     if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
       throw "Close error: ${status.ref.status} ${status.ref.message.toDartString()}";

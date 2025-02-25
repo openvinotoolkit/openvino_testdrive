@@ -54,6 +54,7 @@ class Message {
 class TextInferenceProvider extends ChangeNotifier {
 
   Completer<void> loaded = Completer<void>();
+  Completer<void> inferenceResponse = Completer<void>()..complete();
 
   Project? _project;
   String? _device;
@@ -209,6 +210,7 @@ class TextInferenceProvider extends ChangeNotifier {
 
     String modelOutput = "";
     Metrics? metrics;
+    inferenceResponse = Completer<void>();
     await for (final output in chain.answerChain.stream(input)) {
       final result = output as LLMResult;
       final token = result.output;
@@ -218,6 +220,7 @@ class TextInferenceProvider extends ChangeNotifier {
       modelOutput += token;
       onToken(token);
     }
+    inferenceResponse.complete();
 
     memory.saveContext(
       inputValues: {'input': message},
@@ -272,8 +275,12 @@ class TextInferenceProvider extends ChangeNotifier {
   @override
   void dispose() {
     if (inference != null) {
-      inference?.close();
-      super.dispose();
+      inference?.forceStop();
+      inferenceResponse.future.then((_) {
+        inference?.close();
+        super.dispose();
+        print("disposed");
+      });
     } else {
       close();
       super.dispose();
