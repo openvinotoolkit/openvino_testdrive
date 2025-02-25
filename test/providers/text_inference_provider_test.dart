@@ -5,8 +5,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:inference/providers/text_inference_provider.dart';
 
-import 'package:mocktail/mocktail.dart';
-
 import '../fixtures.dart';
 import '../mocks.dart';
 
