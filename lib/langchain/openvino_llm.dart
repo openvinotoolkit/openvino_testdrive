@@ -85,6 +85,9 @@ class OpenVINOLLM extends SimpleLLM<OpenVINOLLMOptions> {
 
     promptLLM(input.toString(), options: options).then((response) {
       done = true;
+      if (nextResponse.isCompleted) {
+        nextResponse = Completer<LLMResult>();
+      }
       nextResponse.complete(LLMResult(
         id: i.toString(),
         output: "",

@@ -54,19 +54,7 @@ class _PlaygroundState extends State<Playground> {
     jumpToBottom(offset: 110); //move to bottom including both
 
     final validFiles = newFiles.where((f) => f.error == null).toList();
-    provider.message(message, validFiles).catchError((e) async {
-      if (mounted) {
-        await displayInfoBar(context, builder: (context, close) => InfoBar(
-          title: const Text("An error occurred processing the message"),
-          content: Text(e.toString()),
-          severity: InfoBarSeverity.error,
-          action: IconButton(
-            icon: const Icon(FluentIcons.clear),
-            onPressed: close,
-          ),
-        ));
-      }
-    });
+    provider.message(message, validFiles);
     newFiles.clear();
   }
 
@@ -304,16 +292,16 @@ class _PlaygroundState extends State<Playground> {
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 20),
-                                  child: Builder(builder: (context) {
-                                    final isRunning = provider.interimResponse != null;
-                                    return Tooltip(
+                                  child: Builder(builder: (context) => provider.interimResponse != null
+                                    ? Tooltip(
+                                      message: "Stop",
+                                      child: Button(child: const Icon(FluentIcons.stop, size: 18,), onPressed: () { provider.forceStop(); }),
+                                    )
+                                    : Tooltip(
                                       message: "Send message",
-                                      child: Button(
-                                        onPressed: isRunning ?  null : () => message(_textController.text),
-                                        child: const Icon(FluentIcons.send, size: 18),
-                                      ),
-                                    );
-                                  }),
+                                      child: Button(child: const Icon(FluentIcons.send, size: 18,), onPressed: () { message(_textController.text); }),
+                                    )
+                                  ),
                                 )
                               ]
                             ),

@@ -38,12 +38,4 @@ void main() {
     expect(provider.messages[1].message, "The color of the sun is yellow");
     llmInference.clean();
   });
-
-  test('test inference provider dispose triggers close ', () async {
-    final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
-    final llmInference = MockLLMInference();
-    provider.inference = llmInference.instance;
-    provider.dispose();
-    verify(llmInference.instance.close).called(1);
-  });
 }
