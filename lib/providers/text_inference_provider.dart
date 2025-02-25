@@ -139,7 +139,7 @@ class TextInferenceProvider extends ChangeNotifier {
     if (n == 0) {
       _response = word;
     } else {
-      _response = _response! + word;
+      _response = (_response ?? "") + word;
     }
     _speed = averageElapsed;
     if (hasListeners) {
@@ -249,9 +249,6 @@ class TextInferenceProvider extends ChangeNotifier {
 
   void forceStop() {
     inference?.forceStop();
-    if (_response != '...') {
-      _messages.add(Message(Speaker.assistant, _response!, null, DateTime.now()));
-    }
     _response = null;
     if (hasListeners) {
       notifyListeners();
