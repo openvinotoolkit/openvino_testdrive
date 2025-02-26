@@ -24,7 +24,7 @@ material_color_utilities	Copyright 2021 Google LLC
 mediapipe	
 quiver	Copyright 2013 Google Inc. All Rights Reserved.
 webdriver	Copyright 2013 Google LLC
-
+objectbox-dart
 
 
 Apache License 2.0
@@ -179,6 +179,7 @@ super_native_extensions.dll	Copyright (c) 2022 Superlist, Matej Knopp and the co
 super_native_extensions_plugin.dll	Copyright (c) 2022 Superlist, Matej Knopp and the contributors
 universal_video_controls_plugin.dll Copyright (c) 2023 & onwards Abdelaziz Mahdy
 window_manager_plugin.dll Copyright (c) 2022-present LiJianying <lijy91@foxmail.com>
+mocktail Copyright (c) 2020 Felix Angelov
 
 MIT license
 SPDX-License-Identifier: MIT
