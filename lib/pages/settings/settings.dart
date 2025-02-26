@@ -131,7 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         constraints: BoxConstraints(maxWidth: isWide ? 300 : double.infinity),
                         child: TextBox(
                           controller: _proxyController,
-                          placeholder: '<username>:<password>@<proxy>:<port>',
+                          placeholder: '<proxy>:<port>',
                           onChanged: (value) async {
                             Config.setProxy(value);
                             setState(() { });
