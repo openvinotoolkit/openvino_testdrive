@@ -2,7 +2,7 @@
 
 # OpenVINO™ Test Drive
 
-[![openvino](https://img.shields.io/badge/openvino-2024.6-blue)]()
+[![openvino](https://img.shields.io/badge/openvino-2025.0-blue)]()
 
 </div>
 
