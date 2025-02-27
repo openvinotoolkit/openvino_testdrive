@@ -2,7 +2,7 @@
 
 # OpenVINO™ Test Drive
 
-[![openvino](https://img.shields.io/badge/openvino-2024.6-blue)]()
+[![openvino](https://img.shields.io/badge/openvino-2025.0-blue)]()
 
 </div>
 
@@ -26,8 +26,10 @@ Download the latest release from the [Releases repository](https://storage.openv
 > [!NOTE]
 > To verify downloaded file integrity, you can generate a SHA-256 of the downloaded file and compare it to the SHA-256 from corresponding `.sha256` file published in Releases repository. 
 
-<details>
-<summary>Installation on Windows</summary>
+### Installation on Windows
+
+> [!IMPORTANT]
+> For Intel® NPU, please use the Intel® NPU Driver latest available version.
 
 1. Downloading the zip archive [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/) `Windows` folder .
 
@@ -37,13 +39,8 @@ Download the latest release from the [Releases repository](https://storage.openv
 
 2. Extract zip archive double-click the MSIX installation package, click `Install` button and it will display the installation process
 
-<p align="left">
-  <img src="./docs/win_inst2.gif" width="350">
-</p>
-
 3. Click on the application name on Windows app list to launch OpenVINO™ Test Drive.
 
-</details>
 
 ## Quick start
 
@@ -66,6 +63,33 @@ Upon starting the application, you can import a model using either Hugging Face 
   <img src="./docs/metrics.gif" width="500">
 </p>
 
+### Retrieval-Augmented Generation with LLM
+
+1. It is possible to upload files and create knowledge base for RAG (Retrieval-Augmented Generation) using `Knowledge base` tab
+<p align="left">
+  <img src="./docs/rag_base.gif" width="500">
+</p>
+This knowledge base can be used during text generation with LLM models.
+<p align="left">
+  <img src="./docs/rag1.gif" width="500">
+</p>
+
+2. It is also possible to upload document directly using `Playground` tab.
+<p align="left">
+  <img src="./docs/rag2.gif" width="500">
+</p>
+
+### Work with Visual Language Models
+
+1. Try Visual Language Model (VLM) for image analysis.
+<p align="left">
+  <img src="./docs/vlm1.gif" width="500">
+</p>
+
+2. Pick imported VLM from `My models` section, upload image and analyze it.
+<p align="left">
+  <img src="./docs/vlm2.gif" width="500">
+</p>
 
 ### Transcribe speech from video
 
