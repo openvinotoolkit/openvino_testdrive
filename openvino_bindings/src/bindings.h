@@ -160,7 +160,6 @@ typedef struct {
 
 typedef void (*ImageInferenceCallbackFunction)(StatusOrString*);
 typedef void (*LLMInferenceCallbackFunction)(StatusOrString*);
-typedef void (*TTIInferenceCallbackFunction)(StatusOrString*);
 typedef void (*VLMInferenceCallbackFunction)(StatusOrString*);
 
 EXPORT void freeStatus(Status *status);
@@ -184,7 +183,6 @@ EXPORT Status* llmInferenceClose(CLLMInference instance);
 
 EXPORT StatusOrTTIInference* ttiInferenceOpen(const char* model_path, const char* device);
 EXPORT StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height, int rounds);
-EXPORT Status* ttiInferenceSetListener(CTTIInference instance, TTIInferenceCallbackFunction callback);
 EXPORT StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance);
 EXPORT Status* ttiInferenceClose(CLLMInference instance);
 
