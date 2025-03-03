@@ -7,6 +7,7 @@
 #ifndef LLM_INFERENCE_H_
 #define LLM_INFERENCE_H_
 
+#include <condition_variable>
 #include <optional>
 #include <cmath>
 #include <mutex>
