@@ -1,28 +1,4 @@
 cc_library(
-    name = "image_inference",
-    hdrs = [
-        "image_inference.h",
-    ],
-    srcs = [
-        "image_inference.cc",
-    ],
-    deps = [
-        "//third_party:blend2d",
-        "//third_party:opencv",
-        "//third_party:model_api",
-        "@nlohmann_json//:json",
-        "//src/utils:status",
-        "//src/utils:errors",
-        ":data_structures",
-        ":post_processing",
-        ":utils",
-        ":serialization",
-        ":overlay",
-    ],
-    visibility = ["//visibility:public"],
-)
-
-cc_library(
     name = "utils",
     hdrs = [
         "utils.h",
@@ -68,20 +44,6 @@ cc_library(
         "//third_party:blend2d",
     ],
     visibility = ["//visibility:public"],
-)
-
-cc_library(
-    name = "post_processing",
-    hdrs = [
-        "post_processing.h",
-    ],
-    deps = [
-        "//third_party:openvino",
-        "//third_party:opencv",
-        "//third_party:model_api",
-        ":contourer",
-        ":data_structures",
-    ],
 )
 
 cc_library(

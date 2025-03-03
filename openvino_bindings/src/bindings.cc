@@ -12,7 +12,6 @@
 #include <openvino/openvino.hpp>
 
 #include "src/audio/speech_to_text.h"
-#include "src/image/image_inference.h"
 #include "src/mediapipe/graph_runner.h"
 #include "src/mediapipe/serialization/serialization_calculators.h"
 #include "src/llm/llm_inference.h"
@@ -49,11 +48,6 @@ void freeStatusOrInt(StatusOrInt *status) {
 //    delete status;
 //}
 
-void freeStatusOrImageInference(StatusOrString *status) {
-    //std::cout << "Freeing StatusOrImageInference" << std::endl;
-    delete status;
-}
-
 void freeStatusOrModelResponse(StatusOrModelResponse *status) {
     //std::cout << "Freeing StatusOrImageInference" << std::endl;
     delete status;
@@ -89,125 +83,6 @@ void freeStatusOrCameraDevices(StatusOrCameraDevices *status) {
         status->value = NULL;        // Prevent dangling pointers
     }
     delete status;
-}
-
-StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json) {
-    try {
-        auto instance = new ImageInference(model_path, get_task_type(task), device);
-        instance->project_labels = nlohmann::json::parse(label_definitions_json);
-        return new StatusOrImageInference{OkStatus, "", instance};
-    } catch (...) {
-        auto except = handle_exceptions();
-        return new StatusOrImageInference{except->status, except->message};
-    }
-}
-
-Status* imageInferenceClose(CImageInference instance) {
-    auto inference = reinterpret_cast<ImageInference*>(instance);
-    inference->close();
-    delete inference;
-    return new Status{OkStatus};
-}
-
-StatusOrString* imageInferenceInfer(CImageInference instance, unsigned char* image_data, const size_t data_length, bool json, bool csv, bool overlay) {
-    try {
-        if(!(json || csv || overlay)){
-            return new StatusOrString{OverlayNoOutputSelected};
-        }
-        auto image_inference = reinterpret_cast<ImageInference*>(instance);
-        std::vector<char> image_vector(image_data, image_data + data_length);
-        auto image = cv::imdecode(image_vector, 1);
-        auto inference_result = image_inference->infer(image);
-        auto result = image_inference->serialize(inference_result, image, json, csv, overlay).dump();
-        return new StatusOrString{OkStatus, "", strdup(result.c_str())};
-    } catch (...) {
-        auto except = handle_exceptions();
-        return new StatusOrString{except->status, except->message};
-    }
-}
-
-StatusOrString* imageInferenceInferRoi(CImageInference instance, unsigned char* image_data, const size_t data_length, int x, int y, int width, int height, bool json, bool csv, bool overlay) {
-    try {
-        if(!(json || csv || overlay)){
-            return new StatusOrString{OverlayNoOutputSelected};
-        }
-
-        auto image_inference = reinterpret_cast<ImageInference*>(instance);
-        std::vector<char> image_vector(image_data, image_data + data_length);
-        auto image = cv::imdecode(image_vector, 1);
-        cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
-        auto rect = cv::Rect(x, y, width, height);
-        auto roi = image(rect).clone();
-        auto inference_result = image_inference->infer(roi);
-        auto result = image_inference->serialize(inference_result, roi, json, csv, overlay).dump();
-        return new StatusOrString{OkStatus, "", strdup(result.c_str())};
-    } catch (...) {
-        auto except = handle_exceptions();
-        return new StatusOrString{except->status, except->message};
-    }
-}
-
-Status* imageInferenceInferAsync(CImageInference instance, const char* id, unsigned char* image_data, const size_t data_length, bool json, bool csv, bool overlay) {
-    try {
-        auto image_inference = reinterpret_cast<ImageInference*>(instance);
-        std::vector<char> image_vector(image_data, image_data + data_length);
-        auto image = cv::imdecode(image_vector, 1);
-        image_inference->inferAsync(image, id, json, csv, overlay);
-        return new Status{OkStatus, ""};
-    } catch (...) {
-        return handle_exceptions();
-    }
-}
-
-Status* imageInferenceSetListener(CImageInference instance, ImageInferenceCallbackFunction callback) {
-    try {
-        auto lambda_callback = [callback](StatusEnum status, const std::string& error_message, const std::string& response) {
-            callback(new StatusOrString{status, strdup(error_message.c_str()), strdup(response.c_str())});
-        };
-        auto image_inference = reinterpret_cast<ImageInference*>(instance);
-        image_inference->set_listener(lambda_callback);
-        return new Status{OkStatus, ""};
-    } catch (...) {
-        return handle_exceptions();
-    }
-}
-
-Status* imageInferenceSerializeModel(const char* model_path, const char* output_path) {
-    try {
-        ImageInference::serialize_model(model_path, output_path);
-        return new Status{OkStatus, ""};
-    } catch (...) {
-        return handle_exceptions();
-    }
-}
-
-Status* imageInferenceOpenCamera(CImageInference instance, int device) {
-    try {
-        auto image_inference = reinterpret_cast<ImageInference*>(instance);
-        image_inference->open_camera(device);
-        return new Status{OkStatus, ""};
-    } catch (...) {
-        return handle_exceptions();
-    }
-}
-
-Status* imageInferenceStopCamera(CImageInference instance) {
-    try {
-        auto image_inference = reinterpret_cast<ImageInference*>(instance);
-        image_inference->stop_camera();
-        return new Status{OkStatus, ""};
-    } catch (...) {
-        return handle_exceptions();
-    }
-}
-
-Status* load_font(const char* font_path) {
-    try {
-        ImageInference::load_font(font_path);
-        return new Status{OkStatus};
-    } catch (...) {
-        return handle_exceptions();
-    }
 }
 
 StatusOrLLMInference* llmInferenceOpen(const char* model_path, const char* device) {

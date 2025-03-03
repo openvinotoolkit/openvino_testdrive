@@ -74,12 +74,6 @@ typedef struct {
 typedef struct {
     enum StatusEnum status;
     const char* message;
-    CImageInference value;
-} StatusOrImageInference;
-
-typedef struct {
-    enum StatusEnum status;
-    const char* message;
     CGraphRunner value;
 } StatusOrGraphRunner;
 
@@ -171,7 +165,6 @@ typedef void (*VLMInferenceCallbackFunction)(StatusOrString*);
 EXPORT void freeStatus(Status *status);
 EXPORT void freeStatusOrString(StatusOrString *status);
 EXPORT void freeStatusOrInt(StatusOrInt *status);
-EXPORT void freeStatusOrImageInference(StatusOrImageInference *status);
 EXPORT void freeStatusOrLLMInference(StatusOrLLMInference *status);
 EXPORT void freeStatusOrSpeechToText(StatusOrSpeechToText *status);
 EXPORT void freeStatusOrModelResponse(StatusOrModelResponse *status);
@@ -179,17 +172,6 @@ EXPORT void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *statu
 EXPORT void freeStatusOrDevices(StatusOrDevices *status);
 EXPORT void freeStatusOrEmbeddings(StatusOrEmbeddings *status);
 EXPORT void freeStatusOrCameraDevices(StatusOrCameraDevices *status);
-
-EXPORT StatusOrImageInference* imageInferenceOpen(const char* model_path, const char* task, const char* device, const char* label_definitions_json);
-EXPORT StatusOrString* imageInferenceInfer(CImageInference instance, unsigned char* image_data, const size_t data_length, bool json, bool csv, bool overlay);
-EXPORT StatusOrString* imageInferenceInferRoi(CImageInference instance, unsigned char* image_data, const size_t data_length, int x, int y, int width, int height, bool json, bool csv, bool overlay);
-EXPORT Status* imageInferenceInferAsync(CImageInference instance, const char* id, unsigned char* image_data, const size_t data_length, bool json, bool csv, bool overlay);
-EXPORT Status* imageInferenceSetListener(CImageInference instance, ImageInferenceCallbackFunction callback);
-EXPORT Status* imageInferenceOpenCamera(CImageInference instance, int device);
-EXPORT Status* imageInferenceStopCamera(CImageInference instance);
-EXPORT Status* imageInferenceClose(CImageInference instance);
-EXPORT Status* imageInferenceSerializeModel(const char* model_path, const char* output_path);
-EXPORT Status* load_font(const char* font_path);
 
 EXPORT StatusOrLLMInference* llmInferenceOpen(const char* model_path, const char* device);
 EXPORT Status* llmInferenceSetListener(CLLMInference instance, LLMInferenceCallbackFunction callback);
