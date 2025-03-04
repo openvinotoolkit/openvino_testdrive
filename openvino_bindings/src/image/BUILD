@@ -13,6 +13,7 @@ cc_library(
         "//src/utils:errors",
         ":data_structures",
     ],
+    visibility = ["//visibility:public"],
 )
 
 cc_library(

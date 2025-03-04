@@ -19,6 +19,18 @@ BLRgba32 hex_to_color(std::string color);
 
 const ProjectLabel &get_label_by_id(const std::string &id, const std::vector<ProjectLabel> &label_definitions);
 
+void serialize_model(const std::string& model_path, const std::string& output_path);
+
+enum class ModelType {
+  Detection,
+  Classification,
+  MaskRCNN,
+  Segmentation,
+  Anomaly,
+};
+
+ModelType get_model_type(const std::string& name);
+
 }
 
 #endif // UTILS_H_

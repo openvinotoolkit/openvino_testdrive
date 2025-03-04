@@ -7,8 +7,8 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:image/image.dart';
 import 'package:archive/archive_io.dart';
+import 'package:inference/interop/utils.dart';
 import 'package:inference/importers/importer.dart';
-import 'package:inference/interop/image_inference.dart';
 import 'package:inference/project.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -150,7 +150,7 @@ class GetiDeploymentProcessor extends Importer {
             platformContext.join(folder, "${task.id}_model.xml");
         final String serializedModelXmlPath =
             platformContext.join(folder, task.modelPaths[0]);
-        await ImageInference.serialize(modelXmlPath, serializedModelXmlPath);
+        await InteropUtils.serialize(modelXmlPath, serializedModelXmlPath);
       }
 
       modelXml.delete();

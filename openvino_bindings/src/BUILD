@@ -9,6 +9,7 @@ cc_library(
         "//src/utils:input_devices",
         "//src/utils:status",
         "//src/utils:utils",
+        "//src/image:utils",
         "//src/sentence_transformer:sentence_transformer_pipeline",
         "//src/llm:llm_inference",
         "//src/audio:speech_to_text",

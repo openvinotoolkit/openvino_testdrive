@@ -172,3 +172,23 @@ class Annotation {
     };
   }
 }
+
+class ImageInferenceResult {
+  final String? csv;
+  final Map<String, dynamic>? json;
+  final String? overlay;
+
+  ImageInferenceResult({this.csv, this.json, this.overlay});
+
+  factory ImageInferenceResult.fromJson(Map<String, dynamic> output) {
+    return ImageInferenceResult(csv: output["csv"], json: output["json"], overlay: output["overlay"]);
+  }
+
+  List<Annotation> parseAnnotations() {
+    if (json == null) {
+      return [];
+    }
+
+    return List<Annotation>.from(json!["predictions"].map((p) => Annotation.fromJson(p)));
+  }
+}
