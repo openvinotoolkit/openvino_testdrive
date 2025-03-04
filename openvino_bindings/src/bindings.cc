@@ -19,6 +19,7 @@
 #include "src/tti/tti_inference.h"
 #include "src/vlm/vlm_inference.h"
 #include "src/utils/errors.h"
+#include "src/image/utils.h"
 #include "src/utils/utils.h"
 #include "src/utils/input_devices.h"
 #include "src/utils/status.h"
@@ -276,6 +277,14 @@ Status* vlmInferenceClose(CVLMInference instance) {
     return new Status{OkStatus};
 }
 
+Status* ModelAPISerializeModel(const char* model_path, const char* output_path) {
+    try {
+        geti::serialize_model(model_path, output_path);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
 
 StatusOrGraphRunner* graphRunnerOpen(const char* graph) {
     try {

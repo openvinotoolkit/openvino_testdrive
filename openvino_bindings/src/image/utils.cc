@@ -6,7 +6,14 @@
 
 
 #include "utils.h"
-
+#include "models/model_base.h"
+#include <adapters/openvino_adapter.h>
+#include <models/detection_model.h>
+#include <models/classification_model.h>
+#include <models/instance_segmentation.h>
+#include <models/segmentation_model.h>
+#include <models/anomaly_model.h>
+#include <models/input_data.h>
 
 namespace geti {
 
@@ -54,6 +61,62 @@ const ProjectLabel &get_label_by_id(const std::string &id,
     }
   }
   throw api_error(OverlayLabelNotFound, id);
+}
+
+ModelType get_model_type(const std::string& name) {
+    if (name == "ssd" || name == "Detection") {
+        return ModelType::Detection;
+    } else if (name == "Classification") {
+        return ModelType::Classification;
+    } else if (name == "MaskRCNN") {
+        return ModelType::MaskRCNN;
+    } else if (name == "Segmentation") {
+        return ModelType::Segmentation;
+    } else if (name == "AnomalyDetection") {
+        return ModelType::Anomaly;
+    } else {
+        throw api_error(ModelTypeNotSupported, name);
+    }
+}
+
+
+void serialize_model(const std::string& model_path, const std::string& output_path) {
+    std::unique_ptr<ModelBase> model;
+    std::string device = "CPU"; //Loading is faster on CPU, and serialization is a small task
+
+    std::string model_type = "";
+    {
+        auto core = ov::Core();
+        auto ov_model = core.read_model(model_path);
+
+        auto config = ov_model->get_rt_info<ov::AnyMap>("model_info");
+        auto model_type_iter = config.find("model_type");
+        if (model_type_iter == config.end()) {
+            throw api_error(StatusEnum::ModelTypeNotSupplied);
+        }
+        model_type = model_type_iter->second.as<std::string>();
+    }
+
+    switch(get_model_type(model_type)) {
+        case ModelType::Detection:
+            model = DetectionModel::create_model(model_path, {}, "", true, device);
+            break;
+        case ModelType::Classification:
+            model = ClassificationModel::create_model(model_path, {}, true, device);
+            break;
+        case ModelType::Segmentation:
+            model = SegmentationModel::create_model(model_path, {}, true, device);
+            break;
+        case ModelType::MaskRCNN:
+            model = MaskRCNNModel::create_model(model_path, {}, true, device);
+            break;
+        case ModelType::Anomaly:
+            model = AnomalyModel::create_model(model_path, {}, true, device);
+            break;
+        default:
+            throw std::runtime_error("Model type serialization not implemented");
+    }
+    ov::serialize(model->getModel(), output_path);
 }
 
 

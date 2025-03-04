@@ -7,8 +7,8 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/annotation.dart';
 import 'package:inference/interop/device.dart' show CameraDevice;
-import 'package:inference/interop/image_inference.dart';
 import 'package:inference/interop/openvino_bindings.dart' show SerializationOutput;
 import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
 import 'package:inference/pages/computer_vision/widgets/camera_view.dart';

@@ -213,6 +213,7 @@ EXPORT Status* speechToTextLoadVideo(CSpeechToText instance, const char* video_p
 EXPORT StatusOrInt* speechToTextVideoDuration(CSpeechToText instance);
 EXPORT StatusOrWhisperModelResponse* speechToTextTranscribe(CSpeechToText instance, int start, int duration, const char* language);
 
+EXPORT Status* ModelAPISerializeModel(const char* model_path, const char* output_path);
 EXPORT StatusOrDevices* getAvailableDevices();
 EXPORT StatusOrCameraDevices* getAvailableCameraDevices();
 

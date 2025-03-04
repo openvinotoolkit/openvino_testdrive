@@ -61,21 +61,6 @@ class OpenVINO {
   late final _freeStatusOrInt =
       _freeStatusOrIntPtr.asFunction<void Function(ffi.Pointer<StatusOrInt>)>();
 
-  void freeStatusOrImageInference(
-    ffi.Pointer<StatusOrImageInference> status,
-  ) {
-    return _freeStatusOrImageInference(
-      status,
-    );
-  }
-
-  late final _freeStatusOrImageInferencePtr = _lookup<
-          ffi.NativeFunction<
-              ffi.Void Function(ffi.Pointer<StatusOrImageInference>)>>(
-      'freeStatusOrImageInference');
-  late final _freeStatusOrImageInference = _freeStatusOrImageInferencePtr
-      .asFunction<void Function(ffi.Pointer<StatusOrImageInference>)>();
-
   void freeStatusOrLLMInference(
     ffi.Pointer<StatusOrLLMInference> status,
   ) {
@@ -180,247 +165,6 @@ class OpenVINO {
       'freeStatusOrCameraDevices');
   late final _freeStatusOrCameraDevices = _freeStatusOrCameraDevicesPtr
       .asFunction<void Function(ffi.Pointer<StatusOrCameraDevices>)>();
-
-  ffi.Pointer<StatusOrImageInference> imageInferenceOpen(
-    ffi.Pointer<pkg_ffi.Utf8> model_path,
-    ffi.Pointer<pkg_ffi.Utf8> task,
-    ffi.Pointer<pkg_ffi.Utf8> device,
-    ffi.Pointer<pkg_ffi.Utf8> label_definitions_json,
-  ) {
-    return _imageInferenceOpen(
-      model_path,
-      task,
-      device,
-      label_definitions_json,
-    );
-  }
-
-  late final _imageInferenceOpenPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<StatusOrImageInference> Function(
-              ffi.Pointer<pkg_ffi.Utf8>,
-              ffi.Pointer<pkg_ffi.Utf8>,
-              ffi.Pointer<pkg_ffi.Utf8>,
-              ffi.Pointer<pkg_ffi.Utf8>)>>('imageInferenceOpen');
-  late final _imageInferenceOpen = _imageInferenceOpenPtr.asFunction<
-      ffi.Pointer<StatusOrImageInference> Function(
-          ffi.Pointer<pkg_ffi.Utf8>,
-          ffi.Pointer<pkg_ffi.Utf8>,
-          ffi.Pointer<pkg_ffi.Utf8>,
-          ffi.Pointer<pkg_ffi.Utf8>)>();
-
-  ffi.Pointer<StatusOrString> imageInferenceInfer(
-    CImageInference instance,
-    ffi.Pointer<ffi.Uint8> image_data,
-    int data_length,
-    bool json,
-    bool csv,
-    bool overlay,
-  ) {
-    return _imageInferenceInfer(
-      instance,
-      image_data,
-      data_length,
-      json,
-      csv,
-      overlay,
-    );
-  }
-
-  late final _imageInferenceInferPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<StatusOrString> Function(
-              CImageInference,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Bool,
-              ffi.Bool,
-              ffi.Bool)>>('imageInferenceInfer');
-  late final _imageInferenceInfer = _imageInferenceInferPtr.asFunction<
-      ffi.Pointer<StatusOrString> Function(
-          CImageInference, ffi.Pointer<ffi.Uint8>, int, bool, bool, bool)>();
-
-  ffi.Pointer<StatusOrString> imageInferenceInferRoi(
-    CImageInference instance,
-    ffi.Pointer<ffi.Uint8> image_data,
-    int data_length,
-    int x,
-    int y,
-    int width,
-    int height,
-    bool json,
-    bool csv,
-    bool overlay,
-  ) {
-    return _imageInferenceInferRoi(
-      instance,
-      image_data,
-      data_length,
-      x,
-      y,
-      width,
-      height,
-      json,
-      csv,
-      overlay,
-    );
-  }
-
-  late final _imageInferenceInferRoiPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<StatusOrString> Function(
-              CImageInference,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Int,
-              ffi.Int,
-              ffi.Int,
-              ffi.Int,
-              ffi.Bool,
-              ffi.Bool,
-              ffi.Bool)>>('imageInferenceInferRoi');
-  late final _imageInferenceInferRoi = _imageInferenceInferRoiPtr.asFunction<
-      ffi.Pointer<StatusOrString> Function(CImageInference,
-          ffi.Pointer<ffi.Uint8>, int, int, int, int, int, bool, bool, bool)>();
-
-  ffi.Pointer<Status> imageInferenceInferAsync(
-    CImageInference instance,
-    ffi.Pointer<pkg_ffi.Utf8> id,
-    ffi.Pointer<ffi.Uint8> image_data,
-    int data_length,
-    bool json,
-    bool csv,
-    bool overlay,
-  ) {
-    return _imageInferenceInferAsync(
-      instance,
-      id,
-      image_data,
-      data_length,
-      json,
-      csv,
-      overlay,
-    );
-  }
-
-  late final _imageInferenceInferAsyncPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Status> Function(
-              CImageInference,
-              ffi.Pointer<pkg_ffi.Utf8>,
-              ffi.Pointer<ffi.Uint8>,
-              ffi.Size,
-              ffi.Bool,
-              ffi.Bool,
-              ffi.Bool)>>('imageInferenceInferAsync');
-  late final _imageInferenceInferAsync =
-      _imageInferenceInferAsyncPtr.asFunction<
-          ffi.Pointer<Status> Function(
-              CImageInference,
-              ffi.Pointer<pkg_ffi.Utf8>,
-              ffi.Pointer<ffi.Uint8>,
-              int,
-              bool,
-              bool,
-              bool)>();
-
-  ffi.Pointer<Status> imageInferenceSetListener(
-    CImageInference instance,
-    ImageInferenceCallbackFunction callback,
-  ) {
-    return _imageInferenceSetListener(
-      instance,
-      callback,
-    );
-  }
-
-  late final _imageInferenceSetListenerPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Status> Function(CImageInference,
-              ImageInferenceCallbackFunction)>>('imageInferenceSetListener');
-  late final _imageInferenceSetListener =
-      _imageInferenceSetListenerPtr.asFunction<
-          ffi.Pointer<Status> Function(
-              CImageInference, ImageInferenceCallbackFunction)>();
-
-  ffi.Pointer<Status> imageInferenceOpenCamera(
-    CImageInference instance,
-    int device,
-  ) {
-    return _imageInferenceOpenCamera(
-      instance,
-      device,
-    );
-  }
-
-  late final _imageInferenceOpenCameraPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Status> Function(
-              CImageInference, ffi.Int)>>('imageInferenceOpenCamera');
-  late final _imageInferenceOpenCamera = _imageInferenceOpenCameraPtr
-      .asFunction<ffi.Pointer<Status> Function(CImageInference, int)>();
-
-  ffi.Pointer<Status> imageInferenceStopCamera(
-    CImageInference instance,
-  ) {
-    return _imageInferenceStopCamera(
-      instance,
-    );
-  }
-
-  late final _imageInferenceStopCameraPtr = _lookup<
-          ffi.NativeFunction<ffi.Pointer<Status> Function(CImageInference)>>(
-      'imageInferenceStopCamera');
-  late final _imageInferenceStopCamera = _imageInferenceStopCameraPtr
-      .asFunction<ffi.Pointer<Status> Function(CImageInference)>();
-
-  ffi.Pointer<Status> imageInferenceClose(
-    CImageInference instance,
-  ) {
-    return _imageInferenceClose(
-      instance,
-    );
-  }
-
-  late final _imageInferenceClosePtr = _lookup<
-          ffi.NativeFunction<ffi.Pointer<Status> Function(CImageInference)>>(
-      'imageInferenceClose');
-  late final _imageInferenceClose = _imageInferenceClosePtr
-      .asFunction<ffi.Pointer<Status> Function(CImageInference)>();
-
-  ffi.Pointer<Status> imageInferenceSerializeModel(
-    ffi.Pointer<pkg_ffi.Utf8> model_path,
-    ffi.Pointer<pkg_ffi.Utf8> output_path,
-  ) {
-    return _imageInferenceSerializeModel(
-      model_path,
-      output_path,
-    );
-  }
-
-  late final _imageInferenceSerializeModelPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Status> Function(ffi.Pointer<pkg_ffi.Utf8>,
-              ffi.Pointer<pkg_ffi.Utf8>)>>('imageInferenceSerializeModel');
-  late final _imageInferenceSerializeModel =
-      _imageInferenceSerializeModelPtr.asFunction<
-          ffi.Pointer<Status> Function(
-              ffi.Pointer<pkg_ffi.Utf8>, ffi.Pointer<pkg_ffi.Utf8>)>();
-
-  ffi.Pointer<Status> load_font(
-    ffi.Pointer<pkg_ffi.Utf8> font_path,
-  ) {
-    return _load_font(
-      font_path,
-    );
-  }
-
-  late final _load_fontPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<Status> Function(
-              ffi.Pointer<pkg_ffi.Utf8>)>>('load_font');
-  late final _load_font = _load_fontPtr
-      .asFunction<ffi.Pointer<Status> Function(ffi.Pointer<pkg_ffi.Utf8>)>();
 
   ffi.Pointer<StatusOrLLMInference> llmInferenceOpen(
     ffi.Pointer<pkg_ffi.Utf8> model_path,
@@ -606,7 +350,7 @@ class OpenVINO {
       .asFunction<ffi.Pointer<StatusOrBool> Function(CTTIInference)>();
 
   ffi.Pointer<Status> ttiInferenceClose(
-    CLLMInference instance,
+    CTTIInference instance,
   ) {
     return _ttiInferenceClose(
       instance,
@@ -614,10 +358,10 @@ class OpenVINO {
   }
 
   late final _ttiInferenceClosePtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<Status> Function(CLLMInference)>>(
+      _lookup<ffi.NativeFunction<ffi.Pointer<Status> Function(CTTIInference)>>(
           'ttiInferenceClose');
   late final _ttiInferenceClose = _ttiInferenceClosePtr
-      .asFunction<ffi.Pointer<Status> Function(CLLMInference)>();
+      .asFunction<ffi.Pointer<Status> Function(CTTIInference)>();
 
   ffi.Pointer<StatusOrVLMInference> vlmInferenceOpen(
     ffi.Pointer<pkg_ffi.Utf8> model_path,
@@ -1031,6 +775,24 @@ class OpenVINO {
       ffi.Pointer<StatusOrWhisperModelResponse> Function(
           CSpeechToText, int, int, ffi.Pointer<pkg_ffi.Utf8>)>();
 
+  ffi.Pointer<Status> ModelAPISerializeModel(
+    ffi.Pointer<pkg_ffi.Utf8> model_path,
+    ffi.Pointer<pkg_ffi.Utf8> output_path,
+  ) {
+    return _ModelAPISerializeModel(
+      model_path,
+      output_path,
+    );
+  }
+
+  late final _ModelAPISerializeModelPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<Status> Function(ffi.Pointer<pkg_ffi.Utf8>,
+              ffi.Pointer<pkg_ffi.Utf8>)>>('ModelAPISerializeModel');
+  late final _ModelAPISerializeModel = _ModelAPISerializeModelPtr.asFunction<
+      ffi.Pointer<Status> Function(
+          ffi.Pointer<pkg_ffi.Utf8>, ffi.Pointer<pkg_ffi.Utf8>)>();
+
   ffi.Pointer<StatusOrDevices> getAvailableDevices() {
     return _getAvailableDevices();
   }
@@ -1249,17 +1011,6 @@ final class StatusOrInt extends ffi.Struct {
   external int value;
 }
 
-final class StatusOrImageInference extends ffi.Struct {
-  @ffi.Int()
-  external int status;
-
-  external ffi.Pointer<pkg_ffi.Utf8> message;
-
-  external CImageInference value;
-}
-
-typedef CImageInference = ffi.Pointer<ffi.Void>;
-
 final class StatusOrGraphRunner extends ffi.Struct {
   @ffi.Int()
   external int status;
@@ -1407,12 +1158,6 @@ final class StatusOrCameraDevices extends ffi.Struct {
   external int size;
 }
 
-typedef ImageInferenceCallbackFunction
-    = ffi.Pointer<ffi.NativeFunction<ImageInferenceCallbackFunctionFunction>>;
-typedef ImageInferenceCallbackFunctionFunction = ffi.Void Function(
-    ffi.Pointer<StatusOrString>);
-typedef DartImageInferenceCallbackFunctionFunction = void Function(
-    ffi.Pointer<StatusOrString>);
 typedef LLMInferenceCallbackFunction
     = ffi.Pointer<ffi.NativeFunction<LLMInferenceCallbackFunctionFunction>>;
 typedef LLMInferenceCallbackFunctionFunction = ffi.Void Function(
@@ -1426,4 +1171,10 @@ typedef VLMInferenceCallbackFunction
 typedef VLMInferenceCallbackFunctionFunction = ffi.Void Function(
     ffi.Pointer<StatusOrString>);
 typedef DartVLMInferenceCallbackFunctionFunction = void Function(
+    ffi.Pointer<StatusOrString>);
+typedef ImageInferenceCallbackFunction
+    = ffi.Pointer<ffi.NativeFunction<ImageInferenceCallbackFunctionFunction>>;
+typedef ImageInferenceCallbackFunctionFunction = ffi.Void Function(
+    ffi.Pointer<StatusOrString>);
+typedef DartImageInferenceCallbackFunctionFunction = void Function(
     ffi.Pointer<StatusOrString>);

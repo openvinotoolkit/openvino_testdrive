@@ -8,7 +8,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/interop/image_inference.dart';
+import 'package:inference/annotation.dart';
 import 'package:inference/interop/openvino_bindings.dart' show SerializationOutput;
 import 'package:inference/providers/image_inference_provider.dart';
 import 'package:provider/provider.dart';
