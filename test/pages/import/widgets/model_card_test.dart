@@ -4,7 +4,7 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/importers/model_manifest.dart';
 import 'package:inference/pages/import/widgets/model_card.dart';
 
 void main() {
@@ -17,6 +17,9 @@ void main() {
       contextWindow: 512,
       description: 'This is a test model description.',
       task: 'classification',
+      collection: '',
+      author: 'OpenVINO',
+      npuEnabled: false,
     );
 
     await tester.pumpWidget(
@@ -47,6 +50,9 @@ void main() {
       contextWindow: 512,
       description: 'This is a test model description.',
       task: 'classification',
+      collection: '',
+      author: 'OpenVINO',
+      npuEnabled: false,
     );
 
     bool checked = false;

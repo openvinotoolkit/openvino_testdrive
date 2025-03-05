@@ -72,14 +72,15 @@ main() {
   //});
 
   testWidgets('test chat reset clears chat', (tester) async {
-    final provider = TextInferenceProvider(largeLanguageModel(), "CPU");
+    final model = largeLanguageModel();
+    final provider = TextInferenceProvider(model, "CPU");
     final llmInference = MockLLMInference(
       listenerAnswer: "The color of the sun is yellow",
     );
     provider.inference = llmInference.instance;
     provider.loaded.complete();
     await tester.binding.setSurfaceSize(const Size(1900, 1024));
-    await tester.pumpWidget(renderWidget(provider, preferenceProvider, largeLanguageModel()));
+    await tester.pumpWidget(renderWidget(provider, preferenceProvider, model));
     await tester.enterText(find.byType(TextBox), 'What is the color of the sun?');
     await tester.tap(find.byIcon(FluentIcons.send));
     await tester.pumpAndSettle();

@@ -12,6 +12,8 @@ import 'package:inference/project.dart';
 import 'package:inference/providers/vlm_inference_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../../fixtures.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -19,12 +21,8 @@ void main() {
     late Message testMessage;
     late VLMInferenceProvider inferenceProvider;
     late PublicProject project;
-    late Image thumbnail;
     setUp(() {
-      thumbnail = Image.asset('images/logo_50.png');
-      project = PublicProject("id", "model_id", "app_version", "name",
-          "creation_time", ProjectType.vlm, "/path/", thumbnail, null);
-
+      project = visualLanguageModel();
       inferenceProvider = VLMInferenceProvider(project, "auto");
 
       testMessage = Message(
@@ -66,7 +64,7 @@ void main() {
       expect(decoration!.image!.image, isA<AssetImage>());
 
       final AssetImage image = decoration.image!.image as AssetImage;
-      final AssetImage image2 = thumbnail.image as AssetImage;
+      final AssetImage image2 = project.thumbnail.image as AssetImage;
       expect(image.assetName, equals(image2.assetName));
     });
 
