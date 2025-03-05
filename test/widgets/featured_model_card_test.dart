@@ -8,7 +8,7 @@ import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/pages/home/widgets/featured_card.dart';
 
 
-Widget renderWidget(Model model) {
+Widget renderWidget(ModelManifest model) {
 
 
   return FluentApp(
@@ -24,7 +24,7 @@ Widget renderWidget(Model model) {
 
 
 void main() {
-  var model = Model(name: 'Test model',
+  var model = ModelManifest(name: 'Test model',
       id: 'test_model',
       fileSize: 1024,
       optimizationPrecision: 'int8',

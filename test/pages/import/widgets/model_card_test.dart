@@ -9,7 +9,7 @@ import 'package:inference/pages/import/widgets/model_card.dart';
 
 void main() {
   testWidgets('ModelCard displays model information correctly', (WidgetTester tester) async {
-    final model = Model(
+    final model = ModelManifest(
       name: 'Test Model',
       id: 'test_model',
       fileSize: 1024,
@@ -39,7 +39,7 @@ void main() {
   });
 
   testWidgets('ModelCard calls onChecked when tapped', (WidgetTester tester) async {
-    final model = Model(
+    final model = ModelManifest(
       name: 'Test Model',
       id: 'test_model',
       fileSize: 1024,

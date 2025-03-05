@@ -183,7 +183,7 @@ class Project {
     }
   }
 
-  Object toMap() {
+  Map<String, dynamic> toMap() {
     return {
       "id": id,
       "model_id": modelId,
@@ -214,6 +214,13 @@ class GetiProject extends Project {
 
   List<Score?> scores() {
     return tasks.map((t) => t.performance).toList();
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map["geti"] = tasks.map((t) => t.toMap()).toList();
+    return map;
   }
 
   @override
@@ -270,7 +277,7 @@ class GetiProject extends Project {
       storagePath
     );
     project.hasSample = json["has_sample"] != null && json["has_sample"];
-    project.tasks = List.from(json["tasks"].map((task) => Task.fromJson(task)));
+    project.tasks = List.from(json["geti"].map((task) => Task.fromJson(task)));
     return project;
   }
 
@@ -307,6 +314,13 @@ class PublicProject extends Project {
 
   PublicProject(String id, String modelId, String applicationVersion, String name, String creationTime, ProjectType type, String storagePath, this.manifest)
     : super(id, modelId, applicationVersion, name, creationTime, type, storagePath, true);
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map["manifest"] = manifest.toJson();
+    return map;
+  }
 
 
   Image get thumbnail {
