@@ -212,10 +212,15 @@ class GetiProject extends Project {
 
   GetiProject(String id, String modelId, String applicationVersion, String name, String creationTime, ProjectType type, String storagePath)
     : super(id, modelId, applicationVersion, name, creationTime, type, storagePath, false) {
+    size = calculateDiskUsage();
+  }
+
+  int calculateDiskUsage() {
     final dir = Directory(storagePath);
     if (dir.existsSync()) {
-      size = dir.listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
+      return dir.listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
     }
+    return 0;
   }
 
   List<Score?> scores() {
