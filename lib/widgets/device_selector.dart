@@ -10,13 +10,17 @@ import 'package:provider/provider.dart';
 
 class DeviceSelector extends StatelessWidget {
   final String device = "Auto";
-  const DeviceSelector({super.key});
+  final bool npuSupported;
+  const DeviceSelector({super.key, required this.npuSupported});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<PreferenceProvider>(builder: (context, preferences, child) {
         final currentDevice = PreferenceProvider.availableDevices.firstWhereOrNull((d) => d.id == preferences.device)?.name ?? preferences.device;
-
+        final availableDevices = PreferenceProvider.availableDevices;
+        if (!npuSupported) {
+          availableDevices.removeWhere((device) => device.id == "NPU");
+        }
         return DropDownButton(
           buttonBuilder: (context, callback) {
             return NoOutlineButton(
@@ -36,7 +40,7 @@ class DeviceSelector extends StatelessWidget {
             );
           },
           items: [
-            for (final device in PreferenceProvider.availableDevices)
+            for (final device in availableDevices)
               MenuFlyoutItem(text: Text(device.name), onPressed: () => preferences.device = device.id)
           ]
         );

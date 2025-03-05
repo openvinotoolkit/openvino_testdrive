@@ -103,7 +103,7 @@ class _TTIPlaygroundState extends State<TTIPlayground> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Row(
                           children: [
-                            const DeviceSelector(),
+                            DeviceSelector(npuSupported: widget.project.npuSupported),
                             const Divider(size: 24,direction: Axis.vertical,),
                             const SizedBox(width: 24,),
                             ToolbarTextInput(

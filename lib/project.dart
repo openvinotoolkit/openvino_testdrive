@@ -169,6 +169,9 @@ class Project {
     return "";
   }
 
+  bool get npuSupported {
+    return false;
+  }
 
   String taskName() {
     return "";
@@ -322,6 +325,10 @@ class PublicProject extends Project {
     return map;
   }
 
+  @override
+  bool get npuSupported {
+    return manifest.npuEnabled;
+  }
 
   Image get thumbnail {
     return getThumbnail(id);

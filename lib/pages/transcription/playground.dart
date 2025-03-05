@@ -113,7 +113,7 @@ class _PlaygroundState extends State<Playground> with TickerProviderStateMixin{
                             ],
                           ),
                         ),
-                        const DeviceSelector(),
+                        DeviceSelector(npuSupported: widget.project.npuSupported),
                         const LanguageSelector(),
                       ],
                     ),

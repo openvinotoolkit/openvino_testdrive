@@ -160,7 +160,7 @@ class _LiveInferenceState extends State<LiveInference> {
                                 );
                               }
                             ),
-                            const DeviceSelector(),
+                            DeviceSelector(npuSupported: widget.project.npuSupported),
                           ],
                         ),
                       ),
