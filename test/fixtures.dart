@@ -97,6 +97,6 @@ GetiProject getiProject() {
     ],
     "is_public": false,
     "application_version": "25.0.1",
-  }, "/dev/null");
+  }, "/dev/null")..size = 0;
 
 }

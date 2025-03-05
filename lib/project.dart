@@ -159,8 +159,6 @@ class Project {
   bool isPublic;
   bool hasSample = false;
 
-  int? size;
-
   String get architecture {
     //if (tasks.length > 1) {
     //  return "Task Chain";
@@ -179,12 +177,9 @@ class Project {
 
   bool get isDownloaded => true;
 
-  Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic) {
-    final dir = Directory(storagePath);
-    if (dir.existsSync()) {
-      size = dir.listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
-    }
-  }
+  Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic);
+
+  int get size => 0;
 
   Map<String, dynamic> toMap() {
     return {
@@ -194,6 +189,7 @@ class Project {
       "creation_time": creationTime,
       "type": projectTypeToString(type),
       "application_version": applicationVersion,
+      "is_public": isPublic,
     };
   }
 
@@ -211,9 +207,16 @@ class Project {
 
 class GetiProject extends Project {
   List<Task> tasks = [];
+  @override
+  late int size;
 
   GetiProject(String id, String modelId, String applicationVersion, String name, String creationTime, ProjectType type, String storagePath)
-    : super(id, modelId, applicationVersion, name, creationTime, type, storagePath, false);
+    : super(id, modelId, applicationVersion, name, creationTime, type, storagePath, false) {
+    final dir = Directory(storagePath);
+    if (dir.existsSync()) {
+      size = dir.listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
+    }
+  }
 
   List<Score?> scores() {
     return tasks.map((t) => t.performance).toList();
@@ -326,12 +329,15 @@ class PublicProject extends Project {
   }
 
   @override
+  int get size => manifest.fileSize;
+
+  @override
   bool get npuSupported {
     return manifest.npuEnabled;
   }
 
   Image get thumbnail {
-    return getThumbnail(id);
+    return getThumbnail(modelId);
   }
 
   @override
@@ -354,7 +360,7 @@ class PublicProject extends Project {
 
   static Future<PublicProject> fromModelManifest(ModelManifest manifest) async {
     final directory = await getApplicationSupportDirectory();
-    final projectId = const Uuid().v4();
+    final projectId = manifest.id;
     final storagePath = platformContext.join(directory.path, projectId.toString());
     await Directory(storagePath).create(recursive: true);
     final projectType = parseProjectType(manifest.task);

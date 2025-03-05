@@ -30,6 +30,20 @@ class _InferencePageState extends State<InferencePage> {
     final selectedDevice = provider.device;
     if (selectedDevice == "NPU" && !widget.project.npuSupported) {
       provider.device = PreferenceProvider.defaultDevice;
+      showChangeNotification();
+    }
+  }
+
+  void showChangeNotification() {
+    if (context.mounted) {
+      displayInfoBar(context, builder: (context, close) => InfoBar(
+        title: const Text('The previously selected device is not supported by this model, switching back to default.'),
+        severity: InfoBarSeverity.info,
+        action: IconButton(
+          icon: const Icon(FluentIcons.clear),
+          onPressed: close,
+        ),
+      ));
     }
   }
 
