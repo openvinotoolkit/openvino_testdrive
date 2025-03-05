@@ -5,19 +5,17 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/project.dart';
 import 'package:inference/widgets/grid_container.dart';
+import 'package:inference/widgets/horizontal_rule.dart';
 import 'package:inference/widgets/model_propery.dart';
-import 'package:intl/intl.dart';
 import 'package:inference/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ModelProperties extends StatelessWidget {
-  final GetiProject project;
+  final Project project;
   const ModelProperties({super.key, required this.project});
 
   @override
   Widget build(BuildContext context) {
-    Locale locale = Localizations.localeOf(context);
-    final formatter = NumberFormat.percentPattern(locale.languageCode);
-
     return SizedBox(
       width: 280,
       child: GridContainer(
@@ -49,17 +47,17 @@ class ModelProperties extends StatelessWidget {
                     title: "Size",
                     value: project.size?.readableFileSize() ?? "",
                   ),
-                  Builder(
-                    builder: (context) {
-                      if (project.tasks.first.performance == null) {
-                        return Container();
-                      }
-                      return ModelProperty(
-                        title: "Accuracy",
-                        value: formatter.format(project.tasks.first.performance!.score)
-                      );
-                    }
+                  if (project is PublicProject) Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const HorizontalRule(),
+                      const Text('External links', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                      HyperlinkButton(
+                          child: const Text("Model on Hugging Face"), onPressed: () { launchUrl(Uri.parse('https://huggingface.co/${project.modelId}')); }
+                      ),
+                    ],
                   ),
+
                 ],
               ),
             )

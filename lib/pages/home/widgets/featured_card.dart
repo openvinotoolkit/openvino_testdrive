@@ -3,13 +3,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/importers/model_manifest.dart';
 import 'package:inference/widgets/elevation.dart';
 
 class FeaturedCard extends StatelessWidget {
-  final Model model;
-  final void Function(Model) onDownload;
-  final void Function(Model) onOpen;
+  final ModelManifest model;
+  final void Function(ModelManifest) onDownload;
+  final void Function(ModelManifest) onOpen;
   final bool downloaded;
 
   const FeaturedCard(

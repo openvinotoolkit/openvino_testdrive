@@ -18,7 +18,7 @@ class InferencePage extends StatelessWidget {
   Widget build(BuildContext context) {
     switch(project.type){
       case ProjectType.image:
-        return ComputerVisionPage(project);
+        return ComputerVisionPage(project as GetiProject);
       case ProjectType.text:
         return TextGenerationPage(project);
       case ProjectType.speech:

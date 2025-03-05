@@ -40,6 +40,7 @@ Future<List<Project>> loadProjectsFromStorage() async {
       try {
         final content = File(platformContext.join(projectFolder.path, "project.json")).readAsStringSync();
         final project = Project.fromJson(jsonDecode(content), projectFolder.path);
+        print(project.id);
         //if (!project.verify()) {
         //  throw Exception("project not valid. removing");
         //}

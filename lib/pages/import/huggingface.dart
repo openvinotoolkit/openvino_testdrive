@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/importers/model_manifest.dart';
 import 'package:inference/pages/import/providers/import_provider.dart';
 import 'package:inference/pages/import/widgets/badge.dart';
 import 'package:inference/pages/import/widgets/model_card.dart';
@@ -125,7 +125,7 @@ class Huggingface extends StatelessWidget {
                         ),
                         Expanded(
                           child: SingleChildScrollView(
-                            child: FutureBuilder<List<Model>>(
+                            child: FutureBuilder<List<ModelManifest>>(
                               future: importProvider.allModelsFuture,
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState == ConnectionState.waiting) {

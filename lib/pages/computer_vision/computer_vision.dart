@@ -13,7 +13,7 @@ import 'package:inference/widgets/controls/close_model_button.dart';
 import 'package:provider/provider.dart';
 
 class ComputerVisionPage extends StatefulWidget {
-  final Project project;
+  final GetiProject project;
   const ComputerVisionPage(this.project, {super.key});
 
   @override
@@ -93,7 +93,7 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
                   PaneItem(
                     icon: const Icon(FluentIcons.processing),
                     title: const Text("Live Inference"),
-                    body: LiveInference(project: widget.project),
+                    body: LiveInference(project: widget.project as GetiProject),
                   ),
                   PaneItem(
                     icon: const Icon(FluentIcons.project_collection),

@@ -5,6 +5,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:inference/importers/model_manifest.dart';
 import 'package:inference/pages/home/widgets/featured_card.dart';
 import 'package:inference/pages/models/widgets/model_card.dart';
 import 'package:inference/importers/manifest_importer.dart';
@@ -23,7 +24,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<List<Model>> popularModelsFuture;
+  late Future<List<ModelManifest>> popularModelsFuture;
   bool orderAscend = false;
   Map<String, Project> projectModelMap = {}; // Map to hold modelId and a corresponding project
 
@@ -41,24 +42,24 @@ class _HomePageState extends State<HomePage> {
     };
   }
 
-  Project? getProjectWithModel(Model model) {
+  Project? getProjectWithModel(ModelManifest model) {
     // Retrieve a project given the modelId
     return projectModelMap[model.id] ?? projectModelMap["OpenVINO/${model.id}"];
   }
 
-  bool projectExistsWithModel(Model model){
+  bool projectExistsWithModel(ModelManifest model){
     return getProjectWithModel(model) != null;
   }
 
-  void downloadFeaturedModel(Model model){
-    model.convertToProject().then((project) {
+  void downloadFeaturedModel(ModelManifest model){
+    PublicProject.fromModelManifest(model).then((project) {
       if (mounted) {
         GoRouter.of(context).push('/models/download', extra: project);
       }
     });
 
   }
-  void openFeaturedModel(Model model){
+  void openFeaturedModel(ModelManifest model){
     var project = getProjectWithModel(model);
     if (project != null){
       GoRouter.of(context).push("/models/inference", extra: project);
@@ -105,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            FutureBuilder<List<Model>>(
+            FutureBuilder<List<ModelManifest>>(
               future: popularModelsFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

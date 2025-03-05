@@ -128,12 +128,13 @@ class _ModelCardState extends State<ModelCard>{
                                 ModelProperty(name: "Size", value: widget.project.size?.readableFileSize() ?? ""),
                                 Builder(
                                   builder: (context) {
-                                    if (widget.project is GetiProject && widget.project.tasks.first.performance != null) {
+                                    final project = widget.project;
+                                    if (project is GetiProject && project.tasks.first.performance != null) {
                                       Locale locale = Localizations.localeOf(context);
                                       final formatter = NumberFormat.percentPattern(locale.languageCode);
                                       return ModelProperty(
                                         name: "Accuracy",
-                                        value: formatter.format(widget.project.tasks.first.performance!.score));
+                                        value: formatter.format(project.tasks.first.performance!.score));
                                     }
                                     return Container();
                                   }

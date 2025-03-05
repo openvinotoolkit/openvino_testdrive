@@ -8,7 +8,7 @@ import 'package:inference/project.dart';
 import 'package:path/path.dart';
 
 class ImageGraphBuilder {
-  final Project project;
+  final GetiProject project;
   final Context platformContext;
   final String device;
   ImageGraphBuilder(this.project, this.device): platformContext = Context(style: Style.platform);

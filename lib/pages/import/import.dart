@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:inference/pages/import/huggingface.dart';
 import 'package:inference/pages/import/providers/import_provider.dart';
 import 'package:inference/pages/import/widgets/import_geti_model_dialog.dart';
+import 'package:inference/project.dart';
 import 'package:inference/providers/project_filter_provider.dart';
 import 'package:inference/theme_fluent.dart';
 import 'package:inference/widgets/controls/close_model_button.dart';
@@ -96,11 +97,13 @@ class _ImportPageState extends State<ImportPage> {
                         onPressed: (importProvider.selectedModel == null
                           ? null
                           : () {
-                            importProvider.selectedModel?.convertToProject().then((project) {
-                              if (context.mounted){
-                                GoRouter.of(context).push('/models/download', extra: project);
-                              }
-                            });
+                            if (importProvider.selectedModel != null) {
+                              PublicProject.fromModelManifest(importProvider.selectedModel!).then((project) {
+                                if (context.mounted){
+                                  GoRouter.of(context).push('/models/download', extra: project);
+                                }
+                              });
+                            }
                           }
                         ),
                         child: const Text("Import selected model"),

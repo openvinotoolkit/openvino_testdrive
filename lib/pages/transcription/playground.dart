@@ -6,7 +6,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
+import 'package:inference/widgets/model_properties.dart';
 import 'package:inference/pages/transcription/utils/media_player_controller.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/pages/transcription/widgets/language_selector.dart';

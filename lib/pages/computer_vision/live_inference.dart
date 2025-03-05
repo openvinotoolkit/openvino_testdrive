@@ -28,7 +28,7 @@ import 'dart:ui' as ui;
 enum LiveInferenceMode { camera, image }
 
 class LiveInference extends StatefulWidget {
-  final Project project;
+  final GetiProject project;
 
   const LiveInference({required this.project, super.key});
 

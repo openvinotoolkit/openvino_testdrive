@@ -4,12 +4,13 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/importers/model_manifest.dart';
 
 class ImportProvider extends ChangeNotifier {
-  Future<List<Model>>? allModelsFuture;
-  Model? _selectedModel;
-  Model? get selectedModel => _selectedModel;
-  set selectedModel(Model? model) {
+  Future<List<ModelManifest>>? allModelsFuture;
+  ModelManifest? _selectedModel;
+  ModelManifest? get selectedModel => _selectedModel;
+  set selectedModel(ModelManifest? model) {
     _selectedModel = model;
     notifyListeners();
   }

@@ -8,7 +8,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:inference/pages/vlm/widgets/assistant_message.dart';
 import 'package:inference/pages/vlm/widgets/image_grid.dart';
-import 'package:inference/pages/vlm/widgets/model_properties.dart';
+import 'package:inference/widgets/model_properties.dart';
 import 'package:inference/widgets/toolbar_text_input.dart';
 import 'package:inference/pages/vlm/widgets/user_message.dart';
 import 'package:inference/project.dart';
@@ -292,7 +292,7 @@ class _VLMPlaygroundState extends State<VLMPlayground> {
                 )),
               ],
             ))),
-        const ModelProperties(),
+        ModelProperties(project: widget.project),
       ],
     );
   }

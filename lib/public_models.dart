@@ -36,9 +36,9 @@ Future<void> getAdditionalModelInfo(PublicProject project) async {
   final response = await http.get(Uri.parse(configJsonURL));
   if (response.statusCode == 200) {
     final config = jsonDecode(response.body);
-    project.tasks[0].architecture = config["architectures"][0];
+    project.manifest.architecture = config["architectures"][0];
   }else{
-    project.tasks[0].architecture = "unknown"; // Not all models have config.json
+    project.manifest.architecture = "unknown"; // Not all models have config.json
   }
   writeProjectJson(project);
 }
@@ -56,21 +56,4 @@ Future<Map<String, String>> listDownloadFiles(PublicProject project) async {
 
 String huggingFaceModelFileUrl(String modelId, String name) {
   return "$huggingFaceURL/$modelId/resolve/main/$name?download=true";
-}
-
-Future<List<PublicModelInfo>> getPublicModels() async {
-  List<PublicModelInfo> models = [];
-
-  final dio = dioClient();
-
-  for (final collection in collections) {
-    final request = await dio.get(collection.path);
-    final body = request.toString();
-    final collectionInfo = jsonDecode(body);
-    for (final item in collectionInfo["items"]) {
-      models.add(PublicModelInfo.fromJson(item, collection.type, collection));
-    }
-  }
-  models.sort((a, b) => a.name.compareTo(b.name));
-  return models;
 }

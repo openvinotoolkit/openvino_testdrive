@@ -32,7 +32,7 @@ final platformContext = Context(style: Style.platform);
 class GetiDeploymentProcessor extends Importer {
   final String zipPath;
   Archive archive;
-  Project? project;
+  GetiProject? project;
 
   GetiDeploymentProcessor(this.zipPath, this.archive);
 
