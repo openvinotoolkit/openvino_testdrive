@@ -1,48 +1,28 @@
+// Copyright (c) 2024 Intel Corporation
+//
+// SPDX-License-Identifier: Apache-2.0
+
 import 'package:flutter_test/flutter_test.dart';
-import 'package:collection/collection.dart';
-import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/importers/model_manifest.dart';
+import 'package:inference/migration/migrations/migration_1.0.0_to_25.0.1.dart';
 
 class Migration {
   final String from;
   final String to;
-  final Map Function(Map, List<Model> manifest) migration;
+  final Map Function(Map, List<ModelManifest> manifest) migration;
 
-  Map Function(Map, List<Model> manifest) get migrate => migration;
+  Map Function(Map, List<ModelManifest> manifest) get migrate => migration;
 
   Migration({required this.from, required this.to, required this.migration});
 }
 
 void main() {
-  group("1.0.0 to 25.1.0", () {
+
+  final migration = MigrationV1ToV2501();
+
+  group("1.0.0 to 25.0.1", () {
     test("migration of geti model", () {
-        final migration = Migration(
-          from: "1.0.0",
-          to: "25.1.0",
-          migration: (Map input, List<Model> manifest) {
-            Model? publicModelInfo = manifest.firstWhereOrNull((model) {
-                return input["model_id"] == "${model.author}/${model.id}";
-            });
-
-            Map<String, dynamic> output = {
-              "id": input["id"],
-              "model_id": input["model_id"],
-              "name": input["name"],
-              "creation_time": input["creation_time"],
-              "type": input["type"],
-              "application_version": "25.1.0",
-            };
-
-            if (input["is_public"]) {
-              output["manifest"] = publicModelInfo?.toJson();
-            } else {
-              output["geti"] = input["tasks"];
-            }
-
-            return output;
-          }
-        );
-
-        List<Model> manifest = [];
+        List<ModelManifest> manifest = [];
 
         final subject = {
           "id": "662aac1fedcb02d8b6323097",
@@ -127,33 +107,16 @@ void main() {
               "optimization": "OpenVINO INT8"
             }
           ],
-          "application_version": "25.1.0",
+          "is_public": false,
+          "application_version": "25.0.1",
         };
 
         expect(migration.migrate(subject, manifest), expectation);
     });
     test("migration of public model", () {
-        final migration = Migration(
-          from: "1.0.0",
-          to: "25.1.0",
-          migration: (Map input, List<Model> manifest) {
-            Model? publicModelInfo = manifest.firstWhereOrNull((model) {
-                return input["model_id"] == "${model.author}/${model.id}";
-            });
-            return {
-              "id": input["id"],
-              "model_id": input["model_id"],
-              "name": input["name"],
-              "creation_time": input["creation_time"],
-              "type": input["type"],
-              "manifest": publicModelInfo?.toJson(),
-              "application_version": "25.1.0",
-            };
-          }
-        );
 
-        List<Model> manifest = [
-          Model.fromJson({
+        List<ModelManifest> manifest = [
+          ModelManifest.fromJson({
             "name": "Whisper Base",
             "id": "whisper-base-fp16-ov",
             "fileSize": 251616604,
@@ -206,9 +169,11 @@ void main() {
             "task": "speech",
             "author": "OpenVINO",
             "collection": "speech-to-text-672321d5c070537a178a8aeb",
-            "npuEnabled": true
+            "npuEnabled": true,
+            "architecture": "unknown"
           },
-          "application_version": "25.1.0",
+          "is_public": true,
+          "application_version": "25.0.1",
         };
 
         expect(migration.migrate(subject, manifest), expectation);
