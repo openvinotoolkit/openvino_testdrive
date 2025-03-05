@@ -7,7 +7,8 @@ import 'package:inference/providers/preference_provider.dart';
 import 'package:provider/provider.dart';
 
 class DeviceSelector extends StatefulWidget {
-  const DeviceSelector({super.key});
+  final bool npuSupported;
+  const DeviceSelector({super.key, required this.npuSupported});
 
   @override
   State<DeviceSelector> createState() => _DeviceSelectorState();
@@ -24,6 +25,13 @@ class _DeviceSelectorState extends State<DeviceSelector> {
 
   @override
   Widget build(BuildContext context) {
+    var availableDevices = PreferenceProvider.availableDevices.where((p) {
+        if (!widget.npuSupported && p.id == "NPU") {
+          return false;
+        }
+        return true;
+    });
+
     return Consumer<PreferenceProvider>(builder: (context, preferences, child) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,7 +50,7 @@ class _DeviceSelectorState extends State<DeviceSelector> {
               children: [
                 ComboBox(
                   value: selectedDevice,
-                  items: PreferenceProvider.availableDevices.map<ComboBoxItem<String>>((e) {
+                  items: availableDevices.map<ComboBoxItem<String>>((e) {
                     return ComboBoxItem<String>(
                       value: e.id,
                       child: Text(e.name),

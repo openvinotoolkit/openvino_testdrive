@@ -59,7 +59,7 @@ class BatchInference extends StatelessWidget {
                           const HorizontalRule(),
                           const OutputSelector(),
                           const HorizontalRule(),
-                          const DeviceSelector(),
+                          DeviceSelector(npuSupported: batchInference.imageInference.project.npuSupported),
                           const HorizontalRule(),
                           Row(
                             children: [

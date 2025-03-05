@@ -16,11 +16,14 @@ class DeviceSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<PreferenceProvider>(builder: (context, preferences, child) {
-        final currentDevice = PreferenceProvider.availableDevices.firstWhereOrNull((d) => d.id == preferences.device)?.name ?? preferences.device;
-        final availableDevices = PreferenceProvider.availableDevices;
-        if (!npuSupported) {
-          availableDevices.removeWhere((device) => device.id == "NPU");
-        }
+        var availableDevices = PreferenceProvider.availableDevices.where((p) {
+           if (!npuSupported && p.id == "NPU") {
+             return false;
+           }
+           return true;
+        });
+        final currentDevice = availableDevices.firstWhereOrNull((d) => d.id == preferences.device)?.name ?? preferences.device;
+
         return DropDownButton(
           buttonBuilder: (context, callback) {
             return NoOutlineButton(
