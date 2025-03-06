@@ -43,6 +43,33 @@ class _DownloadPageState extends State<DownloadPage> {
     }
   }
 
+  void showErrorDialog() {
+    final router = GoRouter.of(context);
+    showDialog(context: context, builder: (BuildContext context) => ContentDialog(
+      constraints: BoxConstraints(
+        maxWidth: 400,
+      ),
+      title: const Text('Could not download model'),
+      content: const Text("Please check your network or configure your proxy in the Settings."),
+      actions: [
+        Button(
+          onPressed: () {
+            router.pop();
+            router.go('/settings');
+          },
+          child: const Text('Settings'),
+        ),
+        Button(
+          onPressed: () {
+            router.pop();
+            router.go('/home');
+          },
+          child: const Text('Close'),
+        ),
+      ],
+    ));
+  }
+
   void startDownload() async {
     final router = GoRouter.of(context);
     final downloadProvider = Provider.of<DownloadProvider>(context, listen: false);
@@ -65,17 +92,7 @@ class _DownloadPageState extends State<DownloadPage> {
       files = await listDownloadFiles(widget.project);
     } catch (e) {
       if (mounted){
-        await showDialog(context: context, builder: (BuildContext context) => ContentDialog(
-          title: const Text('Model was not found'),
-          actions: [
-            Button(
-              onPressed: () {
-                router.canPop() ? router.pop() : router.go('/home');
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        ));
+        showErrorDialog();
       }
       return;
     }
@@ -92,18 +109,7 @@ class _DownloadPageState extends State<DownloadPage> {
     } catch(e) {
       print(e);
       if (mounted) {
-        await showDialog(context: context, builder: (BuildContext context) => ContentDialog(
-          title: Text('An error occurred trying to download ${widget.project.name}'),
-          content: Text(e.toString()),
-          actions: [
-            Button(
-              onPressed: () {
-                router.canPop() ? router.pop() : router.go('/home');
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        ));
+        showErrorDialog();
       }
     }
   }
