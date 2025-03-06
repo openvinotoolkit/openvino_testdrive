@@ -205,7 +205,7 @@ void generate() async {
     Collection("speech-to-text-672321d5c070537a178a8aeb", "OpenVINO", "OpenVINO", "speech", (String name) => "Transcribe video with $name"),
     Collection("visual-language-models-6792248a0eed57085d2b094b", "OpenVINO", "OpenVINO", "vlm", (String name) => "Understand images with $name"),
     Collection("llm-6687aaa2abca3bbcec71a9bd", "OpenVINO", "OpenVINO", "text-generation", (String name) => "Chat with $name"),
-    Collection("image-generation-6763eab8ac097237330c78c5", "arendjan", "OpenVINO", "text-to-image", (String name) => "Generate images with $name"),
+    Collection("image-generation-67697d9952fb1eee4a252aa8", "OpenVINO", "OpenVINO", "text-to-image", (String name) => "Generate images with $name"),
   ];
   List<ModelInfo> models = [];
   for (final collection in collections) {
