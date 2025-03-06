@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/migration/migration_manager.dart';
+import 'package:inference/migration/migrations/migration_1.0.0_to_25.0.1.dart';
 import 'package:inference/project.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -37,6 +38,9 @@ Future<List<Project>> loadProjectsFromStorage() async {
   final migrationManager = MigrationManager(
     destinationVersion: currentApplicationVersion,
     manifest: manifest.allModels,
+    migrations: [
+      MigrationV1ToV2501(),
+    ]
   );
 
   return List.from(directory.listSync()
