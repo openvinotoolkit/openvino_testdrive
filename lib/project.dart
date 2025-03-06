@@ -218,7 +218,7 @@ class GetiProject extends Project {
   int calculateDiskUsage() {
     final dir = Directory(storagePath);
     if (dir.existsSync()) {
-      return dir.listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
+      return dir.listSync(recursive: true).fold(0, (acc, m) => acc + m.statSync().size);
     }
     return 0;
   }

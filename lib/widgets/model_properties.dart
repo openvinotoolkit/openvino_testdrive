@@ -45,7 +45,7 @@ class ModelProperties extends StatelessWidget {
                   ),
                   ModelProperty(
                     title: "Size",
-                    value: project.size?.readableFileSize() ?? "",
+                    value: project.size.readableFileSize(),
                   ),
                   if (project is PublicProject) Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

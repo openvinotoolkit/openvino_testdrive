@@ -47,7 +47,7 @@ class ModelProperties extends StatelessWidget {
                   ),
                   ModelProperty(
                     title: "Size",
-                    value: project.size?.readableFileSize() ?? "",
+                    value: project.size.readableFileSize(),
                   ),
                   Builder(
                     builder: (context) {

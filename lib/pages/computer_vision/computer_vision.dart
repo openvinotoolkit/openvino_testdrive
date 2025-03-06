@@ -93,7 +93,7 @@ class _ComputerVisionPageState extends State<ComputerVisionPage> {
                   PaneItem(
                     icon: const Icon(FluentIcons.processing),
                     title: const Text("Live Inference"),
-                    body: LiveInference(project: widget.project as GetiProject),
+                    body: LiveInference(project: widget.project),
                   ),
                   PaneItem(
                     icon: const Icon(FluentIcons.project_collection),

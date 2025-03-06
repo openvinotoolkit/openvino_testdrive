@@ -125,7 +125,7 @@ class _ModelCardState extends State<ModelCard>{
                             ModelProperty(name: "Architecture", value: widget.project.architecture),
                             Row(
                               children: [
-                                ModelProperty(name: "Size", value: widget.project.size?.readableFileSize() ?? ""),
+                                ModelProperty(name: "Size", value: widget.project.size.readableFileSize()),
                                 Builder(
                                   builder: (context) {
                                     final project = widget.project;
