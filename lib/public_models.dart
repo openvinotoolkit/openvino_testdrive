@@ -8,18 +8,12 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:inference/project.dart';
-import 'package:inference/public_model_info.dart';
 import 'package:inference/utils.dart';
 import 'package:path/path.dart';
 
 final platformContext = Context(style: Style.platform);
 
 const huggingFaceURL = "https://huggingface.co";
-
-const List<Collection> collections = [
-  Collection("https://huggingface.co/api/collections/OpenVINO/llm-6687aaa2abca3bbcec71a9bd", "", "text"),
-  //Collection("https://huggingface.co/api/collections/OpenVINO/speech-to-text-672321d5c070537a178a8aeb", "", "speech"),
-];
 
 void createDirectory(PublicProject project) {
   Directory(project.storagePath).createSync();
