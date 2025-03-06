@@ -20,7 +20,7 @@ version: 1.0.2+1
 
 environment:
   sdk: '>=3.3.4 <4.0.0'
-  flutter: 3.24.5
+  flutter: 3.29.0
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -37,16 +37,16 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   ffi: ^2.1.2
-  file_picker: ^8.0.2
+  file_picker: ^9.0.2
   provider: ^6.1.2
-  mime: ^1.0.5
+  mime: ^2.0.0
   image: ^4.1.7
   path: ^1.9.0
   path_provider: ^2.1.3
   intl: ^0.19.0
   go_router: ^14.0.2
   flutter_svg: ^2.0.10+1
-  desktop_drop: ^0.4.4
+  desktop_drop: ^0.5.0
   uuid: ^4.4.0
   collection: ^1.18.0
   csv: ^6.0.0
@@ -83,9 +83,9 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
+  flutter_lints: ^5.0.0
   msix: ^3.16.7
-  ffigen: ^13.0.0
+  ffigen: ^16.1.0
   integration_test:
     sdk: flutter
   path_provider_platform_interface: ^2.1.2

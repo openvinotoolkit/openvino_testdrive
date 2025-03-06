@@ -14,6 +14,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   universal_video_controls
   url_launcher_windows
   video_player_win
+  volume_controller
   window_manager
 )
 
