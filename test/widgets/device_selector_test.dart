@@ -19,7 +19,7 @@ Widget renderWidget(PreferenceProvider preferences) {
     ],
     child: const FluentApp(
       home: ScaffoldPage(
-        content: DeviceSelector(),
+        content: DeviceSelector(npuSupported:  false),
       )
     ),
   );

@@ -32,7 +32,7 @@ final platformContext = Context(style: Style.platform);
 class GetiDeploymentProcessor extends Importer {
   final String zipPath;
   Archive archive;
-  Project? project;
+  GetiProject? project;
 
   GetiDeploymentProcessor(this.zipPath, this.archive);
 
@@ -63,6 +63,7 @@ class GetiDeploymentProcessor extends Importer {
       await processTask(task);
     }
     const encoder = JsonEncoder.withIndent("  ");
+    project!.size = project!.calculateDiskUsage();
     File(platformContext.join(project!.storagePath, "project.json"))
         .writeAsString(encoder.convert(project!.toMap()));
     project!.loaded.complete();
@@ -86,7 +87,7 @@ class GetiDeploymentProcessor extends Importer {
     project = GetiProject(
         content['id'],
         const Uuid().v4().toString(),
-        "1.0.0",
+        currentApplicationVersion,
         content['name'],
         content["creation_time"],
         ProjectType.image,

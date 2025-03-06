@@ -130,15 +130,15 @@ class _PlaygroundState extends State<Playground> {
                       Icon(FluentIcons.settings),
                   ]
                 ),
-                header: const SizedBox(
+                header: SizedBox(
                   height: 64,
                   child: GridContainer(
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Row(
                         children: [
-                          DeviceSelector(),
-                          KnowledgeBaseSelector(),
+                          DeviceSelector(npuSupported: widget.project.npuSupported),
+                          const KnowledgeBaseSelector(),
                         ]
                       )
                     ),

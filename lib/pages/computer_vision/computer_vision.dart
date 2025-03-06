@@ -13,7 +13,7 @@ import 'package:inference/widgets/controls/close_model_button.dart';
 import 'package:provider/provider.dart';
 
 class ComputerVisionPage extends StatefulWidget {
-  final Project project;
+  final GetiProject project;
   const ComputerVisionPage(this.project, {super.key});
 
   @override

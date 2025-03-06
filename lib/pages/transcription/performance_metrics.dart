@@ -4,7 +4,7 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/widgets/horizontal_rule.dart';
-import 'package:inference/pages/computer_vision/widgets/model_properties.dart';
+import 'package:inference/widgets/model_properties.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/pages/transcription/providers/speech_inference_provider.dart';
 import 'package:inference/project.dart';

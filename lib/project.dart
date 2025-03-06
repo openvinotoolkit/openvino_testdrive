@@ -6,18 +6,18 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/public_model_info.dart';
+import 'package:inference/importers/model_manifest.dart';
 import 'package:inference/utils/get_public_thumbnail.dart';
 import 'package:path/path.dart';
 import 'package:collection/collection.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
 String genUUID() => uuid.v4().toString();
 final platformContext = Context(style: Style.platform);
 
-const currentApplicationVersion = "1.0.0";
-
+const currentApplicationVersion = "25.0.1";
 
 class Score {
   double score = 0.0;
@@ -54,9 +54,7 @@ class Label {
         "is_empty": isEmpty
     };
   }
-
 }
-
 
 class Task {
   String id;
@@ -157,60 +155,41 @@ class Project {
   String creationTime;
   ProjectType type;
   String storagePath;
-  List<Task> tasks = [];
   Completer<void> loaded = Completer<void>();
   bool isPublic;
   bool hasSample = false;
 
-  int? size;
-
   String get architecture {
-    if (tasks.length > 1) {
-      return "Task Chain";
-    }
-    return tasks.first.architecture;
+    //if (tasks.length > 1) {
+    //  return "Task Chain";
+    //}
+    //return tasks.first.architecture;
+    return "";
   }
 
-
-  List<Label> labels() {
-    return tasks.map((t) => t.labels).expand((i) => i).where((label) => !label.isEmpty).toList();
-  }
-
-  String samplePath() {
-    return platformContext.join(storagePath, "sample.jpg");
+  bool get npuSupported {
+    return false;
   }
 
   String taskName() {
-    if (tasks.length > 1) {
-      return "Task Chain";
-    }
-    return tasks.first.name;
-  }
-
-  List<Label> get labelDefinitions {
-    return tasks.map((t) => t.labels).flattened.toList();
+    return "";
   }
 
   bool get isDownloaded => true;
 
-  Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic) {
-    final dir = Directory(storagePath);
-    if (dir.existsSync()) {
-      size = dir.listSync(recursive: true).fold(0, (acc, m) => acc! + m.statSync().size);
-    }
-  }
+  Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic);
 
-  Object toMap() {
+  int get size => 0;
+
+  Map<String, dynamic> toMap() {
     return {
       "id": id,
       "model_id": modelId,
       "name": name,
       "creation_time": creationTime,
       "type": projectTypeToString(type),
-      "tasks": tasks.map((task) => task.toMap()).toList(),
       "application_version": applicationVersion,
       "is_public": isPublic,
-      "has_sample": hasSample,
     };
   }
 
@@ -224,34 +203,43 @@ class Project {
       _ => GetiProject.fromJson(json, storagePath),
     };
   }
-
-  bool verify() {
-    final checks = [
-      File(platformContext.join(storagePath, "project.json")).existsSync(),
-    ];
-
-    if (isDownloaded) {
-
-      checks.addAll(tasks.map((task) => task.modelPaths).expand((v) => v).map((path) {
-          return File(platformContext.join(storagePath, path)).existsSync();
-      }));
-
-      checks.addAll([
-          //File(platformContext.join(storagePath, "sample.jpg")).existsSync(),
-          File(platformContext.join(storagePath, "thumbnail.jpg")).existsSync(),
-      ]);
-    }
-
-    return !checks.contains(false);
-  }
 }
 
 class GetiProject extends Project {
+  List<Task> tasks = [];
+  @override
+  late int size;
+
   GetiProject(String id, String modelId, String applicationVersion, String name, String creationTime, ProjectType type, String storagePath)
-    : super(id, modelId, applicationVersion, name, creationTime, type, storagePath, false);
+    : super(id, modelId, applicationVersion, name, creationTime, type, storagePath, false) {
+    size = calculateDiskUsage();
+  }
+
+  int calculateDiskUsage() {
+    final dir = Directory(storagePath);
+    if (dir.existsSync()) {
+      return dir.listSync(recursive: true).fold(0, (acc, m) => acc + m.statSync().size);
+    }
+    return 0;
+  }
 
   List<Score?> scores() {
     return tasks.map((t) => t.performance).toList();
+  }
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map["geti"] = tasks.map((t) => t.toMap()).toList();
+    return map;
+  }
+
+  @override
+  String taskName() {
+    if (tasks.length > 1) {
+      return "Task Chain";
+    }
+    return tasks.first.name;
   }
 
   @override
@@ -265,8 +253,29 @@ class GetiProject extends Project {
     }
   }
 
+  List<Label> labels() {
+    return tasks.map((t) => t.labels).expand((i) => i).where((label) => !label.isEmpty).toList();
+  }
+
+  String samplePath() {
+    return platformContext.join(storagePath, "sample.jpg");
+  }
+
+
+  @override
+  String get architecture {
+    if (tasks.length > 1) {
+      return "Task Chain";
+    }
+    return tasks.first.architecture;
+  }
+
+  List<Label> get labelDefinitions {
+    return tasks.map((t) => t.labels).flattened.toList();
+  }
+
   static GetiProject fromJson(json, String storagePath) {
-    if (json["application_version"] != "1.0.0") {
+    if (json["application_version"] != currentApplicationVersion) {
       throw const FormatException("Project is for different version");
     }
     var project = GetiProject(
@@ -279,7 +288,7 @@ class GetiProject extends Project {
       storagePath
     );
     project.hasSample = json["has_sample"] != null && json["has_sample"];
-    project.tasks = List.from(json["tasks"].map((task) => Task.fromJson(task)));
+    project.tasks = List.from(json["geti"].map((task) => Task.fromJson(task)));
     return project;
   }
 
@@ -294,27 +303,9 @@ class GetiProject extends Project {
     }
 
     return const ListEquality().equals(
-      other.tasks.map((m) => m.id).toList(),
+      (other as GetiProject).tasks.map((m) => m.id).toList(),
       tasks.map((m) => m.id).toList()
     );
-  }
-  @override
-  bool verify() {
-    final platformContext = Context(style: Style.platform);
-    final checks = [
-      File(platformContext.join(storagePath, "project.json")).existsSync(),
-    ];
-
-    checks.addAll(tasks.map((task) => task.modelPaths).expand((v) => v).map((path) {
-        return File(platformContext.join(storagePath, path)).existsSync();
-    }));
-
-    checks.addAll([
-        File(platformContext.join(storagePath, "sample.jpg")).existsSync(),
-        File(platformContext.join(storagePath, "thumbnail.jpg")).existsSync(),
-    ]);
-
-    return !checks.contains(false);
   }
 
   @override
@@ -330,11 +321,39 @@ class PublicProject extends Project {
   @override
   // ignore: overridden_fields
   Completer<void> loaded = Completer<void>();
-  Image thumbnail;
-  PublicModelInfo? modelInfo;
+  ModelManifest manifest;
 
-  PublicProject(String id, String modelId, String applicationVersion, String name, String creationTime, ProjectType type, String storagePath, this.thumbnail, this.modelInfo)
+  PublicProject(String id, String modelId, String applicationVersion, String name, String creationTime, ProjectType type, String storagePath, this.manifest)
     : super(id, modelId, applicationVersion, name, creationTime, type, storagePath, true);
+
+  @override
+  Map<String, dynamic> toMap() {
+    final map = super.toMap();
+    map["manifest"] = manifest.toJson();
+    return map;
+  }
+
+  @override
+  int get size => manifest.fileSize;
+
+  @override
+  bool get npuSupported {
+    return manifest.npuEnabled;
+  }
+
+  Image get thumbnail {
+    return getThumbnail(modelId);
+  }
+
+  @override
+  String get architecture {
+    return manifest.architecture ?? "unknown";
+  }
+
+  @override
+  String taskName() {
+    return projectTypeToString(type);
+  }
 
   @override
   ImageProvider thumbnailImage() {
@@ -343,6 +362,25 @@ class PublicProject extends Project {
 
   @override
   bool get isDownloaded => loaded.isCompleted;
+
+  static Future<PublicProject> fromModelManifest(ModelManifest manifest) async {
+    final directory = await getApplicationSupportDirectory();
+    final projectId = manifest.id;
+    final storagePath = platformContext.join(directory.path, projectId.toString());
+    await Directory(storagePath).create(recursive: true);
+    final projectType = parseProjectType(manifest.task);
+
+    return PublicProject(
+      projectId,
+      "OpenVINO/${manifest.id}",
+      currentApplicationVersion,
+      manifest.name,
+      DateTime.now().toIso8601String(),
+      projectType,
+      storagePath,
+      manifest,
+    );
+  }
 
   static PublicProject fromJson(Map<String, dynamic> json, String storagePath) {
     final project = PublicProject(
@@ -353,11 +391,9 @@ class PublicProject extends Project {
       json['creation_time'],
       parseProjectType(json['type']),
       storagePath,
-      getThumbnail(json['name']),
-      null
+      ModelManifest.fromJson(json["manifest"]),
     );
 
-    project.tasks = List<Task>.from(json['tasks'].map((t) => Task.fromJson(t)));
     return project;
   }
 }

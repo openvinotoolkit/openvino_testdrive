@@ -4,7 +4,7 @@
 
 import 'dart:core';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/importers/model_manifest.dart';
 import 'package:inference/project.dart';
 
 class Option {
@@ -60,12 +60,20 @@ class ProjectFilterProvider extends ChangeNotifier {
       .where((project) =>
           project.name.toLowerCase().contains((name ?? "").toLowerCase())
       )
-      .where((project) => project.tasks.where((t) {
+      .where((project) {
         if (option == null) {
           return true;
         }
-        return t.taskType.contains(option!.filter);
-      }).isNotEmpty);
+
+        if (project is GetiProject) {
+          return project.tasks.where((t) {
+            return t.taskType.contains(option!.filter);
+          }).isNotEmpty;
+        } else if (project is PublicProject) {
+          return project.manifest.task == option!.filter;
+        }
+        return true;
+      });
 
     final filteredList = filtered.toList();
 
@@ -73,7 +81,7 @@ class ProjectFilterProvider extends ChangeNotifier {
     return filteredList;
   }
 
-  List<Model> applyFilterOnModel(List<Model> projects) {
+  List<ModelManifest> applyFilterOnModel(List<ModelManifest> projects) {
     var filtered = projects
       .where((project) =>
           project.id.toLowerCase().contains((name ?? "").toLowerCase())

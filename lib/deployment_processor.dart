@@ -5,6 +5,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/migration/migration_manager.dart';
+import 'package:inference/migration/migrations/migration_1.0.0_to_25.0.1.dart';
 import 'package:inference/project.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -30,6 +33,15 @@ Future<void> ensureFontIsStored() async {
 
 Future<List<Project>> loadProjectsFromStorage() async {
   final directory = await getApplicationSupportDirectory();
+  final manifest = ManifestImporter("assets/manifest.json");
+  await manifest.loadManifest();
+  final migrationManager = MigrationManager(
+    destinationVersion: currentApplicationVersion,
+    manifest: manifest.allModels,
+    migrations: [
+      MigrationV1ToV2501(),
+    ]
+  );
 
   return List.from(directory.listSync()
     .map((projectFolder) {
@@ -38,16 +50,21 @@ Future<List<Project>> loadProjectsFromStorage() async {
       }
       final platformContext = Context(style: Style.platform);
       try {
-        final content = File(platformContext.join(projectFolder.path, "project.json")).readAsStringSync();
-        final project = Project.fromJson(jsonDecode(content), projectFolder.path);
-        //if (!project.verify()) {
-        //  throw Exception("project not valid. removing");
-        //}
+        final projectFile = File(platformContext.join(projectFolder.path, "project.json"));
+        final content = projectFile.readAsStringSync();
+        var jsonContent = jsonDecode(content);
+        if (migrationManager.eligible((jsonContent))) {
+          print("Migrating ${projectFolder.path}");
+          jsonContent = migrationManager.migrate(jsonContent);
+          const encoder = JsonEncoder.withIndent("  ");
+          projectFile.writeAsStringSync(encoder.convert(jsonContent));
+        }
+        final project = Project.fromJson(jsonContent, projectFolder.path);
         project.loaded.complete();
         return project;
-      } catch (exception) {
+      } catch (exception, stack) {
         print(exception);
-        //Directory(projectFolder.path).deleteSync(recursive: true);
+        print(stack);
         return null;
       }
     })

@@ -8,7 +8,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:inference/pages/text_to_image/widgets/assistant_message.dart';
 import 'package:inference/pages/text_to_image/widgets/user_message.dart';
-import 'package:inference/pages/text_to_image/widgets/model_properties.dart';
+import 'package:inference/widgets/model_properties.dart';
 import 'package:inference/widgets/grid_container.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/text_to_image_inference_provider.dart';
@@ -103,7 +103,7 @@ class _TTIPlaygroundState extends State<TTIPlayground> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: Row(
                           children: [
-                            const DeviceSelector(),
+                            DeviceSelector(npuSupported: widget.project.npuSupported),
                             const Divider(size: 24,direction: Axis.vertical,),
                             const SizedBox(width: 24,),
                             ToolbarTextInput(
@@ -290,7 +290,7 @@ class _TTIPlaygroundState extends State<TTIPlayground> {
                 )),
               ],
             ))),
-        const ModelProperties(),
+        ModelProperties(project: widget.project),
       ],
     );
   }

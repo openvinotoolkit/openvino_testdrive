@@ -15,7 +15,7 @@ import 'package:inference/project.dart';
 
 class ImageInferenceProvider extends ChangeNotifier {
   Completer<void> loaded = Completer<void>();
-  final Project project;
+  final GetiProject project;
   final String device;
   GraphRunner? _inference;
   GraphRunner? get inference => _inference;

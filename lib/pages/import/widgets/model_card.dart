@@ -3,12 +3,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/importers/model_manifest.dart';
 import 'package:inference/pages/models/widgets/model_property.dart';
 import 'package:inference/widgets/elevation.dart';
 
 class ModelCard extends StatelessWidget {
-  final Model model;
+  final ModelManifest model;
   final bool checked;
   final ValueChanged<bool> onChecked;
 
@@ -88,6 +88,8 @@ class ModelCard extends StatelessWidget {
                     ModelProperty(name: "Optimization", value: model.optimizationPrecision),
                     ModelProperty(name: "Size", value: model.readableFileSize),
                     ModelProperty(name: "Task", value: model.task),
+                    if (model.npuEnabled)
+                      const ModelProperty(name: "", value: "NPU"),
                   ],
                 ),
               ),

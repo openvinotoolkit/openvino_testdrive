@@ -7,19 +7,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:inference/pages/models/widgets/model_card.dart';
 import 'package:inference/project.dart';
 
-Project testProject() {
-  return PublicProject(
-    "test_id", "llm-model", "1.0.0", "TinyLlama", "2024-04-25T19:16:51.714000+00:00", ProjectType.text, "/dev/null", Image.asset("images/model_thumbnails/llama.jpg"), null
-  )
-  ..tasks.add(Task("task_id", "LLM", "LLM", [], null, [], "LLamaForCasualLM","int8"));
-}
+import '../../../fixtures.dart';
 
 Widget modelWidget(Project project) {
   return FluentApp(
     home: Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(
-          maxWidth: 240,
+          maxWidth: 400,
           maxHeight: 304,
         ),
         child: ModelCard(project: project)),
@@ -42,7 +37,7 @@ String? fromRichTextToPlainText(final Widget widget) {
 
 void main() {
   testWidgets("Test model card shows project info", (tester) async {
-    final project = testProject();
+    final project = largeLanguageModel();
     await tester.pumpWidget(modelWidget(project));
 
     expect(find.byWidgetPredicate((widget) => fromRichTextToPlainText(widget)?.contains(project.taskName()) ?? false), findsOneWidget);

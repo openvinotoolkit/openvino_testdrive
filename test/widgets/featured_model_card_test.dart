@@ -4,11 +4,11 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inference/importers/manifest_importer.dart';
+import 'package:inference/importers/model_manifest.dart';
 import 'package:inference/pages/home/widgets/featured_card.dart';
 
 
-Widget renderWidget(Model model) {
+Widget renderWidget(ModelManifest model) {
 
 
   return FluentApp(
@@ -24,14 +24,16 @@ Widget renderWidget(Model model) {
 
 
 void main() {
-  var model = Model(name: 'Test model',
+  var model = ModelManifest(name: 'Test model',
       id: 'test_model',
       fileSize: 1024,
       optimizationPrecision: 'int8',
       contextWindow: 0,
       description: 'A test model',
-      task: 'speech'
-
+      task: 'speech',
+      collection: "",
+      author: "OpenVINO",
+      npuEnabled: false,
   );
 
 

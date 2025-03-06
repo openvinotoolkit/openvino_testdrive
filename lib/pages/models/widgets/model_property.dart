@@ -37,7 +37,8 @@ class ModelProperty extends StatelessWidget {
             text: TextSpan(
               style: DefaultTextStyle.of(context).style.apply(fontSizeDelta: -2),
               children: <TextSpan>[
-                TextSpan(text: "$name: "),
+                if (name.isNotEmpty)
+                  TextSpan(text: "$name: "),
                 TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.w500)),
               ],
             ),
