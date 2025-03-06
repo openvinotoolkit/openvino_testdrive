@@ -43,7 +43,7 @@
       "description": "Generate images with Dreamshaper V7",
       "task": "text-to-image",
       "author": "OpenVINO",
-      "collection": "image-generation-6763eab8ac097237330c78c5"
+      "collection": "image-generation-67697d9952fb1eee4a252aa8"
     }
   ],
   "all_models": [
@@ -1710,7 +1710,7 @@
       "author": "OpenVINO",
       "collection": "llm-6687aaa2abca3bbcec71a9bd"
     },
-    {
+{
       "name": "LCM Dreamshaper V7",
       "id": "LCM_Dreamshaper_v7-int8-ov",
       "fileSize": 2292848281,
@@ -1719,7 +1719,73 @@
       "description": "Generate images with Dreamshaper V7",
       "task": "text-to-image",
       "author": "OpenVINO",
-      "collection": "image-generation-6763eab8ac097237330c78c5"
+      "collection": "image-generation-67697d9952fb1eee4a252aa8"
+    },
+    {
+      "name": "Stable Diffusion V1 5",
+      "id": "stable-diffusion-v1-5-int8-ov",
+      "fileSize": 2292743197,
+      "optimizationPrecision": "int8",
+      "contextWindow": 0,
+      "description": "Generate images with Stable Diffusion V1 5",
+      "task": "text-to-image",
+      "author": "OpenVINO",
+      "collection": "image-generation-67697d9952fb1eee4a252aa8"
+    },
+    {
+      "name": "Stable Diffusion V1 5",
+      "id": "stable-diffusion-v1-5-fp16-ov",
+      "fileSize": 3354879591,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 0,
+      "description": "Generate images with Stable Diffusion V1 5",
+      "task": "text-to-image",
+      "author": "OpenVINO",
+      "collection": "image-generation-67697d9952fb1eee4a252aa8"
+    },
+    {
+      "name": "LCM Dreamshaper V7",
+      "id": "LCM_Dreamshaper_v7-fp16-ov",
+      "fileSize": 3355059343,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 0,
+      "description": "Generate images with LCM Dreamshaper V7",
+      "task": "text-to-image",
+      "author": "OpenVINO",
+      "collection": "image-generation-67697d9952fb1eee4a252aa8"
+    },
+    {
+      "name": "FLUX.1 Schnell",
+      "id": "FLUX.1-schnell-fp16-ov",
+      "fileSize": 33737052523,
+      "optimizationPrecision": "fp16",
+      "contextWindow": 0,
+      "description": "Generate images with FLUX.1 Schnell",
+      "task": "text-to-image",
+      "author": "OpenVINO",
+      "collection": "image-generation-67697d9952fb1eee4a252aa8"
+    },
+    {
+      "name": "FLUX.1 Schnell",
+      "id": "FLUX.1-schnell-int8-ov",
+      "fileSize": 16894933898,
+      "optimizationPrecision": "int8",
+      "contextWindow": 0,
+      "description": "Generate images with FLUX.1 Schnell",
+      "task": "text-to-image",
+      "author": "OpenVINO",
+      "collection": "image-generation-67697d9952fb1eee4a252aa8"
+    },
+    {
+      "name": "FLUX.1 Schnell",
+      "id": "FLUX.1-schnell-int4-ov",
+      "fileSize": 9249942180,
+      "optimizationPrecision": "int4",
+      "contextWindow": 0,
+      "description": "Generate images with FLUX.1 Schnell",
+      "task": "text-to-image",
+      "author": "OpenVINO",
+      "collection": "image-generation-67697d9952fb1eee4a252aa8"
     }
   ]
 }
