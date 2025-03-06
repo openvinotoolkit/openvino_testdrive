@@ -17,6 +17,7 @@
 #include <universal_video_controls/universal_video_controls_plugin_c_api.h>
 #include <url_launcher_windows/url_launcher_windows.h>
 #include <video_player_win/video_player_win_plugin_c_api.h>
+#include <volume_controller/volume_controller_plugin_c_api.h>
 #include <window_manager/window_manager_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
@@ -42,6 +43,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("UrlLauncherWindows"));
   VideoPlayerWinPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("VideoPlayerWinPluginCApi"));
+  VolumeControllerPluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("VolumeControllerPluginCApi"));
   WindowManagerPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("WindowManagerPlugin"));
 }
