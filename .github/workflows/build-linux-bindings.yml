@@ -66,6 +66,7 @@ jobs:
         with:
           path: |
             /usr/local/include/opencv4
+            /usr/local/lib/cmake/opencv4
             /usr/local/lib/libopencv_*
           key: ${{ runner.os }}-opencv-${{ hashFiles('openvino_bindings/scripts/setup_opencv.sh') }}
 
