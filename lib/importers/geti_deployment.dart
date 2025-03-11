@@ -30,6 +30,7 @@ final archiveContext =
 final platformContext = Context(style: Style.platform);
 
 class GetiDeploymentProcessor extends Importer {
+  InteropUtils interopUtils = InteropUtils();
   final String zipPath;
   Archive archive;
   GetiProject? project;
@@ -70,7 +71,7 @@ class GetiDeploymentProcessor extends Importer {
   }
 
   @override
-  Future<Project> generateProject() async {
+  Future<GetiProject> generateProject() async {
     final directory = await getApplicationSupportDirectory();
 
     final projectJson = archive.findFile("deployment/project.json");
@@ -151,7 +152,7 @@ class GetiDeploymentProcessor extends Importer {
             platformContext.join(folder, "${task.id}_model.xml");
         final String serializedModelXmlPath =
             platformContext.join(folder, task.modelPaths[0]);
-        await InteropUtils.serialize(modelXmlPath, serializedModelXmlPath);
+        await interopUtils.serialize(modelXmlPath, serializedModelXmlPath);
       }
 
       modelXml.delete();

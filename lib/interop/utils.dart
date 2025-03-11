@@ -10,7 +10,7 @@ import 'package:inference/interop/openvino_bindings.dart';
 final ov = getBindings();
 
 class InteropUtils {
-  static Future<bool> serialize(String modelPath, String outputPath ) async {
+  Future<bool> serialize(String modelPath, String outputPath ) async {
     return await Isolate.run(() {
       final modelPathPtr = modelPath.toNativeUtf8();
       final outputPathPtr = outputPath.toNativeUtf8();
