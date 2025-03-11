@@ -20,31 +20,38 @@ class Hints {
 }
 
 class Config {
-  static Hints hints = Hints();
-  static String _proxy = '';
-  static bool _proxyEnabled = false;
-  static ThemeMode _mode = ThemeMode.system;
-  static Envvars envvars = Envvars();
+  static final Config _instance = Config._internal();
 
-  static String get proxy => _proxy;
-  static setProxy(String value) async {
+  Config._internal();
+  factory Config () {
+    return _instance;
+  }
+
+  Hints hints = Hints();
+  String _proxy = '';
+  bool _proxyEnabled = false;
+  ThemeMode _mode = ThemeMode.system;
+  Envvars envvars = Envvars();
+
+  String get proxy => _proxy;
+  setProxy(String value) async {
     _proxy = value;
     await _save('proxy', value);
   }
 
-  static bool get proxyEnabled => _proxyEnabled;
-  static setProxyEnabled(bool value) async {
+  bool get proxyEnabled => _proxyEnabled;
+  setProxyEnabled(bool value) async {
     _proxyEnabled = value;
     await _save('proxyEnabled', value);
   }
 
-  static ThemeMode get themeMode => _mode;
-  static setThemeMode(ThemeMode value) async {
+  ThemeMode get themeMode => _mode;
+  setThemeMode(ThemeMode value) async {
     _mode = value;
     await _save('mode', value.index);
   }
 
-  static void reset() {
+  void reset() {
     hints = Hints();
     _proxy = '';
     _proxyEnabled = false;
@@ -52,7 +59,7 @@ class Config {
     envvars = Envvars();
   }
 
-  static Future<String> _getProxy() async {
+  Future<String> _getProxy() async {
     final dio = Dio(BaseOptions(connectTimeout: const Duration(seconds: 10)));
     dio.httpClientAdapter = IOHttpClientAdapter(
       createHttpClient: () {
@@ -79,7 +86,7 @@ class Config {
     return '';
   }
 
-  static Future<void> loadFromFile() async {
+  Future<void> loadFromFile() async {
     final directory = await getApplicationSupportDirectory();
     final file = File('${directory.path}/config.json');
     if (await file.exists()) {
@@ -95,7 +102,7 @@ class Config {
     }
   }
 
-  static Future<void> _save(String key, dynamic value) async {
+  Future<void> _save(String key, dynamic value) async {
     final directory = await getApplicationSupportDirectory();
     final file = File('${directory.path}/config.json');
     Map<String, dynamic> json = {};

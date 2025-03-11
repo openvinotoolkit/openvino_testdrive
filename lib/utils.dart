@@ -25,9 +25,9 @@ Dio dioClient() {
     createHttpClient: () {
       final client = HttpClient();
       client.findProxy = (uri) {
-        if (Config.proxyEnabled) {
-          final proxyUri = Uri.parse(Config.proxy);
-          final proxyHost = proxyUri.host.isNotEmpty ? proxyUri.host : Config.proxy;
+        if (Config().proxyEnabled) {
+          final proxyUri = Uri.parse(Config().proxy);
+          final proxyHost = proxyUri.host.isNotEmpty ? proxyUri.host : Config().proxy;
           final proxyPort = proxyUri.port != 0 ? ':${proxyUri.port}' : '';
           return "PROXY $proxyHost$proxyPort";
         } else {

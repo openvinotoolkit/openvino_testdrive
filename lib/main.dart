@@ -21,7 +21,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   await ObjectBox.create();
-  await Config.loadFromFile();
+  await Config().loadFromFile();
   WindowOptions windowOptions = WindowOptions(
     size: const Size(1400, 1024),
     center: true,
