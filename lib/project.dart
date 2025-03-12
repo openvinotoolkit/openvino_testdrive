@@ -175,6 +175,11 @@ class Project {
     return "";
   }
 
+  Future<bool> isInAppStorage() async {
+    final directory = await getApplicationSupportDirectory();
+    return storagePath.contains(directory.path);
+  }
+
   bool get isDownloaded => true;
 
   Project(this.id, this.modelId, this.applicationVersion, this.name, this.creationTime, this.type, this.storagePath, this.isPublic);

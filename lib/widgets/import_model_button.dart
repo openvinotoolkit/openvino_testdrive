@@ -5,7 +5,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
-import 'package:inference/pages/import/widgets/import_geti_model_dialog.dart';
+import 'package:inference/pages/import/widgets/import_model_dialog.dart';
 import 'package:inference/widgets/controls/filled_dropdown_button.dart';
 import 'package:provider/provider.dart';
 
@@ -59,7 +59,7 @@ class ImportModelButton extends StatelessWidget {
       items: [
         MenuFlyoutItem(text: const Text('Hugging Face'), onPressed: () { GoRouter.of(context).push('/models/import'); }),
         MenuFlyoutItem(text: const Text('Local disk'), onPressed: () {
-          showImportGetiModelDialog(context,
+          showImportModelDialog(context,
             callback: (projects) {
               if (projects != null && projects.length == 1) {
                 GoRouter.of(context).pushReplacement("/models/inference", extra: projects.first);

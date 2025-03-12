@@ -21,10 +21,21 @@ class Hints {
 
 class Config {
   static final Config _instance = Config._internal();
-
   Config._internal();
+
   factory Config () {
     return _instance;
+  }
+
+  final List<String> _externalModels = [];
+  List<String> get externalModels => _externalModels;
+  addExternalModel(String path) async {
+    _externalModels.add(path);
+    await _save('externalModels', _externalModels);
+  }
+  removeExternalModel(String path) async {
+    _externalModels.remove(path);
+    await _save('externalModels', _externalModels);
   }
 
   Hints hints = Hints();
@@ -99,6 +110,7 @@ class Config {
         _proxy = await _getProxy();
       }
       _mode = ThemeMode.values[json['mode'] ?? 0];
+      _externalModels.addAll(List<String>.from(json['externalModels'] ?? []));
     }
   }
 
@@ -111,7 +123,8 @@ class Config {
       json = jsonDecode(contents);
     }
     json[key] = value;
-    await file.writeAsString(jsonEncode(json));
+    const encoder = JsonEncoder.withIndent("  ");
+    await file.writeAsString(encoder.convert(json));
   }
 
 }
