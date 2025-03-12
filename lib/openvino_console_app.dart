@@ -70,7 +70,6 @@ class _OpenVINOTestDriveAppState extends State<OpenVINOTestDriveApp> {
       icon: const Icon(FluentIcons.flow),
       title: const Text('Workflows'),
       body: const SizedBox.shrink(),
-      enabled: false,
     ),
   ].map<NavigationPaneItem>((item) => PaneItem(
     key: item.key,
