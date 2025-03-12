@@ -126,3 +126,11 @@ class Envvars {
     return '';
   }
 }
+
+int calculateDiskUsage(path) {
+  final dir = Directory(path);
+  if (dir.existsSync()) {
+    return dir.listSync(recursive: true).fold(0, (acc, m) => acc + m.statSync().size);
+  }
+  return 0;
+}

@@ -33,6 +33,8 @@ class ModelDirImporter extends Importer {
     return project!;
   }
 
+  bool get containsProjectJson => findProjectJsonFile() != null;
+
   String? findProjectJsonFile() {
     final files = Directory(directory).listSync();
     return files.firstWhereOrNull((file) => basename(file.path) == "project.json")?.path;

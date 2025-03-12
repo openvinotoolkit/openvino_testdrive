@@ -48,7 +48,7 @@ class _ImportModelDialogState extends State<ImportModelDialog> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Import model from your local disk'),
+                const Text('Import model from your local disk', style: TextStyle(fontSize: 20)),
                 IconButton(
                   icon: const Icon(FluentIcons.clear),
                   onPressed: () { Navigator.pop(context, List<Project>.from([])); },
@@ -66,12 +66,12 @@ class _ImportModelDialogState extends State<ImportModelDialog> {
                   displayMode: PaneDisplayMode.top,
                     items: [
                       PaneItem(
-                        icon: Icon(FluentIcons.car),
+                        icon: Icon(FluentIcons.add_to),
                         title: const Text("Geti"),
                         body: GetiImport(),
                       ),
                       PaneItem(
-                        icon: Icon(FluentIcons.car),
+                        icon: Icon(FluentIcons.fabric_folder_upload),
                         title: const Text("Directory"),
                         body: DirectoryImport(),
                       ),

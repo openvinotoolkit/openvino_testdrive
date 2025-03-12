@@ -10,6 +10,7 @@ import 'package:archive/archive_io.dart';
 import 'package:inference/interop/utils.dart';
 import 'package:inference/importers/importer.dart';
 import 'package:inference/project.dart';
+import 'package:inference/utils.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -63,7 +64,7 @@ class GetiDeploymentProcessor extends Importer {
       await processTask(task);
     }
     const encoder = JsonEncoder.withIndent("  ");
-    project!.size = project!.calculateDiskUsage();
+    project!.size = calculateDiskUsage(project!.storagePath);
     File(platformContext.join(project!.storagePath, "project.json"))
         .writeAsString(encoder.convert(project!.toMap()));
     project!.loaded.complete();
