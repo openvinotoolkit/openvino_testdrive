@@ -5,8 +5,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
+import 'package:inference/pages/workflow/utils/block.dart';
 import 'package:inference/pages/workflow/widgets/block.dart';
-import 'package:inference/pages/workflow/widgets/node.dart';
 import 'package:inference/pages/workflow/workflow_state.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
@@ -23,6 +23,7 @@ class _WorkflowPageState extends State<WorkflowPage> {
   final Matrix4 inverse = Matrix4.identity();
   final WorkflowState state = WorkflowState();
   Routine? routine;
+  Offset mousePosition = Offset.zero;
 
   void sendEvent(RoutineEventType type, Offset position) {
     routine?.sendEvent(RoutineEvent(
@@ -37,7 +38,8 @@ class _WorkflowPageState extends State<WorkflowPage> {
   void initState() {
     super.initState();
     state.blocks.addAll([
-       WorkflowBlock(dimensions: Rect.fromLTWH(500, 100, 79, 44)),
+       WorkflowBlockPainter(block: WorkflowBlock(dimensions: Rect.fromLTWH(500, 100, 79, 44), name: "Input", type: "Image")),
+       WorkflowBlockPainter(block: WorkflowBlock(dimensions: Rect.fromLTWH(200, 80, 79, 44), name: "Input", type: "Image")),
     ]);
   }
 
@@ -45,12 +47,13 @@ class _WorkflowPageState extends State<WorkflowPage> {
     final localPosition = screenToLocalPosition(details.localPosition);
     sendEvent(RoutineEventType.mouseMove, localPosition);
 
-    if (routine == null) {
-      setState(() {
-        matrix.translate(details.delta.dx, details.delta.dy);
-        inverse.copyInverse(matrix);
-      });
-    }
+    setState(() {
+      mousePosition = localPosition;
+      if (routine == null) {
+          matrix.translate(details.delta.dx, details.delta.dy);
+          inverse.copyInverse(matrix);
+      }
+    });
   }
 
   void onHover(PointerHoverEvent details) {
@@ -58,9 +61,7 @@ class _WorkflowPageState extends State<WorkflowPage> {
     sendEvent(RoutineEventType.mouseMove, localPosition);
 
     setState(() {
-      for (final block in state.blocks) {
-        block.eventState.isHovered = block.hitTest(localPosition);
-      }
+        mousePosition = localPosition;
     });
   }
 
@@ -147,6 +148,7 @@ class _WorkflowPageState extends State<WorkflowPage> {
               matrix: matrix,
               state: state,
               routine: routine,
+              mousePosition: mousePosition,
             ),
           ),
         ),
@@ -161,10 +163,12 @@ class EditorPainter extends CustomPainter {
   final Matrix4 matrix;
   final Routine? routine;
   final WorkflowState state;
+  final Offset mousePosition;
 
   EditorPainter({
       required this.matrix,
       required this.state,
+      required this.mousePosition,
       this.routine,
   });
 
@@ -173,7 +177,7 @@ class EditorPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.transform(matrix.storage);
     for (final block in state.blocks) {
-      block.paint(canvas, size);
+      block.paint(canvas, size, mousePosition);
     }
 
     routine?.paint(canvas, size);
