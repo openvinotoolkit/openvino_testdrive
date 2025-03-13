@@ -171,7 +171,7 @@ class HardpointRoutine extends Routine {
       current = Hardpoint(position: event.position, direction: Axis.vertical);
 
       for (final block in event.state.blocks) {
-        if (block != this.block) {
+        if (block.block != this.block) {
           if (block.hitTest(event.position)) {
             List<MapEntry<Hardpoint, double>> points = block.hardpoints.map((p) {
                 return MapEntry(p, (p.position - event.position).distanceSquared);
@@ -190,7 +190,7 @@ class HardpointRoutine extends Routine {
 
       if (event.eventType == RoutineEventType.mouseUp) {
         for (final block in event.state.blocks) {
-          if (block != this.block) {
+          if (block.block != this.block) {
             if (block.hitTest(event.position)) {
               print("New connection: ${this.block.dimensions.topLeft} to ${block.block.dimensions.topLeft}");
             }
