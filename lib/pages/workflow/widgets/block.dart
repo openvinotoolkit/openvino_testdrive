@@ -46,25 +46,6 @@ class WorkflowBlockPainter {
 
   }
 
-  void drawType(Canvas canvas, Size size) {
-    const textStyle = TextStyle(
-        color: Color(0xFF616161),
-        fontSize: 12,
-      );
-
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: 'Input',
-        style: textStyle,
-      ),
-      textDirection: TextDirection.ltr,
-    );
-
-    textPainter.layout(minWidth: 0, maxWidth: size.width);
-    textPainter.paint(canvas, block.dimensions.topLeft + Offset(32, 4));
-
-  }
-
   void drawSelectableNodes(Canvas canvas, Size size, Offset mousePosition) {
     final Paint strokePaint = Paint()
       ..color = Color(0xFF7000FF)
@@ -92,6 +73,26 @@ class WorkflowBlockPainter {
 
   }
 
+
+  void drawType(Canvas canvas, Size size) {
+    const textStyle = TextStyle(
+        color: Color(0xFF616161),
+        fontSize: 12,
+      );
+
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: block.type,
+        style: textStyle,
+      ),
+      textDirection: TextDirection.ltr,
+    );
+
+    textPainter.layout(minWidth: 0, maxWidth: size.width);
+    textPainter.paint(canvas, block.dimensions.topLeft + Offset(32, 4));
+
+  }
+
   void drawName(Canvas canvas, Size size) {
     const textStyle = TextStyle(
         color: Color(0xFF242424),
@@ -100,7 +101,7 @@ class WorkflowBlockPainter {
 
     final textPainter = TextPainter(
       text: TextSpan(
-        text: 'Image',
+        text: block.name,
         style: textStyle,
       ),
       textDirection: TextDirection.ltr,

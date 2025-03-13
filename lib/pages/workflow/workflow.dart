@@ -38,8 +38,8 @@ class _WorkflowPageState extends State<WorkflowPage> {
   void initState() {
     super.initState();
     state.blocks.addAll([
-       WorkflowBlockPainter(block: WorkflowBlock(dimensions: Rect.fromLTWH(500, 100, 79, 44), name: "Input", type: "Image")),
-       WorkflowBlockPainter(block: WorkflowBlock(dimensions: Rect.fromLTWH(200, 80, 79, 44), name: "Input", type: "Image")),
+       WorkflowBlockPainter(block: WorkflowBlock.at(position: Offset(500, 100), name: "Input", type: "Image")),
+       WorkflowBlockPainter(block: WorkflowBlock.at(position: Offset(200, 80), name: "Processing", type: "Detection")),
     ]);
   }
 
@@ -113,14 +113,6 @@ class _WorkflowPageState extends State<WorkflowPage> {
     final localPosition = screenToLocalPosition(position);
 
     if (routine == null) {
-      //for (final node in state.nodes) {
-      //  if (node.hitTest(localPosition)) {
-      //    if (setRoutine(node.onTapDown(localPosition))) {
-      //      break;
-      //    }
-      //  }
-      //}
-
       for (final block in state.blocks) {
         if (block.hitTest(localPosition)) {
           if (setRoutine(block.onTapDown(localPosition))) {
