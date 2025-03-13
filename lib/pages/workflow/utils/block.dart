@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/pages/workflow/utils/hardpoint.dart';
 
 class WorkflowBlock {
   Rect dimensions;
@@ -12,6 +13,27 @@ class WorkflowBlock {
       required this.type,
       required this.name,
   });
+
+  bool hitTest(Offset location) {
+    return dimensions.inflate(10).contains(location);
+  }
+
+  List<Hardpoint> get hardpoints => [
+    Hardpoint(position: dimensions.centerLeft, direction: Axis.horizontal),
+    Hardpoint(position: dimensions.topCenter, direction: Axis.vertical),
+    Hardpoint(position: dimensions.bottomCenter, direction: Axis.vertical),
+    Hardpoint(position: dimensions.centerRight, direction: Axis.horizontal),
+  ];
+
+  Hardpoint closestHardpoint(Offset position) {
+    List<MapEntry<Hardpoint, double>> points = hardpoints.map((p) {
+        return MapEntry(p, (p.position - position).distanceSquared);
+    }).toList();
+
+    points.sort((a, b) => a.value.compareTo(b.value));
+    return points.first.key;
+  }
+
 
   factory WorkflowBlock.at({
       required Offset position,
@@ -45,4 +67,14 @@ class WorkflowBlock {
 
     return textPainter.width + 50;
   }
+}
+
+class WorkflowConnection {
+  final WorkflowBlock from;
+  final WorkflowBlock to;
+
+  const WorkflowConnection({
+      required this.from,
+      required this.to,
+  });
 }

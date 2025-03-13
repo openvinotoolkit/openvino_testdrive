@@ -4,24 +4,73 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
 import 'package:inference/pages/workflow/utils/block.dart';
 import 'package:inference/pages/workflow/widgets/block.dart';
+import 'package:inference/pages/workflow/widgets/connection.dart';
 import 'package:inference/pages/workflow/workflow_state.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
-class WorkflowPage extends StatefulWidget {
 
-  const WorkflowPage({super.key});
+class WorkflowEditorPage extends StatefulWidget {
+  const WorkflowEditorPage({super.key});
 
   @override
-  State<WorkflowPage> createState() => _WorkflowPageState();
+  State<WorkflowEditorPage> createState() => _WorkflowEditorPageState();
 }
 
-class _WorkflowPageState extends State<WorkflowPage> {
+class _WorkflowEditorPageState extends State<WorkflowEditorPage> {
+
+  Future<Map<String, PictureInfo>>? iconFetcher;
+
+  Future<Map<String, PictureInfo>> fetchIcons(List<String> paths) async {
+    final icons = await Future.wait(paths.map((path) async {
+        return MapEntry<String, PictureInfo>(
+          path,
+          await vg.loadPicture(SvgPicture.asset(path).bytesLoader, null)
+        );
+    }));
+    return Map.fromEntries(icons);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    iconFetcher = fetchIcons([
+       "images/workflow/image.svg" ,
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: iconFetcher,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return WorkflowEditor(icons: snapshot.requireData);
+        }
+        return Container();
+      }
+    );
+  }
+}
+class WorkflowEditor extends StatefulWidget {
+  final Map<String, PictureInfo> icons;
+
+  const WorkflowEditor({
+      required this.icons,
+      super.key,
+  });
+
+  @override
+  State<WorkflowEditor> createState() => _WorkflowEditorState();
+}
+
+class _WorkflowEditorState extends State<WorkflowEditor> {
   final Matrix4 matrix = Matrix4.identity();
   final Matrix4 inverse = Matrix4.identity();
-  final WorkflowState state = WorkflowState();
+  WorkflowState state = WorkflowState();
   Routine? routine;
   Offset mousePosition = Offset.zero;
 
@@ -30,7 +79,8 @@ class _WorkflowPageState extends State<WorkflowPage> {
         state: state,
         eventType: type,
         position: position,
-        repaint: repaint
+        repaint: repaint,
+        updateState: updateState,
     ));
   }
 
@@ -38,8 +88,10 @@ class _WorkflowPageState extends State<WorkflowPage> {
   void initState() {
     super.initState();
     state.blocks.addAll([
-       WorkflowBlockPainter(block: WorkflowBlock.at(position: Offset(500, 100), name: "Input", type: "Image")),
-       WorkflowBlockPainter(block: WorkflowBlock.at(position: Offset(200, 80), name: "Processing", type: "Detection")),
+       WorkflowBlock.at(position: Offset(500, 100), name: "Image", type: "Input"),
+       WorkflowBlock.at(position: Offset(200, 80), name: "Detection", type: "Processing"),
+       WorkflowBlock.at(position: Offset(500, 300), name: "Crop", type: "Task"),
+       WorkflowBlock.at(position: Offset(200, 300), name: "Classification", type: "Processing"),
     ]);
   }
 
@@ -88,6 +140,12 @@ class _WorkflowPageState extends State<WorkflowPage> {
     }
   }
 
+  void updateState(WorkflowState newState) {
+    setState(() {
+        state = newState;
+    });
+  }
+
   bool setRoutine(Routine? newRoutine) {
     if (newRoutine == null || routine != null) {
       return false;
@@ -115,9 +173,9 @@ class _WorkflowPageState extends State<WorkflowPage> {
     if (routine == null) {
       for (final block in state.blocks) {
         if (block.hitTest(localPosition)) {
-          if (setRoutine(block.onTapDown(localPosition))) {
-            break;
-          }
+          //if (setRoutine(block.onTapDown(localPosition))) {
+          //  break;
+          //}
         }
       }
     }
@@ -141,14 +199,13 @@ class _WorkflowPageState extends State<WorkflowPage> {
               state: state,
               routine: routine,
               mousePosition: mousePosition,
+              icons: widget.icons,
             ),
           ),
         ),
       )
     );
   }
-
-
 }
 
 class EditorPainter extends CustomPainter {
@@ -156,11 +213,13 @@ class EditorPainter extends CustomPainter {
   final Routine? routine;
   final WorkflowState state;
   final Offset mousePosition;
+  final Map<String, PictureInfo> icons;
 
   EditorPainter({
       required this.matrix,
       required this.state,
       required this.mousePosition,
+      required this.icons,
       this.routine,
   });
 
@@ -169,7 +228,11 @@ class EditorPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.transform(matrix.storage);
     for (final block in state.blocks) {
-      block.paint(canvas, size, mousePosition);
+      WorkflowBlockPainter(block: block, icon: icons["images/workflow/image.svg"]).paint(canvas, size, mousePosition);
+    }
+
+    for (final connection in state.connections) {
+      WorkflowConnectionPainter(connection: connection).paint(canvas, size, mousePosition);
     }
 
     routine?.paint(canvas, size);

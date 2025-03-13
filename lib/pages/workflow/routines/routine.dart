@@ -11,11 +11,13 @@ class RoutineEvent {
   final Offset position;
   final WorkflowState state;
   final Function repaint;
+  final Function(WorkflowState) updateState;
 
   const RoutineEvent({
       required this.eventType,
       required this.position,
       required this.repaint,
+      required this.updateState,
       required this.state,
   });
 }

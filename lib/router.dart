@@ -35,7 +35,7 @@ final router = GoRouter(navigatorKey: rootNavigatorKey,
         GoRoute(path: '/models/download', builder: (context, state) => DownloadPage(project: state.extra as PublicProject)),
         GoRoute(path: '/models/inference', builder: (context, state) => InferencePage(state.extra as Project)),
         GoRoute(path: '/knowledge_base', builder: (context, state) => const KnowledgeBasePage()),
-        GoRoute(path: '/workflows', builder: (context, state) => const WorkflowPage()),
+        GoRoute(path: '/workflows', builder: (context, state) => const WorkflowEditorPage()),
       ],
     )
   ]

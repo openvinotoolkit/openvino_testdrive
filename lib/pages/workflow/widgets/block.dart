@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:collection/collection.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
 import 'package:inference/pages/workflow/utils/block.dart';
 import 'package:inference/pages/workflow/utils/hardpoint.dart';
@@ -7,23 +8,11 @@ import 'package:inference/pages/workflow/utils/line.dart';
 
 class WorkflowBlockPainter {
   WorkflowBlock block;
-  PictureInfo? pictureInfo;
+  final PictureInfo? icon;
 
   final _nodeRadius = 5.0;
 
-  WorkflowBlockPainter({required this.block}) {
-    final svg = SvgPicture.asset("images/workflow/image.svg");
-    vg.loadPicture(svg.bytesLoader, null).then((picture) {
-      pictureInfo = picture;
-    });
-  }
-
-  List<Hardpoint> get hardpoints => [
-    Hardpoint(position: block.dimensions.centerLeft, direction: Axis.horizontal),
-    Hardpoint(position: block.dimensions.topCenter, direction: Axis.vertical),
-    Hardpoint(position: block.dimensions.bottomCenter, direction: Axis.vertical),
-    Hardpoint(position: block.dimensions.centerRight, direction: Axis.horizontal),
-  ];
+  WorkflowBlockPainter({required this.block, required this.icon});
 
   bool hitTest(Offset location) {
     return block.dimensions.inflate(10).contains(location);
@@ -61,7 +50,7 @@ class WorkflowBlockPainter {
       ..color = Color(0xFFF0F0F0)//Colors.black
       ..style = PaintingStyle.fill;
 
-    for (final hardpoint in hardpoints) {
+    for (final hardpoint in block.hardpoints) {
       if ((hardpoint.position - mousePosition).distanceSquared < _nodeRadius * _nodeRadius) {
         canvas.drawCircle(hardpoint.position, _nodeRadius, highlightedPaint);
       } else {
@@ -112,17 +101,17 @@ class WorkflowBlockPainter {
   }
 
   void drawIcon(Canvas canvas, Size size) {
-    if (pictureInfo != null) {
+    if (icon != null) {
       final position = block.dimensions.topLeft + const Offset(10, 16);
       canvas.save();
       canvas.translate(position.dx, position.dy);
-      canvas.drawPicture(pictureInfo!.picture);
+      canvas.drawPicture(icon!.picture);
       canvas.restore();
     }
   }
 
   Routine? onTapDown(Offset localPosition) {
-    for (final hardpoint in hardpoints) {
+    for (final hardpoint in block.hardpoints) {
       if ((hardpoint.position - localPosition).distanceSquared < _nodeRadius * _nodeRadius) {
         print("starting routine for ${hardpoint.position}");
         return HardpointRoutine(block: block, hardpoint: hardpoint);
@@ -169,18 +158,10 @@ class HardpointRoutine extends Routine {
     await for (final event in eventStream.stream) {
       //print("Got event: $event ${event.eventType} in connectRoutine => ${event.position}");
       current = Hardpoint(position: event.position, direction: Axis.vertical);
-
       for (final block in event.state.blocks) {
-        if (block.block != this.block) {
+        if (block != this.block) {
           if (block.hitTest(event.position)) {
-            List<MapEntry<Hardpoint, double>> points = block.hardpoints.map((p) {
-                return MapEntry(p, (p.position - event.position).distanceSquared);
-            }).toList();
-
-            points.sort((a, b) => a.value.compareTo(b.value));
-            current = points.first.key;
-
-            //current = block.hardpoints.first;
+            current = block.closestHardpoint(event.position);
           }
         }
       }
@@ -189,10 +170,20 @@ class HardpointRoutine extends Routine {
       event.repaint();
 
       if (event.eventType == RoutineEventType.mouseUp) {
-        for (final block in event.state.blocks) {
-          if (block.block != this.block) {
-            if (block.hitTest(event.position)) {
-              print("New connection: ${this.block.dimensions.topLeft} to ${block.block.dimensions.topLeft}");
+        for (final target in event.state.blocks) {
+          if (target != block) {
+            if (target.hitTest(event.position)) {
+              //print("New connection: ${block.dimensions.topLeft} to ${target.block.dimensions.topLeft}");
+              final existingConnection = event.state.connections.firstWhereOrNull((connection) {
+                  return connection.from == block && connection.to == target ||
+                  connection.to == block && connection.from == target;
+
+              });
+              if (existingConnection == null) {
+                event.updateState(event.state..connections.add(
+                    WorkflowConnection(from: block, to: target)
+                ));
+              }
             }
           }
         }
