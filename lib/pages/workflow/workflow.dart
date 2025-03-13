@@ -36,10 +36,6 @@ class _WorkflowPageState extends State<WorkflowPage> {
   @override
   void initState() {
     super.initState();
-    state.nodes.addAll([
-      WorkflowNode(position: Offset(200, 100)),
-      WorkflowNode(position: Offset(400, 200)),
-    ]);
     state.blocks.addAll([
        WorkflowBlock(dimensions: Rect.fromLTWH(500, 100, 79, 44)),
     ]);
@@ -62,8 +58,8 @@ class _WorkflowPageState extends State<WorkflowPage> {
     sendEvent(RoutineEventType.mouseMove, localPosition);
 
     setState(() {
-      for (final node in state.nodes) {
-        node.eventState.isHovered = node.hitTest(localPosition);
+      for (final block in state.blocks) {
+        block.eventState.isHovered = block.hitTest(localPosition);
       }
     });
   }
@@ -116,13 +112,13 @@ class _WorkflowPageState extends State<WorkflowPage> {
     final localPosition = screenToLocalPosition(position);
 
     if (routine == null) {
-      for (final node in state.nodes) {
-        if (node.hitTest(localPosition)) {
-          if (setRoutine(node.onTapDown(localPosition))) {
-            break;
-          }
-        }
-      }
+      //for (final node in state.nodes) {
+      //  if (node.hitTest(localPosition)) {
+      //    if (setRoutine(node.onTapDown(localPosition))) {
+      //      break;
+      //    }
+      //  }
+      //}
 
       for (final block in state.blocks) {
         if (block.hitTest(localPosition)) {
@@ -180,9 +176,6 @@ class EditorPainter extends CustomPainter {
       block.paint(canvas, size);
     }
 
-    for (final node in state.nodes) {
-      node.paint(canvas, size);
-    }
     routine?.paint(canvas, size);
   }
 

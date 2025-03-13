@@ -46,6 +46,7 @@ class ConnectRoutine extends Routine {
     await for (final event in eventStream.stream) {
       //print("Got event: $event ${event.eventType} in connectRoutine => ${event.position}");
       current = event.position;
+      /*
 
       //highlight connection nodes
       for (final n in event.state.nodes) {
@@ -69,6 +70,7 @@ class ConnectRoutine extends Routine {
         }
         stop();
       }
+      */
     }
     //print("done handling");
   }
