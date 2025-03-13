@@ -60,6 +60,7 @@ class ConnectRoutine extends Routine {
           if (n != node && n.hitTest(event.position)) {
             print("made connection!");
           }
+          n.eventState.isHovered = false;
         }
         stop();
       }

@@ -5,6 +5,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
+import 'package:inference/pages/workflow/widgets/block.dart';
 import 'package:inference/pages/workflow/widgets/node.dart';
 import 'package:inference/pages/workflow/workflow_state.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
@@ -38,6 +39,9 @@ class _WorkflowPageState extends State<WorkflowPage> {
     state.nodes.addAll([
       WorkflowNode(position: Offset(200, 100)),
       WorkflowNode(position: Offset(400, 200)),
+    ]);
+    state.blocks.addAll([
+       WorkflowBlock(dimensions: Rect.fromLTWH(500, 100, 100, 400)),
     ]);
   }
 
@@ -87,14 +91,6 @@ class _WorkflowPageState extends State<WorkflowPage> {
     }
   }
 
-  void onTapUp(Offset position) {
-    print("on tap up");
-    final localPosition = screenToLocalPosition(position);
-    sendEvent(RoutineEventType.mouseUp, localPosition);
-    //final localPosition = screenToLocalPosition(details.localPosition);
-    //routine?.sendEvent(RoutineEvent(eventType: RoutineEventType.mouseUp, position: localPosition));
-  }
-
   bool setRoutine(Routine? newRoutine) {
     if (newRoutine == null || routine != null) {
       return false;
@@ -110,6 +106,12 @@ class _WorkflowPageState extends State<WorkflowPage> {
     return true;
   }
 
+
+  void onTapUp(Offset position) {
+    final localPosition = screenToLocalPosition(position);
+    sendEvent(RoutineEventType.mouseUp, localPosition);
+  }
+
   void onTapDown(Offset position) {
     final localPosition = screenToLocalPosition(position);
 
@@ -117,6 +119,14 @@ class _WorkflowPageState extends State<WorkflowPage> {
       for (final node in state.nodes) {
         if (node.hitTest(localPosition)) {
           if (setRoutine(node.onTapDown(localPosition))) {
+            break;
+          }
+        }
+      }
+
+      for (final block in state.blocks) {
+        if (block.hitTest(localPosition)) {
+          if (setRoutine(block.onTapDown(localPosition))) {
             break;
           }
         }
@@ -166,6 +176,10 @@ class EditorPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.transform(matrix.storage);
+    for (final block in state.blocks) {
+      block.paint(canvas, size);
+    }
+
     for (final node in state.nodes) {
       node.paint(canvas, size);
     }
