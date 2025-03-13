@@ -1,6 +1,7 @@
-import 'package:inference/pages/workflow/utils/block.dart';
+import 'package:inference/pages/workflow/widgets/block.dart';
+import 'package:inference/pages/workflow/widgets/connection.dart';
 
 class WorkflowState {
-  final List<WorkflowBlock> blocks = [];
-  final List<WorkflowConnection> connections = [];
+  final List<WorkflowBlockPainter> blocks = [];
+  final List<WorkflowConnectionPainter> connections = [];
 }

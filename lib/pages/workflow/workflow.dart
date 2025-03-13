@@ -8,7 +8,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
 import 'package:inference/pages/workflow/utils/block.dart';
 import 'package:inference/pages/workflow/widgets/block.dart';
-import 'package:inference/pages/workflow/widgets/connection.dart';
 import 'package:inference/pages/workflow/workflow_state.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
@@ -39,6 +38,8 @@ class _WorkflowEditorPageState extends State<WorkflowEditorPage> {
     super.initState();
     iconFetcher = fetchIcons([
        "images/workflow/image.svg" ,
+       "images/workflow/clipboard.svg" ,
+       "images/workflow/flowchart.svg" ,
     ]);
   }
 
@@ -88,10 +89,22 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
   void initState() {
     super.initState();
     state.blocks.addAll([
-       WorkflowBlock.at(position: Offset(500, 100), name: "Image", type: "Input"),
-       WorkflowBlock.at(position: Offset(200, 80), name: "Detection", type: "Processing"),
-       WorkflowBlock.at(position: Offset(500, 300), name: "Crop", type: "Task"),
-       WorkflowBlock.at(position: Offset(200, 300), name: "Classification", type: "Processing"),
+       WorkflowBlockPainter(
+         data: WorkflowBlock.at(position: Offset(500, 100), name: "Image", type: "Input"),
+         icon: widget.icons["images/workflow/image.svg"]
+       ),
+       WorkflowBlockPainter(
+          data: WorkflowBlock.at(position: Offset(200, 80), name: "Detection", type: "Processing"),
+         icon: widget.icons["images/workflow/flowchart.svg"]
+       ),
+       WorkflowBlockPainter(
+         data: WorkflowBlock.at(position: Offset(500, 300), name: "Crop", type: "Task"),
+         icon: widget.icons["images/workflow/clipboard.svg"]
+       ),
+       WorkflowBlockPainter(
+         data: WorkflowBlock.at(position: Offset(200, 300), name: "Classification", type: "Processing"),
+         icon: widget.icons["images/workflow/flowchart.svg"]
+       ),
     ]);
   }
 
@@ -173,9 +186,9 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
     if (routine == null) {
       for (final block in state.blocks) {
         if (block.hitTest(localPosition)) {
-          //if (setRoutine(block.onTapDown(localPosition))) {
-          //  break;
-          //}
+          if (setRoutine(block.onTapDown(localPosition))) {
+            break;
+          }
         }
       }
     }
@@ -228,11 +241,11 @@ class EditorPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.transform(matrix.storage);
     for (final block in state.blocks) {
-      WorkflowBlockPainter(block: block, icon: icons["images/workflow/image.svg"]).paint(canvas, size, mousePosition);
+      block.paint(canvas, size, mousePosition);
     }
 
     for (final connection in state.connections) {
-      WorkflowConnectionPainter(connection: connection).paint(canvas, size, mousePosition);
+      connection.paint(canvas, size, mousePosition);
     }
 
     routine?.paint(canvas, size);

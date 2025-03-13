@@ -5,17 +5,18 @@ import 'package:inference/pages/workflow/routines/routine.dart';
 import 'package:inference/pages/workflow/utils/block.dart';
 import 'package:inference/pages/workflow/utils/hardpoint.dart';
 import 'package:inference/pages/workflow/utils/line.dart';
+import 'package:inference/pages/workflow/widgets/connection.dart';
 
 class WorkflowBlockPainter {
-  WorkflowBlock block;
+  WorkflowBlock data;
   final PictureInfo? icon;
 
   final _nodeRadius = 5.0;
 
-  WorkflowBlockPainter({required this.block, required this.icon});
+  WorkflowBlockPainter({required this.data, required this.icon});
 
   bool hitTest(Offset location) {
-    return block.dimensions.inflate(10).contains(location);
+    return data.dimensions.inflate(10).contains(location);
 
   }
 
@@ -24,7 +25,7 @@ class WorkflowBlockPainter {
       ..color = Color(0xFFF0F0F0)//Colors.black
       ..style = PaintingStyle.fill;
 
-    canvas.drawRRect(RRect.fromRectAndRadius(block.dimensions, const Radius.circular(4)), paint);
+    canvas.drawRRect(RRect.fromRectAndRadius(data.dimensions, const Radius.circular(4)), paint);
 
     drawName(canvas, size);
     drawType(canvas, size);
@@ -50,7 +51,7 @@ class WorkflowBlockPainter {
       ..color = Color(0xFFF0F0F0)//Colors.black
       ..style = PaintingStyle.fill;
 
-    for (final hardpoint in block.hardpoints) {
+    for (final hardpoint in data.hardpoints) {
       if ((hardpoint.position - mousePosition).distanceSquared < _nodeRadius * _nodeRadius) {
         canvas.drawCircle(hardpoint.position, _nodeRadius, highlightedPaint);
       } else {
@@ -71,14 +72,14 @@ class WorkflowBlockPainter {
 
     final textPainter = TextPainter(
       text: TextSpan(
-        text: block.type,
+        text: data.type,
         style: textStyle,
       ),
       textDirection: TextDirection.ltr,
     );
 
     textPainter.layout(minWidth: 0, maxWidth: size.width);
-    textPainter.paint(canvas, block.dimensions.topLeft + Offset(32, 4));
+    textPainter.paint(canvas, data.dimensions.topLeft + Offset(32, 4));
 
   }
 
@@ -90,19 +91,19 @@ class WorkflowBlockPainter {
 
     final textPainter = TextPainter(
       text: TextSpan(
-        text: block.name,
+        text: data.name,
         style: textStyle,
       ),
       textDirection: TextDirection.ltr,
     );
 
     textPainter.layout(minWidth: 0, maxWidth: size.width);
-    textPainter.paint(canvas, block.dimensions.topLeft + Offset(32, 20));
+    textPainter.paint(canvas, data.dimensions.topLeft + Offset(32, 20));
   }
 
   void drawIcon(Canvas canvas, Size size) {
     if (icon != null) {
-      final position = block.dimensions.topLeft + const Offset(10, 16);
+      final position = data.dimensions.topLeft + const Offset(10, 16);
       canvas.save();
       canvas.translate(position.dx, position.dy);
       canvas.drawPicture(icon!.picture);
@@ -111,18 +112,18 @@ class WorkflowBlockPainter {
   }
 
   Routine? onTapDown(Offset localPosition) {
-    for (final hardpoint in block.hardpoints) {
+    for (final hardpoint in data.hardpoints) {
       if ((hardpoint.position - localPosition).distanceSquared < _nodeRadius * _nodeRadius) {
         print("starting routine for ${hardpoint.position}");
-        return HardpointRoutine(block: block, hardpoint: hardpoint);
+        return HardpointRoutine(block: this, hardpoint: hardpoint);
       }
     }
-    return MoveBlockRoutine(block: block, offset: localPosition - block.dimensions.topLeft);
+    return MoveBlockRoutine(block: this, offset: localPosition - data.dimensions.topLeft);
   }
 }
 
 class MoveBlockRoutine extends Routine {
-  final WorkflowBlock block;
+  final WorkflowBlockPainter block;
   final Offset offset;
   MoveBlockRoutine({required this.block, required this.offset});
 
@@ -130,8 +131,8 @@ class MoveBlockRoutine extends Routine {
   void handle() async {
     await for (final event in eventStream.stream) {
       if (event.eventType == RoutineEventType.mouseMove) {
-        final dp = event.position - (block.dimensions.topLeft + offset);
-        block.dimensions = block.dimensions.translate(dp.dx, dp.dy);
+        final dp = event.position - (block.data.dimensions.topLeft + offset);
+        block.data.dimensions = block.data.dimensions.translate(dp.dx, dp.dy);
         //print(block.dimensions);
         event.repaint();
         //block.dimensions = block.dimensions.shift(dp);
@@ -145,7 +146,7 @@ class MoveBlockRoutine extends Routine {
 }
 
 class HardpointRoutine extends Routine {
-  final WorkflowBlock block;
+  final WorkflowBlockPainter block;
   final Hardpoint hardpoint;
   Hardpoint? current;
   HardpointRoutine({
@@ -161,7 +162,7 @@ class HardpointRoutine extends Routine {
       for (final block in event.state.blocks) {
         if (block != this.block) {
           if (block.hitTest(event.position)) {
-            current = block.closestHardpoint(event.position);
+            current = block.data.closestHardpoint(event.position);
           }
         }
       }
@@ -175,13 +176,13 @@ class HardpointRoutine extends Routine {
             if (target.hitTest(event.position)) {
               //print("New connection: ${block.dimensions.topLeft} to ${target.block.dimensions.topLeft}");
               final existingConnection = event.state.connections.firstWhereOrNull((connection) {
-                  return connection.from == block && connection.to == target ||
-                  connection.to == block && connection.from == target;
+                  return connection.data.from == block.data && connection.data.to == target.data ||
+                  connection.data.to == block.data && connection.data.from == target.data;
 
               });
               if (existingConnection == null) {
                 event.updateState(event.state..connections.add(
-                    WorkflowConnection(from: block, to: target)
+                  WorkflowConnectionPainter(data: WorkflowConnection(from: block.data, to: target.data))
                 ));
               }
             }
