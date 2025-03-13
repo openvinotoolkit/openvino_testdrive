@@ -1,6 +1,7 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
+import 'package:inference/pages/workflow/utils/line.dart';
 
 class EditorEventState {
   bool isHovered = false;
@@ -45,15 +46,19 @@ class ConnectRoutine extends Routine {
     await for (final event in eventStream.stream) {
       //print("Got event: $event ${event.eventType} in connectRoutine => ${event.position}");
       current = event.position;
-      event.repaint();
 
       //highlight connection nodes
       for (final n in event.state.nodes) {
         if (n != node) {
-          n.eventState.isHovered = n.hitTest(event.position);
+          final hit = n.hitTest(event.position);
+          n.eventState.isHovered = hit;
+          if (hit) {
+            current = n.position;
+          }
           break;
         }
       }
+      event.repaint();
 
       if (event.eventType == RoutineEventType.mouseUp) {
         for (final n in event.state.nodes) {
@@ -78,7 +83,11 @@ class ConnectRoutine extends Routine {
       ..strokeWidth = 2
       ..style = PaintingStyle.fill;
 
-    canvas.drawLine(node.position, current!, paint);
+
+    final line = Line.betweenTwoPoints(node.position, Axis.horizontal, current!, Axis.horizontal);
+    for (final segment in line.segments) {
+      canvas.drawLine(segment.from, segment.to, paint);
+    }
 
   }
 }

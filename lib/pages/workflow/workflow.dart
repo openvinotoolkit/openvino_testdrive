@@ -41,7 +41,7 @@ class _WorkflowPageState extends State<WorkflowPage> {
       WorkflowNode(position: Offset(400, 200)),
     ]);
     state.blocks.addAll([
-       WorkflowBlock(dimensions: Rect.fromLTWH(500, 100, 100, 400)),
+       WorkflowBlock(dimensions: Rect.fromLTWH(500, 100, 79, 44)),
     ]);
   }
 
