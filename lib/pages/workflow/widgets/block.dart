@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:collection/collection.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
-import 'package:inference/pages/workflow/utils/block.dart';
+import 'package:inference/pages/workflow/utils/data.dart';
 import 'package:inference/pages/workflow/utils/hardpoint.dart';
 import 'package:inference/pages/workflow/utils/line.dart';
 import 'package:inference/pages/workflow/widgets/connection.dart';

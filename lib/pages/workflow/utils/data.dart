@@ -14,6 +14,19 @@ class WorkflowBlock {
       required this.name,
   });
 
+  Map<String, dynamic> toMap() {
+    return {
+      "type": type,
+      "name": name,
+      "dimensions": {
+        "x": dimensions.left,
+        "y": dimensions.top,
+        "width": dimensions.width,
+        "height": dimensions.height,
+      },
+    };
+  }
+
   bool hitTest(Offset location) {
     return dimensions.inflate(10).contains(location);
   }
@@ -72,6 +85,13 @@ class WorkflowBlock {
 class WorkflowConnection {
   final WorkflowBlock from;
   final WorkflowBlock to;
+
+  Map<String, dynamic> toMap() {
+    return {
+      "from": from.name,
+      "to": to.name,
+    };
+  }
 
   const WorkflowConnection({
       required this.from,

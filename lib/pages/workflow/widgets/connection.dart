@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:inference/pages/workflow/utils/block.dart';
+import 'package:inference/pages/workflow/utils/data.dart';
 import 'package:inference/pages/workflow/utils/line.dart';
 
 class WorkflowConnectionPainter {

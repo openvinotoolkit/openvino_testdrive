@@ -2,11 +2,13 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 
+import 'dart:convert';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
-import 'package:inference/pages/workflow/utils/block.dart';
+import 'package:inference/pages/workflow/utils/data.dart';
 import 'package:inference/pages/workflow/widgets/block.dart';
 import 'package:inference/pages/workflow/workflow_state.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
@@ -206,14 +208,33 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
           onPanUpdate: pan,
           onTapDown: (details) => onTapDown(details.localPosition),
           onTapUp: (details) => onTapUp(details.localPosition),
-          child: CustomPaint(
-            painter: EditorPainter(
-              matrix: matrix,
-              state: state,
-              routine: routine,
-              mousePosition: mousePosition,
-              icons: widget.icons,
-            ),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              CustomPaint(
+                painter: EditorPainter(
+                  matrix: matrix,
+                  state: state,
+                  routine: routine,
+                  mousePosition: mousePosition,
+                  icons: widget.icons,
+                ),
+              ),
+              Positioned(
+                top: 10,
+                left: 10,
+                child: Container(
+                  color: Colors.red,
+                  child: IconButton(
+                    onPressed: () {
+                      const encoder = JsonEncoder.withIndent("  ");
+                      print(encoder.convert(state.toMap()));
+                    },
+                    icon: Icon(FluentIcons.save),
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       )
