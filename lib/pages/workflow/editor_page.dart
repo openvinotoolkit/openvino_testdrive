@@ -3,8 +3,10 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:inference/pages/workflow/utils/assets.dart';
 import 'package:inference/pages/workflow/widgets/editor.dart';
+import 'package:inference/providers/project_provider.dart';
+import 'package:provider/provider.dart';
 
 class WorkflowEditorPage extends StatefulWidget {
   const WorkflowEditorPage({super.key});
@@ -13,40 +15,38 @@ class WorkflowEditorPage extends StatefulWidget {
   State<WorkflowEditorPage> createState() => _WorkflowEditorPageState();
 }
 
+
 class _WorkflowEditorPageState extends State<WorkflowEditorPage> {
 
-  Future<Map<String, PictureInfo>>? iconFetcher;
+  Future<WorkflowEditorAssets>? assetFetcher;
 
-  Future<Map<String, PictureInfo>> fetchIcons(List<String> paths) async {
-    final icons = await Future.wait(paths.map((path) async {
-        return MapEntry<String, PictureInfo>(
-          path,
-          await vg.loadPicture(SvgPicture.asset(path).bytesLoader, null)
-        );
-    }));
-    return Map.fromEntries(icons);
-  }
 
   @override
   void initState() {
     super.initState();
-    iconFetcher = fetchIcons([
-       "images/workflow/image.svg" ,
-       "images/workflow/clipboard.svg" ,
-       "images/workflow/flowchart.svg" ,
-    ]);
+
+    final projectsProvider = Provider.of<ProjectProvider>(context, listen: false);
+    assetFetcher = WorkflowEditorAssets.load(
+      icons: [
+        "images/workflow/image.svg" ,
+        "images/workflow/clipboard.svg" ,
+        "images/workflow/flowchart.svg" ,
+      ],
+      projectsProvider: projectsProvider,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: iconFetcher,
+      future: assetFetcher,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
-          return WorkflowEditor(icons: snapshot.requireData);
+          return WorkflowEditor(assets: snapshot.requireData);
         }
         return Container();
       }
     );
   }
 }
+

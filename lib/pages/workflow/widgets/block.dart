@@ -74,7 +74,7 @@ class WorkflowBlockPainter {
 
     final textPainter = TextPainter(
       text: TextSpan(
-        text: data.type,
+        text: data.type?.name,
         style: textStyle,
       ),
       textDirection: TextDirection.ltr,

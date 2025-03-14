@@ -1,11 +1,12 @@
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/pages/workflow/blocks/block.dart';
 import 'package:inference/pages/workflow/utils/hardpoint.dart';
 
 class WorkflowBlock {
   Rect dimensions;
-  String type;
+  WorkflowBlockBase? type;
   String name;
 
   WorkflowBlock({
@@ -50,10 +51,10 @@ class WorkflowBlock {
 
   factory WorkflowBlock.at({
       required Offset position,
-      required String type,
+      required WorkflowBlockBase type,
       required String name,
     }) {
-      final width = max(calculateBlockWidth(type), calculateBlockWidth(name));
+      final width = max(calculateBlockWidth(type.name), calculateBlockWidth(name));
       return WorkflowBlock(
         dimensions: Rect.fromLTWH(position.dx, position.dy, width, 44),
         name: name,

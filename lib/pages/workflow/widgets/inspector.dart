@@ -1,11 +1,32 @@
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/pages/workflow/blocks/block.dart';
+import 'package:inference/pages/workflow/blocks/image.dart';
+import 'package:inference/pages/workflow/blocks/model.dart';
+import 'package:inference/pages/workflow/blocks/crop.dart';
+import 'package:inference/pages/workflow/utils/assets.dart';
 import 'package:inference/pages/workflow/utils/data.dart';
+
+List<String> availableTypes = [
+  "ImageBlock",
+  "ModelBlock",
+  "CropBlock",
+];
+
+WorkflowBlockBase nameToBlock(String name) {
+  return switch(name) {
+    "ModelBlock" => ModelBlock(),
+    "ImageBlock" => ImageBlock(),
+    "CropBlock" => CropBlock(),
+    _ => throw Exception("Unknown block type")
+  };
+}
 
 class Inspector extends StatefulWidget {
   final WorkflowBlock? element;
-  const Inspector({required this.element, super.key});
+  final List<Model> models;
+  const Inspector({required this.element, required this.models, super.key});
 
   @override
   State<Inspector> createState() => _InspectorState();
@@ -13,6 +34,7 @@ class Inspector extends StatefulWidget {
 
 class _InspectorState extends State<Inspector> {
   final TextEditingController _nameController = TextEditingController();
+  WorkflowBlockBase? type;
 
   @override
   void initState() {
@@ -47,7 +69,19 @@ class _InspectorState extends State<Inspector> {
                   label: "Type:",
                   child: Padding(
                     padding: const EdgeInsets.only(left: 5),
-                    child: Text(block.type),
+                    child: ComboBox(
+                      value: block.type,
+                      items: availableTypes.map<ComboBoxItem<WorkflowBlockBase?>>((e) {
+                          print(e);
+                        return ComboBoxItem<WorkflowBlockBase>(
+                          value: nameToBlock(e),
+                          child: Text(e)
+                        );
+                      }).toList(),
+                      onChanged: (v) {
+                        block.type = v;
+                      },
+                    ),
                   )
                 ),
                 SizedBox(height: 10),
@@ -57,7 +91,7 @@ class _InspectorState extends State<Inspector> {
                     onChanged: (value) {
                       if (value.isNotEmpty) {
                         block.name = value;
-                        final width = max(WorkflowBlock.calculateBlockWidth(value), WorkflowBlock.calculateBlockWidth(block.type));
+                        final width = max(WorkflowBlock.calculateBlockWidth(value), WorkflowBlock.calculateBlockWidth(block.type?.name ?? "Type"));
                         block.dimensions = Rect.fromLTWH(
                           block.dimensions.left,
                           block.dimensions.top,

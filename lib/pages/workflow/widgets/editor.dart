@@ -4,8 +4,11 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:inference/pages/workflow/blocks/crop.dart';
+import 'package:inference/pages/workflow/blocks/image.dart';
+import 'package:inference/pages/workflow/blocks/model.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
+import 'package:inference/pages/workflow/utils/assets.dart';
 import 'package:inference/pages/workflow/utils/data.dart';
 import 'package:inference/pages/workflow/widgets/block.dart';
 import 'package:inference/pages/workflow/widgets/editor_painter.dart';
@@ -16,10 +19,13 @@ import 'package:inference/widgets/grid_container.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
 class WorkflowEditor extends StatefulWidget {
-  final Map<String, PictureInfo> icons;
+  final WorkflowEditorAssets assets;
+
+  get icons => assets.icons;
+  get models => assets.models;
 
   const WorkflowEditor({
-      required this.icons,
+      required this.assets,
       super.key,
   });
 
@@ -53,19 +59,19 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
     super.initState();
     state.blocks.addAll([
        WorkflowBlockPainter(
-         data: WorkflowBlock.at(position: Offset(500, 100), name: "Image", type: "Input"),
+         data: WorkflowBlock.at(position: Offset(500, 100), name: "Image", type: ImageBlock()),
          icon: widget.icons["images/workflow/image.svg"]
        ),
        WorkflowBlockPainter(
-          data: WorkflowBlock.at(position: Offset(200, 80), name: "Detection", type: "Processing"),
+          data: WorkflowBlock.at(position: Offset(200, 80), name: "Detection", type: ModelBlock()),
          icon: widget.icons["images/workflow/flowchart.svg"]
        ),
        WorkflowBlockPainter(
-         data: WorkflowBlock.at(position: Offset(500, 300), name: "Crop", type: "Task"),
+         data: WorkflowBlock.at(position: Offset(500, 300), name: "Crop", type: CropBlock()),
          icon: widget.icons["images/workflow/clipboard.svg"]
        ),
        WorkflowBlockPainter(
-         data: WorkflowBlock.at(position: Offset(200, 300), name: "Classification", type: "Processing"),
+         data: WorkflowBlock.at(position: Offset(200, 300), name: "Classification", type: ModelBlock()),
          icon: widget.icons["images/workflow/flowchart.svg"]
        ),
     ]);
@@ -133,7 +139,6 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
       return false;
     }
     newRoutine.eventStream.onCancel = () {
-      print(" on cancel");
       setState(() => routine = null);
     };
     setState(() {
@@ -218,7 +223,12 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
                   )
                 ),
               ),
-              GridContainer(child: Inspector(element: inspectingElement)),
+              GridContainer(
+                child: Inspector(
+                  element: inspectingElement,
+                  models: widget.models,
+                )
+              ),
             ],
           ),
         ),
