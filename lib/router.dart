@@ -11,6 +11,7 @@ import 'package:inference/pages/home/home.dart';
 import 'package:inference/pages/import/import.dart';
 import 'package:inference/pages/knowledge_base/knowledge_base.dart';
 import 'package:inference/pages/models/models.dart';
+import 'package:inference/pages/workflow/editor_page.dart';
 import 'package:inference/pages/workflow/workflow.dart';
 import 'package:inference/project.dart';
 import 'package:inference/pages/models/inference.dart';
@@ -35,7 +36,8 @@ final router = GoRouter(navigatorKey: rootNavigatorKey,
         GoRoute(path: '/models/download', builder: (context, state) => DownloadPage(project: state.extra as PublicProject)),
         GoRoute(path: '/models/inference', builder: (context, state) => InferencePage(state.extra as Project)),
         GoRoute(path: '/knowledge_base', builder: (context, state) => const KnowledgeBasePage()),
-        GoRoute(path: '/workflows', builder: (context, state) => const WorkflowEditorPage()),
+        GoRoute(path: '/workflows', builder: (context, state) => const WorkflowPage()),
+        GoRoute(path: '/workflows/editor', builder: (context, state) => const WorkflowEditorPage()),
       ],
     )
   ]
