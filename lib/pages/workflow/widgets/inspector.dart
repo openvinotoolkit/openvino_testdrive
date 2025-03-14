@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/pages/workflow/utils/data.dart';
 
@@ -42,27 +44,30 @@ class _InspectorState extends State<Inspector> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InfoLabel(
+                  label: "Type:",
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: Text(block.type),
+                  )
+                ),
+                SizedBox(height: 10),
+                InfoLabel(
                   label: "Name:",
                   child: TextBox(
                     onChanged: (value) {
                       if (value.isNotEmpty) {
-
                         block.name = value;
+                        final width = max(WorkflowBlock.calculateBlockWidth(value), WorkflowBlock.calculateBlockWidth(block.type));
                         block.dimensions = Rect.fromLTWH(
                           block.dimensions.left,
                           block.dimensions.top,
-                          WorkflowBlock.calculateBlockWidth(value),
+                          width,
                           block.dimensions.height
                         );
                       }
-                      print("new name: $value");
                     },
                     controller: _nameController,
                   )
-                ),
-                InfoLabel(
-                  label: "Type:",
-                  child: Text(block.type)
                 ),
               ],
             );

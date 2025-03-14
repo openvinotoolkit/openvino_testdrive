@@ -229,6 +229,7 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
                       state: state,
                       routine: routine,
                       mousePosition: mousePosition,
+                      inspectingElement: inspectingElement,
                       icons: widget.icons,
                     ),
                   ),
@@ -248,6 +249,7 @@ class EditorPainter extends CustomPainter {
   final Routine? routine;
   final WorkflowState state;
   final Offset mousePosition;
+  final dynamic inspectingElement;
   final Map<String, PictureInfo> icons;
 
   EditorPainter({
@@ -255,6 +257,7 @@ class EditorPainter extends CustomPainter {
       required this.state,
       required this.mousePosition,
       required this.icons,
+      this.inspectingElement,
       this.routine,
   });
 
@@ -263,6 +266,9 @@ class EditorPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.transform(matrix.storage);
     for (final block in state.blocks) {
+      if (block.data == inspectingElement) {
+        block.drawHighlight(canvas, size);
+      }
       block.paint(canvas, size, mousePosition);
     }
 

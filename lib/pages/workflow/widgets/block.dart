@@ -113,6 +113,15 @@ class WorkflowBlockPainter {
     }
   }
 
+  void drawHighlight(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..color = Color(0xFF7000FF)
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawRRect(RRect.fromRectAndRadius(data.dimensions, const Radius.circular(4)), paint);
+  }
+
   Routine? onTapDown(Offset localPosition) {
     for (final hardpoint in data.hardpoints) {
       if ((hardpoint.position - localPosition).distanceSquared < _nodeRadius * _nodeRadius) {
