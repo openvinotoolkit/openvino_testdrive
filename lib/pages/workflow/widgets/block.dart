@@ -148,6 +148,7 @@ class MoveBlockRoutine extends Routine {
 class HardpointRoutine extends Routine {
   final WorkflowBlockPainter block;
   final Hardpoint hardpoint;
+
   Hardpoint? current;
   HardpointRoutine({
       required this.block,
@@ -162,7 +163,7 @@ class HardpointRoutine extends Routine {
       for (final block in event.state.blocks) {
         if (block != this.block) {
           if (block.hitTest(event.position)) {
-            current = block.data.closestHardpoint(event.position);
+            current = block.data.closestHardpoint(this.block.data.dimensions.center);
           }
         }
       }
@@ -210,12 +211,15 @@ class HardpointRoutine extends Routine {
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
 
+    final hardpoint = block.data.closestHardpoint(current!.position);
+
     final line = Line.betweenTwoPoints(hardpoint.position, hardpoint.direction, current!.position, current!.direction);
 
     //canvas.drawArc(Rect.fromPoints(hardpoint.position, current!), 0, pi, false, arcPaint);
     for (final segment in line.segments) {
       canvas.drawLine(segment.from, segment.to, paint);
     }
+    canvas.drawCircle(current!.position, 5, paint);
 
 
   }
