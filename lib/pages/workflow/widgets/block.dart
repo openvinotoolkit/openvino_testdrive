@@ -1,17 +1,19 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:collection/collection.dart';
+import 'package:html/parser.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
 import 'package:inference/pages/workflow/utils/data.dart';
 import 'package:inference/pages/workflow/utils/hardpoint.dart';
 import 'package:inference/pages/workflow/utils/line.dart';
 import 'package:inference/pages/workflow/widgets/connection.dart';
 
+
+final _nodeRadius = 5.0;
+
 class WorkflowBlockPainter {
   WorkflowBlock data;
   final PictureInfo? icon;
-
-  final _nodeRadius = 5.0;
 
   WorkflowBlockPainter({required this.data, required this.icon});
 
@@ -114,7 +116,6 @@ class WorkflowBlockPainter {
   Routine? onTapDown(Offset localPosition) {
     for (final hardpoint in data.hardpoints) {
       if ((hardpoint.position - localPosition).distanceSquared < _nodeRadius * _nodeRadius) {
-        print("starting routine for ${hardpoint.position}");
         return HardpointRoutine(block: this, hardpoint: hardpoint);
       }
     }
@@ -122,11 +123,50 @@ class WorkflowBlockPainter {
   }
 }
 
+class WorkflowBlockClickRoutine extends Routine {
+  final WorkflowBlockPainter block;
+  final Offset initialPosition;
+
+  final int startTime = time;
+
+  WorkflowBlockClickRoutine({required this.block, required this.initialPosition});
+
+  @override
+  void handle() async {
+    await for (final event in eventStream.stream) {
+      print(time - startTime);
+      if (time - startTime < 100) {
+        if (event.eventType == RoutineEventType.mouseUp) {
+          print("Stopping");
+          event.inspect(block.data);
+          stop();
+        }
+      } else {
+        print("going to actual event");
+        event.setRoutine(decideRoutine());
+        stop();
+      }
+
+    }
+  }
+
+  Routine? decideRoutine() {
+    for (final hardpoint in block.data.hardpoints) {
+      if ((hardpoint.position - initialPosition).distanceSquared < _nodeRadius * _nodeRadius) {
+        return HardpointRoutine(block: block, hardpoint: hardpoint);
+      }
+    }
+    return MoveBlockRoutine(block: block, offset: initialPosition - block.data.dimensions.topLeft);
+  }
+
+  static int get time => DateTime.now().millisecondsSinceEpoch;
+}
+
 class MoveBlockRoutine extends Routine {
   final WorkflowBlockPainter block;
   final Offset offset;
   MoveBlockRoutine({required this.block, required this.offset});
-
+  final int startTime = time;
   @override
   void handle() async {
     await for (final event in eventStream.stream) {
@@ -138,11 +178,15 @@ class MoveBlockRoutine extends Routine {
         //block.dimensions = block.dimensions.shift(dp);
       }
       if (event.eventType == RoutineEventType.mouseUp) {
+        if (time - startTime < 100) {
+          event.inspect(block.data);
+        }
         stop();
       }
     }
   }
 
+  static int get time => DateTime.now().millisecondsSinceEpoch;
 }
 
 class HardpointRoutine extends Routine {

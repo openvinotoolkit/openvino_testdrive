@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
 import 'package:inference/pages/workflow/utils/data.dart';
 import 'package:inference/pages/workflow/widgets/block.dart';
+import 'package:inference/pages/workflow/widgets/inspector.dart';
 import 'package:inference/pages/workflow/workflow_state.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 
@@ -77,6 +78,8 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
   Routine? routine;
   Offset mousePosition = Offset.zero;
 
+  WorkflowBlock? inspectingElement;
+
   void sendEvent(RoutineEventType type, Offset position) {
     routine?.sendEvent(RoutineEvent(
         state: state,
@@ -84,6 +87,8 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
         position: position,
         repaint: repaint,
         updateState: updateState,
+        setRoutine: setRoutine,
+        inspect: inspect,
     ));
   }
 
@@ -161,6 +166,12 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
     });
   }
 
+  void inspect(WorkflowBlock block) {
+    setState(() {
+      inspectingElement = block;
+    });
+  }
+
   bool setRoutine(Routine? newRoutine) {
     if (newRoutine == null || routine != null) {
       return false;
@@ -198,46 +209,36 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: MouseRegion(
-        onHover: onHover,
-        child: GestureDetector(
-          onPanStart: onPanStart,
-          onPanEnd: onPanEnd,
-          onPanUpdate: pan,
-          onTapDown: (details) => onTapDown(details.localPosition),
-          onTapUp: (details) => onTapUp(details.localPosition),
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              CustomPaint(
-                painter: EditorPainter(
-                  matrix: matrix,
-                  state: state,
-                  routine: routine,
-                  mousePosition: mousePosition,
-                  icons: widget.icons,
-                ),
-              ),
-              Positioned(
-                top: 10,
-                left: 10,
-                child: Container(
-                  color: Colors.red,
-                  child: IconButton(
-                    onPressed: () {
-                      const encoder = JsonEncoder.withIndent("  ");
-                      print(encoder.convert(state.toMap()));
-                    },
-                    icon: Icon(FluentIcons.save),
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            color: Colors.white,
+            child: MouseRegion(
+              onHover: onHover,
+              child: GestureDetector(
+                onPanStart: onPanStart,
+                onPanEnd: onPanEnd,
+                onPanUpdate: pan,
+                onTapDown: (details) => onTapDown(details.localPosition),
+                onTapUp: (details) => onTapUp(details.localPosition),
+                child: SizedBox.expand(
+                  child: CustomPaint(
+                    painter: EditorPainter(
+                      matrix: matrix,
+                      state: state,
+                      routine: routine,
+                      mousePosition: mousePosition,
+                      icons: widget.icons,
+                    ),
                   ),
                 ),
-              )
-            ],
+              ),
+            )
           ),
         ),
-      )
+        Inspector(element: inspectingElement),
+      ],
     );
   }
 }

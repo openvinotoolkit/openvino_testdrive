@@ -65,7 +65,7 @@ class WorkflowBlock {
   static double calculateBlockWidth(String text) {
     const textStyle = TextStyle(
         color: Color(0xFF616161),
-        fontSize: 12,
+        fontSize: 14,
       );
 
     final textPainter = TextPainter(

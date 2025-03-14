@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/pages/workflow/utils/data.dart';
 import 'package:inference/pages/workflow/workflow_state.dart';
 
 enum RoutineEventType { mouseUp, mouseDown, mouseMove }
@@ -9,15 +10,19 @@ enum RoutineEventType { mouseUp, mouseDown, mouseMove }
 class RoutineEvent {
   final RoutineEventType eventType;
   final Offset position;
-  final WorkflowState state;
   final Function repaint;
   final Function(WorkflowState) updateState;
+  final Function(Routine? routine) setRoutine;
+  final Function(WorkflowBlock) inspect;
+  final WorkflowState state;
 
   const RoutineEvent({
       required this.eventType,
       required this.position,
       required this.repaint,
       required this.updateState,
+      required this.setRoutine,
+      required this.inspect,
       required this.state,
   });
 }
