@@ -1,27 +1,12 @@
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/pages/workflow/blocks/block_extensions.dart';
 import 'package:inference/pages/workflow/blocks/block.dart';
-import 'package:inference/pages/workflow/blocks/image.dart';
 import 'package:inference/pages/workflow/blocks/model.dart';
-import 'package:inference/pages/workflow/blocks/crop.dart';
 import 'package:inference/pages/workflow/utils/assets.dart';
 import 'package:inference/pages/workflow/utils/data.dart';
-
-List<String> availableTypes = [
-  "ImageBlock",
-  "ModelBlock",
-  "CropBlock",
-];
-
-WorkflowBlockBase nameToBlock(String name) {
-  return switch(name) {
-    "ModelBlock" => ModelBlock(),
-    "ImageBlock" => ImageBlock(),
-    "CropBlock" => CropBlock(),
-    _ => throw Exception("Unknown block type")
-  };
-}
+import 'package:inference/pages/workflow/widgets/inspector/model.dart';
 
 class Inspector extends StatefulWidget {
   final WorkflowBlock? element;
@@ -34,18 +19,20 @@ class Inspector extends StatefulWidget {
 
 class _InspectorState extends State<Inspector> {
   final TextEditingController _nameController = TextEditingController();
-  WorkflowBlockBase? type;
+  WorkflowBlock? element;
 
   @override
   void initState() {
     super.initState();
     _nameController.text = widget.element?.name ?? "";
+    element = widget.element;
   }
   @override
   void didUpdateWidget(covariant Inspector oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.element != widget.element) {
       _nameController.text = widget.element?.name ?? "";
+      element = widget.element; // set state?
     }
   }
 
@@ -57,11 +44,11 @@ class _InspectorState extends State<Inspector> {
         padding: const EdgeInsets.all(20),
         child: Builder(
           builder: (context) {
-            if (widget.element == null) {
+            if (element == null) {
               // Show generic info
               return Container();
             }
-            final block = widget.element!;
+            final block = element!;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -70,16 +57,19 @@ class _InspectorState extends State<Inspector> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 5),
                     child: ComboBox(
-                      value: block.type,
-                      items: availableTypes.map<ComboBoxItem<WorkflowBlockBase?>>((e) {
-                          print(e);
-                        return ComboBoxItem<WorkflowBlockBase>(
-                          value: nameToBlock(e),
-                          child: Text(e)
+                      value: block.type?.type.name,
+                      items: BlockType.values.map<ComboBoxItem<String?>>((e) {
+                        return ComboBoxItem<String>(
+                          value: e.name,
+                          child: Text(e.name.uppercaseFirst())
                         );
                       }).toList(),
                       onChanged: (v) {
-                        block.type = v;
+                        if (v is String) {
+                          setState(() {
+                            block.type = BlockTypeExtension.fromName(v)?.createBlock();
+                          });
+                        }
                       },
                     ),
                   )
@@ -103,11 +93,26 @@ class _InspectorState extends State<Inspector> {
                     controller: _nameController,
                   )
                 ),
+                SizedBox(height: 10),
+                inspector(),
               ],
             );
           }
         ),
       ),
     );
+  }
+
+  Widget inspector () {
+    if (element == null) {
+      return Container();
+    }
+    return switch(element?.type?.type) {
+      BlockType.model => ModelInspector(
+        availableModels: widget.models,
+        element: element!.type as ModelBlock,
+      ),
+      _ => Container(),
+    };
   }
 }
