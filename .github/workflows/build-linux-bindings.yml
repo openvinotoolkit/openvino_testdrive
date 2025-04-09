@@ -42,7 +42,7 @@ jobs:
       - name: Install OpenVINO
         run: |
           sudo mkdir -p /opt/intel
-          curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2025.0/linux/openvino_genai_ubuntu22_2025.0.0.0_x86_64.tar.gz \
+          curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2025.1/linux/openvino_genai_ubuntu22_2025.1.0.0_x86_64.tar.gz \
           --output openvino.tgz && tar -xf openvino.tgz && \
           sudo mv openvino_genai_ubuntu22_${{ inputs.OPENVINO_VERSION }}.0.0_x86_64 /opt/intel/openvino && rm openvino.tgz
           cd /opt/intel/openvino && sudo ./install_dependencies/install_openvino_dependencies.sh -y
