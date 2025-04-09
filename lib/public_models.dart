@@ -19,7 +19,7 @@ void createDirectory(PublicProject project) {
   Directory(project.storagePath).createSync();
 }
 
-void writeProjectJson(PublicProject project) {
+void writeProjectJson(Project project) {
   final projectFile = platformContext.join(project.storagePath, "project.json");
   const encoder = JsonEncoder.withIndent("  ");
   File(projectFile).writeAsStringSync(encoder.convert((project.toMap())));

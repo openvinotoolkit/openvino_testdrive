@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/importers/model_manifest.dart';
+import 'package:inference/utils.dart';
 import 'package:inference/utils/get_public_thumbnail.dart';
 import 'package:path/path.dart';
 import 'package:collection/collection.dart';
@@ -147,6 +148,21 @@ String projectTypeToString(ProjectType type) {
   }
 }
 
+String projectTypeToName(ProjectType type) {
+  switch(type){
+    case ProjectType.text:
+      return "Text Generation";
+    case ProjectType.textToImage:
+      return "Image generation";
+    case ProjectType.vlm:
+      return "VLM";
+    case ProjectType.image:
+      return "Computer Vision";
+    case ProjectType.speech:
+      return "Transcription";
+  }
+}
+
 class Project {
   String id;
   String modelId;
@@ -173,6 +189,11 @@ class Project {
 
   String taskName() {
     return "";
+  }
+
+  Future<bool> isInAppStorage() async {
+    final directory = await getApplicationSupportDirectory();
+    return storagePath.contains(directory.path);
   }
 
   bool get isDownloaded => true;
@@ -212,15 +233,7 @@ class GetiProject extends Project {
 
   GetiProject(String id, String modelId, String applicationVersion, String name, String creationTime, ProjectType type, String storagePath)
     : super(id, modelId, applicationVersion, name, creationTime, type, storagePath, false) {
-    size = calculateDiskUsage();
-  }
-
-  int calculateDiskUsage() {
-    final dir = Directory(storagePath);
-    if (dir.existsSync()) {
-      return dir.listSync(recursive: true).fold(0, (acc, m) => acc + m.statSync().size);
-    }
-    return 0;
+    size = calculateDiskUsage(storagePath);
   }
 
   List<Score?> scores() {
@@ -342,7 +355,7 @@ class PublicProject extends Project {
   }
 
   Image get thumbnail {
-    return getThumbnail(modelId);
+    return getThumbnail(name);
   }
 
   @override
@@ -363,11 +376,16 @@ class PublicProject extends Project {
   @override
   bool get isDownloaded => loaded.isCompleted;
 
-  static Future<PublicProject> fromModelManifest(ModelManifest manifest) async {
+  static Future<PublicProject> fromModelManifest(ModelManifest manifest, [String? path]) async {
     final directory = await getApplicationSupportDirectory();
     final projectId = manifest.id;
-    final storagePath = platformContext.join(directory.path, projectId.toString());
-    await Directory(storagePath).create(recursive: true);
+    String storagePath;
+    if (path == null) {
+      storagePath = platformContext.join(directory.path, projectId.toString());
+      await Directory(storagePath).create(recursive: true);
+    } else {
+      storagePath = path;
+    }
     final projectType = parseProjectType(manifest.task);
 
     return PublicProject(

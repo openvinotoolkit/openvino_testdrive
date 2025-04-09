@@ -21,7 +21,7 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    _proxyController = TextEditingController(text: Config.proxy);
+    _proxyController = TextEditingController(text: Config().proxy);
   }
 
   @override
@@ -120,9 +120,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     children: [
                       const SizedBox(height: 8),
                       ToggleSwitch(
-                        checked: Config.proxyEnabled,
+                        checked: Config().proxyEnabled,
                         onChanged: (value) async {
-                          await Config.setProxyEnabled(value);
+                          await Config().setProxyEnabled(value);
                           setState(() { });
                         },
                       ),
@@ -133,7 +133,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           controller: _proxyController,
                           placeholder: '<proxy>:<port>',
                           onChanged: (value) async {
-                            Config.setProxy(value);
+                            Config().setProxy(value);
                             setState(() { });
                           },
                         ),

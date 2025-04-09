@@ -4,6 +4,7 @@
 
 import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:inference/config.dart';
 import 'package:inference/deployment_processor.dart';
 import 'package:inference/project.dart';
 
@@ -29,7 +30,13 @@ class ProjectProvider extends ChangeNotifier {
     }
 
     void removeProject(Project project) async {
-        deleteProjectData(project);
+        if (await project.isInAppStorage()) {
+            print("Is in app storage, removing files");
+            deleteProjectData(project);
+        } else {
+            print("Is stored externally, removing reference");
+            Config().removeExternalModel(project.storagePath);
+        }
         _projects.remove(project);
         notifyListeners();
     }

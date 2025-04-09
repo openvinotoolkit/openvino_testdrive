@@ -5,6 +5,7 @@
 import 'package:collection/collection.dart';
 import 'package:inference/importers/model_manifest.dart';
 import 'package:inference/migration/migration.dart';
+import 'package:inference/migration/migrations/migration_1.0.0_to_25.0.1.dart';
 
 class MigrationManager {
   final String destinationVersion;
@@ -16,6 +17,19 @@ class MigrationManager {
       required this.manifest,
       required this.migrations,
   });
+
+  factory MigrationManager.withMigrations({
+      required String destinationVersion,
+      required List<ModelManifest> manifest,
+  }) {
+    return MigrationManager(
+        destinationVersion: destinationVersion,
+        manifest: manifest,
+        migrations: [
+          MigrationV1ToV2501(),
+        ]
+    );
+  }
 
   bool eligible(Map<String, dynamic> json) {
     return migrations.firstWhereOrNull((migration) {

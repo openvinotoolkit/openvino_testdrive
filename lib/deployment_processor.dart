@@ -5,9 +5,9 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import 'package:inference/config.dart';
 import 'package:inference/importers/manifest_importer.dart';
 import 'package:inference/migration/migration_manager.dart';
-import 'package:inference/migration/migrations/migration_1.0.0_to_25.0.1.dart';
 import 'package:inference/project.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
@@ -35,31 +35,32 @@ Future<List<Project>> loadProjectsFromStorage() async {
   final directory = await getApplicationSupportDirectory();
   final manifest = ManifestImporter("assets/manifest.json");
   await manifest.loadManifest();
-  final migrationManager = MigrationManager(
+  final migrationManager = MigrationManager.withMigrations(
     destinationVersion: currentApplicationVersion,
     manifest: manifest.allModels,
-    migrations: [
-      MigrationV1ToV2501(),
-    ]
   );
 
-  return List.from(directory.listSync()
+  final modelPaths = [
+    Config().externalModels,
+    directory.listSync().map((m) => m.path),
+  ].expand((l) => l);
+
+  return List.from(modelPaths
     .map((projectFolder) {
-      if (!Directory(projectFolder.path).existsSync()) {
+      if (!Directory(projectFolder).existsSync()) {
         return null;
       }
       final platformContext = Context(style: Style.platform);
       try {
-        final projectFile = File(platformContext.join(projectFolder.path, "project.json"));
+        final projectFile = File(platformContext.join(projectFolder, "project.json"));
         final content = projectFile.readAsStringSync();
         var jsonContent = jsonDecode(content);
         if (migrationManager.eligible((jsonContent))) {
-          print("Migrating ${projectFolder.path}");
           jsonContent = migrationManager.migrate(jsonContent);
           const encoder = JsonEncoder.withIndent("  ");
           projectFile.writeAsStringSync(encoder.convert(jsonContent));
         }
-        final project = Project.fromJson(jsonContent, projectFolder.path);
+        final project = Project.fromJson(jsonContent, projectFolder);
         project.loaded.complete();
         return project;
       } catch (exception, stack) {

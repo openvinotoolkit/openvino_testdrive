@@ -47,9 +47,9 @@ class AppTheme extends ChangeNotifier {
     notifyListeners();
   }
 
-  ThemeMode get mode => Config.themeMode;
+  ThemeMode get mode => Config().themeMode;
   set mode(ThemeMode value) {
-    Config.setThemeMode(value);
+    Config().setThemeMode(value);
     notifyListeners();
   }
 

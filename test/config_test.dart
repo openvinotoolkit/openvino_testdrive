@@ -28,57 +28,57 @@ void main() {
     if (PathProviderPlatform.instance is FakePathProviderPlatform) {
       await (PathProviderPlatform.instance as FakePathProviderPlatform).deleteAppDir();
     }
-    Config.reset();
+    Config().reset();
   });
 
   test('Config proxy settings', () async {
     print(await getApplicationSupportDirectory());
-    await Config.setProxy('http://proxy.example.com:8080');
-    expect(Config.proxy, 'http://proxy.example.com:8080');
+    await Config().setProxy('http://proxy.example.com:8080');
+    expect(Config().proxy, 'http://proxy.example.com:8080');
 
-    await Config.setProxyEnabled(true);
-    expect(Config.proxyEnabled, true);
+    await Config().setProxyEnabled(true);
+    expect(Config().proxyEnabled, true);
 
-    await Config.setProxyEnabled(false);
-    expect(Config.proxyEnabled, false);
+    await Config().setProxyEnabled(false);
+    expect(Config().proxyEnabled, false);
   });
 
   test('Config theme mode', () async {
-    await Config.setThemeMode(ThemeMode.dark);
-    expect(Config.themeMode, ThemeMode.dark);
+    await Config().setThemeMode(ThemeMode.dark);
+    expect(Config().themeMode, ThemeMode.dark);
 
-    await Config.setThemeMode(ThemeMode.system);
-    expect(Config.themeMode, ThemeMode.system);
+    await Config().setThemeMode(ThemeMode.system);
+    expect(Config().themeMode, ThemeMode.system);
 
-    await Config.setThemeMode(ThemeMode.light);
-    expect(Config.themeMode, ThemeMode.light);
+    await Config().setThemeMode(ThemeMode.light);
+    expect(Config().themeMode, ThemeMode.light);
   });
 
   test('Config load and save', () async {
-    expect(Config.proxyEnabled, false);
-    expect(Config.proxy, '');
-    expect(Config.themeMode, ThemeMode.system);
+    expect(Config().proxyEnabled, false);
+    expect(Config().proxy, '');
+    expect(Config().themeMode, ThemeMode.system);
 
-    await Config.setProxy('http://proxy.example.com:8080');
-    await Config.setProxyEnabled(true);
-    await Config.setThemeMode(ThemeMode.dark);
+    await Config().setProxy('http://proxy.example.com:8080');
+    await Config().setProxyEnabled(true);
+    await Config().setThemeMode(ThemeMode.dark);
 
-    await Config.loadFromFile();
-    expect(Config.proxy, 'http://proxy.example.com:8080');
-    expect(Config.proxyEnabled, true);
-    expect(Config.themeMode, ThemeMode.dark);
+    await Config().loadFromFile();
+    expect(Config().proxy, 'http://proxy.example.com:8080');
+    expect(Config().proxyEnabled, true);
+    expect(Config().themeMode, ThemeMode.dark);
   });
 
   test('Load proxy from envvar', () async {
     const proxy = 'http://proxy.foo.bar:8080';
     when(() => envvars.proxy).thenReturn(proxy);
-    Config.envvars = envvars;
+    Config().envvars = envvars;
 
-    await Config.loadFromFile();
-    expect(Config.proxy, '');
+    await Config().loadFromFile();
+    expect(Config().proxy, '');
 
-    await Config.setProxyEnabled(true);
-    await Config.loadFromFile();
-    expect(Config.proxy, proxy);
+    await Config().setProxyEnabled(true);
+    await Config().loadFromFile();
+    expect(Config().proxy, proxy);
   });
 }

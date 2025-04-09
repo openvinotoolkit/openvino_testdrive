@@ -7,7 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:inference/pages/import/huggingface.dart';
 import 'package:inference/pages/import/providers/import_provider.dart';
-import 'package:inference/pages/import/widgets/import_geti_model_dialog.dart';
+import 'package:inference/pages/import/widgets/import_model_dialog.dart';
 import 'package:inference/project.dart';
 import 'package:inference/providers/project_filter_provider.dart';
 import 'package:inference/theme_fluent.dart';
@@ -67,7 +67,7 @@ class _ImportPageState extends State<ImportPage> {
                   PaneItemAction(
                     icon: const Icon(FluentIcons.project_collection),
                     title: const Text("Local disk"),
-                    onTap: () => showImportGetiModelDialog(context,
+                    onTap: () => showImportModelDialog(context,
                       callback: (projects) {
                         if (projects != null && projects.isNotEmpty) {
                           if (projects.length == 1) {

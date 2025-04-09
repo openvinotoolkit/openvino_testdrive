@@ -25,9 +25,9 @@ Dio dioClient() {
     createHttpClient: () {
       final client = HttpClient();
       client.findProxy = (uri) {
-        if (Config.proxyEnabled) {
-          final proxyUri = Uri.parse(Config.proxy);
-          final proxyHost = proxyUri.host.isNotEmpty ? proxyUri.host : Config.proxy;
+        if (Config().proxyEnabled) {
+          final proxyUri = Uri.parse(Config().proxy);
+          final proxyHost = proxyUri.host.isNotEmpty ? proxyUri.host : Config().proxy;
           final proxyPort = proxyUri.port != 0 ? ':${proxyUri.port}' : '';
           return "PROXY $proxyHost$proxyPort";
         } else {
@@ -125,4 +125,12 @@ class Envvars {
     }
     return '';
   }
+}
+
+int calculateDiskUsage(path) {
+  final dir = Directory(path);
+  if (dir.existsSync()) {
+    return dir.listSync(recursive: true).fold(0, (acc, m) => acc + m.statSync().size);
+  }
+  return 0;
 }

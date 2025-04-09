@@ -23,7 +23,7 @@ void main() {
     if (PathProviderPlatform.instance is FakePathProviderPlatform) {
       await (PathProviderPlatform.instance as FakePathProviderPlatform).deleteAppDir();
     }
-    Config.reset();
+    Config().reset();
   });
 
   testWidgets('SettingsPage displays and updates theme mode', (WidgetTester tester) async {
@@ -67,11 +67,11 @@ void main() {
     await tester.tap(find.byType(ToggleSwitch));
     await tester.pumpAndSettle();
 
-    expect(Config.proxyEnabled, true);
+    expect(Config().proxyEnabled, true);
 
     await tester.enterText(find.byType(TextBox), 'http://proxy.example.com:8080');
     await tester.pumpAndSettle();
 
-    expect(Config.proxy, 'http://proxy.example.com:8080');
+    expect(Config().proxy, 'http://proxy.example.com:8080');
   });
 }
