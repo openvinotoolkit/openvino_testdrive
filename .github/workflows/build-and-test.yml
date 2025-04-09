@@ -25,7 +25,7 @@ jobs:
       contents: write
     uses: ./.github/workflows/build-linux-bindings.yml
     with:
-      OPENVINO_VERSION: '2025.0'
+      OPENVINO_VERSION: '2025.1'
 
   build-windows-bindings:
     permissions:
@@ -37,7 +37,7 @@ jobs:
       contents: write
     uses: ./.github/workflows/build-macos-bindings.yml
     with:
-      OPENVINO_VERSION: '2025.0'
+      OPENVINO_VERSION: '2025.1'
 
   package:
     name: Package combined release
