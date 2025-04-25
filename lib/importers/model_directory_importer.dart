@@ -32,7 +32,10 @@ class ModelDirImporter extends Importer {
 
       final source = File(projectJson).readAsStringSync();
       final migrated = migrationManager.migrate(jsonDecode(source));
-      project =  Project.fromJson(migrated, directory);
+      project = Project.fromJson(migrated, directory);
+      if (project is PublicProject) { // Always allow npu when importing a model manually
+        (project as PublicProject).manifest.npuEnabled = true;
+      }
     }
     return project!;
   }

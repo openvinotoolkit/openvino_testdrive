@@ -465,7 +465,7 @@ StatusOrDevices* getAvailableDevices() {
     devices[0] = {"AUTO", "auto"};
     for (int i = 0; i < device_ids.size(); i++) {
         auto device_name = core.get_property(device_ids[i], ov::device::full_name);
-        devices[i + 1] = { strdup(device_ids[i].c_str()), strdup(device_name.c_str()) };
+        devices[i + 1] = { strdup(device_ids[i].c_str()), strdup((device_ids[i] + "(" + device_name + ")").c_str()) };
     }
 
     return new StatusOrDevices{OkStatus, "", devices, (int)device_ids.size() + 1};
