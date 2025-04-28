@@ -31,7 +31,7 @@ class VLMInference {
     });
 
     print("${result.ref.status}, ${result.ref.message}");
-    if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+    if (result.ref.status != StatusEnum.OkStatus) {
       throw "VLMInference open error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
@@ -41,7 +41,7 @@ class VLMInference {
   Future<void> setListener(void Function(String) callback) async{
     int instanceAddress = instance.ref.value.address;
     void localCallback(Pointer<StatusOrString> ptr) {
-      if (StatusEnum.fromValue(ptr.ref.status) != StatusEnum.OkStatus) {
+      if (ptr.ref.status != StatusEnum.OkStatus) {
         // TODO(RHeckerIntel): instead of throw, call an onError callback.
         throw "VLM Callback error: ${ptr.ref.status} ${ptr.ref.message.toDartString()}";
       }
@@ -51,7 +51,7 @@ class VLMInference {
     nativeListener?.close();
     nativeListener = NativeCallable<VLMInferenceCallbackFunctionFunction>.listener(localCallback);
     final status = vlmOV.vlmInferenceSetListener(Pointer<Void>.fromAddress(instanceAddress), nativeListener!.nativeFunction);
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       // TODO(RHeckerIntel): instead of throw, call an onError callback.
       throw "VLM setListener error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
@@ -72,7 +72,7 @@ class VLMInference {
       return status;
     });
 
-    if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+    if (result.ref.status != StatusEnum.OkStatus) {
       var msg = result.ref.message;
       var status = result.ref.status;
       var dStr = msg.toDartString();
@@ -97,7 +97,7 @@ class VLMInference {
 
     final status = vlmOV.vlmInferenceSetImagePaths(instance.ref.value, pointerToCStrings, cStrings.length);
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "Close error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
     vlmOV.freeStatus(status);
@@ -106,7 +106,7 @@ class VLMInference {
   void forceStop() {
     final status = vlmOV.vlmInferenceStop(instance.ref.value);
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "VLM Force Stop error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
   }
@@ -115,7 +115,7 @@ class VLMInference {
   void close() {
     final status = vlmOV.vlmInferenceClose(instance.ref.value);
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "Close error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
     vlmOV.freeStatus(status);

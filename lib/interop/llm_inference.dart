@@ -28,7 +28,7 @@ class LLMInference {
     });
 
     print("${result.ref.status}, ${result.ref.message}");
-    if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+    if (result.ref.status != StatusEnum.OkStatus) {
       throw "LLMInference open error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
@@ -46,7 +46,7 @@ class LLMInference {
     })
 ;
 
-    if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+    if (result.ref.status != StatusEnum.OkStatus) {
       throw "LLMInference prompt error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
@@ -56,7 +56,7 @@ class LLMInference {
   Future<void> setListener(void Function(String) callback) async{
     int instanceAddress = instance.ref.value.address;
     void localCallback(Pointer<StatusOrString> ptr) {
-      if (StatusEnum.fromValue(ptr.ref.status) != StatusEnum.OkStatus) {
+      if (ptr.ref.status != StatusEnum.OkStatus) {
         // TODO(RHeckerIntel): instead of throw, call an onError callback.
         throw "LLM Callback error: ${ptr.ref.status} ${ptr.ref.message.toDartString()}";
       }
@@ -66,7 +66,7 @@ class LLMInference {
     nativeListener?.close();
     nativeListener = NativeCallable<LLMInferenceCallbackFunctionFunction>.listener(localCallback);
     final status = llmOV.llmInferenceSetListener(Pointer<Void>.fromAddress(instanceAddress), nativeListener!.nativeFunction);
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       // TODO(RHeckerIntel): instead of throw, call an onError callback.
       throw "LLM setListener error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
@@ -76,7 +76,7 @@ class LLMInference {
   void forceStop() {
     final status = llmOV.llmInferenceForceStop(instance.ref.value);
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "LLM Force Stop error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
   }
@@ -84,7 +84,7 @@ class LLMInference {
   String getTokenizerConfig() {
     final status = llmOV.llmInferenceGetTokenizerConfig(instance.ref.value);
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "LLM get Chat template error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
 
@@ -98,7 +98,7 @@ class LLMInference {
     final status = llmOV.llmInferenceClose(instance.ref.value);
     nativeListener?.close();
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "Close error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
     llmOV.freeStatus(status);
@@ -107,7 +107,7 @@ class LLMInference {
   void clearHistory() {
     final status = llmOV.llmInferenceClearHistory(instance.ref.value);
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "Clear History: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
   }

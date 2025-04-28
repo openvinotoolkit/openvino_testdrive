@@ -14,8 +14,9 @@ class SerializationOutput {
   bool csv;
   bool json;
   bool overlay;
+  bool source;
 
-  SerializationOutput({this.csv = false, this.json = false, this.overlay = false});
+  SerializationOutput({this.csv = false, this.json = false, this.overlay = false, this.source = false});
 
   bool any() => csv || json || overlay;
 

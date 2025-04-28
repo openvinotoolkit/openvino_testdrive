@@ -275,6 +275,7 @@ class ImageGraphBuilder {
           input_stream : "INFERENCE_RESULT:inference_result"
           input_stream : "OVERLAY:overlay"
           input_stream : "OUTPUT:serialization_output"
+          input_stream : "SOURCE:input"
           output_stream: "RESULT:output"
       }
     """;

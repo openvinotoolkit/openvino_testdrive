@@ -27,7 +27,7 @@ class SpeechToText {
     });
 
     print("${result.ref.status}, ${result.ref.message}");
-    if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+    if (result.ref.status != StatusEnum.OkStatus) {
       throw "SpeechToText open error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
@@ -44,7 +44,7 @@ class SpeechToText {
         return status;
       });
 
-      if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+      if (result.ref.status != StatusEnum.OkStatus) {
         throw "SpeechToText LoadVideo error: ${result.ref.status} ${result.ref.message.toDartString()}";
       }
     }
@@ -54,7 +54,7 @@ class SpeechToText {
         final status = ov.speechToTextVideoDuration(Pointer<Void>.fromAddress(instanceAddress));
         return status;
       });
-      if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+      if (result.ref.status != StatusEnum.OkStatus) {
         throw "SpeechToText VideoDuration error: ${result.ref.status} ${result.ref.message.toDartString()}";
       }
       return result.ref.value;
@@ -70,7 +70,7 @@ class SpeechToText {
       return status;
     });
 
-    if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+    if (result.ref.status != StatusEnum.OkStatus) {
       throw "SpeechToText LoadVideo error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 

@@ -350,7 +350,7 @@ class OpenVINO {
       .asFunction<ffi.Pointer<StatusOrBool> Function(CTTIInference)>();
 
   ffi.Pointer<Status> ttiInferenceClose(
-    CTTIInference instance,
+    CLLMInference instance,
   ) {
     return _ttiInferenceClose(
       instance,
@@ -358,10 +358,10 @@ class OpenVINO {
   }
 
   late final _ttiInferenceClosePtr =
-      _lookup<ffi.NativeFunction<ffi.Pointer<Status> Function(CTTIInference)>>(
+      _lookup<ffi.NativeFunction<ffi.Pointer<Status> Function(CLLMInference)>>(
           'ttiInferenceClose');
   late final _ttiInferenceClose = _ttiInferenceClosePtr
-      .asFunction<ffi.Pointer<Status> Function(CTTIInference)>();
+      .asFunction<ffi.Pointer<Status> Function(CLLMInference)>();
 
   ffi.Pointer<StatusOrVLMInference> vlmInferenceOpen(
     ffi.Pointer<pkg_ffi.Utf8> model_path,
@@ -535,6 +535,7 @@ class OpenVINO {
     bool json,
     bool csv,
     bool overlay,
+    bool source,
   ) {
     return _graphRunnerQueueSerializationOutput(
       instance,
@@ -543,6 +544,7 @@ class OpenVINO {
       json,
       csv,
       overlay,
+      source,
     );
   }
 
@@ -554,11 +556,12 @@ class OpenVINO {
               ffi.Int,
               ffi.Bool,
               ffi.Bool,
+              ffi.Bool,
               ffi.Bool)>>('graphRunnerQueueSerializationOutput');
   late final _graphRunnerQueueSerializationOutput =
       _graphRunnerQueueSerializationOutputPtr.asFunction<
           ffi.Pointer<Status> Function(CGraphRunner, ffi.Pointer<pkg_ffi.Utf8>,
-              int, bool, bool, bool)>();
+              int, bool, bool, bool, bool)>();
 
   ffi.Pointer<StatusOrString> graphRunnerGet(
     CGraphRunner instance,
@@ -596,6 +599,7 @@ class OpenVINO {
     bool json,
     bool csv,
     bool overlay,
+    bool source,
   ) {
     return _graphRunnerStartCamera(
       instance,
@@ -604,6 +608,7 @@ class OpenVINO {
       json,
       csv,
       overlay,
+      source,
     );
   }
 
@@ -615,10 +620,11 @@ class OpenVINO {
               ImageInferenceCallbackFunction,
               ffi.Bool,
               ffi.Bool,
+              ffi.Bool,
               ffi.Bool)>>('graphRunnerStartCamera');
   late final _graphRunnerStartCamera = _graphRunnerStartCameraPtr.asFunction<
       ffi.Pointer<Status> Function(CGraphRunner, int,
-          ImageInferenceCallbackFunction, bool, bool, bool)>();
+          ImageInferenceCallbackFunction, bool, bool, bool, bool)>();
 
   ffi.Pointer<StatusOrInt> graphRunnerGetTimestamp(
     CGraphRunner instance,
@@ -824,6 +830,48 @@ class OpenVINO {
       _handle_exceptionsPtr.asFunction<ffi.Pointer<Status> Function()>();
 }
 
+typedef va_list = ffi.Pointer<pkg_ffi.Utf8>;
+typedef ptrdiff_t = ffi.LongLong;
+typedef Dartptrdiff_t = int;
+typedef errno_t = ffi.Int;
+typedef Darterrno_t = int;
+typedef wint_t = ffi.UnsignedShort;
+typedef Dartwint_t = int;
+typedef wctype_t = ffi.UnsignedShort;
+typedef Dartwctype_t = int;
+typedef __time32_t = ffi.Long;
+typedef Dart__time32_t = int;
+typedef __time64_t = ffi.LongLong;
+typedef Dart__time64_t = int;
+
+final class __crt_locale_data extends ffi.Opaque {}
+
+final class __crt_multibyte_data extends ffi.Opaque {}
+
+final class __crt_locale_pointers extends ffi.Struct {
+  external ffi.Pointer<__crt_locale_data> locinfo;
+
+  external ffi.Pointer<__crt_multibyte_data> mbcinfo;
+}
+
+typedef _locale_t = ffi.Pointer<__crt_locale_pointers>;
+
+final class _Mbstatet extends ffi.Struct {
+  @ffi.UnsignedLong()
+  external int _Wchar;
+
+  @ffi.UnsignedShort()
+  external int _Byte;
+
+  @ffi.UnsignedShort()
+  external int _State;
+}
+
+typedef mbstate_t = _Mbstatet;
+typedef time_t = __time64_t;
+typedef rsize_t = ffi.Size;
+typedef Dartrsize_t = int;
+
 enum StatusEnum {
   OkStatus(0),
   ErrorStatus(-1),
@@ -952,6 +1000,14 @@ final class VLMStringWithMetrics extends ffi.Struct {
   external VLMMetrics metrics;
 }
 
+typedef CImageInference = ffi.Pointer<ffi.Void>;
+typedef CGraphRunner = ffi.Pointer<ffi.Void>;
+typedef CSpeechToText = ffi.Pointer<ffi.Void>;
+typedef CLLMInference = ffi.Pointer<ffi.Void>;
+typedef CTTIInference = ffi.Pointer<ffi.Void>;
+typedef CSentenceTransformer = ffi.Pointer<ffi.Void>;
+typedef CVLMInference = ffi.Pointer<ffi.Void>;
+
 final class Device extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> id;
 
@@ -977,14 +1033,18 @@ final class TranscriptionChunk extends ffi.Struct {
 
 final class Status extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 }
 
 final class StatusOrString extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -993,7 +1053,9 @@ final class StatusOrString extends ffi.Struct {
 
 final class StatusOrBool extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -1003,7 +1065,9 @@ final class StatusOrBool extends ffi.Struct {
 
 final class StatusOrInt extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -1013,51 +1077,53 @@ final class StatusOrInt extends ffi.Struct {
 
 final class StatusOrGraphRunner extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
   external CGraphRunner value;
 }
 
-typedef CGraphRunner = ffi.Pointer<ffi.Void>;
-
 final class StatusOrSentenceTransformer extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
   external CSentenceTransformer value;
 }
 
-typedef CSentenceTransformer = ffi.Pointer<ffi.Void>;
-
 final class StatusOrSpeechToText extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
   external CSpeechToText value;
 }
 
-typedef CSpeechToText = ffi.Pointer<ffi.Void>;
-
 final class StatusOrLLMInference extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
   external CLLMInference value;
 }
 
-typedef CLLMInference = ffi.Pointer<ffi.Void>;
-
 final class StatusOrTTIInference extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -1066,7 +1132,9 @@ final class StatusOrTTIInference extends ffi.Struct {
 
 final class StatusOrVLMInference extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -1075,7 +1143,9 @@ final class StatusOrVLMInference extends ffi.Struct {
 
 final class StatusOrModelResponse extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -1086,7 +1156,9 @@ final class StatusOrModelResponse extends ffi.Struct {
 
 final class StatusOrWhisperModelResponse extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -1102,7 +1174,9 @@ final class StatusOrWhisperModelResponse extends ffi.Struct {
 
 final class StatusOrTTIModelResponse extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -1113,7 +1187,9 @@ final class StatusOrTTIModelResponse extends ffi.Struct {
 
 final class StatusOrEmbeddings extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -1125,7 +1201,9 @@ final class StatusOrEmbeddings extends ffi.Struct {
 
 final class StatusOrVLMModelResponse extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -1136,7 +1214,9 @@ final class StatusOrVLMModelResponse extends ffi.Struct {
 
 final class StatusOrDevices extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -1148,7 +1228,9 @@ final class StatusOrDevices extends ffi.Struct {
 
 final class StatusOrCameraDevices extends ffi.Struct {
   @ffi.Int()
-  external int status;
+  external int statusAsInt;
+
+  StatusEnum get status => StatusEnum.fromValue(statusAsInt);
 
   external ffi.Pointer<pkg_ffi.Utf8> message;
 
@@ -1158,23 +1240,21 @@ final class StatusOrCameraDevices extends ffi.Struct {
   external int size;
 }
 
-typedef LLMInferenceCallbackFunction
-    = ffi.Pointer<ffi.NativeFunction<LLMInferenceCallbackFunctionFunction>>;
-typedef LLMInferenceCallbackFunctionFunction = ffi.Void Function(
-    ffi.Pointer<StatusOrString>);
-typedef DartLLMInferenceCallbackFunctionFunction = void Function(
-    ffi.Pointer<StatusOrString>);
-typedef CTTIInference = ffi.Pointer<ffi.Void>;
-typedef CVLMInference = ffi.Pointer<ffi.Void>;
-typedef VLMInferenceCallbackFunction
-    = ffi.Pointer<ffi.NativeFunction<VLMInferenceCallbackFunctionFunction>>;
-typedef VLMInferenceCallbackFunctionFunction = ffi.Void Function(
-    ffi.Pointer<StatusOrString>);
-typedef DartVLMInferenceCallbackFunctionFunction = void Function(
-    ffi.Pointer<StatusOrString>);
-typedef ImageInferenceCallbackFunction
-    = ffi.Pointer<ffi.NativeFunction<ImageInferenceCallbackFunctionFunction>>;
 typedef ImageInferenceCallbackFunctionFunction = ffi.Void Function(
     ffi.Pointer<StatusOrString>);
 typedef DartImageInferenceCallbackFunctionFunction = void Function(
     ffi.Pointer<StatusOrString>);
+typedef ImageInferenceCallbackFunction
+    = ffi.Pointer<ffi.NativeFunction<ImageInferenceCallbackFunctionFunction>>;
+typedef LLMInferenceCallbackFunctionFunction = ffi.Void Function(
+    ffi.Pointer<StatusOrString>);
+typedef DartLLMInferenceCallbackFunctionFunction = void Function(
+    ffi.Pointer<StatusOrString>);
+typedef LLMInferenceCallbackFunction
+    = ffi.Pointer<ffi.NativeFunction<LLMInferenceCallbackFunctionFunction>>;
+typedef VLMInferenceCallbackFunctionFunction = ffi.Void Function(
+    ffi.Pointer<StatusOrString>);
+typedef DartVLMInferenceCallbackFunctionFunction = void Function(
+    ffi.Pointer<StatusOrString>);
+typedef VLMInferenceCallbackFunction
+    = ffi.Pointer<ffi.NativeFunction<VLMInferenceCallbackFunctionFunction>>;

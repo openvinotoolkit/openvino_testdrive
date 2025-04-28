@@ -11,7 +11,10 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:inference/annotation.dart';
 import 'package:inference/interop/openvino_bindings.dart' show SerializationOutput;
 import 'package:inference/providers/image_inference_provider.dart';
+import 'package:inference/widgets/canvas/canvas.dart';
 import 'package:provider/provider.dart';
+
+import 'dart:ui' as ui;
 
 class CameraView extends StatefulWidget {
   final int deviceIndex;
@@ -32,7 +35,7 @@ class _CameraViewState extends State<CameraView> {
 
   void startCamera(){
     streamController = StreamController<ImageInferenceResult>();
-    inferenceProvider.openCamera(widget.deviceIndex, onFrame, SerializationOutput(overlay: true));
+    inferenceProvider.openCamera(widget.deviceIndex, onFrame, SerializationOutput(source: true, json: true));
   }
 
   @override
@@ -53,19 +56,19 @@ class _CameraViewState extends State<CameraView> {
     return StreamBuilder<ImageInferenceResult>(
       stream: streamController.stream,
       builder: (context, AsyncSnapshot<ImageInferenceResult> snapshot) {
-        print(snapshot);
-        final overlayData = snapshot.data?.overlay;
-        final overlayImage = overlayData == null
-          ? null
-          : Image.memory(base64Decode(overlayData), gaplessPlayback: true,);
-
-
-        return Builder(
-          builder: (context) {
-            if (overlayImage == null) {
+        Future<ui.Image>? imageFuture = snapshot.data?.source != null ? decodeImageFromList(base64Decode(snapshot.data!.source!)) : null;
+        return FutureBuilder(
+          future: imageFuture,
+          builder: (context, imageSnapshot) {
+            if (imageSnapshot.data == null) {
               return Container();
             }
-            return Center(child: overlayImage);
+            return Canvas(
+              image: imageSnapshot.data!,
+              annotations: snapshot.data!.parseAnnotations(),
+              labelDefinitions: inferenceProvider.project.labelDefinitions,
+            );
+
           }
         );
       }

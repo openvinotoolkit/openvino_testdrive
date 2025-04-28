@@ -28,7 +28,7 @@ class GraphRunner {
       return status;
     });
 
-    if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+    if (result.ref.status != StatusEnum.OkStatus) {
       throw "GraphRunner::Init error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
@@ -38,7 +38,7 @@ class GraphRunner {
   int getTimestamp() {
     final status = ov.graphRunnerGetTimestamp(instance.ref.value);
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "GraphRunner::get error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
     final content = status.ref.value;
@@ -51,7 +51,7 @@ class GraphRunner {
     return await Isolate.run(() {
       final status = ov.graphRunnerGet(Pointer<Void>.fromAddress(instanceAddress));
 
-      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+      if (status.ref.status != StatusEnum.OkStatus) {
         throw "GraphRunner::get error: ${status.ref.status} ${status.ref.message.toDartString()}";
       }
       final content = status.ref.value.toDartString();
@@ -62,7 +62,7 @@ class GraphRunner {
 
   Future<void> startCamera(int deviceIndex, Function(String) callback, SerializationOutput output) async {
     void wrapCallback(Pointer<StatusOrString> ptr) {
-      if (StatusEnum.fromValue(ptr.ref.status) != StatusEnum.OkStatus) {
+      if (ptr.ref.status != StatusEnum.OkStatus) {
         // TODO(RHeckerIntel): instead of throw, call an onError callback.
         throw "ImageInference infer error: ${ptr.ref.status} ${ptr.ref.message.toDartString()}";
       }
@@ -73,8 +73,8 @@ class GraphRunner {
     nativeListener?.close();
     nativeListener = NativeCallable<ImageInferenceCallbackFunctionFunction>.listener(wrapCallback);
     final nativeFunction = nativeListener!.nativeFunction;
-    final status = ov.graphRunnerStartCamera(instance.ref.value, deviceIndex, nativeFunction, output.json, output.csv, output.overlay);
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    final status = ov.graphRunnerStartCamera(instance.ref.value, deviceIndex, nativeFunction, output.json, output.csv, output.overlay, output.source);
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "GraphRunner::StartCamera error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
   }
@@ -82,7 +82,7 @@ class GraphRunner {
     int instanceAddress = instance.ref.value.address;
     await Isolate.run(() {
       final status = ov.graphRunnerStopCamera(Pointer<Void>.fromAddress(instanceAddress));
-      switch(StatusEnum.fromValue(status.ref.status)) {
+      switch(status.ref.status) {
         case StatusEnum.OkStatus:
         case StatusEnum.ErrorStatus: //Fail gracefully since race condition could happen with stopping the camera and we dont care about that
           break;
@@ -103,7 +103,7 @@ class GraphRunner {
       final status = ov.graphRunnerQueueImage(Pointer<Void>.fromAddress(instanceAddress), nodeNamePtr, timestamp, _data, file.lengthInBytes);
       calloc.free(nodeNamePtr);
 
-      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+      if (status.ref.status != StatusEnum.OkStatus) {
         throw "QueueImage error: ${status.ref.status} ${status.ref.message.toDartString()}";
       }
     });
@@ -113,10 +113,10 @@ class GraphRunner {
     int instanceAddress = instance.ref.value.address;
     await Isolate.run(() {
       final nodeNamePtr = nodeName.toNativeUtf8();
-      final status = ov.graphRunnerQueueSerializationOutput(Pointer<Void>.fromAddress(instanceAddress), nodeNamePtr, timestamp, output.json, output.csv, output.overlay);
+      final status = ov.graphRunnerQueueSerializationOutput(Pointer<Void>.fromAddress(instanceAddress), nodeNamePtr, timestamp, output.json, output.csv, output.overlay, output.source);
       calloc.free(nodeNamePtr);
 
-      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+      if (status.ref.status != StatusEnum.OkStatus) {
         throw "QueueSerializationOutput error: ${status.ref.status} ${status.ref.message.toDartString()}";
       }
     });
@@ -126,7 +126,7 @@ class GraphRunner {
     int instanceAddress = instance.ref.value.address;
     await Isolate.run(() {
       final status = ov.graphRunnerStop(Pointer<Void>.fromAddress(instanceAddress));
-      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+      if (status.ref.status != StatusEnum.OkStatus) {
         throw "GraphRunner::stop error: ${status.ref.status} ${status.ref.message.toDartString()}";
       }
     });

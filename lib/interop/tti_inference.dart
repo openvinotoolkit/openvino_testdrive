@@ -30,7 +30,7 @@ class TTIInference {
     });
 
     print("${result.ref.status}, ${result.ref.message}");
-    if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+    if (result.ref.status != StatusEnum.OkStatus) {
       throw "TTIInference open error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
@@ -52,7 +52,7 @@ class TTIInference {
       return status;
     });
 
-    if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+    if (result.ref.status != StatusEnum.OkStatus) {
       throw "TTIInference prompt error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
@@ -63,7 +63,7 @@ class TTIInference {
   bool hasModelIndex() {
     final status = ttiOV.ttiInferenceHasModelIndex(instance.ref.value);
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "TTI Chat template error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
 
@@ -73,7 +73,7 @@ class TTIInference {
   void close() {
     final status = ttiOV.ttiInferenceClose(instance.ref.value);
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "Close error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
     ttiOV.freeStatus(status);

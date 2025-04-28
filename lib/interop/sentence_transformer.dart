@@ -27,7 +27,7 @@ class SentenceTransformer {
     });
 
 
-    if (StatusEnum.fromValue(result.ref.status) != StatusEnum.OkStatus) {
+    if (result.ref.status != StatusEnum.OkStatus) {
       throw "SentenceTransformer open error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
     return SentenceTransformer(result);
@@ -43,7 +43,7 @@ class SentenceTransformer {
       return status;
     });
 
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "SentenceTransformer generate error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
 
@@ -59,7 +59,7 @@ class SentenceTransformer {
 
   void close() {
     final status = ov.sentenceTransformerClose(instance.ref.value);
-    if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+    if (status.ref.status != StatusEnum.OkStatus) {
       throw "Close error: ${status.ref.status} ${status.ref.message.toDartString()}";
     }
     ov.freeStatus(status);

@@ -23,6 +23,7 @@ class SerializationOutput {
     bool json;
     bool csv;
     bool overlay;
+    bool source;
 };
 
 namespace mediapipe {

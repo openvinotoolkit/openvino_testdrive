@@ -19,7 +19,7 @@ class Device {
     final result = await Isolate.run(() {
       final status = deviceOV.getAvailableDevices();
 
-      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+      if (status.ref.status != StatusEnum.OkStatus) {
         throw "GetAvailableDevices error: ${status.ref.status} ${status.ref.message.toDartString()}";
       }
 
@@ -48,7 +48,7 @@ class CameraDevice {
     final result = await Isolate.run(() {
       final status = deviceOV.getAvailableCameraDevices();
 
-      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+      if (status.ref.status != StatusEnum.OkStatus) {
         throw "GetAvailableDevices error: ${status.ref.status} ${status.ref.message.toDartString()}";
       }
 

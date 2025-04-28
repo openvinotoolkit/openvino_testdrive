@@ -310,23 +310,23 @@ Status* graphRunnerQueueImage(CGraphRunner instance, const char* name, int times
     }
 }
 
-Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* name, int timestamp, bool json, bool csv, bool overlay) {
+Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* name, int timestamp, bool json, bool csv, bool overlay, bool source) {
     try {
-        reinterpret_cast<GraphRunner*>(instance)->queue(name, timestamp, SerializationOutput{json, csv, overlay});
+        reinterpret_cast<GraphRunner*>(instance)->queue(name, timestamp, SerializationOutput{json, csv, overlay, source});
         return new Status{OkStatus, ""};
     } catch (...) {
         return handle_exceptions();
     }
 }
 
-Status* graphRunnerStartCamera(CGraphRunner instance, int camera_index, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay) {
+Status* graphRunnerStartCamera(CGraphRunner instance, int camera_index, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay, bool source) {
     try {
         auto runner = reinterpret_cast<GraphRunner*>(instance);
 
         auto lambda_callback = [callback](std::string response) {
             callback(new StatusOrString{OkStatus, "", strdup(response.c_str())});
         };
-        runner->open_camera(camera_index, SerializationOutput{json, csv, overlay}, lambda_callback);
+        runner->open_camera(camera_index, SerializationOutput{json, csv, overlay, source}, lambda_callback);
         return new Status{OkStatus, ""};
     } catch (...) {
         return handle_exceptions();
