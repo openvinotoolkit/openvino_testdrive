@@ -61,6 +61,9 @@ Future<List<Project>> loadProjectsFromStorage() async {
           projectFile.writeAsStringSync(encoder.convert(jsonContent));
         }
         final project = Project.fromJson(jsonContent, projectFolder);
+        if (Config().externalModels.contains(projectFolder) && project is PublicProject) {
+          project.manifest.npuEnabled = true;
+        }
         project.loaded.complete();
         return project;
       } catch (exception, stack) {
