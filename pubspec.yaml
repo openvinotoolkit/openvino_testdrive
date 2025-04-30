@@ -73,6 +73,7 @@ dependencies:
   jinja: ^0.6.0
   docx_to_text: ^1.0.1
   dart_pdf_reader: ^2.1.0
+  rxdart: ^0.28.0
 
 dev_dependencies:
   flutter_test:
@@ -180,9 +181,9 @@ msix_config:
   display_name: OpenVINO Test Drive
   publisher_display_name: Intel
   identity_name: intel.openvino.testdrive
-  msix_version: 25.0.0.5
+  msix_version: 25.1.0.2
   trim_logo: false
-  output_name: OpenVINO Test Drive 25.0.0
+  output_name: OpenVINO Test Drive 25.1.0
   capabilities: "internetClient"
   logo_path: "images/logo_250.png"
   app_installer: #<-- app installer configuration

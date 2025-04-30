@@ -80,6 +80,10 @@ void freeStatusOrEmbeddings(StatusOrEmbeddings *status) {
 
 void freeStatusOrCameraDevices(StatusOrCameraDevices *status) {
     if (status->status == StatusEnum::OkStatus) {
+        for (int i = 0; i < status->size; i++) {
+            delete [] status->value[i].resolutions;
+            status->value[i].resolutions = NULL;
+        }
         delete [] status->value;
         status->value = NULL;        // Prevent dangling pointers
     }
@@ -333,6 +337,15 @@ Status* graphRunnerStartCamera(CGraphRunner instance, int camera_index, ImageInf
     }
 }
 
+Status* graphRunnerSetCameraResolution(CGraphRunner instance, int width, int height) {
+    try {
+        reinterpret_cast<GraphRunner*>(instance)->set_camera_resolution(width, height);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
 StatusOrInt* graphRunnerGetTimestamp(CGraphRunner instance) {
     try {
         auto graph_runner = reinterpret_cast<GraphRunner*>(instance);
@@ -351,6 +364,7 @@ Status* graphRunnerStopCamera(CGraphRunner instance) {
         return handle_exceptions();
     }
 }
+
 
 StatusOrString* graphRunnerGet(CGraphRunner instance) {
     try {
@@ -477,7 +491,12 @@ StatusOrCameraDevices* getAvailableCameraDevices() {
         CameraDevice* devices = new CameraDevice[cameras.size()];
         int i = 0;
         for (auto camera: cameras) {
-            devices[i] = { (int)camera.first, strdup(camera.second.c_str()) };
+            int j = 0;
+            devices[i] = { (int)camera.id, strdup(camera.name.c_str()), new CameraResolution[camera.resolutions.size()], (int)camera.resolutions.size()};
+            for (auto resolution: camera.resolutions) {
+                devices[i].resolutions[j] = {resolution.width, resolution.height};
+                j++;
+            }
             i++;
         }
 

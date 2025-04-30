@@ -17,11 +17,14 @@ class CameraHandler {
     CameraHandler(int device): device(device) {}
     void open_camera(const std::function<void(cv::Mat frame)>& onFrameCallback);
     void stop_camera();
+    void set_resolution(int width, int height);
 
   private:
     void start_camera_process(const std::function<void(cv::Mat frame)>& onFrameCallback);
 
     bool camera_get_frame = false;
+
+    cv::VideoCapture cap;
     std::thread camera_thread;
 
 

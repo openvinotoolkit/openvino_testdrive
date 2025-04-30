@@ -25,7 +25,31 @@
 #pragma comment(lib, "mfplat.lib")
 #pragma comment(lib, "mf.lib")
 
-std::map<size_t, std::string> list_camera_devices() {
+class Resolution {
+public:
+    int width;
+    int height;
+};
+
+class Camera {
+public:
+    size_t id;
+    std::string name;
+    std::vector<Resolution> resolutions;
+
+    bool add_resolution(Resolution resolution) {
+        for (auto &rhs: resolutions) {
+            if (rhs.width == resolution.width && rhs.height == resolution.height) {
+                return false;
+            }
+        }
+        resolutions.push_back(resolution);
+        return true;
+    }
+
+};
+
+std::vector<Camera> list_camera_devices() {
     HRESULT hr = MFStartup(MF_VERSION);
     if (FAILED(hr)) {
         throw api_error(InputDeviceError, "MFStartup failed.");
@@ -50,7 +74,7 @@ std::map<size_t, std::string> list_camera_devices() {
     UINT32 count = 0;
 
 
-    std::map<size_t, std::string> cameras = {};
+    std::vector<Camera> cameras = {};
     hr = MFEnumDeviceSources(pAttributes, &ppDevices, &count);
     if (SUCCEEDED(hr)) {
         for (UINT32 i = 0; i < count; i++) {
@@ -58,8 +82,38 @@ std::map<size_t, std::string> list_camera_devices() {
             UINT32 cchName = 0;
             hr = ppDevices[i]->GetAllocatedString(MF_DEVSOURCE_ATTRIBUTE_FRIENDLY_NAME, &szFriendlyName, &cchName);
             if (SUCCEEDED(hr)) {
+                IMFMediaSource* pSource = nullptr;
+                ppDevices[i]->ActivateObject(IID_PPV_ARGS(&pSource));
+
+                IMFPresentationDescriptor* pPD = nullptr;
+                pSource->CreatePresentationDescriptor(&pPD);
+
+                IMFStreamDescriptor* pSD = nullptr;
+                BOOL selected;
+                pPD->GetStreamDescriptorByIndex(0, &selected, &pSD);
+
+                IMFMediaTypeHandler* pHandler = nullptr;
+                pSD->GetMediaTypeHandler(&pHandler);
+
+
                 std::wstring ws(szFriendlyName);
-                cameras.insert({i, std::string(ws.begin(), ws.end())});
+                auto camera = Camera{i, std::string(ws.begin(), ws.end()), {}};
+
+                DWORD mediaTypeCount = 0;
+                pHandler->GetMediaTypeCount(&mediaTypeCount);
+
+
+                for (DWORD i = 0; i < mediaTypeCount; i++) {
+                    IMFMediaType* pType = nullptr;
+                    pHandler->GetMediaTypeByIndex(i, &pType);
+
+                    UINT32 width = 0, height = 0;
+                    MFGetAttributeSize(pType, MF_MT_FRAME_SIZE, &width, &height);
+                    camera.add_resolution(Resolution{(int)width, (int)height});
+                    pType->Release();
+                }
+
+                cameras.push_back(camera);
                 //std::wcout << L"[" << i << L"]: " << szFriendlyName << std::endl;
                 CoTaskMemFree(szFriendlyName);
             }
@@ -76,7 +130,7 @@ std::map<size_t, std::string> list_camera_devices() {
     return cameras;
 }
 #elif __APPLE__
-std::map<size_t, std::string> list_camera_devices() {
+std::vector<Camera> list_camera_devices() {
     return {};
 }
 #elif __linux__
@@ -85,7 +139,7 @@ std::map<size_t, std::string> list_camera_devices() {
 #include <unistd.h>
 #include <linux/videodev2.h>
 
-std::map<size_t, std::string> list_camera_devices() {
+std::vector<Camera> list_camera_devices() {
     std::map<size_t, std::string> cameras = {};
 
     for (int i = 0; i < 10; ++i) {  // Check up to 10 devices
@@ -97,7 +151,7 @@ std::map<size_t, std::string> list_camera_devices() {
         struct v4l2_capability cap;
         if (ioctl(fd, VIDIOC_QUERYCAP, &cap) == 0) {
             if (cap.capabilities & V4L2_CAP_VIDEO_CAPTURE) {
-                cameras.insert({i, std::string(reinterpret_cast<char*>(cap.card))});
+                cameras.push_back(Camera{i, std::string(reinterpret_cast<char*>(cap.card)), {}});
             }
         }
         close(fd);

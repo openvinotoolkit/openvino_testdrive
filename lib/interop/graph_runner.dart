@@ -10,6 +10,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
+import 'package:inference/interop/device.dart';
 import 'package:inference/interop/openvino_bindings.dart';
 
 final ov = getBindings();
@@ -57,6 +58,18 @@ class GraphRunner {
       final content = status.ref.value.toDartString();
       ov.freeStatusOrString(status);
       return content;
+    });
+  }
+
+  Future<void> setCameraResolution(Resolution resolution) async {
+    int instanceAddress = instance.ref.value.address;
+    return await Isolate.run(() {
+      final status = ov.graphRunnerSetCameraResolution(Pointer<Void>.fromAddress(instanceAddress), resolution.width, resolution.height);
+
+      if (status.ref.status != StatusEnum.OkStatus) {
+        throw "GraphRunner::setCameraResolution error: ${status.ref.status} ${status.ref.message.toDartString()}";
+      }
+      ov.freeStatus(status);
     });
   }
 

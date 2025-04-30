@@ -174,7 +174,7 @@ class _LiveInferenceState extends State<LiveInference> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.done) {
                             return switch(mode) {
-                              LiveInferenceMode.camera => CameraView(deviceIndex: cameraDevice!.id),
+                              LiveInferenceMode.camera => CameraView(device: cameraDevice!),
                               LiveInferenceMode.image => DropArea(
                                 type: "image",
                                 showChild: inferenceResult != null,

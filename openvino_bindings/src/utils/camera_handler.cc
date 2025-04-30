@@ -18,11 +18,19 @@ void CameraHandler::stop_camera() {
     }
 }
 
+void CameraHandler::set_resolution(int width, int height) {
+    if (width > 0) {
+        cap.set(cv::CAP_PROP_FRAME_WIDTH, width);
+    }
+    if (height > 0) {
+        cap.set(cv::CAP_PROP_FRAME_HEIGHT, height);
+    }
+}
 
 void CameraHandler::start_camera_process(const std::function<void(cv::Mat frame)>& onFrameCallback) {
-    cv::VideoCapture cap;
+    cap = cv::VideoCapture(device);
+    std::cout << "opening device: " << std::endl;
     std::cout << device << std::endl;
-    cap.open(device);
     if (!cap.isOpened()) {
         throw api_error(CameraNotOpenend);
     }
@@ -31,7 +39,7 @@ void CameraHandler::start_camera_process(const std::function<void(cv::Mat frame)
     while(camera_get_frame) {
         std::cout << "input..." << std::endl;
         cap.read(frame);
-        std::cout << frame.rows << std::endl;
+        std::cout << frame.cols << "x" << frame.rows << std::endl;
         if (frame.empty()) {
             std::cout << "empty frame" << std::endl;
             continue;

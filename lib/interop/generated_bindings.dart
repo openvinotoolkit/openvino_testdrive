@@ -654,6 +654,26 @@ class OpenVINO {
   late final _graphRunnerStopCamera = _graphRunnerStopCameraPtr
       .asFunction<ffi.Pointer<Status> Function(CGraphRunner)>();
 
+  ffi.Pointer<Status> graphRunnerSetCameraResolution(
+    CGraphRunner instance,
+    int width,
+    int height,
+  ) {
+    return _graphRunnerSetCameraResolution(
+      instance,
+      width,
+      height,
+    );
+  }
+
+  late final _graphRunnerSetCameraResolutionPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<Status> Function(CGraphRunner, ffi.Int,
+              ffi.Int)>>('graphRunnerSetCameraResolution');
+  late final _graphRunnerSetCameraResolution =
+      _graphRunnerSetCameraResolutionPtr
+          .asFunction<ffi.Pointer<Status> Function(CGraphRunner, int, int)>();
+
   ffi.Pointer<StatusOrSentenceTransformer> sentenceTransformerOpen(
     ffi.Pointer<pkg_ffi.Utf8> model_path,
     ffi.Pointer<pkg_ffi.Utf8> device,
@@ -1014,11 +1034,24 @@ final class Device extends ffi.Struct {
   external ffi.Pointer<pkg_ffi.Utf8> name;
 }
 
+final class CameraResolution extends ffi.Struct {
+  @ffi.Int()
+  external int width;
+
+  @ffi.Int()
+  external int height;
+}
+
 final class CameraDevice extends ffi.Struct {
   @ffi.Int()
   external int id;
 
   external ffi.Pointer<pkg_ffi.Utf8> name;
+
+  external ffi.Pointer<CameraResolution> resolutions;
+
+  @ffi.Int()
+  external int size;
 }
 
 final class TranscriptionChunk extends ffi.Struct {

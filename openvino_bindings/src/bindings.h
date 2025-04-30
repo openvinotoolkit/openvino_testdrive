@@ -38,8 +38,15 @@ typedef struct {
 } Device;
 
 typedef struct {
+    int width;
+    int height;
+} CameraResolution;
+
+typedef struct {
     int id;
     const char* name;
+    CameraResolution* resolutions;
+    int size;
 } CameraDevice;
 
 typedef struct {
@@ -203,6 +210,8 @@ EXPORT Status* graphRunnerStop(CGraphRunner instance);
 EXPORT Status* graphRunnerStartCamera(CGraphRunner instance, int cameraIndex, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay, bool source);
 EXPORT StatusOrInt* graphRunnerGetTimestamp(CGraphRunner instance);
 EXPORT Status* graphRunnerStopCamera(CGraphRunner instance);
+EXPORT Status* graphRunnerSetCameraResolution(CGraphRunner instance, int width, int height);
+
 
 EXPORT StatusOrSentenceTransformer* sentenceTransformerOpen(const char* model_path, const char* device);
 EXPORT StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, const char* prompt);
