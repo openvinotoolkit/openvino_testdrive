@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:inference/pages/workflow/blocks/crop.dart';
 import 'package:inference/pages/workflow/blocks/image.dart';
 import 'package:inference/pages/workflow/blocks/model.dart';
+import 'package:inference/pages/workflow/graph_builder.dart';
 import 'package:inference/pages/workflow/routines/routine.dart';
 import 'package:inference/pages/workflow/utils/assets.dart';
 import 'package:inference/pages/workflow/utils/data.dart';
@@ -190,6 +191,13 @@ class _WorkflowEditorState extends State<WorkflowEditor> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
+              FilledButton(
+                onPressed: () {
+                  final builder = GraphBuilder(state: state);
+                  builder.generate();
+                },
+                child: Text("Generate graph"),
+              )
             ],
           ),
         ),
