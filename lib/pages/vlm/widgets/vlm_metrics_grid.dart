@@ -29,7 +29,7 @@ class VLMMetricsGrid extends StatelessWidget {
           unit: "ms",
         ),
         MetricsCard(
-          header: "Time to generate image",
+          header: "Time to generate answer",
           value: nf.format(metrics.generate_time),
           unit: "ms",
         )
