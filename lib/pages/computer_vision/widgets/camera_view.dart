@@ -7,6 +7,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:inference/pages/computer_vision/widgets/automation_options.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -92,15 +93,31 @@ class _CameraViewState extends State<CameraView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
     return Column(
       children: [
-        CameraOptions(
-          fpsStream: fpsCounter.fpsStream,
-          device: widget.device,
-          inferenceProvider: inferenceProvider,
-          onResolutionChange: (_) {
-            fpsCounter.reset();
-          },
+        SizedBox(
+          height: 64,
+          child: GridContainer(
+            color: neutralBackground.of(theme),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CameraOptions(
+                  fpsStream: fpsCounter.fpsStream,
+                  device: widget.device,
+                  inferenceProvider: inferenceProvider,
+                  onResolutionChange: (_) {
+                    fpsCounter.reset();
+                  },
+                ),
+                AutomationOptions(
+                  stream: stream
+                ),
+              ],
+            ),
+          ),
         ),
         Expanded(
           child: StreamBuilder<ImageInferenceResult>(
@@ -128,6 +145,8 @@ class _CameraViewState extends State<CameraView> {
     );
   }
 }
+
+
 
 class CameraOptions extends StatefulWidget {
   final CameraDevice device;
@@ -166,49 +185,41 @@ class _CameraOptionsState extends State<CameraOptions> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = FluentTheme.of(context);
     final fpsFormatter = NumberFormat.decimalPatternDigits(decimalDigits: 2);
-    return SizedBox(
-      height: 64,
-      child: GridContainer(
-        color: neutralBackground.of(theme),
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Row(
-          children: [
-            StreamBuilder<double>(
-              stream: widget.fpsStream,
-              builder: (context, snapshot) {
-                final fps  = snapshot.data ?? 0;
-                return Text("FPS: ${fpsFormatter.format(fps)}");
-              }
-            ),
-            Builder(
-              builder: (context) {
-                return DropDownButton(
-                  buttonBuilder: (context, callback) {
-                    return NoOutlineButton(
-                      onPressed: callback,
-                      child: Row(
-                        children: [
-                          Text("Resolution: ${resolution.width} x ${resolution.height}"),
-                          const Padding(
-                            padding: EdgeInsets.only(left: 8),
-                            child: Icon(FluentIcons.chevron_down, size: 12),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  items: [
-                    for (final resolution in widget.device.resolutions)
-                      MenuFlyoutItem(text: Text("${resolution.width} x ${resolution.height}"), onPressed: () => setResolution(resolution, widget.inferenceProvider)),
-                  ]
-                );
-              }
-            ),
-          ],
+    return Row(
+      children: [
+        StreamBuilder<double>(
+          stream: widget.fpsStream,
+          builder: (context, snapshot) {
+            final fps  = snapshot.data ?? 0;
+            return Text("FPS: ${fpsFormatter.format(fps)}");
+          }
         ),
-      ),
+        Builder(
+          builder: (context) {
+            return DropDownButton(
+              buttonBuilder: (context, callback) {
+                return NoOutlineButton(
+                  onPressed: callback,
+                  child: Row(
+                    children: [
+                      Text("Resolution: ${resolution.width} x ${resolution.height}"),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8),
+                        child: Icon(FluentIcons.chevron_down, size: 12),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              items: [
+                for (final resolution in widget.device.resolutions)
+                  MenuFlyoutItem(text: Text("${resolution.width} x ${resolution.height}"), onPressed: () => setResolution(resolution, widget.inferenceProvider)),
+              ]
+            );
+          }
+        ),
+      ],
     );
   }
 }
