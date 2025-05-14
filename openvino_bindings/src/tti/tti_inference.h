@@ -44,14 +44,20 @@ public:
         model_path(model_path)
     {
         // Constructor body can remain empty unless additional initialization is required
+        streamer = [this](size_t step, size_t num_steps, ov::Tensor& latent) {return false;};
+
     }
 
+    void set_streamer(const std::function<void(const StringWithMetrics& response)> callback);
     StringWithMetrics prompt(std::string message, int width, int height, int rounds);
     void stop();
     bool has_model_index() const;
 
+    std::string tensor_to_encoded_string(const ov::Tensor& tensor);
+
 private:
     std::string model_path;
+    std::function<bool(size_t step, size_t num_steps, ov::Tensor& latent)> streamer;
 };
 
 #endif // TTI_INFERENCE_H_

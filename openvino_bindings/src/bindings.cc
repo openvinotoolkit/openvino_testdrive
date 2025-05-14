@@ -185,6 +185,20 @@ StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char*
     }
 }
 
+Status* ttiInferenceSetListener(CTTIInference instance, TTIInferenceCallbackFunction callback) {
+    try {
+        auto lambda_callback = [callback](const StringWithMetrics& result) {
+            auto text = result.string;
+            auto metrics = result.metrics;
+            callback(new StatusOrTTIModelResponse{OkStatus, {}, metrics, text});
+        };
+        reinterpret_cast<TTIInference*>(instance)->set_streamer(lambda_callback);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
 StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance) {
     try {
         bool has_chat_template = reinterpret_cast<TTIInference*>(instance)->has_model_index();

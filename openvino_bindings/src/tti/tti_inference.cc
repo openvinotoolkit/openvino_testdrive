@@ -8,6 +8,7 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 
+#include "src/utils/tti_metrics.h"
 #include "tti_inference.h"
 #include <opencv2/opencv.hpp>
 
@@ -22,33 +23,10 @@ StringWithMetrics TTIInference::prompt(std::string message, int width, int heigh
                                             ov::genai::width(width),
                                             ov::genai::height(height),
                                             ov::genai::num_inference_steps(rounds),
-                                            ov::genai::num_images_per_prompt(1));
+                                            ov::genai::num_images_per_prompt(1),
+                                            ov::genai::callback(streamer));
 
-
-    auto* tensor_data = tensor.data<uint8_t>();
-
-    // Get the shape of the tensor [1, 512, 512, 3]
-    const auto shape = tensor.get_shape();
-    const auto batch_size_ = shape[0];
-    const auto height_ = shape[1];
-    const auto width_ = shape[2];
-    const auto channels_ = shape[3];
-
-    // Ensure the tensor has the shape [1, 512, 512, 3]
-    if (batch_size_ != 1 || channels_ != 3)
-    {
-        std::cerr << "Unsupported tensor shape" << std::endl;
-        return StringWithMetrics{"", {}};
-    }
-
-    // Reshape the uint8_t data into a 512x512 3-channel OpenCV Mat
-    const cv::Mat image(static_cast<int>(height_), static_cast<int>(width_), CV_8UC3, tensor_data);
-    if (!flip_bgr)
-    {
-        cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
-    }
-
-    const auto imgDataString = geti::base64_encode_mat(image);
+    const auto imgDataString = tensor_to_encoded_string(tensor);
 
     // Make Metrics
     const auto t2 = std::chrono::steady_clock::now();
@@ -65,6 +43,40 @@ StringWithMetrics TTIInference::prompt(std::string message, int width, int heigh
     // Return
     auto res = StringWithMetrics{strdup(imgDataString.c_str()), metrics};
     return res;
+}
+
+std::string TTIInference::tensor_to_encoded_string(const ov::Tensor& tensor) {
+    auto* tensor_data = tensor.data<uint8_t>();
+
+    // Get the shape of the tensor [1, 512, 512, 3]
+    const auto shape = tensor.get_shape();
+    const auto batch_size_ = shape[0];
+    const auto height_ = shape[1];
+    const auto width_ = shape[2];
+    const auto channels_ = shape[3];
+
+    // Ensure the tensor has the shape [1, 512, 512, 3]
+    if (batch_size_ != 1 || channels_ != 3)
+    {
+        throw api_error(StatusEnum::ErrorStatus, "Unsupported tensor shape");
+    }
+
+    const cv::Mat image(static_cast<int>(height_), static_cast<int>(width_), CV_8UC3, tensor_data);
+    if (!flip_bgr)
+    {
+        cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
+    }
+    return geti::base64_encode_mat(image);
+
+}
+
+void TTIInference::set_streamer(const std::function<void(const StringWithMetrics& response)> callback) {
+    streamer = [callback, this](size_t step, size_t num_steps, ov::Tensor& latent) {
+        ov::Tensor tensor = ov_pipe.decode(latent); // get intermediate image tensor
+        const auto imgDataString = tensor_to_encoded_string(tensor);
+        callback(StringWithMetrics{strdup(imgDataString.c_str()), TTIMetrics{}});
+        return false;
+    };
 }
 
 void TTIInference::stop()
