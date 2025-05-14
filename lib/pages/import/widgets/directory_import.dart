@@ -173,7 +173,7 @@ class _ModelImportPropertiesFormState extends State<ModelImportPropertiesForm> {
       author: "Unknown",
       collection: "",
       description: "Try out $name",
-      npuEnabled: false,
+      npuEnabled: true,
       contextWindow: 0,
       optimizationPrecision: "",
     );
