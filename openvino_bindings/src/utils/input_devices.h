@@ -15,16 +15,6 @@
 #include "status.h"
 #include "errors.h"
 
-
-#if _WIN32
-#include <windows.h>
-#include <mfapi.h>
-#include <mfidl.h>
-#include <mfobjects.h>
-#include <mferror.h>
-#pragma comment(lib, "mfplat.lib")
-#pragma comment(lib, "mf.lib")
-
 class Resolution {
 public:
     int width;
@@ -48,6 +38,16 @@ public:
     }
 
 };
+
+#if _WIN32
+#include <windows.h>
+#include <mfapi.h>
+#include <mfidl.h>
+#include <mfobjects.h>
+#include <mferror.h>
+#pragma comment(lib, "mfplat.lib")
+#pragma comment(lib, "mf.lib")
+
 
 std::vector<Camera> list_camera_devices() {
     HRESULT hr = MFStartup(MF_VERSION);
@@ -140,7 +140,7 @@ std::vector<Camera> list_camera_devices() {
 #include <linux/videodev2.h>
 
 std::vector<Camera> list_camera_devices() {
-    std::map<size_t, std::string> cameras = {};
+    std::vector<Camera> cameras = {};
 
     for (int i = 0; i < 10; ++i) {  // Check up to 10 devices
         std::string devName = "/dev/video" + std::to_string(i);
