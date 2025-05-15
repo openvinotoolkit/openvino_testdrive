@@ -135,6 +135,8 @@ typedef struct {
     const char* message;
     TTIMetrics metrics;
     const char* value;
+    int step;
+    int num_step;
 } StatusOrTTIModelResponse;
 
 typedef struct {
@@ -177,6 +179,7 @@ EXPORT void freeStatusOrLLMInference(StatusOrLLMInference *status);
 EXPORT void freeStatusOrSpeechToText(StatusOrSpeechToText *status);
 EXPORT void freeStatusOrModelResponse(StatusOrModelResponse *status);
 EXPORT void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *status);
+EXPORT void freeStatusOrTTIModelResponse(StatusOrTTIModelResponse *status);
 EXPORT void freeStatusOrDevices(StatusOrDevices *status);
 EXPORT void freeStatusOrEmbeddings(StatusOrEmbeddings *status);
 EXPORT void freeStatusOrCameraDevices(StatusOrCameraDevices *status);

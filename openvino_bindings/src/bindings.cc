@@ -54,6 +54,14 @@ void freeStatusOrModelResponse(StatusOrModelResponse *status) {
     delete status;
 }
 
+void freeStatusOrTTIModelResponse(StatusOrTTIModelResponse *status) {
+    if (status->status == StatusEnum::OkStatus) {
+        free((void*)status->value);  // Free the allocated memory
+        status->value = NULL;        // Prevent dangling pointers
+    }
+    delete status;
+}
+
 void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *status) {
     if (status->status == StatusEnum::OkStatus) {
         delete [] status->value;
@@ -178,7 +186,7 @@ StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char*
         auto result = inference->prompt(message, width, height, rounds);
         auto text = result.string;
         auto metrics = result.metrics;
-        return new StatusOrTTIModelResponse{OkStatus, {}, metrics, text};
+        return new StatusOrTTIModelResponse{OkStatus, {}, metrics, text, rounds, rounds};
     } catch (...) {
         auto except = handle_exceptions();
         return new StatusOrTTIModelResponse{except->status, except->message, {}, {}};
@@ -187,10 +195,10 @@ StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char*
 
 Status* ttiInferenceSetListener(CTTIInference instance, TTIInferenceCallbackFunction callback) {
     try {
-        auto lambda_callback = [callback](const StringWithMetrics& result) {
+        auto lambda_callback = [callback](const StringWithMetrics& result, int step, int rounds) {
             auto text = result.string;
             auto metrics = result.metrics;
-            callback(new StatusOrTTIModelResponse{OkStatus, {}, metrics, text});
+            callback(new StatusOrTTIModelResponse{OkStatus, {}, metrics, text, step, rounds});
         };
         reinterpret_cast<TTIInference*>(instance)->set_streamer(lambda_callback);
         return new Status{OkStatus, ""};

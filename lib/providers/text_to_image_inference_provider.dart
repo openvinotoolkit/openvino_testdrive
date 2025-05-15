@@ -4,12 +4,10 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:isolate';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:inference/interop/generated_bindings.dart';
+import 'package:inference/interop/openvino_bindings.dart' show GenericMetrics;
 import 'package:inference/interop/tti_inference.dart';
 import 'package:inference/project.dart';
 
@@ -21,18 +19,27 @@ class ImageContent {
   final int height;
   final BoxFit boxFit;
   const ImageContent(this.imageData, this.width, this.height, this.boxFit);
-
 }
 
 class ImageMessage {
   final Speaker speaker;
-  final String message;
-  final ImageContent? imageContent;
-  final TTIMetrics? metrics;
-  final DateTime? time;
-  final bool allowedCopy; // Don't allow loading images to be copied
+  String message;
+  final List<ImageContent> imageContent;
+  final int rounds;
+  Size size;
+  GenericMetrics? metrics;
+  DateTime? time;
+  bool done = false; // Don't allow loading images to be copied
 
-  const ImageMessage(this.speaker, this.message, this.imageContent, this.metrics, this.time, this.allowedCopy);
+  ImageMessage(this.speaker, this.message, this.imageContent, this.rounds, this.size, this.metrics, this.time);
+
+  void finalize(String message, GenericMetrics metrics) {
+    //imageContent.add(finalImage);
+    time = DateTime.now();
+    this.metrics = metrics;
+    this.message = message;
+    done = true;
+  }
 }
 
 class TextToImageInferenceProvider extends ChangeNotifier {
@@ -45,12 +52,7 @@ class TextToImageInferenceProvider extends ChangeNotifier {
 
   String? get device => _device;
 
-  TTIMetrics? get metrics => _messages.lastOrNull?.metrics;
-
-  Uint8List? _imageBytes;
-
-  int _loadWidth = 256;
-  int _loadHeight = 256;
+  GenericMetrics? get metrics => _messages.lastOrNull?.metrics;
 
   int _width = 256;
 
@@ -88,7 +90,6 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     _device = device;
 
     if (project != null && device != null) {
-      preloadImageBytes();
       print("instantiating project: ${project.name}");
       print(project.storagePath);
       print(device);
@@ -99,20 +100,21 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     await TTIInference.init(project!.storagePath, device!).then((instance) {
       print("done loading");
       _inference = instance;
+      instance.setListener((response) {
+          final imageData  = base64Decode(response.content);
+
+          if (_response != null){
+          final imageContent = ImageContent(imageData, _response!.size.width.toInt(), _response!.size.height.toInt(), BoxFit.contain);
+            _response!.imageContent.add(imageContent);
+            notifyListeners();
+          }
+         //_intermediateImageStreamController.add(imageContent);
+      });
     });
     loaded.complete();
     if (hasListeners) {
       notifyListeners();
     }
-  }
-
-
-  void preloadImageBytes() {
-    rootBundle.load('images/intel-loading.gif').then((data) {
-      _imageBytes = data.buffer.asUint8List();
-      // Optionally notify listeners if you need to update UI
-      notifyListeners();
-    });
   }
 
 
@@ -132,26 +134,12 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String? _response;
+  ImageMessage? _response;
 
-  String? get response => _response;
-
-  set response(String? response) {
-    _response = response;
-    notifyListeners();
-  }
+  ImageMessage? get interimResponse => _response;
 
   String get task {
     return "Image Generation";
-  }
-
-  ImageMessage? get interimResponse {
-    if (_response == null) {
-      return null;
-    }
-    final imageContent = ImageContent(_imageBytes ?? Uint8List(0), _loadWidth, _loadHeight, BoxFit.contain);
-
-    return ImageMessage(Speaker.assistant, response!, imageContent, null, DateTime.now(), false);
   }
 
   List<ImageMessage> get messages {
@@ -166,21 +154,15 @@ class TextToImageInferenceProvider extends ChangeNotifier {
   }
 
   Future<void> message(String message) async {
-    _response = "Generating image...";
+    {
+      _response = ImageMessage(Speaker.assistant, "Generating image...", [], rounds, Size(width.toDouble(), height.toDouble()), null, DateTime.now());
+    }
 
-    _messages.add(ImageMessage(Speaker.user, message, null, null, DateTime.now(), false));
+    _messages.add(ImageMessage(Speaker.user, message, [], rounds, Size.zero, null, DateTime.now()));
     notifyListeners();
 
-    _loadWidth = width;
-    _loadHeight = height;
     final response = await _inference!.prompt(message, width, height, rounds);
-
-    final imageData  = base64Decode(response.content);
-    final imageContent = ImageContent(imageData, _loadWidth, _loadHeight, BoxFit.contain);
-
-    if (_messages.isNotEmpty) {
-      _messages.add(ImageMessage(Speaker.assistant, "Generated image", imageContent, response.metrics, DateTime.now(), true));
-    }
+    _messages.add(_response!..finalize("Generated image", response.metrics));
     _response = null;
 
     n = 0;
@@ -189,13 +171,11 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     }
   }
 
-  void close() {
+  void close() async {
+    await loaded.future;
     _messages.clear();
     _inference?.close();
     _response = null;
-    if (_inference != null) {
-      _inference!.close();
-    }
   }
 
   void forceStop() {
@@ -203,55 +183,14 @@ class TextToImageInferenceProvider extends ChangeNotifier {
   }
 
   void reset() {
-    //_inference?.close();
-    // _inference?.forceStop();
-    // _inference?.clearHistory();
     _messages.clear();
     _response = null;
     notifyListeners();
   }
 
-
-  Future<void> _closeInferenceInIsolate(dynamic inference) async {
-    final receivePort = ReceivePort();
-
-    // Spawn an isolate and pass the SendPort and inference
-    await Isolate.spawn((List<dynamic> args) {
-      final SendPort sendPort = args[0];
-      final dynamic inference = args[1];
-      try {
-        inference?.close(); // Perform the blocking operation
-      } catch (e) {
-        print("Error closing inference: $e");
-      } finally {
-        sendPort.send(null); // Notify that the operation is complete
-      }
-    }, [receivePort.sendPort, inference]);
-
-    // Wait for the isolate to complete
-    await receivePort.first;
-  }
-
-  Future<void> _waitForLoadCompletion() async {
-    if (!loaded.isCompleted) {
-      print("Still loading model, await disposal");
-      await loaded.future;
-    }
-  }
-
   @override
   void dispose() async {
-    // Wait for model to finish loading
-    await _waitForLoadCompletion();
-
-    if (_inference != null) {
-      print("Closing inference");
-      await _closeInferenceInIsolate(_inference!);
-      print("Closing inference done");
-    } else {
-      close();
-    }
-
-    super.dispose(); // Always call super.dispose()
+    close();
+    super.dispose();
   }
 }

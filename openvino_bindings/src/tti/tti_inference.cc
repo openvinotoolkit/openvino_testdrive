@@ -70,11 +70,11 @@ std::string TTIInference::tensor_to_encoded_string(const ov::Tensor& tensor) {
 
 }
 
-void TTIInference::set_streamer(const std::function<void(const StringWithMetrics& response)> callback) {
+void TTIInference::set_streamer(const std::function<void(const StringWithMetrics& response, int step, int rounds)> callback) {
     streamer = [callback, this](size_t step, size_t num_steps, ov::Tensor& latent) {
         ov::Tensor tensor = ov_pipe.decode(latent); // get intermediate image tensor
         const auto imgDataString = tensor_to_encoded_string(tensor);
-        callback(StringWithMetrics{strdup(imgDataString.c_str()), TTIMetrics{}});
+        callback(StringWithMetrics{strdup(imgDataString.c_str()), TTIMetrics{}}, step, num_steps);
         return false;
     };
 }

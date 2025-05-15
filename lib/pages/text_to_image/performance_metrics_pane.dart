@@ -69,7 +69,7 @@ class _TTIPerformanceMetricsPaneState extends State<TTIPerformanceMetricsPane> {
 
 
 class TTIMetricsGrid extends StatelessWidget {
-  final TTIMetrics metrics;
+  final GenericMetrics metrics;
 
   const TTIMetricsGrid({super.key, required this.metrics});
 
@@ -85,12 +85,12 @@ class TTIMetricsGrid extends StatelessWidget {
       children: [
         MetricsCard(
           header: "Time to load model",
-          value: nf.format(metrics.load_time),
+          value: nf.format(metrics.loadTime),
           unit: "ms",
         ),
         MetricsCard(
           header: "Time to generate image",
-          value: nf.format(metrics.generate_time),
+          value: nf.format(metrics.generationTime),
           unit: "ms",
         )
       ],

@@ -48,7 +48,7 @@ public:
 
     }
 
-    void set_streamer(const std::function<void(const StringWithMetrics& response)> callback);
+    void set_streamer(const std::function<void(const StringWithMetrics& response, int step, int rounds)> callback);
     StringWithMetrics prompt(std::string message, int width, int height, int rounds);
     void stop();
     bool has_model_index() const;

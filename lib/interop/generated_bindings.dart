@@ -122,6 +122,21 @@ class OpenVINO {
       _freeStatusOrWhisperModelResponsePtr.asFunction<
           void Function(ffi.Pointer<StatusOrWhisperModelResponse>)>();
 
+  void freeStatusOrTTIModelResponse(
+    ffi.Pointer<StatusOrTTIModelResponse> status,
+  ) {
+    return _freeStatusOrTTIModelResponse(
+      status,
+    );
+  }
+
+  late final _freeStatusOrTTIModelResponsePtr = _lookup<
+          ffi.NativeFunction<
+              ffi.Void Function(ffi.Pointer<StatusOrTTIModelResponse>)>>(
+      'freeStatusOrTTIModelResponse');
+  late final _freeStatusOrTTIModelResponse = _freeStatusOrTTIModelResponsePtr
+      .asFunction<void Function(ffi.Pointer<StatusOrTTIModelResponse>)>();
+
   void freeStatusOrDevices(
     ffi.Pointer<StatusOrDevices> status,
   ) {
@@ -333,6 +348,24 @@ class OpenVINO {
   late final _ttiInferencePrompt = _ttiInferencePromptPtr.asFunction<
       ffi.Pointer<StatusOrTTIModelResponse> Function(
           CTTIInference, ffi.Pointer<pkg_ffi.Utf8>, int, int, int)>();
+
+  ffi.Pointer<Status> ttiInferenceSetListener(
+    CTTIInference instance,
+    TTIInferenceCallbackFunction callback,
+  ) {
+    return _ttiInferenceSetListener(
+      instance,
+      callback,
+    );
+  }
+
+  late final _ttiInferenceSetListenerPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<Status> Function(CTTIInference,
+              TTIInferenceCallbackFunction)>>('ttiInferenceSetListener');
+  late final _ttiInferenceSetListener = _ttiInferenceSetListenerPtr.asFunction<
+      ffi.Pointer<Status> Function(
+          CTTIInference, TTIInferenceCallbackFunction)>();
 
   ffi.Pointer<StatusOrBool> ttiInferenceHasModelIndex(
     CTTIInference instance,
@@ -1216,6 +1249,12 @@ final class StatusOrTTIModelResponse extends ffi.Struct {
   external TTIMetrics metrics;
 
   external ffi.Pointer<pkg_ffi.Utf8> value;
+
+  @ffi.Int()
+  external int step;
+
+  @ffi.Int()
+  external int num_step;
 }
 
 final class StatusOrEmbeddings extends ffi.Struct {
@@ -1279,6 +1318,12 @@ typedef DartImageInferenceCallbackFunctionFunction = void Function(
     ffi.Pointer<StatusOrString>);
 typedef ImageInferenceCallbackFunction
     = ffi.Pointer<ffi.NativeFunction<ImageInferenceCallbackFunctionFunction>>;
+typedef TTIInferenceCallbackFunctionFunction = ffi.Void Function(
+    ffi.Pointer<StatusOrTTIModelResponse>);
+typedef DartTTIInferenceCallbackFunctionFunction = void Function(
+    ffi.Pointer<StatusOrTTIModelResponse>);
+typedef TTIInferenceCallbackFunction
+    = ffi.Pointer<ffi.NativeFunction<TTIInferenceCallbackFunctionFunction>>;
 typedef LLMInferenceCallbackFunctionFunction = ffi.Void Function(
     ffi.Pointer<StatusOrString>);
 typedef DartLLMInferenceCallbackFunctionFunction = void Function(

@@ -43,7 +43,7 @@ class _TTIPlaygroundState extends State<TTIPlayground> {
   void message(String message) {
     if (message.isEmpty) return;
     final provider = Provider.of<TextToImageInferenceProvider>(context, listen: false);
-    if (!provider.initialized || provider.response != null) return;
+    if (!provider.initialized || provider.interimResponse != null) return;
     _textController.text = '';
     jumpToBottom(offset: 110); //move to bottom including both
     provider.message(message).catchError((e) async {

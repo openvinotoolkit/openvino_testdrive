@@ -11,6 +11,7 @@ import 'package:inference/interop/openvino_bindings.dart';
 final ttiOV = getBindings();
 
 class TTIInference {
+  NativeCallable<TTIInferenceCallbackFunctionFunction>? nativeListener;
   final Pointer<StatusOrTTIInference> instance;
   late bool chatEnabled;
 
@@ -37,6 +38,27 @@ class TTIInference {
     return TTIInference(result);
   }
 
+
+  Future<void> setListener(void Function(TTIModelResponse) callback) async{
+    int instanceAddress = instance.ref.value.address;
+    void localCallback(Pointer<StatusOrTTIModelResponse> ptr) {
+      if (ptr.ref.status != StatusEnum.OkStatus) {
+        // TODO(RHeckerIntel): instead of throw, call an onError callback.
+        throw "TTI Callback error: ${ptr.ref.status} ${ptr.ref.message.toDartString()}";
+      }
+      callback(TTIModelResponse(ptr.ref.value.toDartString(), GenericMetrics.fromTTIMetrics(ptr.ref.metrics), ptr.ref.step, ptr.ref.num_step));
+      ttiOV.freeStatusOrTTIModelResponse(ptr);
+    }
+    nativeListener?.close();
+    nativeListener = NativeCallable<TTIInferenceCallbackFunctionFunction>.listener(localCallback);
+    final status = ttiOV.ttiInferenceSetListener(Pointer<Void>.fromAddress(instanceAddress), nativeListener!.nativeFunction);
+    if (status.ref.status != StatusEnum.OkStatus) {
+      // TODO(RHeckerIntel): instead of throw, call an onError callback.
+      throw "LLM setListener error: ${status.ref.status} ${status.ref.message.toDartString()}";
+    }
+    ttiOV.freeStatus(status);
+  }
+
   Future<TTIModelResponse> prompt(
       String message, int width, int height, int rounds) async {
     int instanceAddress = instance.ref.value.address;
@@ -56,8 +78,9 @@ class TTIInference {
       throw "TTIInference prompt error: ${result.ref.status} ${result.ref.message.toDartString()}";
     }
 
-    return TTIModelResponse(
-        result.ref.value.toDartString(), result.ref.metrics);
+    final response = TTIModelResponse(result.ref.value.toDartString(), GenericMetrics.fromTTIMetrics(result.ref.metrics), result.ref.step, result.ref.num_step);
+    ttiOV.freeStatusOrTTIModelResponse(result);
+    return response;
   }
 
   bool hasModelIndex() {
@@ -70,12 +93,16 @@ class TTIInference {
     return status.ref.value;
   }
 
-  void close() {
-    final status = ttiOV.ttiInferenceClose(instance.ref.value);
+  void close() async {
+    int instanceAddress = instance.ref.value.address;
+    await Isolate.run(() {
+      final status = ttiOV.ttiInferenceClose(Pointer<Void>.fromAddress(instanceAddress));
 
-    if (status.ref.status != StatusEnum.OkStatus) {
-      throw "Close error: ${status.ref.status} ${status.ref.message.toDartString()}";
-    }
-    ttiOV.freeStatus(status);
+      if (status.ref.status != StatusEnum.OkStatus) {
+        throw "Close error: ${status.ref.status} ${status.ref.message.toDartString()}";
+      }
+      ttiOV.freeStatus(status);
+    });
+    nativeListener?.close();
   }
 }
