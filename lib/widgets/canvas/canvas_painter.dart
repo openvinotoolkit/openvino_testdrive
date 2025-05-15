@@ -46,7 +46,7 @@ class CanvasPainter extends CustomPainter {
         ..style = PaintingStyle.stroke;
 
       Paint transparent = Paint()
-        ..color = Color.fromARGB(102, firstLabelColor.red, firstLabelColor.green, firstLabelColor.blue);
+        ..color = Color.fromARGB(102, firstLabelColor.r.toInt(), firstLabelColor.g.toInt(), firstLabelColor.b.toInt());
 
       if (annotation.shape is Rectangle) {
         drawRectangle(canvas, size, paint, transparent, annotation);

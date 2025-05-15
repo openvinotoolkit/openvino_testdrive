@@ -2,13 +2,12 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-OPENVINO_VERSION = "2500"
+OPENVINO_VERSION = "2510"
 
 filegroup(
     name = "shared_objects",
     srcs = [
         "3rdparty/tbb/lib/libtbb.so.12",
-        "lib/intel64/libcore_tokenizers.so",
         "lib/intel64/libopenvino.so." + OPENVINO_VERSION,
         "lib/intel64/libopenvino_c.so",
         "lib/intel64/libopenvino_c.so." + OPENVINO_VERSION,
