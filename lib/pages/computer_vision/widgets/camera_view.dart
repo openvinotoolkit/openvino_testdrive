@@ -167,12 +167,12 @@ class CameraOptions extends StatefulWidget {
 
 class _CameraOptionsState extends State<CameraOptions> {
 
-  late Resolution resolution;
+  Resolution? resolution;
 
   @override
   void initState() {
     super.initState();
-    resolution = widget.device.resolutions.first;
+    resolution = widget.device.resolutions.firstOrNull;
   }
 
   void setResolution(Resolution res, ImageInferenceProvider inferenceProvider) {
@@ -197,13 +197,16 @@ class _CameraOptionsState extends State<CameraOptions> {
         ),
         Builder(
           builder: (context) {
+            if (widget.device.resolutions.isEmpty) {
+              return Container();
+            }
             return DropDownButton(
               buttonBuilder: (context, callback) {
                 return NoOutlineButton(
                   onPressed: callback,
                   child: Row(
                     children: [
-                      Text("Resolution: ${resolution.width} x ${resolution.height}"),
+                      Text("Resolution: ${resolution!.width} x ${resolution!.height}"),
                       const Padding(
                         padding: EdgeInsets.only(left: 8),
                         child: Icon(FluentIcons.chevron_down, size: 12),
