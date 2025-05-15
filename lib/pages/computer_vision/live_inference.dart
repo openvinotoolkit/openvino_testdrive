@@ -84,6 +84,13 @@ class _LiveInferenceState extends State<LiveInference> {
     });
   }
 
+  void closeCamera() {
+    setState(() {
+        mode = LiveInferenceMode.image;
+        cameraDevice = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
@@ -148,10 +155,7 @@ class _LiveInferenceState extends State<LiveInference> {
                                   },
                                   items: [
                                     MenuFlyoutItem(text: const Text("None"), onPressed: () {
-                                        setState(() {
-                                            mode = LiveInferenceMode.image;
-                                            cameraDevice = null;
-                                        });
+                                        closeCamera();
                                     }),
 
                                     for (final device in devices)
