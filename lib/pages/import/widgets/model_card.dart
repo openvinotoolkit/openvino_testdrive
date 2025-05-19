@@ -33,7 +33,7 @@ class ModelCard extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(4)),
             border: Border.all(
-                color: checked ? theme.accentColor.withOpacity(0.5) : theme.cardColor,
+                color: checked ? theme.accentColor.withValues(alpha: 0.5) : theme.cardColor,
                 width: 1.0
             )
           ),

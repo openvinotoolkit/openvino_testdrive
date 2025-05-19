@@ -1,4 +1,4 @@
-OPENVINO_VERSION = "2500"
+OPENVINO_VERSION = "2510"
 
 package(
     default_visibility = ["//visibility:public"],
@@ -36,7 +36,6 @@ cc_library(
     ]),
     srcs = [
         "lib/arm64/Release/libopenvino_tokenizers.dylib",
-        "lib/arm64/Release/libcore_tokenizers.dylib",
         "lib/arm64/Release/libopenvino." + OPENVINO_VERSION +".dylib",
         "lib/arm64/Release/libopenvino_c." + OPENVINO_VERSION + ".dylib",
         "lib/arm64/Release/libopenvino_genai." + OPENVINO_VERSION + ".dylib",

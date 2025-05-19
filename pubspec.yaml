@@ -165,7 +165,11 @@ ffigen:
       - '_.*'
   globals:
     exclude:
+      - '_(.*)'
+  typedefs:
+    exclude:
       - '_.*'
+      - mbstate_t
   type-map:
     native-types:
       'char':

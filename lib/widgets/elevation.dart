@@ -24,12 +24,12 @@ class Elevation extends StatelessWidget {
         shape: shape,
         shadows: [
           BoxShadow(
-            color: (shadowColor ?? theme.shadowColor).withOpacity(0.13),
+            color: (shadowColor ?? theme.shadowColor).withValues(alpha: 0.13),
             blurRadius: 0.9 * elevation,
             offset: Offset(0, 0.4 * elevation),
           ),
           BoxShadow(
-            color: (shadowColor ?? theme.shadowColor).withOpacity(0.11),
+            color: (shadowColor ?? theme.shadowColor).withValues(alpha: 0.11),
             blurRadius: 0.225 * elevation,
             offset: Offset(0, 0.085 * elevation),
           ),

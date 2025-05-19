@@ -892,36 +892,7 @@ typedef wint_t = ffi.UnsignedShort;
 typedef Dartwint_t = int;
 typedef wctype_t = ffi.UnsignedShort;
 typedef Dartwctype_t = int;
-typedef __time32_t = ffi.Long;
-typedef Dart__time32_t = int;
-typedef __time64_t = ffi.LongLong;
-typedef Dart__time64_t = int;
-
-final class __crt_locale_data extends ffi.Opaque {}
-
-final class __crt_multibyte_data extends ffi.Opaque {}
-
-final class __crt_locale_pointers extends ffi.Struct {
-  external ffi.Pointer<__crt_locale_data> locinfo;
-
-  external ffi.Pointer<__crt_multibyte_data> mbcinfo;
-}
-
-typedef _locale_t = ffi.Pointer<__crt_locale_pointers>;
-
-final class _Mbstatet extends ffi.Struct {
-  @ffi.UnsignedLong()
-  external int _Wchar;
-
-  @ffi.UnsignedShort()
-  external int _Byte;
-
-  @ffi.UnsignedShort()
-  external int _State;
-}
-
-typedef mbstate_t = _Mbstatet;
-typedef time_t = __time64_t;
+typedef time_t = ffi.LongLong;
 typedef rsize_t = ffi.Size;
 typedef Dartrsize_t = int;
 
