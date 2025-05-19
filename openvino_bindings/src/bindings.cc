@@ -217,6 +217,15 @@ StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance) {
     }
 }
 
+Status* ttiInferenceForceStop(CTTIInference instance) {
+    try {
+        reinterpret_cast<TTIInference*>(instance)->force_stop();
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
 Status* ttiInferenceClose(CTTIInference instance) {
     auto inference = reinterpret_cast<TTIInference*>(instance);
     inference->stop();

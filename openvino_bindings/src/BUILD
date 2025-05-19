@@ -1,5 +1,11 @@
 load(":windows_dll_library.bzl", "windows_dll_library")
 
+cc_binary(
+name = "scratch",
+srcs=["scratch.cc"],
+deps=[":bindings_deps"],
+)
+
 cc_library(
     name = "bindings_deps",
     deps = [

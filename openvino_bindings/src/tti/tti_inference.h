@@ -8,7 +8,7 @@
 #define TTI_INFERENCE_H_
 
 #include <mutex>
-
+#include <condition_variable>
 #include "src/utils/tti_metrics.h"
 #include "openvino/genai/image_generation/text2image_pipeline.hpp"
 
@@ -48,6 +48,7 @@ public:
 
     }
 
+    void force_stop();
     void set_streamer(const std::function<void(const StringWithMetrics& response, int step, int rounds)> callback);
     StringWithMetrics prompt(std::string message, int width, int height, int rounds);
     void stop();
@@ -56,6 +57,12 @@ public:
     std::string tensor_to_encoded_string(const ov::Tensor& tensor);
 
 private:
+    bool _stop = false;
+    bool _done = true;
+    std::mutex streamer_lock;
+    std::condition_variable cond;
+
+
     std::string model_path;
     std::function<bool(size_t step, size_t num_steps, ov::Tensor& latent)> streamer;
 };

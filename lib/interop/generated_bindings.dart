@@ -382,6 +382,20 @@ class OpenVINO {
   late final _ttiInferenceHasModelIndex = _ttiInferenceHasModelIndexPtr
       .asFunction<ffi.Pointer<StatusOrBool> Function(CTTIInference)>();
 
+  ffi.Pointer<Status> ttiInferenceForceStop(
+    CTTIInference instance,
+  ) {
+    return _ttiInferenceForceStop(
+      instance,
+    );
+  }
+
+  late final _ttiInferenceForceStopPtr =
+      _lookup<ffi.NativeFunction<ffi.Pointer<Status> Function(CTTIInference)>>(
+          'ttiInferenceForceStop');
+  late final _ttiInferenceForceStop = _ttiInferenceForceStopPtr
+      .asFunction<ffi.Pointer<Status> Function(CTTIInference)>();
+
   ffi.Pointer<Status> ttiInferenceClose(
     CLLMInference instance,
   ) {

@@ -196,6 +196,7 @@ EXPORT StatusOrTTIInference* ttiInferenceOpen(const char* model_path, const char
 EXPORT StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height, int rounds);
 EXPORT Status* ttiInferenceSetListener(CTTIInference instance, TTIInferenceCallbackFunction callback);
 EXPORT StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance);
+EXPORT Status* ttiInferenceForceStop(CTTIInference instance);
 EXPORT Status* ttiInferenceClose(CLLMInference instance);
 
 

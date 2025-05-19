@@ -16,15 +16,22 @@
 
 StringWithMetrics TTIInference::prompt(std::string message, int width, int height, int rounds)
 {
-    std::lock_guard<std::mutex> guard(pipe_mutex);
+    _stop = false;
+    //std::lock_guard<std::mutex> guard(pipe_mutex);
     const auto t1 = std::chrono::steady_clock::now();
 
+    _done = false;
+    streamer_lock.lock();
     const ov::Tensor tensor = ov_pipe.generate(message,
                                             ov::genai::width(width),
                                             ov::genai::height(height),
                                             ov::genai::num_inference_steps(rounds),
                                             ov::genai::num_images_per_prompt(1),
                                             ov::genai::callback(streamer));
+
+    streamer_lock.unlock();
+    cond.notify_all();
+    _done = true;
 
     const auto imgDataString = tensor_to_encoded_string(tensor);
 
@@ -72,12 +79,32 @@ std::string TTIInference::tensor_to_encoded_string(const ov::Tensor& tensor) {
 
 void TTIInference::set_streamer(const std::function<void(const StringWithMetrics& response, int step, int rounds)> callback) {
     streamer = [callback, this](size_t step, size_t num_steps, ov::Tensor& latent) {
+        std::cout << "streamer got called" << std::endl;
+        if (_stop) {
+            std::cout << "streamer should stop" << std::endl;
+            _done = true;
+            streamer_lock.unlock();
+            cond.notify_all();
+            return true;
+        }
+
         ov::Tensor tensor = ov_pipe.decode(latent); // get intermediate image tensor
         const auto imgDataString = tensor_to_encoded_string(tensor);
         callback(StringWithMetrics{strdup(imgDataString.c_str()), TTIMetrics{}}, step, num_steps);
         return false;
     };
 }
+
+void TTIInference::force_stop() {
+    std::cout << "force stop!" << std::endl;
+    _stop = true;
+    std::unique_lock<std::mutex> lock(streamer_lock);
+    std::cout << "lock" << std::endl;
+    while(!_done) {
+        cond.wait(lock);
+    }
+}
+
 
 void TTIInference::stop()
 {

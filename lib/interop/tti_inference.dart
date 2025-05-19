@@ -93,6 +93,17 @@ class TTIInference {
     return status.ref.value;
   }
 
+  Future<void> forceStop() async {
+    int instanceAddress = instance.ref.value.address;
+    await Isolate.run(() {
+      final status = ttiOV.ttiInferenceForceStop(Pointer<Void>.fromAddress(instanceAddress));
+
+      if (status.ref.status != StatusEnum.OkStatus) {
+        throw "TTI Force Stop error: ${status.ref.status} ${status.ref.message.toDartString()}";
+      }
+    });
+  }
+
   void close() async {
     int instanceAddress = instance.ref.value.address;
     await Isolate.run(() {

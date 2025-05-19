@@ -173,13 +173,14 @@ class TextToImageInferenceProvider extends ChangeNotifier {
 
   void close() async {
     await loaded.future;
+    await forceStop();
     _messages.clear();
     _inference?.close();
     _response = null;
   }
 
-  void forceStop() {
-    // TODO(ArendJanKramer): Implement forceStop
+  Future<void> forceStop() async {
+    await _inference?.forceStop();
   }
 
   void reset() {
