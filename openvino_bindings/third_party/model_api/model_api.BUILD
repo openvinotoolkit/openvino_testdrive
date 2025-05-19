@@ -4,7 +4,7 @@ visibility = ["//visibility:public"]
 
 filegroup(
     name = "all_srcs",
-    srcs = glob(["model_api/cpp/**"]),
+    srcs = glob(["src/cpp/**"]),
     visibility = ["//visibility:public"],
 )
 

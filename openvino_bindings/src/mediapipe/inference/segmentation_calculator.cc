@@ -11,7 +11,6 @@
 #include <string>
 
 #include "src/mediapipe/inference/utils.h"
-#include "models/image_model.h"
 #include "src/image/data_structures.h"
 
 namespace mediapipe {

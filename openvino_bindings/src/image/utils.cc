@@ -6,7 +6,7 @@
 
 
 #include "utils.h"
-#include "models/model_base.h"
+#include "models/base_model.h"
 #include <adapters/openvino_adapter.h>
 #include <models/detection_model.h>
 #include <models/classification_model.h>
@@ -81,7 +81,7 @@ ModelType get_model_type(const std::string& name) {
 
 
 void serialize_model(const std::string& model_path, const std::string& output_path) {
-    std::unique_ptr<ModelBase> model;
+    std::unique_ptr<BaseModel> model;
     std::string device = "CPU"; //Loading is faster on CPU, and serialization is a small task
 
     std::string model_type = "";

@@ -64,8 +64,8 @@ git_repository(
 git_repository(
     name = "model_api",
     build_file = "//third_party/model_api:model_api.BUILD",
-    commit = "eb9fcfb1e1eebc047ff144707f76203b132e1aa6",
-    remote = "https:///github.com/openvinotoolkit/model_api/",
+    commit = "3839c885cfafa4d2d0456e3caf44b8f3d2f65a88",
+    remote = "https://github.com/open-edge-platform/model_api",
 )
 
 new_local_repository(
