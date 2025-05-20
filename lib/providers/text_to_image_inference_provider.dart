@@ -33,7 +33,7 @@ class ImageMessage {
 
   ImageMessage(this.speaker, this.message, this.imageContent, this.rounds, this.size, this.metrics, this.time);
 
-  void finalize(String message, GenericMetrics metrics) {
+  void finalize(String message, [GenericMetrics? metrics]) {
     //imageContent.add(finalImage);
     time = DateTime.now();
     this.metrics = metrics;
@@ -106,7 +106,9 @@ class TextToImageInferenceProvider extends ChangeNotifier {
           if (_response != null){
           final imageContent = ImageContent(imageData, _response!.size.width.toInt(), _response!.size.height.toInt(), BoxFit.contain);
             _response!.imageContent.add(imageContent);
-            notifyListeners();
+            if (hasListeners){
+              notifyListeners();
+            }
           }
          //_intermediateImageStreamController.add(imageContent);
       });
@@ -161,8 +163,12 @@ class TextToImageInferenceProvider extends ChangeNotifier {
     _messages.add(ImageMessage(Speaker.user, message, [], rounds, Size.zero, null, DateTime.now()));
     notifyListeners();
 
-    final response = await _inference!.prompt(message, width, height, rounds);
-    _messages.add(_response!..finalize("Generated image", response.metrics));
+    try {
+      final response = await _inference!.prompt(message, width, height, rounds);
+      _messages.add(_response!..finalize("Generated image", response.metrics));
+    } catch (e) {
+      _messages.add(_response!..finalize("Interrupted"));
+    }
     _response = null;
 
     n = 0;

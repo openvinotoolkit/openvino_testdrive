@@ -28,11 +28,13 @@ StringWithMetrics TTIInference::prompt(std::string message, int width, int heigh
                                             ov::genai::num_inference_steps(rounds),
                                             ov::genai::num_images_per_prompt(1),
                                             ov::genai::callback(streamer));
-
     streamer_lock.unlock();
     cond.notify_all();
     _done = true;
 
+    if (_stop) { // generate got interrupted, return empty
+        throw api_error(StatusEnum::ErrorStatus, "Prompt interrupted...");
+    }
     const auto imgDataString = tensor_to_encoded_string(tensor);
 
     // Make Metrics
@@ -79,9 +81,7 @@ std::string TTIInference::tensor_to_encoded_string(const ov::Tensor& tensor) {
 
 void TTIInference::set_streamer(const std::function<void(const StringWithMetrics& response, int step, int rounds)> callback) {
     streamer = [callback, this](size_t step, size_t num_steps, ov::Tensor& latent) {
-        std::cout << "streamer got called" << std::endl;
         if (_stop) {
-            std::cout << "streamer should stop" << std::endl;
             _done = true;
             streamer_lock.unlock();
             cond.notify_all();
@@ -96,10 +96,8 @@ void TTIInference::set_streamer(const std::function<void(const StringWithMetrics
 }
 
 void TTIInference::force_stop() {
-    std::cout << "force stop!" << std::endl;
     _stop = true;
     std::unique_lock<std::mutex> lock(streamer_lock);
-    std::cout << "lock" << std::endl;
     while(!_done) {
         cond.wait(lock);
     }

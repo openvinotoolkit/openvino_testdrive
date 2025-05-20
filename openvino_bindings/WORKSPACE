@@ -64,7 +64,7 @@ git_repository(
 git_repository(
     name = "model_api",
     build_file = "//third_party/model_api:model_api.BUILD",
-    commit = "3839c885cfafa4d2d0456e3caf44b8f3d2f65a88",
+    commit = "83e2c069b8efc847d4b77cfad6208158ffb7be9f",
     remote = "https://github.com/open-edge-platform/model_api",
 )
 

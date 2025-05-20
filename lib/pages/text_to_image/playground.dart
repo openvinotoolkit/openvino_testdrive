@@ -269,10 +269,19 @@ class _TTIPlaygroundState extends State<TTIPlayground> {
                                         padding: const EdgeInsets.only(bottom: 20),
                                         child: Builder(builder: (context) {
                                           final isRunning = provider.interimResponse != null;
+                                          if (isRunning) {
+                                            return Tooltip(
+                                              message: "Stop",
+                                              child: Button(
+                                                onPressed: () => provider.forceStop(),
+                                                child: const Icon(FluentIcons.stop, size: 18),
+                                              ),
+                                            );
+                                          }
                                           return Tooltip(
                                             message: "Send message",
                                             child: Button(
-                                              onPressed: isRunning ?  null : () => message(_textController.text),
+                                              onPressed: () => message(_textController.text),
                                               child: const Icon(FluentIcons.send, size: 18),
                                             ),
                                           );
