@@ -24,10 +24,10 @@ jobs:
           persist-credentials: false
 
       - name: Check License Header
-        uses: apache/skywalking-eyes/header@main
+        uses: apache/skywalking-eyes/header@07a607ff5b0759f5ed47306c865aac50fe9b3985
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@fd55f4c5af5b953cc57a2be44cb082c8f6635e8e # v2.21.0
         with:
           flutter-version-file: pubspec.yaml
 
