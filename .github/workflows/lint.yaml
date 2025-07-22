@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+permissions: {} # No permissions by default on workflow level
 
 jobs:
   lint:

@@ -5,15 +5,14 @@ on:
     inputs:
       OPENVINO_VERSION:
         required: true
-        description: 'The version of OpenVINO to use'
+        description: "The version of OpenVINO to use"
         type: string
+permissions: {} # No permissions by default on workflow level
 
 jobs:
   build-macos-bindings:
     name: Build MacOS Bindings
     runs-on: macos-latest
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout repository

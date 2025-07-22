@@ -7,13 +7,12 @@ on:
         required: true
         description: 'The operating system to build for'
         type: string
+permissions: {} # No permissions by default on workflow level
 
 jobs:
   build-ui:
     name: Build UI
     runs-on: ${{ inputs.os }}
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout repository

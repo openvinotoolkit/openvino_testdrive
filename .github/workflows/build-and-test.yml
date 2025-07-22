@@ -8,6 +8,8 @@ on:
     branches:
       - main
 
+permissions: {} # No permissions by default on workflow level
+
 jobs:
   build-ui:
     permissions:

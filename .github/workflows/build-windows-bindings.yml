@@ -3,12 +3,13 @@ name: Build Windows Bindings
 on:
   workflow_call:
 
+permissions: {} # No permissions by default on workflow level
+
 jobs:
   build-windows-bindings:
     name: Build Windows Bindings
     runs-on: windows-2019-16-core
-    permissions:
-      contents: write
+
 
     steps:
       # Step 1: Checkout the repository

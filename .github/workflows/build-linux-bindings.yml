@@ -5,14 +5,14 @@ on:
     inputs:
       OPENVINO_VERSION:
         required: true
-        description: 'The version of OpenVINO to use'
+        description: "The version of OpenVINO to use"
         type: string
+
+permissions: {} # No permissions by default on workflow level
 
 jobs:
   build-linux-bindings:
     runs-on: ubuntu-22.04-16-cores
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout repository
@@ -55,7 +55,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-              /opt/ffmpeg
+            /opt/ffmpeg
           key: ${{ runner.os }}-ffmpeg
 
       - name: Install FFmpeg
