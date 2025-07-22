@@ -12,8 +12,6 @@ permissions: {} # No permissions by default on workflow level
 
 jobs:
   build-ui:
-    permissions:
-      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -23,20 +21,14 @@ jobs:
       os: ${{ matrix.os }}
 
   build-linux-bindings:
-    permissions:
-      contents: write
     uses: ./.github/workflows/build-linux-bindings.yml
     with:
       OPENVINO_VERSION: "2025.0"
 
   build-windows-bindings:
-    permissions:
-      contents: write
     uses: ./.github/workflows/build-windows-bindings.yml
 
   build-macos-bindings:
-    permissions:
-      contents: write
     uses: ./.github/workflows/build-macos-bindings.yml
     with:
       OPENVINO_VERSION: "2025.0"
