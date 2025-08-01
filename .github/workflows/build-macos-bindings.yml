@@ -5,18 +5,20 @@ on:
     inputs:
       OPENVINO_VERSION:
         required: true
-        description: 'The version of OpenVINO to use'
+        description: "The version of OpenVINO to use"
         type: string
+permissions: {} # No permissions by default on workflow level
 
 jobs:
   build-macos-bindings:
     name: Build MacOS Bindings
     runs-on: macos-latest
-    permissions:
-      contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       # NOTE: cache action executes without sudo, so we need to change ownership (https://github.com/actions/cache/issues/845#issuecomment-1252594999)
       - name: Change ownership
@@ -24,12 +26,14 @@ jobs:
           sudo chown -R $USER /usr/local /opt
 
       - name: Install OpenVINO
+        env:
+          OPENVINO_VERSION: ${{ inputs.OPENVINO_VERSION }}
         run: |
           curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2025.0/macos/openvino_genai_macos_12_6_2025.0.0.0_arm64.tar.gz \
           -o /tmp/openvino.tar.gz
           sudo mkdir /opt/intel
           sudo tar -xvf /tmp/openvino.tar.gz -C /opt/intel
-          sudo mv /opt/intel/openvino_genai_macos_12_6_${{ inputs.OPENVINO_VERSION }}.0.0_arm64 /opt/intel/openvino
+          sudo mv /opt/intel/openvino_genai_macos_12_6_"$OPENVINO_VERSION".0.0_arm64 /opt/intel/openvino
           rm /tmp/openvino.tar.gz
 
       - name: Cache ffmpeg

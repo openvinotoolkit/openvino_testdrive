@@ -5,17 +5,20 @@ on:
     inputs:
       OPENVINO_VERSION:
         required: true
-        description: 'The version of OpenVINO to use'
+        description: "The version of OpenVINO to use"
         type: string
+
+permissions: {} # No permissions by default on workflow level
 
 jobs:
   build-linux-bindings:
     runs-on: ubuntu-22.04-16-cores
-    permissions:
-      contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       # NOTE: cache action executes without sudo, so we need to change ownership (https://github.com/actions/cache/issues/845#issuecomment-1252594999)
       - name: Change ownership
@@ -40,11 +43,13 @@ jobs:
           rm -f bazel-$BAZEL_VERSION-installer-linux-x86_64.sh
 
       - name: Install OpenVINO
+        env:
+          OPENVINO_VERSION: ${{ inputs.OPENVINO_VERSION }}
         run: |
           sudo mkdir -p /opt/intel
           curl -L https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2025.0/linux/openvino_genai_ubuntu22_2025.0.0.0_x86_64.tar.gz \
           --output openvino.tgz && tar -xf openvino.tgz && \
-          sudo mv openvino_genai_ubuntu22_${{ inputs.OPENVINO_VERSION }}.0.0_x86_64 /opt/intel/openvino && rm openvino.tgz
+          sudo mv openvino_genai_ubuntu22_"$OPENVINO_VERSION".0.0_x86_64 /opt/intel/openvino && rm openvino.tgz
           cd /opt/intel/openvino && sudo ./install_dependencies/install_openvino_dependencies.sh -y
 
       - name: Cache ffmpeg
@@ -52,7 +57,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-              /opt/ffmpeg
+            /opt/ffmpeg
           key: ${{ runner.os }}-ffmpeg
 
       - name: Install FFmpeg

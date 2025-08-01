@@ -8,10 +8,10 @@ on:
     branches:
       - main
 
+permissions: {} # No permissions by default on workflow level
+
 jobs:
   build-ui:
-    permissions:
-      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -21,33 +21,36 @@ jobs:
       os: ${{ matrix.os }}
 
   build-linux-bindings:
-    permissions:
-      contents: write
     uses: ./.github/workflows/build-linux-bindings.yml
     with:
-      OPENVINO_VERSION: '2025.0'
+      OPENVINO_VERSION: "2025.0"
 
   build-windows-bindings:
-    permissions:
-      contents: write
     uses: ./.github/workflows/build-windows-bindings.yml
 
   build-macos-bindings:
-    permissions:
-      contents: write
     uses: ./.github/workflows/build-macos-bindings.yml
     with:
-      OPENVINO_VERSION: '2025.0'
+      OPENVINO_VERSION: "2025.0"
 
   package:
     name: Package combined release
     runs-on: ubuntu-22.04
-    needs: [ build-linux-bindings, build-windows-bindings, build-macos-bindings, build-ui ]
+    needs:
+      [
+        build-linux-bindings,
+        build-windows-bindings,
+        build-macos-bindings,
+        build-ui,
+      ]
     strategy:
       matrix:
         os: [linux, windows, macos]
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Set safe filename
         id: set_filename
@@ -92,14 +95,16 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@fd55f4c5af5b953cc57a2be44cb082c8f6635e8e # v2.21.0
         with:
           cache: true
           flutter-version-file: pubspec.yaml
-          channel: 'stable'
+          channel: "stable"
 
       - name: Install dependencies
         run: flutter pub get
@@ -108,7 +113,7 @@ jobs:
         run: flutter test --coverage --no-pub
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
         with:
           files: coverage/lcov.info
           flags: unittests
@@ -118,14 +123,16 @@ jobs:
 
   integration_tests:
     runs-on: ubuntu-22.04
-    needs: [ build-linux-bindings ]
+    needs: [build-linux-bindings]
 
     env:
       DISPLAY: ":99"
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev libglu1-mesa xvfb
@@ -142,11 +149,11 @@ jobs:
           rm linux_bindings.tgz
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@fd55f4c5af5b953cc57a2be44cb082c8f6635e8e # v2.21.0
         with:
           cache: true
           flutter-version-file: pubspec.yaml
-          channel: 'stable'
+          channel: "stable"
 
       - name: Install dependencies
         run: flutter pub get
@@ -167,7 +174,7 @@ jobs:
         run: flutter test --coverage --no-pub integration_test -d linux
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
         with:
           files: coverage/lcov.info
           flags: integrationtests
