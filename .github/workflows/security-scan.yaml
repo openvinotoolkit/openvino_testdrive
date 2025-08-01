@@ -22,7 +22,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Run Zizmor scan
-        uses: open-edge-platform/anomalib/.github/actions/security/zizmor@90e1192dd7d420cb243a93ce17809e43f23fc36d
+        uses: open-edge-platform/anomalib/.github/actions/security/zizmor@f8f14cea02c84333a2a32eaadcda6f1e526e67d8
         with:
           scan-scope: "all"
           severity-level: "LOW"
@@ -42,7 +42,7 @@ jobs:
           persist-credentials: false
       - name: Run Trivy scan
         id: trivy
-        uses: open-edge-platform/anomalib/.github/actions/security/trivy@90e1192dd7d420cb243a93ce17809e43f23fc36d
+        uses: open-edge-platform/anomalib/.github/actions/security/trivy@f8f14cea02c84333a2a32eaadcda6f1e526e67d8
         with:
           scan_type: "fs"
           scan-scope: all
