@@ -48,7 +48,7 @@ jobs:
         os: [linux, windows, macos]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
 
@@ -59,12 +59,12 @@ jobs:
           echo "SANITIZED_FILENAME=OpenVINO-TestDrive-${SAFE_REF_NAME}-${{ matrix.os }}" >> $GITHUB_ENV
 
       - name: Download bindings build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: "${{ matrix.os }}_bindings.${{ matrix.os == 'windows' && 'tar' || 'tgz' }}"
 
       - name: Download flutter build artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: "OpenVINO-TestDrive-no-bindings-${{ matrix.os }}"
           path: flutter
@@ -95,7 +95,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
 
@@ -113,7 +113,7 @@ jobs:
         run: flutter test --coverage --no-pub
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v5.5.0
         with:
           files: coverage/lcov.info
           flags: unittests
@@ -130,7 +130,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
 
@@ -138,7 +138,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libmpv-dev libglu1-mesa xvfb
 
       - name: Download OpenVINO bindings
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: "linux_bindings.tgz"
 
@@ -174,7 +174,7 @@ jobs:
         run: flutter test --coverage --no-pub integration_test -d linux
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v5.5.0
         with:
           files: coverage/lcov.info
           flags: integrationtests
