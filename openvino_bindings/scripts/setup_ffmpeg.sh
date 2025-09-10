@@ -1,5 +1,5 @@
 #!/bin/bash
-export FFMPEG_VERSION=6.1.2
+export FFMPEG_VERSION=7.0.2
 
 echo "Installing ffmpeg from source"
 rm -rf /tmp/build_ffmpeg
