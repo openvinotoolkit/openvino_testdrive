@@ -13,12 +13,12 @@ cc_library(
         "include/libswresample/*.h",
     ]),
     srcs = glob([
-        "bin/avcodec-60.dll",
-        "bin/avutil-58.dll",
-        "bin/avformat-60.dll",
-        "bin/avfilter-9.dll",
-        "bin/swscale-7.dll",
-        "bin/swresample-4.dll",
+        "bin/avcodec-61.dll",
+        "bin/avutil-59.dll",
+        "bin/avformat-61.dll",
+        "bin/avfilter-10.dll",
+        "bin/swscale-8.dll",
+        "bin/swresample-5.dll",
         "lib/*.lib",
     ]),
     includes = [

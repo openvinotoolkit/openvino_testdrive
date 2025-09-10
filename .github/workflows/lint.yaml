@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+permissions: {} # No permissions by default on workflow level
 
 jobs:
   lint:
@@ -14,16 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-      contents: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Check License Header
-        uses: apache/skywalking-eyes/header@main
+        uses: apache/skywalking-eyes/header@07a607ff5b0759f5ed47306c865aac50fe9b3985
 
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@fd55f4c5af5b953cc57a2be44cb082c8f6635e8e # v2.21.0
         with:
           flutter-version-file: pubspec.yaml
 

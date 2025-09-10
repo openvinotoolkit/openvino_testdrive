@@ -8,45 +8,21 @@
 
 Get started with OpenVINO™ Test Drive, an application that allows you to run generative AI and vision models trained by [Intel® Geti™](https://docs.geti.intel.com/) directly on your computer or edge device using [OpenVINO™ Runtime](https://github.com/openvinotoolkit/openvino).
 
-
 <p align="center">
   <img src="./docs/llm_model_chat.gif" width="600" alt="sample">
 </p>
 
 With use of OpenVINO™ Test Drive you can:
-+ **Chat with LLMs** and evaluating model performance on your computer or edge device
-+ **Experiment with different text prompts** to generate images using Stable Diffusion and Stable DiffusionXL models
-+ **Transcribe speech from video** using Whisper models, including generation of timestamps
-+ **Run and visualize results of models** trained by Intel® Geti™ using single image inference or batch inference mode
 
-## Installation
+- **Chat with LLMs** and evaluating model performance on your computer or edge device
+- **Experiment with different text prompts** to generate images using Stable Diffusion and Stable DiffusionXL models
+- **Transcribe speech from video** using Whisper models, including generation of timestamps
+- **Run and visualize results of models** trained by Intel® Geti™ using single image inference or batch inference mode
 
-Download the latest release from the [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/).
+## Key features
 
-> [!NOTE]
-> To verify downloaded file integrity, you can generate a SHA-256 of the downloaded file and compare it to the SHA-256 from corresponding `.sha256` file published in Releases repository. 
-
-### Installation on Windows
-
-> [!IMPORTANT]
-> For Intel® NPU, please use the Intel® NPU Driver latest available version.
-
-1. Downloading the zip archive [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/) `Windows` folder .
-
-<p align="left">
-  <img src="./docs/win_inst.gif" width="500">
-</p>
-
-2. Extract zip archive double-click the MSIX installation package, click `Install` button and it will display the installation process
-
-3. Click on the application name on Windows app list to launch OpenVINO™ Test Drive.
-
-
-## Quick start
-
-Upon starting the application, you can import a model using either Hugging Face for LLMs or upload Intel® Geti™ models from local disk.
-
-### Text generation and LLM performance evaluation
+<details>
+<summary>📝 Text generation and LLM performance evaluation </summary>
 
 1. Choose a model from predefined set of popular models or pick one from Hugging Face using `Import model` -> `Hugging Face` and import it.
 <p align="left">
@@ -62,8 +38,10 @@ Upon starting the application, you can import a model using either Hugging Face 
 <p align="left">
   <img src="./docs/metrics.gif" width="500">
 </p>
+</details>
 
-### Retrieval-Augmented Generation with LLM
+<details>
+<summary>📚 Retrieval-Augmented Generation with LLM </summary>
 
 1. It is possible to upload files and create knowledge base for RAG (Retrieval-Augmented Generation) using `Knowledge base` tab
 <p align="left">
@@ -78,8 +56,10 @@ This knowledge base can be used during text generation with LLM models.
 <p align="left">
   <img src="./docs/rag2.gif" width="500">
 </p>
+</details>
 
-### Work with Visual Language Models
+<details>
+<summary>🧠 Work with Visual Language Models </summary>
 
 1. Try Visual Language Model (VLM) for image analysis.
 <p align="left">
@@ -90,8 +70,10 @@ This knowledge base can be used during text generation with LLM models.
 <p align="left">
   <img src="./docs/vlm2.gif" width="500">
 </p>
+</details>
 
-### Transcribe speech from video
+<details>
+<summary>✍️ Transcribe speech from video </summary>
 
 1. Try Whisper for video transcription.
 <p align="left">
@@ -105,8 +87,10 @@ This knowledge base can be used during text generation with LLM models.
 </p>
 
 3. Use `Performance metrics` tab to get LLM performance metrics on your computer.
+</details>
 
-### Image generation
+<details>
+<summary>🎨 Image generation </summary>
 
 1. Choose an image generation LLM from predefined set of popular models or pick one from Hugging Face using `Import model` -> `Hugging Face` and import it.
 
@@ -120,9 +104,12 @@ This knowledge base can be used during text generation with LLM models.
 
 You can export LLM via `Export model` button.
 
-### Images inference with models trained by Intel® Geti™
+</details>
 
-1. Download code deployment for the model in OpenVINO format trained by Intel® Geti™. 
+<details>
+<summary>🤖 Images inference with models trained by Intel® Geti™ </summary>
+
+1. Download code deployment for the model in OpenVINO format trained by Intel® Geti™.
 
 <p align="left">
   <img src="./docs/geti_download.gif" width="500">
@@ -148,6 +135,29 @@ You can export LLM via `Export model` button.
 <p align="left">
   <img src="./docs/geti_batch.gif" width="500">
 </p>
+</details>
+
+## Installation
+
+Download the latest release from the [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/).
+
+> [!NOTE]
+> To verify downloaded file integrity, you can generate a SHA-256 of the downloaded file and compare it to the SHA-256 from corresponding `.sha256` file published in Releases repository.
+
+### Installation on Windows
+
+> [!IMPORTANT]
+> For Intel® NPU, please use the Intel® NPU Driver latest available version.
+
+1. Downloading the zip archive [Releases repository](https://storage.openvinotoolkit.org/repositories/openvino_testdrive/) `Windows` folder .
+
+<p align="left">
+  <img src="./docs/win_inst.gif" width="500">
+</p>
+
+2. Extract zip archive double-click the MSIX installation package, click `Install` button and it will display the installation process
+
+3. Click on the application name on Windows app list to launch OpenVINO™ Test Drive.
 
 ## Build
 
@@ -160,7 +170,7 @@ Secondly, the bindings and its dependencies for your platform to be added to `./
 
 ## Ecosystem
 
-- [OpenVINO™](https://github.com/openvinotoolkit/openvino)  - software toolkit for optimizing and deploying deep learning models.
+- [OpenVINO™](https://github.com/openvinotoolkit/openvino) - software toolkit for optimizing and deploying deep learning models.
 - [GenAI Repository](https://github.com/openvinotoolkit/openvino.genai) and [OpenVINO Tokenizers](https://github.com/openvinotoolkit/openvino_tokenizers) - resources and tools for developing and optimizing Generative AI applications.
 - [Intel® Geti™](https://docs.geti.intel.com/) - software for building computer vision models.
 - [OpenVINO™ Vision ModelAPI](https://github.com/openvinotoolkit/model_api) - a set of wrapper classes for particular tasks and model architectures, simplifying data preprocess and postprocess as well as routine procedures.

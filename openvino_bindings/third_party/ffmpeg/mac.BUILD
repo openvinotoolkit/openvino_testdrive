@@ -8,11 +8,11 @@ cc_library(
         "include/**/*.h",
     ]),
     srcs = [
-        "lib/libavdevice.60.dylib",
-        "lib/libavformat.60.dylib",
-        "lib/libavcodec.60.dylib",
-        "lib/libswresample.4.dylib",
-        "lib/libavutil.58.dylib",
+        "lib/libavdevice.61.dylib",
+        "lib/libavformat.61.dylib",
+        "lib/libavcodec.61.dylib",
+        "lib/libswresample.5.dylib",
+        "lib/libavutil.59.dylib",
     ],
     includes = [
         "lib",
