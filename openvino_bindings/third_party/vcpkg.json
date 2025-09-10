@@ -3,8 +3,5 @@
   "builtin-baseline": "c8582b4d83dbd36e1bebc08bf166b5eb807996b0",
   "dependencies": [
     "ffmpeg"
-  ],
-  "overrides": [
-    { "name": "ffmpeg", "version": "6.1.1" }
   ]
 }
