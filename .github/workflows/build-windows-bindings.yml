@@ -99,10 +99,10 @@ jobs:
       - name: Download and Install OpenVINO Runtime 24.6.0
         shell: powershell
         run: |
-          Invoke-WebRequest -Uri https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2025.1/windows/openvino_genai_windows_2025.1.0.0_x86_64.zip -OutFile openvino_runtime.zip
+          Invoke-WebRequest -Uri https://storage.openvinotoolkit.org/repositories/openvino_genai/packages/2025.2/windows/openvino_genai_windows_2025.2.0.0_x86_64.zip -OutFile openvino_runtime.zip
           Expand-Archive -Path openvino_runtime.zip -DestinationPath C:/Intel/
-          Rename-Item -Path "C:/Intel/openvino_genai_windows_2025.1.0.0_x86_64" -NewName "openvino_2025.1.0"
-          dir C:/Intel/openvino_2025.1.0/
+          Rename-Item -Path "C:/Intel/openvino_genai_windows_2025.2.0.0_x86_64" -NewName "openvino_2025.2.0"
+          dir C:/Intel/openvino_2025.2.0/
 
       # Step 11: Install Mediapipe Requirements
       - name: Install Mediapipe Requirements
