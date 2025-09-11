@@ -54,6 +54,14 @@ void freeStatusOrModelResponse(StatusOrModelResponse *status) {
     delete status;
 }
 
+void freeStatusOrTTIModelResponse(StatusOrTTIModelResponse *status) {
+    if (status->status == StatusEnum::OkStatus) {
+        free((void*)status->value);  // Free the allocated memory
+        status->value = NULL;        // Prevent dangling pointers
+    }
+    delete status;
+}
+
 void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *status) {
     if (status->status == StatusEnum::OkStatus) {
         delete [] status->value;
@@ -80,6 +88,10 @@ void freeStatusOrEmbeddings(StatusOrEmbeddings *status) {
 
 void freeStatusOrCameraDevices(StatusOrCameraDevices *status) {
     if (status->status == StatusEnum::OkStatus) {
+        for (int i = 0; i < status->size; i++) {
+            delete [] status->value[i].resolutions;
+            status->value[i].resolutions = NULL;
+        }
         delete [] status->value;
         status->value = NULL;        // Prevent dangling pointers
     }
@@ -174,10 +186,24 @@ StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char*
         auto result = inference->prompt(message, width, height, rounds);
         auto text = result.string;
         auto metrics = result.metrics;
-        return new StatusOrTTIModelResponse{OkStatus, {}, metrics, text};
+        return new StatusOrTTIModelResponse{OkStatus, {}, metrics, text, rounds, rounds};
     } catch (...) {
         auto except = handle_exceptions();
         return new StatusOrTTIModelResponse{except->status, except->message, {}, {}};
+    }
+}
+
+Status* ttiInferenceSetListener(CTTIInference instance, TTIInferenceCallbackFunction callback) {
+    try {
+        auto lambda_callback = [callback](const StringWithMetrics& result, int step, int rounds) {
+            auto text = result.string;
+            auto metrics = result.metrics;
+            callback(new StatusOrTTIModelResponse{OkStatus, {}, metrics, text, step, rounds});
+        };
+        reinterpret_cast<TTIInference*>(instance)->set_streamer(lambda_callback);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
     }
 }
 
@@ -188,6 +214,15 @@ StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance) {
     } catch (...) {
         auto except = handle_exceptions();
         return new StatusOrBool{except->status, except->message};
+    }
+}
+
+Status* ttiInferenceForceStop(CTTIInference instance) {
+    try {
+        reinterpret_cast<TTIInference*>(instance)->force_stop();
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
     }
 }
 
@@ -310,23 +345,32 @@ Status* graphRunnerQueueImage(CGraphRunner instance, const char* name, int times
     }
 }
 
-Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* name, int timestamp, bool json, bool csv, bool overlay) {
+Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* name, int timestamp, bool json, bool csv, bool overlay, bool source) {
     try {
-        reinterpret_cast<GraphRunner*>(instance)->queue(name, timestamp, SerializationOutput{json, csv, overlay});
+        reinterpret_cast<GraphRunner*>(instance)->queue(name, timestamp, SerializationOutput{json, csv, overlay, source});
         return new Status{OkStatus, ""};
     } catch (...) {
         return handle_exceptions();
     }
 }
 
-Status* graphRunnerStartCamera(CGraphRunner instance, int camera_index, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay) {
+Status* graphRunnerStartCamera(CGraphRunner instance, int camera_index, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay, bool source) {
     try {
         auto runner = reinterpret_cast<GraphRunner*>(instance);
 
         auto lambda_callback = [callback](std::string response) {
             callback(new StatusOrString{OkStatus, "", strdup(response.c_str())});
         };
-        runner->open_camera(camera_index, SerializationOutput{json, csv, overlay}, lambda_callback);
+        runner->open_camera(camera_index, SerializationOutput{json, csv, overlay, source}, lambda_callback);
+        return new Status{OkStatus, ""};
+    } catch (...) {
+        return handle_exceptions();
+    }
+}
+
+Status* graphRunnerSetCameraResolution(CGraphRunner instance, int width, int height) {
+    try {
+        reinterpret_cast<GraphRunner*>(instance)->set_camera_resolution(width, height);
         return new Status{OkStatus, ""};
     } catch (...) {
         return handle_exceptions();
@@ -351,6 +395,7 @@ Status* graphRunnerStopCamera(CGraphRunner instance) {
         return handle_exceptions();
     }
 }
+
 
 StatusOrString* graphRunnerGet(CGraphRunner instance) {
     try {
@@ -465,7 +510,7 @@ StatusOrDevices* getAvailableDevices() {
     devices[0] = {"AUTO", "auto"};
     for (int i = 0; i < device_ids.size(); i++) {
         auto device_name = core.get_property(device_ids[i], ov::device::full_name);
-        devices[i + 1] = { strdup(device_ids[i].c_str()), strdup(device_name.c_str()) };
+        devices[i + 1] = { strdup(device_ids[i].c_str()), strdup((device_ids[i] + "(" + device_name + ")").c_str()) };
     }
 
     return new StatusOrDevices{OkStatus, "", devices, (int)device_ids.size() + 1};
@@ -477,7 +522,12 @@ StatusOrCameraDevices* getAvailableCameraDevices() {
         CameraDevice* devices = new CameraDevice[cameras.size()];
         int i = 0;
         for (auto camera: cameras) {
-            devices[i] = { (int)camera.first, strdup(camera.second.c_str()) };
+            int j = 0;
+            devices[i] = { (int)camera.id, strdup(camera.name.c_str()), new CameraResolution[camera.resolutions.size()], (int)camera.resolutions.size()};
+            for (auto resolution: camera.resolutions) {
+                devices[i].resolutions[j] = {resolution.width, resolution.height};
+                j++;
+            }
             i++;
         }
 

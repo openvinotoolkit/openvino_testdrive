@@ -23,7 +23,7 @@ jobs:
   build-linux-bindings:
     uses: ./.github/workflows/build-linux-bindings.yml
     with:
-      OPENVINO_VERSION: "2025.0"
+      OPENVINO_VERSION: '2025.3'
 
   build-windows-bindings:
     uses: ./.github/workflows/build-windows-bindings.yml
@@ -31,7 +31,7 @@ jobs:
   build-macos-bindings:
     uses: ./.github/workflows/build-macos-bindings.yml
     with:
-      OPENVINO_VERSION: "2025.0"
+      OPENVINO_VERSION: '2025.3'
 
   package:
     name: Package combined release

@@ -4,7 +4,7 @@ visibility = ["//visibility:public"]
 
 filegroup(
     name = "all_srcs",
-    srcs = glob(["model_api/cpp/**"]),
+    srcs = glob(["src/cpp/**"]),
     visibility = ["//visibility:public"],
 )
 
@@ -61,7 +61,7 @@ cmake(
     ],
     cache_entries = {
         "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
-        "OpenVINO_DIR": "C:/Intel/openvino_2025.0.0/runtime/cmake",
+        "OpenVINO_DIR": "C:/Intel/openvino_2025.3.0/runtime/cmake",
         "OpenCV_DIR": "C:/opencv/build",
     },
     lib_source = ":all_srcs",

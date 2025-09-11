@@ -18,6 +18,7 @@ namespace mediapipe {
 
 absl::Status SerializationCalculator::GetContract(CalculatorContract *cc) {
   LOG(INFO) << "SerializationCalculator::GetContract()";
+  cc->Inputs().Tag("SOURCE").Set<cv::Mat>();
   cc->Inputs().Tag("OVERLAY").Set<cv::Mat>().Optional();
   cc->Inputs().Tag("OUTPUT").Set<SerializationOutput>();
   cc->Inputs().Tag("INFERENCE_RESULT").Set<geti::InferenceResult>();
@@ -61,6 +62,11 @@ absl::Status SerializationCalculator::GetiProcess(CalculatorContext *cc) {
     cv::Mat overlay = cc->Inputs().Tag("OVERLAY").Get<cv::Mat>();
     cv::cvtColor(overlay, overlay, cv::COLOR_BGR2RGB);
     output["overlay"] = geti::base64_encode_mat(overlay);
+  }
+
+  if (selected_output.source) {
+    cv::Mat source = cc->Inputs().Tag("SOURCE").Get<cv::Mat>();
+    output["source"] = geti::base64_encode_mat(source);
   }
 
   cc->Outputs()

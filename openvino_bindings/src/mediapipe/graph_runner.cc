@@ -36,6 +36,12 @@ void GraphRunner::stop() {
 }
 
 
+void GraphRunner::set_camera_resolution(int width, int height) {
+    if (camera_handler) {
+        camera_handler->set_resolution(width, height);
+    }
+}
+
 
 void GraphRunner::open_camera(int deviceIndex, SerializationOutput serializationOutput, const std::function<void(std::string output)>& callback) {
     camera_handler = std::make_shared<CameraHandler>(deviceIndex);

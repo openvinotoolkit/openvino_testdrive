@@ -302,6 +302,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  event_bus:
+    dependency: transitive
+    description:
+      name: event_bus
+      sha256: "1a55e97923769c286d295240048fc180e7b0768902c3c2e869fe059aafa15304"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -713,6 +721,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  mqtt_client:
+    dependency: "direct main"
+    description:
+      name: mqtt_client
+      sha256: "85fa7e9aad03fbd6a54fcaf46127579f3e049b4834557a06e49aea7869b04c94"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.8.0"
   msix:
     dependency: "direct dev"
     description:
@@ -938,7 +954,7 @@ packages:
     source: hosted
     version: "4.1.0"
   rxdart:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: rxdart
       sha256: "5c3004a4a8dbb94bd4bf5412a4def4acdaa12e12f269737a5751369e12d1a962"

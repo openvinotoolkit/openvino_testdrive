@@ -177,11 +177,12 @@ class ImageInferenceResult {
   final String? csv;
   final Map<String, dynamic>? json;
   final String? overlay;
+  final String? source;
 
-  ImageInferenceResult({this.csv, this.json, this.overlay});
+  ImageInferenceResult({this.csv, this.json, this.overlay, this.source});
 
   factory ImageInferenceResult.fromJson(Map<String, dynamic> output) {
-    return ImageInferenceResult(csv: output["csv"], json: output["json"], overlay: output["overlay"]);
+    return ImageInferenceResult(csv: output["csv"], json: output["json"], overlay: output["overlay"], source: output["source"]);
   }
 
   List<Annotation> parseAnnotations() {

@@ -38,6 +38,8 @@ class GraphRunner  {
   std::string get();
   void stop();
 
+
+  void set_camera_resolution(int width, int height);
   void open_camera(int deviceIndex, SerializationOutput serializationOutput, const std::function<void(std::string output)>& callback);
   void stop_camera();
 

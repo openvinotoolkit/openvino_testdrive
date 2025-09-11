@@ -14,8 +14,9 @@ class SerializationOutput {
   bool csv;
   bool json;
   bool overlay;
+  bool source;
 
-  SerializationOutput({this.csv = false, this.json = false, this.overlay = false});
+  SerializationOutput({this.csv = false, this.json = false, this.overlay = false, this.source = false});
 
   bool any() => csv || json || overlay;
 
@@ -42,11 +43,23 @@ class ModelResponse {
   const ModelResponse(this.content, this.metrics);
 }
 
+class GenericMetrics {
+  final double loadTime;
+  final double generationTime;
+
+  const GenericMetrics(this.loadTime, this.generationTime);
+  factory GenericMetrics.fromTTIMetrics(TTIMetrics metrics) {
+    return GenericMetrics(metrics.load_time, metrics.generate_time);
+  }
+}
+
 class TTIModelResponse {
   final String content;
-  final TTIMetrics metrics;
+  final GenericMetrics metrics;
+  final int step;
+  final int rounds;
 
-  const TTIModelResponse(this.content, this.metrics);
+  const TTIModelResponse(this.content, this.metrics, this.step, this.rounds);
 }
 
 class VLMModelResponse {

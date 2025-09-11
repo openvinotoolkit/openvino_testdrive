@@ -80,7 +80,7 @@ class _ParagraphState extends State<Paragraph> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: hover ? subtleTextColor.of(theme).withOpacity(0.3) : null,
+                  color: hover ? subtleTextColor.of(theme).withValues(alpha: 0.3) : null,
                   borderRadius: const BorderRadius.all(Radius.circular(4)),
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),

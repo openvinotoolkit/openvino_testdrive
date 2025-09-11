@@ -12,7 +12,6 @@
 #include <string>
 
 #include "src/mediapipe/inference/utils.h"
-#include "models/image_model.h"
 #include "src/image/contourer.h"
 #include "src/mediapipe/utils/emptylabel.pb.h"
 

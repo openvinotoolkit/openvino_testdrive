@@ -13,6 +13,7 @@ import 'package:inference/widgets/canvas/canvas_painter.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
 import 'package:inference/project.dart' as project;
 
+
 class Canvas extends StatefulWidget {
 
   final ui.Image image;
@@ -32,6 +33,7 @@ class _CanvasState extends State<Canvas> {
     ..scale(0.9);
   Matrix4 inverse = Matrix4.identity();
   bool done = false;
+
 
   @override
   void initState() {
@@ -72,6 +74,16 @@ class _CanvasState extends State<Canvas> {
               0, 0, scale, 0,
               mScale * position.x, mScale * position.y, 0, 1);
       });
+  }
+
+  @override
+  void didUpdateWidget(covariant Canvas oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.image.width != widget.image.width || oldWidget.image.height != widget.image.height) {
+      Future.delayed(Duration.zero, () {
+        matrix = setTransformToFit(widget.image);
+      });
+    }
   }
 
   @override

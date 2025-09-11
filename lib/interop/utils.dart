@@ -19,7 +19,7 @@ class InteropUtils {
 
       calloc.free(modelPathPtr);
       calloc.free(outputPathPtr);
-      if (StatusEnum.fromValue(status.ref.status) != StatusEnum.OkStatus) {
+      if (status.ref.status != StatusEnum.OkStatus) {
         throw "Serialize error: ${status.ref.status} ${status.ref.message.toDartString()}";
       }
       print("Serialization done");

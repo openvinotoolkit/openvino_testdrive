@@ -7,6 +7,7 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:inference/annotation.dart';
+import 'package:inference/interop/device.dart';
 import 'package:inference/utils/image_graph_builder.dart';
 import 'package:inference/interop/graph_runner.dart';
 import 'package:inference/interop/openvino_bindings.dart';
@@ -67,6 +68,10 @@ class ImageInferenceProvider extends ChangeNotifier {
   void dispose() async {
     await close();
     super.dispose();
+  }
+
+  void setCameraResolution(Resolution resolution) {
+    _inference!.setCameraResolution(resolution);
   }
 
   void openCamera(int deviceIndex, Function(ImageInferenceResult) callback, SerializationOutput output) {

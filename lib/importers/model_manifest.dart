@@ -16,7 +16,7 @@ class ModelManifest {
   final String description;
   final String task;
   final String author;
-  final bool npuEnabled;
+  bool npuEnabled;
   String? architecture;
 
   ModelManifest({

@@ -38,8 +38,15 @@ typedef struct {
 } Device;
 
 typedef struct {
+    int width;
+    int height;
+} CameraResolution;
+
+typedef struct {
     int id;
     const char* name;
+    CameraResolution* resolutions;
+    int size;
 } CameraDevice;
 
 typedef struct {
@@ -128,6 +135,8 @@ typedef struct {
     const char* message;
     TTIMetrics metrics;
     const char* value;
+    int step;
+    int num_step;
 } StatusOrTTIModelResponse;
 
 typedef struct {
@@ -159,6 +168,7 @@ typedef struct {
 } StatusOrCameraDevices;
 
 typedef void (*ImageInferenceCallbackFunction)(StatusOrString*);
+typedef void (*TTIInferenceCallbackFunction)(StatusOrTTIModelResponse*);
 typedef void (*LLMInferenceCallbackFunction)(StatusOrString*);
 typedef void (*VLMInferenceCallbackFunction)(StatusOrString*);
 
@@ -169,6 +179,7 @@ EXPORT void freeStatusOrLLMInference(StatusOrLLMInference *status);
 EXPORT void freeStatusOrSpeechToText(StatusOrSpeechToText *status);
 EXPORT void freeStatusOrModelResponse(StatusOrModelResponse *status);
 EXPORT void freeStatusOrWhisperModelResponse(StatusOrWhisperModelResponse *status);
+EXPORT void freeStatusOrTTIModelResponse(StatusOrTTIModelResponse *status);
 EXPORT void freeStatusOrDevices(StatusOrDevices *status);
 EXPORT void freeStatusOrEmbeddings(StatusOrEmbeddings *status);
 EXPORT void freeStatusOrCameraDevices(StatusOrCameraDevices *status);
@@ -183,7 +194,9 @@ EXPORT Status* llmInferenceClose(CLLMInference instance);
 
 EXPORT StatusOrTTIInference* ttiInferenceOpen(const char* model_path, const char* device);
 EXPORT StatusOrTTIModelResponse* ttiInferencePrompt(CTTIInference instance, const char* message, int width, int height, int rounds);
+EXPORT Status* ttiInferenceSetListener(CTTIInference instance, TTIInferenceCallbackFunction callback);
 EXPORT StatusOrBool* ttiInferenceHasModelIndex(CTTIInference instance);
+EXPORT Status* ttiInferenceForceStop(CTTIInference instance);
 EXPORT Status* ttiInferenceClose(CLLMInference instance);
 
 
@@ -197,12 +210,14 @@ EXPORT Status* vlmInferenceClose(CVLMInference instance);
 
 EXPORT StatusOrGraphRunner* graphRunnerOpen(const char* graph);
 EXPORT Status* graphRunnerQueueImage(CGraphRunner instance, const char* name, int timestamp, unsigned char* image_data, const size_t data_length);
-EXPORT Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* name, int timestamp, bool json, bool csv, bool overlay);
+EXPORT Status* graphRunnerQueueSerializationOutput(CGraphRunner instance, const char* name, int timestamp, bool json, bool csv, bool overlay, bool source);
 EXPORT StatusOrString* graphRunnerGet(CGraphRunner instance);
 EXPORT Status* graphRunnerStop(CGraphRunner instance);
-EXPORT Status* graphRunnerStartCamera(CGraphRunner instance, int cameraIndex, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay);
+EXPORT Status* graphRunnerStartCamera(CGraphRunner instance, int cameraIndex, ImageInferenceCallbackFunction callback, bool json, bool csv, bool overlay, bool source);
 EXPORT StatusOrInt* graphRunnerGetTimestamp(CGraphRunner instance);
 EXPORT Status* graphRunnerStopCamera(CGraphRunner instance);
+EXPORT Status* graphRunnerSetCameraResolution(CGraphRunner instance, int width, int height);
+
 
 EXPORT StatusOrSentenceTransformer* sentenceTransformerOpen(const char* model_path, const char* device);
 EXPORT StatusOrEmbeddings* sentenceTransformerGenerate(CSentenceTransformer instance, const char* prompt);

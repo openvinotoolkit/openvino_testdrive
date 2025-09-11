@@ -84,6 +84,13 @@ class _LiveInferenceState extends State<LiveInference> {
     });
   }
 
+  void closeCamera() {
+    setState(() {
+        mode = LiveInferenceMode.image;
+        cameraDevice = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = FluentTheme.of(context);
@@ -148,10 +155,7 @@ class _LiveInferenceState extends State<LiveInference> {
                                   },
                                   items: [
                                     MenuFlyoutItem(text: const Text("None"), onPressed: () {
-                                        setState(() {
-                                            mode = LiveInferenceMode.image;
-                                            cameraDevice = null;
-                                        });
+                                        closeCamera();
                                     }),
 
                                     for (final device in devices)
@@ -174,7 +178,7 @@ class _LiveInferenceState extends State<LiveInference> {
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.done) {
                             return switch(mode) {
-                              LiveInferenceMode.camera => CameraView(deviceIndex: cameraDevice!.id),
+                              LiveInferenceMode.camera => CameraView(device: cameraDevice!),
                               LiveInferenceMode.image => DropArea(
                                 type: "image",
                                 showChild: inferenceResult != null,

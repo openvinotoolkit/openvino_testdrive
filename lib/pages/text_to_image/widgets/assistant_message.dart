@@ -152,7 +152,7 @@ class _GeneratedImageMessageState extends State<GeneratedImageMessage> {
                                       child: Tooltip(
                                         message: 'Generation time',
                                         child: Text(
-                                          '${nf.format(widget.message.metrics!.generate_time)}ms',
+                                          '${nf.format(widget.message.metrics!.generationTime)}ms',
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: subtleTextColor.of(theme),
@@ -204,26 +204,44 @@ class SmartImageWidget extends StatelessWidget {
 
   void copyToClipboard() {
     final clipboard = SystemClipboard.instance;
-    if (clipboard == null || message.imageContent == null) {
+    if (clipboard == null) {
       return; // Clipboard API is not supported on this platform.
     }
     final item = DataWriterItem();
 
-    item.add(Formats.jpeg(message.imageContent!.imageData));
+    item.add(Formats.jpeg(message.imageContent.last.imageData));
     clipboard.write([item]);
   }
 
   bool hasClipboard() {
-    return message.allowedCopy;
+    return message.done;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Image.memory(
-      message.imageContent!.imageData,
-      width: message.imageContent!.width.toDouble(),
-      height: message.imageContent!.height.toDouble(),
-      fit: message.imageContent!.boxFit,
+    if (message.imageContent.isEmpty) {
+      return SizedBox(
+        width: message.size.width,
+        height: message.size.height,
+        child: Center(child: ProgressRing()),
+      );
+    }
+    return Stack(
+      children: [
+        Image.memory(
+          message.imageContent.last.imageData,
+          width: message.imageContent.last.width.toDouble(),
+          height: message.imageContent.last.height.toDouble(),
+          fit: message.imageContent.last.boxFit,
+        ),
+        if (!message.done) Align(
+          alignment: Alignment.topRight,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("${message.imageContent.length} / ${message.rounds}"),
+          )
+        ),
+      ],
     );
   }
 }
