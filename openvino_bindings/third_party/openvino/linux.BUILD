@@ -2,7 +2,7 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-OPENVINO_VERSION = "2510"
+OPENVINO_VERSION = "2530"
 
 filegroup(
     name = "shared_objects",

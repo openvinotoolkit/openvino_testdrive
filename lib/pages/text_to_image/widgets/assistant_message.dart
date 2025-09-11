@@ -204,7 +204,7 @@ class SmartImageWidget extends StatelessWidget {
 
   void copyToClipboard() {
     final clipboard = SystemClipboard.instance;
-    if (clipboard == null || message.imageContent == null) {
+    if (clipboard == null) {
       return; // Clipboard API is not supported on this platform.
     }
     final item = DataWriterItem();
