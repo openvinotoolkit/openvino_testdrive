@@ -18,11 +18,11 @@ jobs:
       security-events: write # Needed to upload the results to code-scanning dashboard
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
       - name: Run Zizmor scan
-        uses: open-edge-platform/anomalib/.github/actions/security/zizmor@90e1192dd7d420cb243a93ce17809e43f23fc36d
+        uses: open-edge-platform/anomalib/.github/actions/security/zizmor@bbcd5b65aafb3674d7dd078a1556a104701a88c3
         with:
           scan-scope: "all"
           severity-level: "LOW"
@@ -37,12 +37,12 @@ jobs:
       security-events: write # Needed to upload the results to code-scanning dashboard
     steps:
       - name: Checkout code
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
       - name: Run Trivy scan
         id: trivy
-        uses: open-edge-platform/anomalib/.github/actions/security/trivy@90e1192dd7d420cb243a93ce17809e43f23fc36d
+        uses: open-edge-platform/anomalib/.github/actions/security/trivy@bbcd5b65aafb3674d7dd078a1556a104701a88c3
         with:
           scan_type: "fs"
           scan-scope: all
